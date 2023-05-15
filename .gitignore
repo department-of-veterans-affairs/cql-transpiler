@@ -6,6 +6,7 @@
 # Java
 target
 dependency-reduced-pom.xml
+**/.metals/
 
 # Gradle
 .gradle
