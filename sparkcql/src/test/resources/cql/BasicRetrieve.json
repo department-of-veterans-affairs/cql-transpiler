@@ -1,0 +1,328 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorVersion" : "2.8.0",
+         "translatorOptions" : "",
+         "type" : "CqlToElmInfo"
+      }, {
+         "message" : "List-valued expression was demoted to a singleton.",
+         "errorType" : "semantic",
+         "errorSeverity" : "warning",
+         "type" : "CqlToElmError"
+      } ],
+      "identifier" : {
+         "id" : "SimpleStandalone",
+         "version" : "1.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1"
+         }, {
+            "localIdentifier" : "QUICK",
+            "uri" : "http://hl7.org/fhir"
+         } ]
+      },
+      "codeSystems" : {
+         "def" : [ {
+            "name" : "SNOMED",
+            "id" : "http://snomed.info/sct",
+            "accessLevel" : "Public"
+         } ]
+      },
+      "valueSets" : {
+         "def" : [ {
+            "name" : "Ambulatory/ED Visit",
+            "id" : "urn:oid:2.16.840.1.113883.3.464.1003.101.12.1061",
+            "accessLevel" : "Public"
+         } ]
+      },
+      "codes" : {
+         "def" : [ {
+            "name" : "Acute Pharyngitis Code",
+            "id" : "363746003",
+            "display" : "Acute pharyngitis (disorder)",
+            "accessLevel" : "Public",
+            "codeSystem" : {
+               "name" : "SNOMED"
+            }
+         }, {
+            "name" : "Type Code",
+            "id" : "12345678",
+            "accessLevel" : "Public",
+            "codeSystem" : {
+               "name" : "SNOMED"
+            }
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient"
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "name" : "Patient",
+            "context" : "Patient",
+            "expression" : {
+               "type" : "SingletonFrom",
+               "operand" : {
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "patient-qicore-qicore-patient",
+                  "type" : "Retrieve"
+               }
+            }
+         }, {
+            "name" : "Encounter A",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "expression" : {
+               "dataType" : "{http://hl7.org/fhir}Encounter",
+               "templateId" : "encounter-qicore-qicore-encounter",
+               "type" : "Retrieve"
+            }
+         }, {
+            "name" : "Encounter B",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "expression" : {
+               "dataType" : "{http://hl7.org/fhir}Encounter",
+               "templateId" : "encounter-qicore-qicore-encounter",
+               "codeProperty" : "type",
+               "codeComparator" : "in",
+               "type" : "Retrieve",
+               "codes" : {
+                  "name" : "Ambulatory/ED Visit",
+                  "preserve" : true,
+                  "type" : "ValueSetRef"
+               }
+            }
+         }, {
+            "name" : "Encounter C",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "expression" : {
+               "dataType" : "{http://hl7.org/fhir}Encounter",
+               "templateId" : "encounter-qicore-qicore-encounter",
+               "codeProperty" : "type",
+               "codeComparator" : "=",
+               "type" : "Retrieve",
+               "codes" : {
+                  "type" : "ToList",
+                  "operand" : {
+                     "name" : "Type Code",
+                     "type" : "CodeRef"
+                  }
+               }
+            }
+         }, {
+            "name" : "Encounter Combined",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "expression" : {
+               "type" : "Query",
+               "source" : [ {
+                  "alias" : "A",
+                  "expression" : {
+                     "name" : "Encounter A",
+                     "type" : "ExpressionRef"
+                  }
+               } ],
+               "relationship" : [ {
+                  "alias" : "B",
+                  "type" : "With",
+                  "expression" : {
+                     "name" : "Encounter B",
+                     "type" : "ExpressionRef"
+                  },
+                  "suchThat" : {
+                     "type" : "IncludedIn",
+                     "operand" : [ {
+                        "path" : "period",
+                        "scope" : "A",
+                        "type" : "Property"
+                     }, {
+                        "path" : "period",
+                        "scope" : "B",
+                        "type" : "Property"
+                     } ]
+                  }
+               } ]
+            }
+         }, {
+            "name" : "MyTupleLiteralList",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "expression" : {
+               "type" : "List",
+               "element" : [ {
+                  "type" : "Tuple",
+                  "element" : [ {
+                     "name" : "Name",
+                     "value" : {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Patrick",
+                        "type" : "Literal"
+                     }
+                  }, {
+                     "name" : "DOB",
+                     "value" : {
+                        "type" : "Date",
+                        "year" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "2014",
+                           "type" : "Literal"
+                        },
+                        "month" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "1",
+                           "type" : "Literal"
+                        },
+                        "day" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "1",
+                           "type" : "Literal"
+                        }
+                     }
+                  }, {
+                     "name" : "Address",
+                     "value" : {
+                        "type" : "Tuple",
+                        "element" : [ {
+                           "name" : "Line1",
+                           "value" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "41 Spinning Ave",
+                              "type" : "Literal"
+                           }
+                        }, {
+                           "name" : "City",
+                           "value" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Dayton",
+                              "type" : "Literal"
+                           }
+                        }, {
+                           "name" : "State",
+                           "value" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "OH",
+                              "type" : "Literal"
+                           }
+                        } ]
+                     }
+                  }, {
+                     "name" : "Phones",
+                     "value" : {
+                        "type" : "List",
+                        "element" : [ {
+                           "type" : "Tuple",
+                           "element" : [ {
+                              "name" : "Number",
+                              "value" : {
+                                 "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                 "value" : "202-413-1234",
+                                 "type" : "Literal"
+                              }
+                           }, {
+                              "name" : "Use",
+                              "value" : {
+                                 "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                 "value" : "Home",
+                                 "type" : "Literal"
+                              }
+                           } ]
+                        } ]
+                     }
+                  } ]
+               }, {
+                  "type" : "Tuple",
+                  "element" : [ {
+                     "name" : "Name",
+                     "value" : {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Beth",
+                        "type" : "Literal"
+                     }
+                  }, {
+                     "name" : "DOB",
+                     "value" : {
+                        "type" : "Date",
+                        "year" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "2014",
+                           "type" : "Literal"
+                        },
+                        "month" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "1",
+                           "type" : "Literal"
+                        },
+                        "day" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "1",
+                           "type" : "Literal"
+                        }
+                     }
+                  }, {
+                     "name" : "Address",
+                     "value" : {
+                        "type" : "Tuple",
+                        "element" : [ {
+                           "name" : "Line1",
+                           "value" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "123 Main Ave",
+                              "type" : "Literal"
+                           }
+                        }, {
+                           "name" : "City",
+                           "value" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Anytown",
+                              "type" : "Literal"
+                           }
+                        }, {
+                           "name" : "State",
+                           "value" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "GA",
+                              "type" : "Literal"
+                           }
+                        } ]
+                     }
+                  }, {
+                     "name" : "Phones",
+                     "value" : {
+                        "type" : "List",
+                        "element" : [ {
+                           "type" : "Tuple",
+                           "element" : [ {
+                              "name" : "Number",
+                              "value" : {
+                                 "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                 "value" : "202-413-1234",
+                                 "type" : "Literal"
+                              }
+                           }, {
+                              "name" : "Use",
+                              "value" : {
+                                 "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                 "value" : "Home",
+                                 "type" : "Literal"
+                              }
+                           } ]
+                        } ]
+                     }
+                  } ]
+               } ]
+            }
+         } ]
+      }
+   }
+}
+

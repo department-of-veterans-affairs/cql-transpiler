@@ -1,0 +1,4 @@
+Uri: git:/d%3A/Repo/sparkcql/sparkcql-udf/src/main/java/gov/va/sparkcql/common/Stopwatch.java?%7B%22path%22%3A%22d%3A%5C%5CRepo%5C%5Csparkcql%5C%5Csparkcql-udf%5C%5Csrc%5C%5Cmain%5C%5Cjava%5C%5Cgov%5C%5Cva%5C%5Csparkcql%5C%5Ccommon%5C%5CStopwatch.java%22%2C%22ref%22%3A%22HEAD%22%7D
+
+Error message: Provider "git" not installed
+Error: java.nio.file.FileSystemNotFoundException: Provider "git" not installed
