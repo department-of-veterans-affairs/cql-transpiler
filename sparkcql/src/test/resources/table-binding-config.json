@@ -1,27 +1,31 @@
 {
     "system": "http://hl7.org/fhir/fhir-types",
-    "type": [
+    "resourceTypes": [
         {
+            "table": "AllergyIntolerance",
             "code": "AllergyIntolerance",
-            "primaryCodePath": null,
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "CarePlan",
             "code": "CarePlan",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "CareTeam",
             "code": "CareTeam",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Claim",
             "code": "Claim",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Condition",
             "code": "Condition",
             "resourceColumn": "ResourceData",
-            "index": [{
+            "indexes": [{
                 "column": "IndexPrimaryStartDate",
                 "path": "onsetDateTime"
             },
@@ -31,53 +35,62 @@
             }]
         },
         {
+            "table": "Device",
             "code": "Device",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "DiagnosticReport",
             "code": "DiagnosticReport",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Encounter",
             "code": "Encounter",
             "resourceColumn": "ResourceData"
-            // "primaryCodePath": "class.code",
-            // "primaryStartDate": "period.start",
-            // "primaryEndDate": "period.end"
         },
         {
+            "table": "ExplanationOfBenefit",
             "code": "ExplanationOfBenefit",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Goal",
             "code": "Goal",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "ImagingStudy",
             "code": "ImagingStudy",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Immunization",
             "code": "Immunization",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "MedicationRequest",
             "code": "MedicationRequest",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Organization",
             "code": "Organization",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Procedure",
             "code": "Procedure",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Patient",
             "code": "Patient",
             "resourceColumn": "ResourceData"
         },
         {
+            "table": "Practitioner",
             "code": "Practitioner",
             "resourceColumn": "ResourceData"
         }

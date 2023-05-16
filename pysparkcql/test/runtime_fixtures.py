@@ -9,6 +9,7 @@ from pyspark.sql import SparkSession
 def spark() -> SparkSession:
     config = SparkConf()
     config.set("spark.sql.catalogImplementation", "in-memory")  # allows for local dev w/o installing winutils.exe
+    config.set("spark.pyspark.python", "python.exe")
     context = SparkContext(master='local[1]', conf=config)
     return SparkSession(context).builder.getOrCreate()
 
