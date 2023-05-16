@@ -5,5 +5,5 @@
 // import org.apache.spark.sql.DataFrame
 // import gov.va.sparkcql.binding.ConfigurationBindingStrategy
 
-// class MockBindStrategy extends ConfigurationBindingStrategy {
+// class MockBinding extends ConfigurationBindingStrategy {
 // }

@@ -29,7 +29,7 @@ class CommonTest extends AnyFlatSpec {
   }
 
   it should "symmetrically serialize a FHIR coding type" in {
-    val json = """{"system":"me","version":"you","code":"us"}"""
+    val json = """{"system":"me","code":"us","version":"you"}"""
     assert(json.deserializeJson[Coding]().serializeJson() == json)
   }
 }
