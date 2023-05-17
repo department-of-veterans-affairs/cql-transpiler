@@ -3,7 +3,8 @@
 **/.bin/
 **/bin/
 
-# Java
+# Scala & Java
+**/.bloop/
 target
 dependency-reduced-pom.xml
 **/.metals/
