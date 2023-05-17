@@ -13,5 +13,5 @@ final case class TableBindingConfigTypeIndex(column: String, path: String)
 
 class TableBinding(spark: SparkSession, configuration: TableBindingConfig) extends Binding(spark) {
 
-  def query[T <: Product : TypeTag](resourceType: Coding, code: Option[Coding], startDate: Option[DateTime], endDate: Option[DateTime]): Dataset[T] = ???
+  def resolve[T <: Product : TypeTag](resourceType: Coding, code: Option[Coding], startDate: Option[DateTime], endDate: Option[DateTime]): Dataset[T] = ???
 }

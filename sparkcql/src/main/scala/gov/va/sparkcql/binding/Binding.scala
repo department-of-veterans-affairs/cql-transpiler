@@ -9,5 +9,5 @@ import scala.reflect.runtime.universe._
 import org.apache.spark.sql.Dataset
 
 abstract class Binding(spark: SparkSession) {
-  def query[T <: Product : TypeTag](resourceType: Coding, code: Option[Coding] = None, startDate: Option[DateTime] = None, endDate: Option[DateTime] = None): Dataset[T]
+  def resolve[T <: Product : TypeTag](resourceType: Coding, code: Option[Coding] = None, startDate: Option[DateTime] = None, endDate: Option[DateTime] = None): Dataset[T]
 }

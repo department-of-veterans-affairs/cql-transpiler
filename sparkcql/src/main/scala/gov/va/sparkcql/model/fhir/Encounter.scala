@@ -10,7 +10,6 @@ trait Encounterable extends Resourceable {
 final case class Encounter (
   id: Id,
   status: Option[Code] = None,
-  resourceType: Option[String] = None,
   meta: Option[Meta] = None,
   implicitRules: Option[Uri] = None,
   language: Option[Code] = None,
