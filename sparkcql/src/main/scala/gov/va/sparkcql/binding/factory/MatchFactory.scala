@@ -2,18 +2,18 @@ package gov.va.sparkcql.binding.factory
 
 import gov.va.sparkcql.model.fhir.Coding
 import scala.collection.mutable.HashSet
-import gov.va.sparkcql.binding.strategy.BindingStrategy
+import gov.va.sparkcql.binding.Binding
 
-class MatchedBindingFactory extends BindingFactory {
+class MatchFactory extends BindingFactory {
 
-  type StrategyCreationMatch = (Coding) => Option[BindingStrategy]
+  type StrategyCreationMatch = (Coding) => Option[Binding]
   val registry = HashSet[StrategyCreationMatch]()
 
   def add(f: StrategyCreationMatch): Unit = {
     registry.add(f)
   }
 
-  override def create(resourceType: Coding): BindingStrategy = {
+  override def create(resourceType: Coding): Binding = {
     registry.foreach(f => {
       var strategy = f(resourceType)
       if (strategy.isDefined) {

@@ -17,7 +17,6 @@
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-sql_2.12\\3.3.2\\1b047416b563375224bb7ca988a070863fae99a7\\spark-sql_2.12-3.3.2.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-catalyst_2.12\\3.3.2\\f947494c340d3df62c4696e27c2593ad5b7e4188\\spark-catalyst_2.12-3.3.2.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-core_2.12\\3.3.2\\f322bbce86e5b5a3038a780cb4318c9f1db6c853\\spark-core_2.12-3.3.2.jar",
-            "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.github.nscala-time\\nscala-time_2.12\\2.32.0\\2db82a67ef3fe19f6180accf0620133005d03655\\nscala-time_2.12-2.32.0.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-native_2.12\\3.6.12\\8ed0b8f93ed2cbc4eaa55c1abaf2f3d506b61ba9\\json4s-native_2.12-3.6.12.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest_2.12\\3.2.15\\449e062d8aa0026051e44ede577d488583f2cbdb\\scalatest_2.12-3.2.15.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-jackson_2.12\\3.7.0-M11\\54089dd27d932de33c329199474ad429ee076510\\json4s-jackson_2.12-3.7.0-M11.jar",
@@ -120,8 +119,6 @@
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.spark-project.spark\\unused\\1.0.0\\205fe37a2fade6ce6dfcf8eff57ed21a4a1c22af\\unused-1.0.0.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.rocksdb\\rocksdbjni\\6.20.3\\e06fcf25faef09d8a3feeb58c88b6c4d768aadd6\\rocksdbjni-6.20.3.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.univocity\\univocity-parsers\\2.9.1\\81827d186e42129f23c3f1e002b757ad4b4e769\\univocity-parsers-2.9.1.jar",
-            "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\joda-time\\joda-time\\2.11.0\\da4c58430c8f55f3c3fdf13653d2b629ce1fcc1d\\joda-time-2.11.0.jar",
-            "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.joda\\joda-convert\\2.2.2\\94885e26725346aa723a3cfcdc69a10e65632092\\joda-convert-2.2.2.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.commons\\commons-compress\\1.21\\4ec95b60d4e86b5c95a0e919cb172a0af98011ef\\commons-compress-1.21.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.esotericsoftware\\kryo-shaded\\4.0.2\\e8c89779f93091aa9cb895093402b5d15065bf88\\kryo-shaded-4.0.2.jar",
             "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.fusesource.leveldbjni\\leveldbjni-all\\1.8\\707350a2eeb1fa2ed77a32ddb3893ed308e941db\\leveldbjni-all-1.8.jar",
@@ -299,7 +296,6 @@
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-sql_2.12\\3.3.2\\1b047416b563375224bb7ca988a070863fae99a7\\spark-sql_2.12-3.3.2.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-catalyst_2.12\\3.3.2\\f947494c340d3df62c4696e27c2593ad5b7e4188\\spark-catalyst_2.12-3.3.2.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-core_2.12\\3.3.2\\f322bbce86e5b5a3038a780cb4318c9f1db6c853\\spark-core_2.12-3.3.2.jar",
-                "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.github.nscala-time\\nscala-time_2.12\\2.32.0\\2db82a67ef3fe19f6180accf0620133005d03655\\nscala-time_2.12-2.32.0.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-native_2.12\\3.6.12\\8ed0b8f93ed2cbc4eaa55c1abaf2f3d506b61ba9\\json4s-native_2.12-3.6.12.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest_2.12\\3.2.15\\449e062d8aa0026051e44ede577d488583f2cbdb\\scalatest_2.12-3.2.15.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-jackson_2.12\\3.7.0-M11\\54089dd27d932de33c329199474ad429ee076510\\json4s-jackson_2.12-3.7.0-M11.jar",
@@ -402,8 +398,6 @@
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.spark-project.spark\\unused\\1.0.0\\205fe37a2fade6ce6dfcf8eff57ed21a4a1c22af\\unused-1.0.0.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.rocksdb\\rocksdbjni\\6.20.3\\e06fcf25faef09d8a3feeb58c88b6c4d768aadd6\\rocksdbjni-6.20.3.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.univocity\\univocity-parsers\\2.9.1\\81827d186e42129f23c3f1e002b757ad4b4e769\\univocity-parsers-2.9.1.jar",
-                "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\joda-time\\joda-time\\2.11.0\\da4c58430c8f55f3c3fdf13653d2b629ce1fcc1d\\joda-time-2.11.0.jar",
-                "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.joda\\joda-convert\\2.2.2\\94885e26725346aa723a3cfcdc69a10e65632092\\joda-convert-2.2.2.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.commons\\commons-compress\\1.21\\4ec95b60d4e86b5c95a0e919cb172a0af98011ef\\commons-compress-1.21.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.esotericsoftware\\kryo-shaded\\4.0.2\\e8c89779f93091aa9cb895093402b5d15065bf88\\kryo-shaded-4.0.2.jar",
                 "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\commons-logging\\commons-logging\\1.1.3\\f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f\\commons-logging-1.1.3.jar",
@@ -601,22 +595,6 @@
                         {
                             "name": "parquet-jackson",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.parquet\\parquet-jackson\\1.12.2\\1c8c957d84d1ea3dcf74baa30a191bc0cf9a50ba\\parquet-jackson-1.12.2.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "org.joda",
-                    "name": "joda-convert",
-                    "version": "2.2.2",
-                    "artifacts": [
-                        {
-                            "name": "joda-convert",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.joda\\joda-convert\\2.2.2\\94885e26725346aa723a3cfcdc69a10e65632092\\joda-convert-2.2.2.jar"
-                        },
-                        {
-                            "name": "joda-convert",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.joda\\joda-convert\\2.2.2\\9c6656a567c5493e3ad919e40f31c93a423ac1cc\\joda-convert-2.2.2-sources.jar"
                         }
                     ]
                 },
@@ -1256,22 +1234,6 @@
                     ]
                 },
                 {
-                    "organization": "joda-time",
-                    "name": "joda-time",
-                    "version": "2.11.0",
-                    "artifacts": [
-                        {
-                            "name": "joda-time",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\joda-time\\joda-time\\2.11.0\\b7a5659a7b5e0cbb6e89e8d2d52195b1fdd54d21\\joda-time-2.11.0-sources.jar"
-                        },
-                        {
-                            "name": "joda-time",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\joda-time\\joda-time\\2.11.0\\da4c58430c8f55f3c3fdf13653d2b629ce1fcc1d\\joda-time-2.11.0.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "io.netty",
                     "name": "netty-transport",
                     "version": "4.1.74.Final",
@@ -1288,22 +1250,6 @@
                     ]
                 },
                 {
-                    "organization": "org.apache.spark",
-                    "name": "spark-sql_2.12",
-                    "version": "3.3.2",
-                    "artifacts": [
-                        {
-                            "name": "spark-sql_2.12",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-sql_2.12\\3.3.2\\3481cd2ff7458e977eb8af21f7ecb452f7c633ff\\spark-sql_2.12-3.3.2-sources.jar"
-                        },
-                        {
-                            "name": "spark-sql_2.12",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-sql_2.12\\3.3.2\\1b047416b563375224bb7ca988a070863fae99a7\\spark-sql_2.12-3.3.2.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "io.dropwizard.metrics",
                     "name": "metrics-core",
                     "version": "4.2.7",
@@ -1316,6 +1262,22 @@
                         {
                             "name": "metrics-core",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\io.dropwizard.metrics\\metrics-core\\4.2.7\\f5cfd15166bd888cb3439e282517f23b5d38279e\\metrics-core-4.2.7.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.spark",
+                    "name": "spark-sql_2.12",
+                    "version": "3.3.2",
+                    "artifacts": [
+                        {
+                            "name": "spark-sql_2.12",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-sql_2.12\\3.3.2\\3481cd2ff7458e977eb8af21f7ecb452f7c633ff\\spark-sql_2.12-3.3.2-sources.jar"
+                        },
+                        {
+                            "name": "spark-sql_2.12",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-sql_2.12\\3.3.2\\1b047416b563375224bb7ca988a070863fae99a7\\spark-sql_2.12-3.3.2.jar"
                         }
                     ]
                 },
@@ -1352,18 +1314,18 @@
                     ]
                 },
                 {
-                    "organization": "org.apache.curator",
-                    "name": "curator-framework",
-                    "version": "2.13.0",
+                    "organization": "org.objenesis",
+                    "name": "objenesis",
+                    "version": "2.5.1",
                     "artifacts": [
                         {
-                            "name": "curator-framework",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.curator\\curator-framework\\2.13.0\\d45229aee7d3f1f628a34fcac9b66ed5ba52c31f\\curator-framework-2.13.0.jar"
+                            "name": "objenesis",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.objenesis\\objenesis\\2.5.1\\36bc7ecec5fb17144916c7012cc1a91a87c0ba95\\objenesis-2.5.1-sources.jar"
                         },
                         {
-                            "name": "curator-framework",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.curator\\curator-framework\\2.13.0\\597aedcea214b6139298a5f17ce8b74c2134eccc\\curator-framework-2.13.0-sources.jar"
+                            "name": "objenesis",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.objenesis\\objenesis\\2.5.1\\272bab9a4e5994757044d1fc43ce480c8cb907a4\\objenesis-2.5.1.jar"
                         }
                     ]
                 },
@@ -1380,22 +1342,6 @@
                             "name": "hk2-api",
                             "classifier": "sources",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.hk2\\hk2-api\\2.6.1\\911d7e334b8b230b491bb130af8404fdb7a81059\\hk2-api-2.6.1-sources.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "org.objenesis",
-                    "name": "objenesis",
-                    "version": "2.5.1",
-                    "artifacts": [
-                        {
-                            "name": "objenesis",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.objenesis\\objenesis\\2.5.1\\36bc7ecec5fb17144916c7012cc1a91a87c0ba95\\objenesis-2.5.1-sources.jar"
-                        },
-                        {
-                            "name": "objenesis",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.objenesis\\objenesis\\2.5.1\\272bab9a4e5994757044d1fc43ce480c8cb907a4\\objenesis-2.5.1.jar"
                         }
                     ]
                 },
@@ -1428,6 +1374,22 @@
                         {
                             "name": "gson",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.8.6\\9180733b7df8542621dc12e21e87557e8c99b8cb\\gson-2.8.6.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.curator",
+                    "name": "curator-framework",
+                    "version": "2.13.0",
+                    "artifacts": [
+                        {
+                            "name": "curator-framework",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.curator\\curator-framework\\2.13.0\\d45229aee7d3f1f628a34fcac9b66ed5ba52c31f\\curator-framework-2.13.0.jar"
+                        },
+                        {
+                            "name": "curator-framework",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.curator\\curator-framework\\2.13.0\\597aedcea214b6139298a5f17ce8b74c2134eccc\\curator-framework-2.13.0-sources.jar"
                         }
                     ]
                 },
@@ -1704,22 +1666,6 @@
                     ]
                 },
                 {
-                    "organization": "org.json4s",
-                    "name": "json4s-scalap_2.12",
-                    "version": "3.7.0-M11",
-                    "artifacts": [
-                        {
-                            "name": "json4s-scalap_2.12",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-scalap_2.12\\3.7.0-M11\\5a5aafd028f7ac4a8565e1cebe1307c146c87f70\\json4s-scalap_2.12-3.7.0-M11.jar"
-                        },
-                        {
-                            "name": "json4s-scalap_2.12",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-scalap_2.12\\3.7.0-M11\\2658f2a425dc6be062b5796a566b4e4f79a8fe0e\\json4s-scalap_2.12-3.7.0-M11-sources.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "com.thoughtworks.paranamer",
                     "name": "paranamer",
                     "version": "2.8",
@@ -1732,6 +1678,22 @@
                             "name": "paranamer",
                             "classifier": "sources",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.thoughtworks.paranamer\\paranamer\\2.8\\8f3421a8203053a6ab4b74f76a0550d21eee8cfe\\paranamer-2.8-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.json4s",
+                    "name": "json4s-scalap_2.12",
+                    "version": "3.7.0-M11",
+                    "artifacts": [
+                        {
+                            "name": "json4s-scalap_2.12",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-scalap_2.12\\3.7.0-M11\\5a5aafd028f7ac4a8565e1cebe1307c146c87f70\\json4s-scalap_2.12-3.7.0-M11.jar"
+                        },
+                        {
+                            "name": "json4s-scalap_2.12",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.json4s\\json4s-scalap_2.12\\3.7.0-M11\\2658f2a425dc6be062b5796a566b4e4f79a8fe0e\\json4s-scalap_2.12-3.7.0-M11-sources.jar"
                         }
                     ]
                 },
@@ -2040,6 +2002,22 @@
                     ]
                 },
                 {
+                    "organization": "org.glassfish.jersey.core",
+                    "name": "jersey-common",
+                    "version": "2.36",
+                    "artifacts": [
+                        {
+                            "name": "jersey-common",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.core\\jersey-common\\2.36\\5d259ea71ca3c1f4566ec5bfee7320e63d79673b\\jersey-common-2.36.jar"
+                        },
+                        {
+                            "name": "jersey-common",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.core\\jersey-common\\2.36\\afcc4a544d9bd617c5285015903d7fbdfe0608d4\\jersey-common-2.36-sources.jar"
+                        }
+                    ]
+                },
+                {
                     "organization": "org.threeten",
                     "name": "threeten-extra",
                     "version": "1.5.0",
@@ -2068,22 +2046,6 @@
                             "name": "activation",
                             "classifier": "sources",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\javax.activation\\activation\\1.1.1\\159e45688875fdabff19c9ceb7335aefe4df8339\\activation-1.1.1-sources.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "org.glassfish.jersey.core",
-                    "name": "jersey-common",
-                    "version": "2.36",
-                    "artifacts": [
-                        {
-                            "name": "jersey-common",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.core\\jersey-common\\2.36\\5d259ea71ca3c1f4566ec5bfee7320e63d79673b\\jersey-common-2.36.jar"
-                        },
-                        {
-                            "name": "jersey-common",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.core\\jersey-common\\2.36\\afcc4a544d9bd617c5285015903d7fbdfe0608d4\\jersey-common-2.36-sources.jar"
                         }
                     ]
                 },
@@ -2355,22 +2317,6 @@
                     ]
                 },
                 {
-                    "organization": "com.github.nscala-time",
-                    "name": "nscala-time_2.12",
-                    "version": "2.32.0",
-                    "artifacts": [
-                        {
-                            "name": "nscala-time_2.12",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.github.nscala-time\\nscala-time_2.12\\2.32.0\\2db82a67ef3fe19f6180accf0620133005d03655\\nscala-time_2.12-2.32.0.jar"
-                        },
-                        {
-                            "name": "nscala-time_2.12",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\com.github.nscala-time\\nscala-time_2.12\\2.32.0\\afea339f940354dd2f52b81de3c6eae78f65d6e6\\nscala-time_2.12-2.32.0-sources.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "org.apache.arrow",
                     "name": "arrow-format",
                     "version": "7.0.0",
@@ -2419,6 +2365,22 @@
                     ]
                 },
                 {
+                    "organization": "org.glassfish.jersey.containers",
+                    "name": "jersey-container-servlet-core",
+                    "version": "2.36",
+                    "artifacts": [
+                        {
+                            "name": "jersey-container-servlet-core",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.containers\\jersey-container-servlet-core\\2.36\\d3bd5067597fa7252e603502ee4ae34563852eb5\\jersey-container-servlet-core-2.36.jar"
+                        },
+                        {
+                            "name": "jersey-container-servlet-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.containers\\jersey-container-servlet-core\\2.36\\ca632363e3b623de1808cac6351f2520b8943c63\\jersey-container-servlet-core-2.36-sources.jar"
+                        }
+                    ]
+                },
+                {
                     "organization": "org.apache.curator",
                     "name": "curator-recipes",
                     "version": "2.13.0",
@@ -2447,22 +2409,6 @@
                             "name": "scalatest_2.12",
                             "classifier": "sources",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest_2.12\\3.2.15\\edee7eee00369824a3c93ca77cdd6b5b9ef5762f\\scalatest_2.12-3.2.15-sources.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "org.glassfish.jersey.containers",
-                    "name": "jersey-container-servlet-core",
-                    "version": "2.36",
-                    "artifacts": [
-                        {
-                            "name": "jersey-container-servlet-core",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.containers\\jersey-container-servlet-core\\2.36\\d3bd5067597fa7252e603502ee4ae34563852eb5\\jersey-container-servlet-core-2.36.jar"
-                        },
-                        {
-                            "name": "jersey-container-servlet-core",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.containers\\jersey-container-servlet-core\\2.36\\ca632363e3b623de1808cac6351f2520b8943c63\\jersey-container-servlet-core-2.36-sources.jar"
                         }
                     ]
                 },
@@ -2611,22 +2557,6 @@
                     ]
                 },
                 {
-                    "organization": "org.apache.zookeeper",
-                    "name": "zookeeper",
-                    "version": "3.6.2",
-                    "artifacts": [
-                        {
-                            "name": "zookeeper",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.zookeeper\\zookeeper\\3.6.2\\bd0630f2de482ce8a14bc1de8dc12ef6197f4624\\zookeeper-3.6.2.jar"
-                        },
-                        {
-                            "name": "zookeeper",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.zookeeper\\zookeeper\\3.6.2\\2c2d6094a068e9a2fc7528900ce0753af602b2f4\\zookeeper-3.6.2-sources.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "org.glassfish.jersey.containers",
                     "name": "jersey-container-servlet",
                     "version": "2.36",
@@ -2639,6 +2569,22 @@
                             "name": "jersey-container-servlet",
                             "classifier": "sources",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.glassfish.jersey.containers\\jersey-container-servlet\\2.36\\c94ed9793424a5716657b1d6299e20b6b7cb2146\\jersey-container-servlet-2.36-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.zookeeper",
+                    "name": "zookeeper",
+                    "version": "3.6.2",
+                    "artifacts": [
+                        {
+                            "name": "zookeeper",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.zookeeper\\zookeeper\\3.6.2\\bd0630f2de482ce8a14bc1de8dc12ef6197f4624\\zookeeper-3.6.2.jar"
+                        },
+                        {
+                            "name": "zookeeper",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.zookeeper\\zookeeper\\3.6.2\\2c2d6094a068e9a2fc7528900ce0753af602b2f4\\zookeeper-3.6.2-sources.jar"
                         }
                     ]
                 },
@@ -2659,18 +2605,18 @@
                     ]
                 },
                 {
-                    "organization": "org.scalatest",
-                    "name": "scalatest-flatspec_2.12",
-                    "version": "3.2.15",
+                    "organization": "commons-io",
+                    "name": "commons-io",
+                    "version": "2.11.0",
                     "artifacts": [
                         {
-                            "name": "scalatest-flatspec_2.12",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest-flatspec_2.12\\3.2.15\\348e2176008f947ca976b6a9e474f64aecda9f34\\scalatest-flatspec_2.12-3.2.15-sources.jar"
+                            "name": "commons-io",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\commons-io\\commons-io\\2.11.0\\a2503f302b11ebde7ebc3df41daebe0e4eea3689\\commons-io-2.11.0.jar"
                         },
                         {
-                            "name": "scalatest-flatspec_2.12",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest-flatspec_2.12\\3.2.15\\22944677a085633d3dbf54e61e7f9f0e63b8fa6b\\scalatest-flatspec_2.12-3.2.15.jar"
+                            "name": "commons-io",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\commons-io\\commons-io\\2.11.0\\2ef0187124bbfc7aed3038d4ffdd2241e8992937\\commons-io-2.11.0-sources.jar"
                         }
                     ]
                 },
@@ -2691,18 +2637,18 @@
                     ]
                 },
                 {
-                    "organization": "commons-io",
-                    "name": "commons-io",
-                    "version": "2.11.0",
+                    "organization": "org.scalatest",
+                    "name": "scalatest-flatspec_2.12",
+                    "version": "3.2.15",
                     "artifacts": [
                         {
-                            "name": "commons-io",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\commons-io\\commons-io\\2.11.0\\a2503f302b11ebde7ebc3df41daebe0e4eea3689\\commons-io-2.11.0.jar"
+                            "name": "scalatest-flatspec_2.12",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest-flatspec_2.12\\3.2.15\\348e2176008f947ca976b6a9e474f64aecda9f34\\scalatest-flatspec_2.12-3.2.15-sources.jar"
                         },
                         {
-                            "name": "commons-io",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\commons-io\\commons-io\\2.11.0\\2ef0187124bbfc7aed3038d4ffdd2241e8992937\\commons-io-2.11.0-sources.jar"
+                            "name": "scalatest-flatspec_2.12",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest-flatspec_2.12\\3.2.15\\22944677a085633d3dbf54e61e7f9f0e63b8fa6b\\scalatest-flatspec_2.12-3.2.15.jar"
                         }
                     ]
                 },
@@ -2787,22 +2733,6 @@
                     ]
                 },
                 {
-                    "organization": "org.apache.spark",
-                    "name": "spark-launcher_2.12",
-                    "version": "3.3.2",
-                    "artifacts": [
-                        {
-                            "name": "spark-launcher_2.12",
-                            "classifier": "sources",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-launcher_2.12\\3.3.2\\8010b01fc2e874da93d9d55d38d577c67216b7f2\\spark-launcher_2.12-3.3.2-sources.jar"
-                        },
-                        {
-                            "name": "spark-launcher_2.12",
-                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-launcher_2.12\\3.3.2\\7d2709f493c5f9b8a2052e6494bb96c25dc07f19\\spark-launcher_2.12-3.3.2.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "org.scalatest",
                     "name": "scalatest-core_2.12",
                     "version": "3.2.15",
@@ -2815,6 +2745,22 @@
                             "name": "scalatest-core_2.12",
                             "classifier": "sources",
                             "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.scalatest\\scalatest-core_2.12\\3.2.15\\28dcde405b1702d0e030d136ac40b1d5930fe49b\\scalatest-core_2.12-3.2.15-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.spark",
+                    "name": "spark-launcher_2.12",
+                    "version": "3.3.2",
+                    "artifacts": [
+                        {
+                            "name": "spark-launcher_2.12",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-launcher_2.12\\3.3.2\\8010b01fc2e874da93d9d55d38d577c67216b7f2\\spark-launcher_2.12-3.3.2-sources.jar"
+                        },
+                        {
+                            "name": "spark-launcher_2.12",
+                            "path": "C:\\Users\\Dan\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.spark\\spark-launcher_2.12\\3.3.2\\7d2709f493c5f9b8a2052e6494bb96c25dc07f19\\spark-launcher_2.12-3.3.2.jar"
                         }
                     ]
                 },

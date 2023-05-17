@@ -4,7 +4,6 @@ dependencies {
     implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
     // testImplementation "org.slf4j:slf4j-simple:2.0.7"
 
-    implementation 'com.github.nscala-time:nscala-time_2.12:2.32.0'
     implementation 'org.json4s:json4s-native_2.12:3.6.12'
     implementation 'org.json4s:json4s-jackson_2.12:3.6.12'
 }

@@ -8,16 +8,9 @@ import org.apache.spark.sql.types.DataTypes
 import scala.collection.Seq
 import org.apache.spark.sql.catalyst.ScalaReflection
 import gov.va.sparkcql.model.fhir.Coding
+import gov.va.sparkcql.Sparkable
 
-class EvaluatorTest extends AnyFlatSpec {
-  def fixture = new {
-    val spark = SparkSession.builder()
-      .master("local[1]")
-      .config("spark.sql.catalogImplementation", "in-memory")
-      .config("spark.cql.binding.configuration", "")
-      //.config("spark.cql.binding.strategy", "")
-      .getOrCreate()
-  }
+class EvaluatorTest extends AnyFlatSpec with Sparkable {
 
   "An Evaluator" should "retrieve common FHIR resource types" in {
 
