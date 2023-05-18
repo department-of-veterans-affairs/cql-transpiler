@@ -2,7 +2,7 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait Metable extends Elementable {
+trait MetaLike extends ElementLike {
   def versionId: Option[Id]
   def text: Option[String]
   def lastUpdated: Option[Instant]
@@ -19,4 +19,4 @@ final case class Meta (
   security: Option[List[Coding]] = None,
   tag: Option[List[Coding]] = None,
   id: Option[String] = None
-) extends Metable
+) extends MetaLike

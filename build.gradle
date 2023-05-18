@@ -30,7 +30,13 @@ subprojects {
     // Required to run scalatest within Gradle (https://stackoverflow.com/questions/18823855/cant-run-scalatest-with-gradle)
     task spec(dependsOn: ['testClasses'], type: JavaExec) {
         main = 'org.scalatest.tools.Runner'
-        args = ['-R', 'build/classes/scala/test', '-o']
+        try {       // TODO: avoid depending on error to check for existence of tests property (hasProperty wasn't returning anything)
+            args = ['-R', 'build/classes/scala/test', '-o', '-z', project.tests]
+        } catch (Exception e) {
+            args = ['-R', 'build/classes/scala/test', '-o']
+        }
+        // https://www.scalatest.org/user_guide/using_the_runner
+
         classpath = sourceSets.test.runtimeClasspath
         test.dependsOn spec
     }

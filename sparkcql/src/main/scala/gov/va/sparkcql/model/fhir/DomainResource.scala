@@ -2,7 +2,7 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait DomainResourceable extends Resourceable {
+trait DomainResourceLike extends ResourceLike {
   def text: Option[Narrative]
   def contained: Option[List[Resource]]
 }
@@ -15,4 +15,4 @@ final case class DomainResource (
   language: Option[Code] = None,
   text: Option[Narrative] = None,
   contained: Option[List[Resource]] = None
-) extends DomainResourceable
+) extends DomainResourceLike

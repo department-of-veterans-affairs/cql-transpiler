@@ -9,11 +9,19 @@ import scala.collection.Seq
 import org.apache.spark.sql.catalyst.ScalaReflection
 import gov.va.sparkcql.model.fhir.Coding
 import gov.va.sparkcql.Sparkable
+import gov.va.sparkcql.binding.BundleFolderBinding
 
 class EvaluatorTest extends AnyFlatSpec with Sparkable {
 
-  "An Evaluator" should "retrieve common FHIR resource types" in {
+  lazy val bundleBinding = new BundleFolderBinding(spark, """"../data/fhir/bundle""")
 
+  val binder = (resourceType: Coding) => resourceType match {
+    case Coding(system, "Library", _, _, _, _) => None
+    case _ => Some(bundleBinding)
+  }
+
+  "An Evaluator" should "retrieve common FHIR resource types" in {
+    val evaluator = new Evaluator(binder)
   }
   
   it should "work with case types" in {

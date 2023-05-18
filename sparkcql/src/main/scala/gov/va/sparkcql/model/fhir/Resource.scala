@@ -2,7 +2,7 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait Resourceable extends Baseable {
+trait ResourceLike extends BaseLike {
   def id: Id
   def meta: Option[Meta]
   def implicitRules: Option[Uri]
@@ -14,4 +14,4 @@ final case class Resource (
   meta: Option[Meta] = None,
   implicitRules: Option[Uri] = None,
   language: Option[Code] = None
-) extends Resourceable
+) extends ResourceLike

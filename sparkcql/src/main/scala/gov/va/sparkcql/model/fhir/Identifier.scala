@@ -2,7 +2,7 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait Identifiable extends Elementable {
+trait IdentifierLike extends ElementLike {
   def system: String
   def value: String
   def use: Option[String]
@@ -17,4 +17,4 @@ final case class Identifier (
   `type`: Option[CodeableConcept] = None,
   period: Option[String] = None,
   id: Option[String] = None
-) extends Identifiable
+) extends IdentifierLike

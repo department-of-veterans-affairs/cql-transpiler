@@ -1,5 +1,5 @@
 package gov.va.sparkcql.model.fhir
 
-trait Baseable
+trait BaseLike
 
-final case class Base() extends Baseable
+final case class Base() extends BaseLike

@@ -2,7 +2,7 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait Encounterable extends Resourceable {
+trait EncounterLike extends ResourceLike {
   def identifier: Option[List[Identifier]]
   def status: Option[Code]
 }
@@ -14,4 +14,4 @@ final case class Encounter (
   implicitRules: Option[Uri] = None,
   language: Option[Code] = None,
   identifier: Option[List[Identifier]] = None  
-) extends Encounterable
+) extends EncounterLike

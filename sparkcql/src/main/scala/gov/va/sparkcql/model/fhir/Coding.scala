@@ -2,7 +2,7 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait Codeable extends Elementable {
+trait CodeLike extends ElementLike {
   def system: Uri
   def code: Code
   def version: Option[String]
@@ -17,4 +17,4 @@ final case class Coding (
   display: Option[String] = None,
   userSelected: Option[String] = None,
   id: Option[String] = None
-) extends Codeable
+) extends CodeLike

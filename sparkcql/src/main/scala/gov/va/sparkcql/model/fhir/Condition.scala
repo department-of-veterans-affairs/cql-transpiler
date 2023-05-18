@@ -2,7 +2,7 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait Conditionable extends Resourceable {
+trait ConditionLike extends ResourceLike {
   def identifier: Option[List[Identifier]]
   def clinicalStatus: CodeableConcept
   def verificationStatus: Option[CodeableConcept]
@@ -24,4 +24,4 @@ final case class Condition (
   severity: Option[CodeableConcept] = None,
   code: Option[CodeableConcept] = None,
   bodySite: Option[List[CodeableConcept]] = None
-) extends Conditionable
+) extends ConditionLike

@@ -8,8 +8,9 @@ import gov.va.sparkcql.model.fhir._
 import gov.va.sparkcql.model.fhir.Encounter
 
 class BundleFolderBindingTest extends AnyFlatSpec with Sparkable {
+  
   lazy val binding = {
-    new BundleFolderBinding(spark, "../data/fhir/bundle")    
+    new BundleFolderBinding(spark, "../data/fhir/bundle")
   }
 
   "A BundleFolderBinding" should "bind Encounter data" in {

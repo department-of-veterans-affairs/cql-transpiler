@@ -11,7 +11,6 @@ final case class TableBindingConfig(system: String, resourceTypes: List[TableBin
 final case class TableBindingConfigType(schema: Option[String], table: String, code: String, primaryCodePath: Option[String], resourceColumn: String, indexes: Option[List[TableBindingConfigTypeIndex]])
 final case class TableBindingConfigTypeIndex(column: String, path: String)
 
-class TableBinding(spark: SparkSession, configuration: TableBindingConfig) extends Binding(spark) {
-
+class TableBinding(spark: SparkSession, configuration: TableBindingConfig) extends Bindable {
   def resolve[T <: Product : TypeTag](resourceType: Coding, code: Option[Coding], startDate: Option[DateTime], endDate: Option[DateTime]): Dataset[T] = ???
 }

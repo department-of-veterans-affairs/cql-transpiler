@@ -10,7 +10,7 @@ import org.apache.spark.sql.Encoders
 import gov.va.sparkcql.model.fhir._
 import gov.va.sparkcql.model.fhir.Primitive._
 
-class BundleFolderBinding(spark: SparkSession, path: String) extends Binding(spark) {
+class BundleFolderBinding(spark: SparkSession, path: String) extends Bindable {
 
   import spark.implicits._
   var cache = HashMap[Coding, Object]()
