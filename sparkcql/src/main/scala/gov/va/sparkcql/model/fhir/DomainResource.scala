@@ -3,8 +3,8 @@ package gov.va.sparkcql.model.fhir
 import gov.va.sparkcql.model.fhir.Primitive._
 
 trait DomainResourceLike extends ResourceLike {
-  def text: Option[Narrative]
-  def contained: Option[List[Resource]]
+  val text: Option[Narrative]
+  val contained: Option[List[Resource]]
 }
 
 final case class DomainResource (

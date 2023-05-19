@@ -8,4 +8,5 @@ object Primitive {
   type DateTime = java.sql.Timestamp
   type Instant = DateTime
   type Xhtml = String
+  type Markdown = String
 }

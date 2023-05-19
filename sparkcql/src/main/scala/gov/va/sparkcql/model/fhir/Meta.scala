@@ -3,12 +3,12 @@ package gov.va.sparkcql.model.fhir
 import gov.va.sparkcql.model.fhir.Primitive._
 
 trait MetaLike extends ElementLike {
-  def versionId: Option[Id]
-  def text: Option[String]
-  def lastUpdated: Option[Instant]
-  def source: Option[Uri]
-  def security: Option[List[Coding]]
-  def tag: Option[List[Coding]]
+  val versionId: Option[Id]
+  val text: Option[String]
+  val lastUpdated: Option[Instant]
+  val source: Option[Uri]
+  val security: Option[List[Coding]]
+  val tag: Option[List[Coding]]
 }
 
 final case class Meta (

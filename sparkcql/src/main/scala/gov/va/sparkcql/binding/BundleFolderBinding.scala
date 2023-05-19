@@ -1,19 +1,18 @@
 package gov.va.sparkcql.binding
 
 import java.nio.file.{FileSystems, Files}
-import scala.collection.mutable.HashMap
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.{SparkSession, Dataset, DataFrame}
+import org.apache.spark.sql.{SparkSession, Dataset, DataFrame, Row}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.Encoders
 import gov.va.sparkcql.model.fhir._
 import gov.va.sparkcql.model.fhir.Primitive._
 
-class BundleFolderBinding(spark: SparkSession, path: String) extends Bindable {
+class BundleFolderBinding(spark: SparkSession, path: String) extends TableBinding(spark, TableBindingConfig("http://hl7.org/fhir/fhir-types", List[TableBindingConfigTable]())) {
 
   import spark.implicits._
-  var cache = HashMap[Coding, Object]()
+  val ResourceColumn = "Resource"
 
   lazy val allResourceText = {
     // Load all files for given path into a Seq of strings.
@@ -34,20 +33,25 @@ class BundleFolderBinding(spark: SparkSession, path: String) extends Bindable {
         col("entry.resource.resourceType").as("resourceType"))
   }
 
-  def resolve[T <: Product : TypeTag](resourceType: Coding, code: Option[Coding] = None, startDate: Option[DateTime] = None, endDate: Option[DateTime] = None): Dataset[T] = {
-    if (!cache.contains(resourceType)) {
-      
+  def ensureFetched[T <: Product : TypeTag](resourceType: Coding): Unit = {
+    val t = tableConfig(resourceType.code)
+    if (t.isEmpty) {
       val resourceText = allResourceText
         .where(col("resourceType").equalTo(resourceType.code))
         .select(col("resourceText"))
         .toDF()
 
       val schema = Encoders.product[T].schema
-      val ds = spark.read.schema(schema).json(resourceText.as[String]).as[T]
+      val ds = spark.read.schema(schema).json(resourceText.as[String])  // select(struct("*").as(ResourceColumn))
       
-      cache.put(resourceType, ds)
+      val newTableConfig = TableBindingConfigTable(schema=None, table=resourceType.code, code=resourceType.code, resourceColumn=ResourceColumn)
+      configuration = configuration.copy(tables=newTableConfig :: configuration.tables)
+      ds.createTempView(tableNomenclature(newTableConfig))
     }
-    
-    cache(resourceType).asInstanceOf[Dataset[T]]
+  }
+
+  override def retrieve[T <: Product: TypeTag](resourceType: Coding, filter: Option[List[PredicateLike]]): Option[Dataset[T]] = {
+    ensureFetched[T](resourceType)
+    super.retrieve(resourceType, filter)
   }
 }

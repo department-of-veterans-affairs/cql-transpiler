@@ -2,12 +2,12 @@ package gov.va.sparkcql.model.fhir
 
 import gov.va.sparkcql.model.fhir.Primitive._
 
-trait CodeLike extends ElementLike {
-  def system: Uri
-  def code: Code
-  def version: Option[String]
-  def display: Option[String]
-  def userSelected: Option[String]
+trait CodingLike extends ElementLike {
+  val system: Uri
+  val code: Code
+  val version: Option[String]
+  val display: Option[String]
+  val userSelected: Option[String]
 }
 
 final case class Coding (
@@ -17,4 +17,4 @@ final case class Coding (
   display: Option[String] = None,
   userSelected: Option[String] = None,
   id: Option[String] = None
-) extends CodeLike
+) extends CodingLike

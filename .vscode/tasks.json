@@ -2,16 +2,15 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build sparkcql-udf",
+			"label": "Clean Metals",
 			"type": "shell",
-			"group": "build",
-			"command": "gradle build",
+			"command": "del .bloop /s /q && del .metals /s /q",
 			"presentation": {
 				"reveal": "always",
 				"clear": true,
 				"panel": "shared"
 			},
-			"options": {"cwd": "${workspaceFolder}/sparkcql-udf"}
+			"options": {"cwd": "${workspaceFolder}/"}
 		},
 		{
 			"label": "Test sparkcql",

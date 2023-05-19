@@ -3,8 +3,8 @@ package gov.va.sparkcql.model.fhir
 import gov.va.sparkcql.model.fhir.Primitive._
 
 trait NarrativeLike extends ElementLike {
-  def status: Code
-  def div: Xhtml
+  val status: Code
+  val div: Xhtml
 }
 
 final case class Narrative (

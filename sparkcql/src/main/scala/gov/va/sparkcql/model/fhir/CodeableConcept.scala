@@ -3,8 +3,8 @@ package gov.va.sparkcql.model.fhir
 import gov.va.sparkcql.model.fhir.Primitive._
 
 trait CodeableConceptLike extends ElementLike {
-  def coding: List[Coding]
-  def text: Option[String]
+  val coding: List[Coding]
+  val text: Option[String]
 }
 
 final case class CodeableConcept (

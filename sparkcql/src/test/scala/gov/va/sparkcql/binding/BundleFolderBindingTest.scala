@@ -13,21 +13,17 @@ class BundleFolderBindingTest extends AnyFlatSpec with Sparkable {
     new BundleFolderBinding(spark, "../data/fhir/bundle")
   }
 
-  "A BundleFolderBinding" should "bind Encounter data" in {
-    val encounter = binding.resolve[Encounter](Coding(system="system", code="Encounter"))
-    assert(List("finished", "active", "completed").contains(encounter.take(1).head.status.get))
-    val condition = binding.resolve[Condition](Coding(system="system", code="Condition", version=Some("R4")))
-    assert(condition.take(1).head.id != None)
+  "A BundleFolderBinding" should "retrieve Encounter data" in {
+    val encounter = binding.retrieve[Encounter](Coding(system="system", code="Encounter"), None)
+    assert(List("finished", "active", "completed").contains(encounter.get.take(1).head.status.get))
   }
 
-  it should "bind Condition data" in {
-    val encounter = binding.resolve[Encounter](Coding(system="system", code="Encounter"))
-    assert(List("finished", "active", "completed").contains(encounter.take(1).head.status.get))
-    val condition = binding.resolve[Condition](Coding(system="system", code="Condition", version=Some("R4")))
-    assert(condition.take(1).head.id != None)
+  it should "retrieve Condition data" in {
+    val condition = binding.retrieve[Condition](Coding(system="system", code="Condition", version=Some("R4")), None)
+    assert(condition.get.take(1).head.id != None)
   }
 
-  it should "allow for retrieval operations" in {
+  it should "filter on code equality" in {
     // TODO
   }
 }

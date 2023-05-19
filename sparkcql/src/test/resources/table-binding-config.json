@@ -1,6 +1,6 @@
 {
     "system": "http://hl7.org/fhir/fhir-types",
-    "resourceTypes": [
+    "tables": [
         {
             "table": "AllergyIntolerance",
             "code": "AllergyIntolerance",

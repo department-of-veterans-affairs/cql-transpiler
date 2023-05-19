@@ -3,8 +3,8 @@ package gov.va.sparkcql.model.fhir
 import gov.va.sparkcql.model.fhir.Primitive._
 
 trait EncounterLike extends ResourceLike {
-  def identifier: Option[List[Identifier]]
-  def status: Option[Code]
+  val identifier: Option[List[Identifier]]
+  val status: Option[Code]
 }
 
 final case class Encounter (

@@ -13,10 +13,10 @@ final case class BundleEntry (
 ) extends BundleEntryLike
 
 trait BundleLike extends ResourceLike {
-  def identifier: Option[List[Identifier]]
-  def `type`: Code
-  def timestamp: Instant
-  def entry: List[BundleEntry]
+  val identifier: Option[List[Identifier]]
+  val `type`: Code
+  val timestamp: Instant
+  val entry: List[BundleEntry]
 }
 
 final case class Bundle (

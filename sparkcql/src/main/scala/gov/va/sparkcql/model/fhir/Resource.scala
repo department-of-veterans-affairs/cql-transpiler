@@ -3,10 +3,10 @@ package gov.va.sparkcql.model.fhir
 import gov.va.sparkcql.model.fhir.Primitive._
 
 trait ResourceLike extends BaseLike {
-  def id: Id
-  def meta: Option[Meta]
-  def implicitRules: Option[Uri]
-  def language: Option[Code]
+  val id: Id
+  val meta: Option[Meta]
+  val implicitRules: Option[Uri]
+  val language: Option[Code]
  }
   
 final case class Resource (
