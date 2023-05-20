@@ -30,3 +30,6 @@ FHIR R4 Model
 # Documentation TODO
 - Explain promoted columns and how it allows for indexing outside retrieve optimizations (`[Encounter] where ...` would use spark optimizations)
     - https://issues.apache.org/jira/browse/SPARK-18084
+    - According to these, nested struct fields are pushed down as of 3.X. Not clear if it applies to partition pruning.
+        - https://issues.apache.org/jira/browse/SPARK-17636
+        - https://www.waitingforcode.com/apache-spark-sql/whats-new-apache-spark-3-predicate-pushdown-support-nested-fields/read

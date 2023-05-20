@@ -1,6 +1,4 @@
-package gov.va.sparkcql.model.fhir
-
-import gov.va.sparkcql.model.fhir.Primitive._
+package gov.va.sparkcql.model.fhir.r4
 
 trait ResourceLike extends BaseLike {
   val id: Id
@@ -8,7 +6,7 @@ trait ResourceLike extends BaseLike {
   val implicitRules: Option[Uri]
   val language: Option[Code]
  }
-  
+
 final case class Resource (
   id: Id,
   meta: Option[Meta] = None,

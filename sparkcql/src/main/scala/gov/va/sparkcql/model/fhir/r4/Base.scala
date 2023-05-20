@@ -1,4 +1,4 @@
-package gov.va.sparkcql.model.fhir
+package gov.va.sparkcql.model.fhir.r4
 
 trait BaseLike
 

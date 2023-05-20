@@ -1,11 +1,9 @@
 package gov.va.sparkcql.binding
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import gov.va.sparkcql.model.fhir._
-import gov.va.sparkcql.model.fhir.Primitive._
-import gov.va.sparkcql.model.fhir.Coding
+import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import gov.va.sparkcql.model.fhir.r4._
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.functions._
 
 final case class TableBindingConfig(system: String, tables: List[TableBindingConfigTable])
 final case class TableBindingConfigTable(schema: Option[String] = None, table: String, code: String, primaryCodePath: Option[String] = None, resourceColumn: String, indexes: Option[List[TableBindingConfigTableIndex]] = None)
@@ -26,7 +24,10 @@ class TableBinding(spark: SparkSession, protected var configuration: TableBindin
 
   override def retrieve[T <: Product: TypeTag](resourceType: Coding, filter: Option[List[PredicateLike]]): Option[Dataset[T]] = {
     val table = tableConfig(resourceType.code).getOrElse(throw new Exception(s"Table ${resourceType.code} not found."))
-    val ds = spark.table(tableNomenclature(table)).as[T]
+    
+    val ds = spark.table(tableNomenclature(table))
+      .select(col(s"${table.resourceColumn}.*"))
+      .as[T]
     
     // TODO: Predicate pushdown
     // var x = filter.get.foreach(_ match {
@@ -42,5 +43,4 @@ class TableBinding(spark: SparkSession, protected var configuration: TableBindin
     
     Some(ds)
   }
-
 }

@@ -1,6 +1,4 @@
-package gov.va.sparkcql.model.fhir
-
-import gov.va.sparkcql.model.fhir.Primitive._
+package gov.va.sparkcql.model.fhir.r4
 
 trait PeriodLike extends ElementLike {
   val start: Option[DateTime]

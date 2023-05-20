@@ -4,8 +4,8 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.common.Serialization._
 import gov.va.sparkcql.Sparkable
-import gov.va.sparkcql.model.fhir._
-import gov.va.sparkcql.model.fhir.Encounter
+import org.apache.spark.sql.sources.Filter
+import gov.va.sparkcql.model.fhir.r4._
 
 class BundleFolderBindingTest extends AnyFlatSpec with Sparkable {
   
@@ -24,6 +24,5 @@ class BundleFolderBindingTest extends AnyFlatSpec with Sparkable {
   }
 
   it should "filter on code equality" in {
-    // TODO
   }
 }

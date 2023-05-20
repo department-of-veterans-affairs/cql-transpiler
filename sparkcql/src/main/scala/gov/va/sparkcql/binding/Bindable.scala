@@ -1,10 +1,9 @@
 package gov.va.sparkcql.binding
 
-import gov.va.sparkcql.model.fhir.{Coding, ValueSet, Period}
-import gov.va.sparkcql.model.fhir.Primitive._
+import gov.va.sparkcql.model.fhir.r4.{Coding, ValueSet, Period}
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.Dataset
-import gov.va.sparkcql.model.fhir.CodingLike
+import gov.va.sparkcql.model.fhir.r4._
 import org.apache.spark.sql.Row
 
 /**

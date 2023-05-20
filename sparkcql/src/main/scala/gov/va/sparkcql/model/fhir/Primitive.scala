@@ -1,6 +1,6 @@
 package gov.va.sparkcql.model.fhir
 
-object Primitive {
+package object r4 {
   type Uri = String
   type Code = String
   type Id = String
@@ -9,4 +9,15 @@ object Primitive {
   type Instant = DateTime
   type Xhtml = String
   type Markdown = String
+}
+
+package object r5 {
+  type Uri = String
+  type Code = String
+  type Id = String
+  type Date = java.sql.Date
+  type DateTime = java.sql.Timestamp
+  type Instant = DateTime
+  type Xhtml = String
+  type Markdown = String  
 }
