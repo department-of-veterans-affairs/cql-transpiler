@@ -23,7 +23,7 @@
                 "tablePostfix": "",
                 "indexColumnPrefix": "",
                 "indexColumnPostfix": "",
-                "resourceColumn": ""
+                "resourceColumn": "ResourceData"
             }
         }
     ]

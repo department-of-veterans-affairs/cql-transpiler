@@ -22,15 +22,16 @@ class Session private[Session](val spark: SparkSession, val configuration: Sessi
     bindingManager.retrieve[T](None)
   }
 
+  def evaluate[T](libraryId: String, parameters: Object): Seq[DataFrame] = {
+    ???
+  }
+  
   def result[T](): Dataset[T] = {
     ???
   }
 
-  def cql(elmText: String): Seq[DataFrame] = {
-    ???
-  }
-
-  def elm(elmText: String): Seq[DataFrame] = {
+  def expression(cqlExpression: String): Seq[DataFrame] = {
+    // TODO: Could/should this be a spark function similar to expr()?
     ???
   }
 }
