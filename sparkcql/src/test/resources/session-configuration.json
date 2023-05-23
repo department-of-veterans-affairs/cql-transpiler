@@ -1,0 +1,30 @@
+{
+    "cqlCompilerUrl": "",
+    "bindings": [
+        {
+            "implementationClassName": "gov.va.sparkcql.binding.MockDataBinding",
+            "isDefaultBinding": true,
+            "boundTypes": [
+                "gov.va.sparkcql.model.fhir.r4.ValueSet",
+                "gov.va.sparkcql.model.fhir.r4.Condition",
+                "gov.va.sparkcql.model.fhir.r4.Encounter"
+            ],
+            "settings": {
+                "bundleFolderPath": "../data/fhir/bundle"
+            }
+        },
+        {
+            "implementationClassName": "gov.va.sparkcql.binding.TableBinding",
+            "isDefaultBinding": false,
+            "boundTypes": [],
+            "settings": {
+                "schema": null,
+                "tablePrefix": "",
+                "tablePostfix": "",
+                "indexColumnPrefix": "",
+                "indexColumnPostfix": "",
+                "resourceColumn": ""
+            }
+        }
+    ]
+}

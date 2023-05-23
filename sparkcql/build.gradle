@@ -3,6 +3,8 @@ dependencies {
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
     implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
 
-    implementation 'org.json4s:json4s-native_2.12:3.6.12'
-    implementation 'org.json4s:json4s-jackson_2.12:3.6.12'
+    implementation 'org.json4s:json4s-native_2.12:3.7.0-M11'
+    implementation 'org.json4s:json4s-jackson_2.12:3.7.0-M11'
+    
+    implementation 'com.google.guava:guava:16.0.1'
 }

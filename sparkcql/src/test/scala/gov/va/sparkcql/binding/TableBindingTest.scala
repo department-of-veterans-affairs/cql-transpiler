@@ -2,7 +2,6 @@ package gov.va.sparkcql.binding
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.common.Serialization._
 import gov.va.sparkcql.Sparkable
 
 class TableBindingTest extends AnyFlatSpec with Sparkable {

@@ -12,7 +12,7 @@ trait Sparkable {
     val spark = SparkSession.builder()
       .master("local[4]")
       .getOrCreate()
-    
+      
     spark.sparkContext.setLogLevel("OFF")
     
     spark

@@ -3,8 +3,10 @@ package gov.va.sparkcql.binding
 import gov.va.sparkcql.model.fhir.r4.{Coding, ValueSet, Period}
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.Dataset
+import gov.va.sparkcql.model.BoundType
 import gov.va.sparkcql.model.fhir.r4._
 import org.apache.spark.sql.Row
+import gov.va.sparkcql.session.Session
 
 /**
   * Predicates used for retrieval operations defined as algebraic data types.
@@ -28,11 +30,10 @@ case class DurationBetweenPredicate (
   val end: Date
 ) extends PredicateLike
 
-/**
-  * To provide retrieval operations
-  */
-trait Bindable {
+trait Binding {
 
-  def retrieve[T <: Product : TypeTag](resourceType: Coding, filter: Option[List[PredicateLike]]): Option[Dataset[T]]
-  
+  def retrieve[T <: BoundType : TypeTag](filter: Option[List[PredicateLike]]): Option[Dataset[T]]
+  protected def boundName[T <: BoundType : TypeTag]: String = {
+    typeOf[T].typeSymbol.name.toString
+  }
 }

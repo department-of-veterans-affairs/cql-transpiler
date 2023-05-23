@@ -1,32 +1,29 @@
 package gov.va.sparkcql.binding
 
+import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import gov.va.sparkcql.model.fhir.r4._
-import scala.reflect.runtime.universe._
+import gov.va.sparkcql.model._
 import org.apache.spark.sql.functions._
+import gov.va.sparkcql.session.Session
 
-final case class TableBindingConfig(system: String, tables: List[TableBindingConfigTable])
-final case class TableBindingConfigTable(schema: Option[String] = None, table: String, code: String, primaryCodePath: Option[String] = None, resourceColumn: String, indexes: Option[List[TableBindingConfigTableIndex]] = None)
-final case class TableBindingConfigTableIndex(column: String, path: String)
+final case class TableBindingSetting(schema: Option[String], tablePrefix: Option[String], tablePostfix: Option[String], indexColumnPrefix: Option[String], indexColumnPostfix: Option[String], resourceColumn: String)
 
-class TableBinding(spark: SparkSession, protected var configuration: TableBindingConfig) extends Bindable {
+class TableBinding(session: Session, settings: TableBindingSetting) extends Binding {
+  
+  import session.spark.implicits._
 
-  import spark.implicits._
+  override def retrieve[T <: BoundType: TypeTag](filter: Option[List[PredicateLike]]): Option[Dataset[T]] = {
 
-  protected def tableConfig(code: String) = {
-    val t = configuration.tables.filter(_.code == code)
-    if (t.isEmpty) None else Some(t.head)
-  }
-
-  protected def tableNomenclature(table: TableBindingConfigTable): String = {
-    if (table.schema.isDefined) s"${table.schema.get}.${table.table}" else s"${table.table}"
-  }
-
-  override def retrieve[T <: Product: TypeTag](resourceType: Coding, filter: Option[List[PredicateLike]]): Option[Dataset[T]] = {
-    val table = tableConfig(resourceType.code).getOrElse(throw new Exception(s"Table ${resourceType.code} not found."))
+    //if (table.schema.isDefined) s"${table.schema.get}.${table.table}" else s"${table.table}"
+    val simpleBoundName = boundName[T]
+    val tableName = if (settings.schema.isDefined) 
+        s"${settings.schema.get}.${settings.tablePrefix.getOrElse("")}${simpleBoundName}${settings.tablePostfix.getOrElse("")}"
+      else
+        s"${settings.tablePrefix.getOrElse("")}${simpleBoundName}${settings.tablePostfix.getOrElse("")}"
     
-    val ds = spark.table(tableNomenclature(table))
-      .select(col(s"${table.resourceColumn}.*"))
+    val ds = session.spark.table(tableName)
+      .select(col(s"${settings.resourceColumn}.*"))
       .as[T]
     
     // TODO: Predicate pushdown
@@ -42,5 +39,11 @@ class TableBinding(spark: SparkSession, protected var configuration: TableBindin
     // })
     
     Some(ds)
+  }
+}
+
+object TableBinding extends BindingFactory {
+  override def create(session: Session, settings: Option[Map[String, Any]]): Binding = {
+    new TableBinding(session, convertSettings[TableBindingSetting](settings))
   }
 }
