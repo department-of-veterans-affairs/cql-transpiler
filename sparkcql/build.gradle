@@ -6,5 +6,6 @@ dependencies {
     implementation 'org.json4s:json4s-native_2.12:3.7.0-M11'
     implementation 'org.json4s:json4s-jackson_2.12:3.7.0-M11'
     
-    implementation 'com.google.guava:guava:16.0.1'
+    implementation 'ca.uhn.hapi.fhir:org.hl7.fhir.r4:6.0.7'
+    
 }

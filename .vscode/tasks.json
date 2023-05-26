@@ -37,6 +37,18 @@
 				"panel": "shared"
 			},
 			"options": {"cwd": "${workspaceFolder}"}
-		}
+		},
+		{
+			"label": "Generate Model Classes",
+			"type": "shell",
+			"group": "build",
+			"command": "generate-models.bat",
+			"presentation": {
+				"reveal": "always",
+				"clear": true,
+				"panel": "shared"
+			},
+			"options": {"cwd": "${workspaceFolder}/generator"}
+		}		
 	]
 }

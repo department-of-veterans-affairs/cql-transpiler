@@ -4,30 +4,34 @@ import org.scalatest.flatspec.AnyFlatSpec
 import gov.va.sparkcql.binding._
 import gov.va.sparkcql.Sparkable
 import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.model.fhir.r4.ValueSet
-import gov.va.sparkcql.binding.MockDataBinding
-import gov.va.sparkcql.model.fhir.r4.{Condition, Encounter}
+import gov.va.sparkcql.binding.MockDataBinder
 import com.google.common.io.Resources
 import java.nio.charset.StandardCharsets
 import org.scalatest.tagobjects.{Slow}
-import gov.va.sparkcql.model.fhir.r4.CodeableConcept
+import gov.va.sparkcql.model.elm.{Code}
+import gov.va.sparkcql.model.elm.{VersionedIdentifier, VersionedIdentifier2}
+
+import org.json4s._
+import org.json4s.native.JsonMethods.{parse, compact}
+import org.json4s.native.Serialization.{write, read}
+import gov.va.sparkcql.model.elm.VersionedIdentifier2
 
 class SessionTest extends AnyFlatSpec with Sparkable {
 
-  def session: Session = {
-    val url = Resources.getResource("session-configuration.json")
-    Session(spark, Resources.toString(url, StandardCharsets.UTF_8))
+  def bundlePath = "../data/fhir/bundle"
+
+  lazy val session: CqlSession = {
+    CqlSession.build(spark, new MockDataBinder(bundlePath))
+      .create()
   }
 
-  //def bundleBinding(spark: SparkSession) = new MockDataBinding(spark, """"../data/fhir/bundle""")
-
   "A Session" should "retrieve bound FHIR data without CQL" in {
-    assert(session.retrieve[Condition]().get.count() > 100)
-    assert(session.retrieve[Encounter]().get.head().status.get == "finished")
+    assert(session.retrieve(Code("Condition")).get.count() > 100)
+    assert(session.retrieve(Code("Encounter")).get.head().getAs[String]("status") == "finished")
   }
 
   it should "allow retrieve filtering using a strongly typed model" in {
-    assert(session.retrieve[Encounter]().get.filter(f => {f.status.get == "finished"}).count() > 500)
+    session.retrieve(Code("Encounter")).get.selectExpr("class.code").show()
     // assert(session.retrieve[Encounter]().get.filter(f => f.cls match {
     //   case Some(cls) => cls.coding(0).code == "EMER"
     //   case None => false

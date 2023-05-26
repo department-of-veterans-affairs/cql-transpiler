@@ -1,7 +1,6 @@
 package gov.va.sparkcql.common
 
 import org.scalatest.flatspec.AnyFlatSpec
-import gov.va.sparkcql.model.fhir.r4._
 
 class CommonTest extends AnyFlatSpec {
   "A Stopwatch" should "calculation duration" in {
