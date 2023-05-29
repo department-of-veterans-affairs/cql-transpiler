@@ -24,7 +24,7 @@
 				"panel": "shared"
 			},
 			"options": {"cwd": "${workspaceFolder}/sparkcql"}
-		},		
+		},
 		{
 			"label": "Build CQL Scripts",
 			"type": "shell",

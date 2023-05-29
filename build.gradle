@@ -23,7 +23,17 @@ subprojects {
     }
 
     dependencies {
+        // Scala
         implementation 'org.scala-lang:scala-library:2.12.17'
+
+        // Spark
+        implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
+        implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+
+        // CQFramework
+        implementation 'info.cqframework:elm:2.8.0'
+
+        // Test
         testImplementation 'org.scalatest:scalatest_2.12:3.2.15'
     }
 

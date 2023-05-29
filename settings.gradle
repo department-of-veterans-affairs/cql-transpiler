@@ -2,4 +2,4 @@ plugins {
 }
 
 rootProject.name = 'gov-va-sparkcql'
-include 'sparkcql'
+include 'sparkcql-core', 'sparkcql-fhir', 'sparkcql-fhir-synthetic', 'sparkcql-qdm'

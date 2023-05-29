@@ -1,0 +1,4 @@
+dependencies {
+    implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
+    implementation project(':sparkcql-core')
+}
