@@ -1,4 +1,6 @@
 dependencies {
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
-    implementation project(':sparkcql-core')
+    implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+    implementation "info.cqframework:elm:${cqfVersion}"
+    implementation project(":sparkcql-core")
 }

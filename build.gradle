@@ -1,6 +1,13 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
+    id 'maven-publish'
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'scala'
+    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: 'maven-publish'
 
     ext {
         // Project Metadata
@@ -11,6 +18,8 @@ subprojects {
         // Dependency Versions
         sparkVersion = "3.3.2"
         hapiVersion = "6.4.1"
+        cqfVersion = "2.8.0"
+        ucumVersion = "1.0.3"
     }
 
     compileJava {
@@ -23,17 +32,7 @@ subprojects {
     }
 
     dependencies {
-        // Scala
         implementation 'org.scala-lang:scala-library:2.12.17'
-
-        // Spark
-        implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
-        implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
-
-        // CQFramework
-        implementation 'info.cqframework:elm:2.8.0'
-
-        // Test
         testImplementation 'org.scalatest:scalatest_2.12:3.2.15'
     }
 

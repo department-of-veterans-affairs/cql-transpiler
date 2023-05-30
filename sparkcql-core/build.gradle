@@ -1,12 +1,19 @@
 dependencies {
-    implementation 'org.json4s:json4s-native_2.12:3.7.0-M11'
-    implementation 'org.json4s:json4s-jackson_2.12:3.7.0-M11'
-    
-    //implementation 'ca.uhn.hapi.fhir:org.hl7.fhir.r4:6.0.7'
-    
-    //implementation 'info.cqframework:elm:2.8.0'
-    //implementation 'info.cqframework:elm-jackson:2.8.0'
-    testImplementation 'info.cqframework:cql-to-elm-cli:2.8.0'
+    implementation project(path: ':sparkcql-core-shadow', configuration: 'shadow')
+    testImplementation project(":sparkcql-fhir-synthetic")
 
-    testImplementation project(':sparkcql-fhir-synthetic')
+    implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
+    implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+    
+    implementation "org.json4s:json4s-native_2.12:3.7.0-M11"
+    implementation "org.json4s:json4s-jackson_2.12:3.7.0-M11"
+    
+    implementation "info.cqframework:elm:${cqfVersion}"
+    implementation "info.cqframework:elm-jackson:${cqfVersion}"
+    implementation "info.cqframework:model-jackson:${cqfVersion}"
+    implementation "info.cqframework:model-jackson:${cqfVersion}"
+    implementation "org.fhir:ucum:${ucumVersion}"
+
+    testImplementation "info.cqframework:quick:${cqfVersion}"
+    testImplementation "info.cqframework:qdm:${cqfVersion}"
 }
