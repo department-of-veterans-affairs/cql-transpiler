@@ -1,4 +1,4 @@
-package gov.va.sparkcql.adapter.clinical
+package gov.va.sparkcql.dataprovider.clinical
 
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -8,7 +8,7 @@ import org.hl7.elm.r1.Code
 final case class TableInfo(table: String, schema: Option[String], resourceColumn: Option[String] = Some("resource_data"), indexes: Option[List[IndexInfo]])
 final case class IndexInfo(code: Code, columnName: String)
 
-class TableClinicalDataAdapter() extends ClinicalDataAdapter {
+class TableClinicalDataProvider() extends ClinicalDataProvider {
   
   val DefaultResourceColumnName = "resource_data"
 

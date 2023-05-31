@@ -15,7 +15,6 @@ dependencies {
     implementation "info.cqframework:elm:${cqfVersion}"
     implementation "info.cqframework:elm-jackson:${cqfVersion}"
     implementation "info.cqframework:model-jackson:${cqfVersion}"
-    implementation "org.fhir:ucum:${ucumVersion}"
 
     testImplementation "info.cqframework:quick:${cqfVersion}"
     testImplementation "info.cqframework:qdm:${cqfVersion}"

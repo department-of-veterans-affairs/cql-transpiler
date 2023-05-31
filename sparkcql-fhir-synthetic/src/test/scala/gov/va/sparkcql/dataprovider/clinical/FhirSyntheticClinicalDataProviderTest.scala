@@ -1,4 +1,4 @@
-package gov.va.sparkcql.adapter.clinical
+package gov.va.sparkcql.dataprovider.clinical
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.apache.spark.sql.{SparkSession, Dataset, DataFrame, Row}
@@ -6,13 +6,13 @@ import org.apache.spark.sql.functions._
 import org.hl7.elm.r1.Code
 import gov.va.sparkcql.TestBase
 
-class FhirSyntheticClinicalDataAdapterTest extends AnyFlatSpec with TestBase {
+class FhirSyntheticClinicalDataProviderTest extends AnyFlatSpec with TestBase {
 
   lazy val provider10 = {
-    new FhirSyntheticClinicalDataAdapter(FhirSyntheticClinicalDataAdapter.PopulationSize10)
+    new FhirSyntheticClinicalDataProvider(FhirSyntheticClinicalDataProvider.PopulationSize10)
   }
     
-  "A FhirSyntheticClinicalDataAdapter" should "return exactly 10 bundles when using PopulationSize10" in {
+  "A FhirSyntheticClinicalDataProvider" should "return exactly 10 bundles when using PopulationSize10" in {
     assert(
       provider10.retrieve(spark, new Code().withCode("Patient"), None).get
         .distinct.count() == 10
@@ -20,7 +20,7 @@ class FhirSyntheticClinicalDataAdapterTest extends AnyFlatSpec with TestBase {
   }
 
   it should "retrieve encounters when using PopulationSize10" in {
-    val provider = new FhirSyntheticClinicalDataAdapter(FhirSyntheticClinicalDataAdapter.PopulationSize10)
+    val provider = new FhirSyntheticClinicalDataProvider(FhirSyntheticClinicalDataProvider.PopulationSize10)
     assert(
       provider10.retrieve(spark, new Code().withCode("Encounter"), None).get
         .count() > 100

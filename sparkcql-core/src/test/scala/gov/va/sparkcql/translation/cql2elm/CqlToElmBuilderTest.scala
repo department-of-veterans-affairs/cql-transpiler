@@ -6,7 +6,6 @@ import java.io.StringWriter
 import collection.JavaConverters._
 import org.hl7.elm.r1.Library
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory
-import org.cqframework.cql.cql2elm.LibraryContentType
 import gov.va.sparkcql.common.Extensions._
 import org.hl7.elm.r1.VersionedIdentifier
 

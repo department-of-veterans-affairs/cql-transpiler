@@ -1,5 +1,5 @@
-package gov.va.sparkcql.DataAdapter
+package gov.va.sparkcql.DataProvider
 
-class FhirApiClinicalDataAdapter {
+class FhirApiClinicalDataProvider {
   
 }

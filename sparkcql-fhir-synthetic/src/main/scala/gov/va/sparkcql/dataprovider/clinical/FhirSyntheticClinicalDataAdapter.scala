@@ -1,4 +1,4 @@
-package gov.va.sparkcql.adapter.clinical
+package gov.va.sparkcql.dataprovider.clinical
 
 //import java.nio.file.{FileSystems, Files}
 import scala.reflect.runtime.universe._
@@ -7,7 +7,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 import org.hl7.elm.r1.Code
 
-class FhirSyntheticClinicalDataAdapter(size: FhirSyntheticClinicalDataAdapter.PopulationSize) extends TableClinicalDataAdapter {
+class FhirSyntheticClinicalDataProvider(size: FhirSyntheticClinicalDataProvider.PopulationSize) extends TableClinicalDataProvider {
 
   def allResourceText(spark: SparkSession) = {
     import spark.implicits._
@@ -48,7 +48,7 @@ class FhirSyntheticClinicalDataAdapter(size: FhirSyntheticClinicalDataAdapter.Po
   def loadBundles(spark: SparkSession): Dataset[String] = {
     import spark.implicits._
     size match {
-      case FhirSyntheticClinicalDataAdapter.PopulationSize10 =>
+      case FhirSyntheticClinicalDataProvider.PopulationSize10 =>
         val loader = Thread.currentThread().getContextClassLoader()
         import scala.io.Source
         Seq(
@@ -63,13 +63,13 @@ class FhirSyntheticClinicalDataAdapter(size: FhirSyntheticClinicalDataAdapter.Po
           Source.fromResource("embedded/Sina65_Wolff180_582b89e2-30d8-44fb-bb96-03957b2ec7c2.json").mkString,
           Source.fromResource("embedded/Truman805_Durgan499_277bea41-b704-4be3-972a-4feee4e2712b.json").mkString
         ).toDS()
-      case FhirSyntheticClinicalDataAdapter.PopulationSize1000 => ???
-      case FhirSyntheticClinicalDataAdapter.PopulationSize1M => ???
+      case FhirSyntheticClinicalDataProvider.PopulationSize1000 => ???
+      case FhirSyntheticClinicalDataProvider.PopulationSize1M => ???
       }
   }
 }
 
-object FhirSyntheticClinicalDataAdapter {
+object FhirSyntheticClinicalDataProvider {
   sealed trait PopulationSize
   final case object PopulationSize10 extends PopulationSize
   final case object PopulationSize1000 extends PopulationSize

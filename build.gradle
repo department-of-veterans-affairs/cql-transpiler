@@ -3,11 +3,17 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
+// configurations.all {
+//   resolutionStrategy { 
+//     force 'org.antlr:antlr4-runtime:4.8.0'
+//   }
+// }
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'scala'
-    apply plugin: "com.github.johnrengelman.shadow"
     apply plugin: 'maven-publish'
+    apply plugin: "com.github.johnrengelman.shadow"
 
     ext {
         // Project Metadata
@@ -67,7 +73,3 @@ subprojects {
         '--add-opens=java.base/sun.util.calendar=ALL-UNNAMED'      
     ]
 }
-
-// project(':sparkcql') {
-//     version "${projectVersion}"
-// }
