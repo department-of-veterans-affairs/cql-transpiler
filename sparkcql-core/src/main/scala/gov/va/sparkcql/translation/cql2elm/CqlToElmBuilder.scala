@@ -34,7 +34,7 @@ class CqlToElmBuilder(protected val transitiveLibraries: Option[LibraryDataProvi
   def build(directLibraryIdentifiers: Array[VersionedIdentifier]): Seq[Library] = {
     val libraries = directLibraryIdentifiers.flatMap(
       id => transitiveLibraries.map(
-        provider => (id -> provider.fetch(id).getOrElse(throw new Exception(s"${id.toPrettyString()} not found.")))
+        provider => (id -> provider.getOrElse(id, throw new Exception(s"${id.toPrettyString()} not found.")))
       )
     ).toMap
 

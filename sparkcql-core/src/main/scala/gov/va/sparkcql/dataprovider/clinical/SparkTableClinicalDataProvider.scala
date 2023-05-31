@@ -8,7 +8,7 @@ import org.hl7.elm.r1.Code
 final case class TableInfo(table: String, schema: Option[String], resourceColumn: Option[String] = Some("resource_data"), indexes: Option[List[IndexInfo]])
 final case class IndexInfo(code: Code, columnName: String)
 
-class TableClinicalDataProvider() extends ClinicalDataProvider {
+class SparkTableClinicalDataProvider() extends ClinicalDataProvider {
   
   val DefaultResourceColumnName = "resource_data"
 

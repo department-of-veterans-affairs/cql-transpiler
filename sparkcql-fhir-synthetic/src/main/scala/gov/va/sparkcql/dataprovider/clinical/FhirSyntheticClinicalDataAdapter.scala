@@ -7,7 +7,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 import org.hl7.elm.r1.Code
 
-class FhirSyntheticClinicalDataProvider(size: FhirSyntheticClinicalDataProvider.PopulationSize) extends TableClinicalDataProvider {
+class FhirSyntheticClinicalDataProvider(size: FhirSyntheticClinicalDataProvider.PopulationSize) extends SparkTableClinicalDataProvider {
 
   def allResourceText(spark: SparkSession) = {
     import spark.implicits._
