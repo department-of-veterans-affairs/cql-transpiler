@@ -1,12 +1,11 @@
 package gov.va.sparkcql.dataprovider.clinical
 
-import org.scalatest.flatspec.AnyFlatSpec
+import gov.va.sparkcql.TestBase
 import org.apache.spark.sql.{SparkSession, Dataset, DataFrame, Row}
 import org.apache.spark.sql.functions._
 import org.hl7.elm.r1.Code
-import gov.va.sparkcql.TestBase
 
-class FhirSyntheticClinicalDataProviderTest extends AnyFlatSpec with TestBase {
+class FhirSyntheticClinicalDataProviderTest extends TestBase {
 
   lazy val provider10 = {
     new FhirSyntheticClinicalDataProvider(FhirSyntheticClinicalDataProvider.PopulationSize10)

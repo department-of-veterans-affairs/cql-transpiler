@@ -4,7 +4,6 @@ import java.io.IOException
 import java.util._
 import collection.JavaConverters._
 
-import org.fhir.ucum.UcumEssenceService
 import org.hl7.elm.r1.Library
 import org.hl7.elm.r1.VersionedIdentifier
 import org.hl7.cql_annotations.r1.CqlToElmError

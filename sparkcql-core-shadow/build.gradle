@@ -1,15 +1,23 @@
+/*
+sparkcql-core-shadow must be built and used as a jar to properly shade CQF's ANTLR version from 
+spark which uses an incompatible ANTLR version. The build will publish shadow to a local maven
+repository which can be used by downstream dependents. Alternatively, the shadow plugin supports
+"configuration: 'shadow'" which avoids publishing locally but this setting trips up Metals.
+*/
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            groupId = projectGroup
-            artifactId = 'sparkcql-core-shadow'
-            version = projectVersion
+            groupId = group
+            version = version
         }
     }
     repositories {
         mavenCentral()
-        mavenLocal()
     }
 }
 
@@ -24,6 +32,3 @@ shadowJar {
     archiveBaseName.set(null)
     archiveClassifier = null
 }
-
-// TODO: Metals doesn't seem compatible with the "configuration: 'shadow'" clause sparkcql-core uses to reference compiler
-// causing debugging to break. A workaround might be to publish to a local repository and referencing it within sparkcql-core.

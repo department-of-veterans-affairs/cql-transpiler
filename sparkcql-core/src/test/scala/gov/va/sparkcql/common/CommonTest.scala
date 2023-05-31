@@ -1,8 +1,8 @@
 package gov.va.sparkcql.common
 
-import org.scalatest.flatspec.AnyFlatSpec
+import gov.va.sparkcql.TestBase
 
-class CommonTest extends AnyFlatSpec {
+class CommonTest extends TestBase {
   "A Stopwatch" should "calculation duration" in {
     var watch = Stopwatch()
     Thread.sleep(10)

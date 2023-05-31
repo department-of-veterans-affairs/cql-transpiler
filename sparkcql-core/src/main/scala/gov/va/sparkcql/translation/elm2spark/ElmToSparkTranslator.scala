@@ -8,7 +8,7 @@ import gov.va.sparkcql.dataprovider.terminology.TerminologyDataProvider
 
 // import org.cqframework.cql.elm.serializing.jackson.ElmJsonLibraryReader
 
-class ElmSparkTranslator(spark: SparkSession, clinicalDataProvider: ClinicalDataProvider, terminologyDataProvider: TerminologyDataProvider, libraryDataProvider: LibraryDataProvider) {
+class ElmToSparkTranslator(spark: SparkSession, clinicalDataProvider: ClinicalDataProvider, terminologyDataProvider: TerminologyDataProvider, libraryDataProvider: LibraryDataProvider) {
   def translate[T](libraryId: Seq[String], parameters: Object): Seq[DataFrame] = {
 
     /*

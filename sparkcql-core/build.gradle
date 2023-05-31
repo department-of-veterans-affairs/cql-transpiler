@@ -1,13 +1,15 @@
 dependencies {
-    implementation project(path: ':sparkcql-core-shadow', configuration: 'shadow')
-    //implementation "gov.va.sparkcql:sparkcql-core-shadow:${projectVersion}"
-    testImplementation project(":sparkcql-fhir-synthetic")
-
+    implementation("gov.va.sparkcql:sparkcql-core-shadow:${version}") {
+        // Shadow already embeds all transitive dependencies but without explicitly excluding
+        // ANTLR Gradle will upgrade spark's ANTLR to a higher, incompatible version. Alternatively,
+        // we could strictly define ANTLR's correct version but this might break in the future if 
+        // spark upgrades to a newer version.
+        exclude group: 'org.antlr', module: 'antlr4-runtime'
+    }
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
     implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
-    
-    implementation "org.json4s:json4s-native_2.12:3.7.0-M11"
-    implementation "org.json4s:json4s-jackson_2.12:3.7.0-M11"
+    implementation "org.json4s:json4s-native_2.12:${json4sVersion}"
+    implementation "org.json4s:json4s-jackson_2.12:${json4sVersion}"
     
     // No references can be made to CQF components which have transitive dependencies 
     // to ANTLR due to version compatibility issues. Those references must be isolated
@@ -18,4 +20,9 @@ dependencies {
 
     testImplementation "info.cqframework:quick:${cqfVersion}"
     testImplementation "info.cqframework:qdm:${cqfVersion}"
+}
+
+// Forces sparkcql-core-shadow to deploy jar to local maven repo where we'll pick it up
+compileJava {
+    dependsOn(':sparkcql-core-shadow:publishToMavenLocal')
 }

@@ -1,16 +1,16 @@
 package gov.va.sparkcql
 
+import org.scalatest.flatspec.AnyFlatSpec
 import org.apache.spark.sql.SparkSession
-import org.apache.log4j.{Level, Logger}
+import org.junit.runner.RunWith
+import org.scalatestplus.junit.JUnitRunner
 
-trait TestBase {
+@RunWith(classOf[JUnitRunner])
+abstract class TestBase extends AnyFlatSpec {
 
   lazy val spark = {
-    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.OFF)
-    Logger.getLogger("org").setLevel(Level.OFF)
-
     SparkSession.builder()
-      .master("local[4]")
+      .master("local[*]")
       .getOrCreate()
   }
 }

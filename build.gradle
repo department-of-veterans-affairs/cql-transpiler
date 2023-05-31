@@ -1,33 +1,8 @@
-plugins {
-    id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '7.1.1'
-}
-
-// configurations.all {
-//   resolutionStrategy { 
-//     force 'org.antlr:antlr4-runtime:4.8.0'
-//   }
-// }
-
 subprojects {
-    apply plugin: 'java'
     apply plugin: 'scala'
+    apply plugin: 'java-library'
     apply plugin: 'maven-publish'
-    apply plugin: "com.github.johnrengelman.shadow"
-
-    ext {
-        // Project Metadata
-        targetJavaVersion=11
-        projectVersion = "1.0-SNAPSHOT"
-        projectGroup = "gov.va.sparkcql"
-
-        // Dependency Versions
-        sparkVersion = "3.3.2"
-        hapiVersion = "6.4.1"
-        cqfVersion = "2.8.0"
-        ucumVersion = "1.0.3"
-    }
-
+    
     compileJava {
         sourceCompatibility = "${targetJavaVersion}"
         targetCompatibility = "${targetJavaVersion}"
@@ -35,41 +10,36 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()        // to pick up sparkcql-core-shadow
     }
 
     dependencies {
         implementation 'org.scala-lang:scala-library:2.12.17'
         testImplementation 'org.scalatest:scalatest_2.12:3.2.15'
-    }
-
-    // Required to run scalatest within Gradle (https://stackoverflow.com/questions/18823855/cant-run-scalatest-with-gradle)
-    task spec(dependsOn: ['testClasses'], type: JavaExec) {
-        main = 'org.scalatest.tools.Runner'
-        try {       // TODO: avoid depending on error to check for existence of tests property (hasProperty wasn't returning anything)
-            args = ['-R', 'build/classes/scala/test', '-o', '-z', project.tests]
-        } catch (Exception e) {
-            args = ['-R', 'build/classes/scala/test', '-o']
-        }
-        // https://www.scalatest.org/user_guide/using_the_runner
-
-        classpath = sourceSets.test.runtimeClasspath
-        test.dependsOn spec
+        testImplementation 'org.scalatestplus:junit-4-12_2.12:3.2.2.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     }
     
-    test.jvmArgs = spec.jvmArgs = [
-        // https://stackoverflow.com/questions/73465937/apache-spark-3-3-0-breaks-on-java-17-with-cannot-access-class-sun-nio-ch-direct
-        '--add-opens=java.base/java.lang=ALL-UNNAMED',
-        '--add-opens=java.base/java.lang.invoke=ALL-UNNAMED',
-        '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
-        '--add-opens=java.base/java.io=ALL-UNNAMED',
-        '--add-opens=java.base/java.net=ALL-UNNAMED',
-        '--add-opens=java.base/java.nio=ALL-UNNAMED',
-        '--add-opens=java.base/java.util=ALL-UNNAMED',
-        '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
-        '--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED',
-        '--add-opens=java.base/sun.nio.ch=ALL-UNNAMED',
-        '--add-opens=java.base/sun.nio.cs=ALL-UNNAMED',
-        '--add-opens=java.base/sun.security.action=ALL-UNNAMED',
-        '--add-opens=java.base/sun.util.calendar=ALL-UNNAMED'      
-    ]
+    test {
+        testLogging {
+            events "PASSED", "FAILED", "STANDARD_ERROR"
+        }
+
+        jvmArgs = [
+            // https://stackoverflow.com/questions/73465937/apache-spark-3-3-0-breaks-on-java-17-with-cannot-access-class-sun-nio-ch-direct
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.invoke=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens=java.base/java.io=ALL-UNNAMED',
+            '--add-opens=java.base/java.net=ALL-UNNAMED',
+            '--add-opens=java.base/java.nio=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED',
+            '--add-opens=java.base/sun.nio.ch=ALL-UNNAMED',
+            '--add-opens=java.base/sun.nio.cs=ALL-UNNAMED',
+            '--add-opens=java.base/sun.security.action=ALL-UNNAMED',
+            '--add-opens=java.base/sun.util.calendar=ALL-UNNAMED'      
+        ]
+    }
 }

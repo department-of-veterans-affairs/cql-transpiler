@@ -1,7 +1,8 @@
 package gov.va.sparkcql.translation.cql2elm
 
-import org.scalatest.flatspec.AnyFlatSpec
 import gov.va.sparkcql.TestBase
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertThrows
 import java.io.StringWriter
 import collection.JavaConverters._
 import org.hl7.elm.r1.Library
@@ -9,7 +10,7 @@ import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory
 import gov.va.sparkcql.common.Extensions._
 import org.hl7.elm.r1.VersionedIdentifier
 
-class CqlToElmBuilderTest extends AnyFlatSpec with TestBase {
+class CqlToElmBuilderTest extends TestBase {
 
   "A CqlElmCompiler" should "translate a single basic CQL to ELM" in {
     val build = new CqlToElmBuilder()
