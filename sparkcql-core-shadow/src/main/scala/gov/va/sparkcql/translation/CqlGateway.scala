@@ -17,7 +17,7 @@ import org.cqframework.cql.gen.cqlParser
 
 /**
   * Compiles a set of libraries from CQL to ELM using CQF's CqlTranslator. The sole purpose
-  * of this package is to shade all transitive dependencies to avoid issues bewteen
+  * of this package is to shade all transitive dependencies to avoid issues between
   * CQF and Spark which both use differing and incompatible versions of ANTLR.
   */
 object CqlGateway {
@@ -32,7 +32,6 @@ object CqlGateway {
     val libraryManager = new LibraryManager(modelManager)
     val ucumService = new UcumEssenceService(classOf[UcumEssenceService].getResourceAsStream("/ucum-essence.xml"))
     val options = new CqlTranslatorOptions()
-
     var translator = CqlTranslator.fromText(cqlText, modelManager, libraryManager, ucumService, options)
     translator.toELM().getIdentifier()
   }

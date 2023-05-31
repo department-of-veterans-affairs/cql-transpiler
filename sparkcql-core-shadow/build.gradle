@@ -1,3 +1,18 @@
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = projectGroup
+            artifactId = 'sparkcql-core-shadow'
+            version = projectVersion
+        }
+    }
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
 dependencies {
     implementation "info.cqframework:cql:${cqfVersion}"
     implementation "info.cqframework:cql-to-elm:${cqfVersion}"
@@ -5,8 +20,9 @@ dependencies {
 }
 
 shadowJar {
-   relocate 'org.antlr.v4', 'shadow.org.antlr.v4'
+    relocate 'org.antlr.v4', 'shadow.org.antlr.v4'
+    archiveBaseName.set(null)
+    archiveClassifier = null
 }
-
 // TODO: Metals doesn't seem compatible with the "configuration: 'shadow'" clause sparkcql-core uses to reference compiler
 // causing debugging to break. A workaround might be to publish to a local repository and referencing it within sparkcql-core.

@@ -1,9 +1,8 @@
-package gov.va.sparkcql
+package gov.va.sparkcql.common
 
 import org.hl7.elm.r1.Library
 import java.io.StringWriter
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory
-import org.cqframework.cql.cql2elm.LibraryContentType
 import org.hl7.cql_annotations.r1.CqlToElmError
 import org.hl7.elm.r1.VersionedIdentifier
 
@@ -11,7 +10,7 @@ object Extensions {
   implicit class CqlLibraryExt(library: Library) {
     def toJson(): String = {
       val writer = new StringWriter()
-      ElmLibraryWriterFactory.getWriter(LibraryContentType.JSON.mimeType()).write(library, writer)
+      ElmLibraryWriterFactory.getWriter("text/cql").write(library, writer)
       writer.getBuffer().toString()
     }
 
@@ -32,9 +31,9 @@ object Extensions {
   implicit class VersionedIdentifierExt(id: VersionedIdentifier) {
     def toPrettyString(): String = {
       if (id.getVersion() != null)
-        s""""library ${id.getId()} version '${id.getVersion()}'""""
+        s"""<library ${id.getId()} version '${id.getVersion()}'>"""
       else
-        s""""library ${id.getId()}""""
+        s"""<library ${id.getId()}>"""
     }
   }  
 }

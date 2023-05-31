@@ -1,4 +1,4 @@
-package gov.va.sparkcql.translation
+package gov.va.sparkcql.translation.cql2elm
 
 import java.io.IOException
 import java.util._
@@ -17,10 +17,11 @@ import scala.collection.mutable.HashMap
 import scala.collection.immutable.Map
 import org.cqframework.cql.cql2elm.LibraryContentType
 import java.nio.charset.StandardCharsets
+import gov.va.sparkcql.adapter.library.{LibraryDataAdapter, InMemoryLibraryDataAdapter}
+import gov.va.sparkcql.translation.CqlGateway
+import gov.va.sparkcql.common.Extensions._
 
-import gov.va.sparkcql.Extensions._
-
-class CqlToElmBuild(protected val sourceProviders: Option[Seq[LibrarySourceProvider]] = None) {
+class CqlToElmBuilder(protected val libaryDataAdapters: Option[Seq[LibraryDataAdapter]] = None) {
 
   val translatorOptions = new CqlTranslatorOptions()
   translatorOptions.setOptions(
@@ -32,17 +33,17 @@ class CqlToElmBuild(protected val sourceProviders: Option[Seq[LibrarySourceProvi
     CqlTranslatorOptions.Options.DisableListPromotion,
     CqlTranslatorOptions.Options.DisableMethodInvocation)
 
-  protected def runBuild(targetLibraries: HashMap[VersionedIdentifier, String]): Seq[Library] = {
+  protected def runBuild(libraries: HashMap[VersionedIdentifier, String]): Seq[Library] = {
     val modelManager = new ModelManager()
     val libraryManager = new LibraryManager(modelManager)
     val ucumService = new UcumEssenceService(classOf[UcumEssenceService].getResourceAsStream("/ucum-essence.xml"))
 
-    val targetLibrariesSourceProvider = new InMemoryLibrarySourceProvider(targetLibraries.asJava)
-    libraryManager.getLibrarySourceLoader().registerProvider(targetLibrariesSourceProvider)
+    val librariesAdapter = new InMemoryLibraryDataAdapter(libraries.toMap)
+    libraryManager.getLibrarySourceLoader().registerProvider(librariesAdapter)
 
-    sourceProviders.foreach(_.foreach(libraryManager.getLibrarySourceLoader().registerProvider(_)))
+    libaryDataAdapters.foreach(_.foreach(libraryManager.getLibrarySourceLoader().registerProvider(_)))
     
-    targetLibraries.map(library => {
+    libraries.map(library => {
       val result = CqlGateway.compile(library._2, modelManager, libraryManager, ucumService, translatorOptions)
       result.getAnnotation().forEach(f => {
         if (f.isInstanceOf[CqlToElmError]) throw new Exception(f.asInstanceOf[CqlToElmError].toPrettyString())
@@ -52,32 +53,32 @@ class CqlToElmBuild(protected val sourceProviders: Option[Seq[LibrarySourceProvi
   }
 
   def build(libraryIdentifiers: Array[VersionedIdentifier]): Seq[Library] = {
-    val targetLibraries = new HashMap[VersionedIdentifier, String]()
+    val libraries = new HashMap[VersionedIdentifier, String]()
     libraryIdentifiers.foreach(id => {
-      sourceProviders.get.foreach(provider => {
+      libaryDataAdapters.get.foreach(provider => {
         if (provider.isLibraryContentAvailable(id, LibraryContentType.CQL)) {
-          targetLibraries(id) = new String(provider.getLibraryContent(id, LibraryContentType.CQL).readAllBytes(), StandardCharsets.UTF_8)
+          libraries(id) = new String(provider.getLibraryContent(id, LibraryContentType.CQL).readAllBytes(), StandardCharsets.UTF_8)
         }
       })
     })
   
-    runBuild(targetLibraries)
+    runBuild(libraries)
   }
 
   def build(cqlText: Array[String]): Seq[Library] = {
-    val targetLibraries = HashMap[VersionedIdentifier, String]()
+    val libraries = HashMap[VersionedIdentifier, String]()
     cqlText.foreach(cql => {
       val id = CqlGateway.parseVersionedIdentifier(cql)
       // Duplicate anonmymous libraries are allowed
       if (id.getId() == null) {
         id.setId("Anonymous-" + java.util.UUID.randomUUID.toString)
-      } else if (targetLibraries.isDefinedAt(id)) {
+      } else if (libraries.isDefinedAt(id)) {
         throw new Exception(s"Duplicate CQL library detected ${id.toPrettyString()}")
       }
-      targetLibraries.put(id, cql)
+      libraries.put(id, cql)
     })
 
-    runBuild(targetLibraries)
+    runBuild(libraries)
   }
 
   def build(cqlText: String*): Seq[Library] = {

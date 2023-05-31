@@ -1,4 +1,4 @@
-package gov.va.sparkcql.DataAdapter
+package gov.va.sparkcql.adapter.clinical
 
 class FhirApiClinicalDataAdapter {
   

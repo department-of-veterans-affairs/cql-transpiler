@@ -1,4 +1,4 @@
-package gov.va.sparkcql.dataprovider
+package gov.va.sparkcql.adapter.clinical
 
 //import java.nio.file.{FileSystems, Files}
 import scala.reflect.runtime.universe._
@@ -7,12 +7,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 import org.hl7.elm.r1.Code
 
-sealed trait PopulationSize
-final case object PopulationSize10 extends PopulationSize
-final case object PopulationSize1000 extends PopulationSize
-final case object PopulationSize1M extends PopulationSize
-
-class FhirSyntheticClinicalDataProvider(size: PopulationSize) extends TableClinicalDataProvider {
+class FhirSyntheticClinicalDataAdapter(size: FhirSyntheticClinicalDataAdapter.PopulationSize) extends TableClinicalDataAdapter {
 
   def allResourceText(spark: SparkSession) = {
     import spark.implicits._
@@ -53,7 +48,7 @@ class FhirSyntheticClinicalDataProvider(size: PopulationSize) extends TableClini
   def loadBundles(spark: SparkSession): Dataset[String] = {
     import spark.implicits._
     size match {
-      case PopulationSize10 =>
+      case FhirSyntheticClinicalDataAdapter.PopulationSize10 =>
         val loader = Thread.currentThread().getContextClassLoader()
         import scala.io.Source
         Seq(
@@ -68,8 +63,15 @@ class FhirSyntheticClinicalDataProvider(size: PopulationSize) extends TableClini
           Source.fromResource("embedded/Sina65_Wolff180_582b89e2-30d8-44fb-bb96-03957b2ec7c2.json").mkString,
           Source.fromResource("embedded/Truman805_Durgan499_277bea41-b704-4be3-972a-4feee4e2712b.json").mkString
         ).toDS()
-      case PopulationSize1000 => ???
-      case PopulationSize1M => ???
+      case FhirSyntheticClinicalDataAdapter.PopulationSize1000 => ???
+      case FhirSyntheticClinicalDataAdapter.PopulationSize1M => ???
       }
   }
+}
+
+object FhirSyntheticClinicalDataAdapter {
+  sealed trait PopulationSize
+  final case object PopulationSize10 extends PopulationSize
+  final case object PopulationSize1000 extends PopulationSize
+  final case object PopulationSize1M extends PopulationSize
 }

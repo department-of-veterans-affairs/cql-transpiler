@@ -1,14 +1,13 @@
-package gov.va.sparkcql.translation
+package gov.va.sparkcql.translation.elm2spark
 
 import org.scalatest.flatspec.AnyFlatSpec
-import gov.va.sparkcql.dataprovider.FhirSyntheticClinicalDataProvider
-import gov.va.sparkcql.dataprovider.PopulationSize10
+import gov.va.sparkcql.adapter.clinical.FhirSyntheticClinicalDataAdapter
 import gov.va.sparkcql.TestBase
 
 class ElmSparkTranslatorTest extends AnyFlatSpec with TestBase {
 
   lazy val translator: ElmSparkTranslator = {
-    new ElmSparkTranslator(spark, new FhirSyntheticClinicalDataProvider(size = PopulationSize10), null, null)
+    new ElmSparkTranslator(spark, new FhirSyntheticClinicalDataAdapter(size = FhirSyntheticClinicalDataAdapter.PopulationSize10), null, null)
   }
 
   "A ElmSparkTranslator" should "perform basic retrieves" in {

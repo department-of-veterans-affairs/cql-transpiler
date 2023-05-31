@@ -1,4 +1,4 @@
-package gov.va.sparkcql.translation
+package gov.va.sparkcql.translation.elm2spark
 
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor
 import org.hl7.elm.r1.Overlaps
