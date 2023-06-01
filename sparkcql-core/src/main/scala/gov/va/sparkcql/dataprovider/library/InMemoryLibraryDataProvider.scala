@@ -11,7 +11,7 @@ class InMemoryLibraryDataProvider(libraries: Map[VersionedIdentifier, String]) e
     libraries.isDefinedAt(key)
   }
 
-  override def get(key: VersionedIdentifier): Option[String] = {
+  override def fetchOne(key: VersionedIdentifier): Option[String] = {
     val versioned = libraries.get(key)
     if (versioned.isDefined)
       versioned

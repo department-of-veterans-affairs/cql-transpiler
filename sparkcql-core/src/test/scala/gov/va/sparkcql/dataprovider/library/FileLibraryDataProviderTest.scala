@@ -8,7 +8,7 @@ class FileLibraryDataProviderTest extends TestBase {
   lazy val provider = new FileLibraryDataProvider("./src/test/resources/")
 
   "A FileLibraryDataProvider" should "fetch a CQL from a files" in {
-    assert(provider.get(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0")) != None)
+    assert(provider.fetchOne(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0")) != None)
   }
 
   it should "inform when a key exists" in {
@@ -20,6 +20,6 @@ class FileLibraryDataProviderTest extends TestBase {
   }
 
   it should "fetch version agnostically" in {
-    assert(provider.get(new VersionedIdentifier().withId("LiteralDefinitions")) != None)
+    assert(provider.fetchOne(new VersionedIdentifier().withId("LiteralDefinitions")) != None)
   }
 }

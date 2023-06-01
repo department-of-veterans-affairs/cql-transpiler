@@ -1,13 +1,11 @@
 package gov.va.sparkcql.dataprovider.library
 
 import org.hl7.elm.r1.VersionedIdentifier
+import gov.va.sparkcql.dataprovider.Fetchable
 
-abstract class LibraryDataProvider {
+abstract class LibraryDataProvider extends Fetchable[String, VersionedIdentifier] {
+  
   def isDefined(key: VersionedIdentifier): Boolean
 
-  def get(key: VersionedIdentifier): Option[String]
-  
-  def getOrElse[V1 >: String](key: VersionedIdentifier, default: => V1): V1 = {
-    get(key).getOrElse(default)
-  }
+  def fetchOne(key: VersionedIdentifier): Option[String]
 }
