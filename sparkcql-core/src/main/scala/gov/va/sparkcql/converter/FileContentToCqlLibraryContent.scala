@@ -1,17 +1,19 @@
 package gov.va.sparkcql.converter
 
 import gov.va.sparkcql.dataprovider.FileContent
-import gov.va.sparkcql.translation.CqlCompilerGateway
-import gov.va.sparkcql.model.{LibraryId, IdentifiedLibraryContent}
+import gov.va.sparkcql.compiler.CqlCompilerGateway
+import gov.va.sparkcql.model.{VersionedIdentifier, LibraryData}
 
-class FileContentToIdentifiedLibraryContent extends Converter {
+class FileContentToLibraryData extends Convertable[FileContent, LibraryData] {
 
-  override def convert[S, T](source: S): T = {
+  override def convert(source: FileContent): LibraryData = {
     source match {
       case content: FileContent => 
-        val id = LibraryId(CqlCompilerGateway.parseVersionedIdentifier(content.value))
-        new IdentifiedLibraryContent(id, content.value).asInstanceOf[T]
+        val id = VersionedIdentifier(CqlCompilerGateway.parseVersionedIdentifier(content.value))
+        new LibraryData(id, content.value)
       case _ => throw new Exception("Unable to convert type " + source.getClass().getSimpleName())
     }
   }
 }
+
+// TODO: DELETE

@@ -6,6 +6,9 @@ import org.apache.spark.sql.functions._
 
 class TableDataProvider(schema: Option[String], table: String, resourceColumn: Option[String] = Some("resource")) extends DataProvider() {
 
+  def initialize(spark: SparkSession): Unit = {
+  }
+  
   lazy val tableRef = {
     if (schema.isDefined)
       s"${schema.get}.${table}"

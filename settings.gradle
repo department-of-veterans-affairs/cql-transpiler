@@ -1,2 +1,2 @@
 rootProject.name = 'sparkcql'
-include 'sparkcql-core', 'sparkcql-core-shadow', 'sparkcql-fhir', 'sparkcql-fhir-synthetic'
+include 'sparkcql-core', 'sparkcql-core-shadow', 'sparkcql-fhir', 'sparkcql-synthea'

@@ -1,4 +1,4 @@
-package gov.va.sparkcql.translation
+package gov.va.sparkcql.compiler
 
 import org.cqframework.cql.cql2elm.CqlTranslator
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions
@@ -27,7 +27,7 @@ object CqlCompilerGateway {
     val modelManager = new ModelManager()
     val libraryManager = new LibraryManager(modelManager)
     if (libraryResolver.isDefined) {
-      libraryManager.getLibrarySourceLoader().registerProvider(new LibrarySourceBridgeProvider(libraryResolver.get))
+      libraryManager.getLibrarySourceLoader().registerProvider(new LibraryDataBridgeProvider(libraryResolver.get))
     }
     
     val translatorOptions = new CqlTranslatorOptions()

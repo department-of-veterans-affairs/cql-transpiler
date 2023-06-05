@@ -13,6 +13,7 @@ final case class DateFilter() extends DateFilterElement with FilterElement
 final case class OtherFilter() extends OtherFilterElement with FilterElement
 
 trait DataProvider {
+  def initialize(spark: SparkSession): Unit
 
   def fetch[T <: Product](spark: SparkSession)(implicit tag: TypeTag[T]): Dataset[T] = {
     fetch[T](spark, None)
