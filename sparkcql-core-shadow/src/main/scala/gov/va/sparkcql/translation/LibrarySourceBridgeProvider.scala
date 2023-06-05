@@ -7,7 +7,7 @@ import org.cqframework.cql.cql2elm.LibrarySourceProvider
 
 /**
   * Implements a bridge between the libary resolver function (defined in CqlCompilerGateway) and
-  * the LibraryManager through the LibrarySourceProvider interface.
+  * the LibraryManager through the IdentifiedLibraryContentProvider interface.
   */
 protected class LibrarySourceBridgeProvider(libraryResolver: (VersionedIdentifier) => String) extends LibrarySourceProvider {
   override def getLibrarySource(libraryIdentifier: VersionedIdentifier): InputStream = {
