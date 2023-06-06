@@ -11,7 +11,7 @@ class FileDataProviderTest extends TestBase {
   import spark.implicits._
 
   "A FileDataProvider" should "load and map CQL files" in {    
-    val provider = FileDataProvider("./src/test/resources/cql")(spark)
-    assert(provider.fetch[LibraryData]().filter(_.identifier.id == "BasicRetrieve").count() == 1)
+    val provider = FileDataProvider("./src/test/resources/cql")
+    assert(provider.fetch[LibraryData](spark).filter(_.identifier.id == "BasicRetrieve").count() == 1)
   }
 }

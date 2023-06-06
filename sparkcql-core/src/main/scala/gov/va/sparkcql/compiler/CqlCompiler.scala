@@ -98,7 +98,7 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     }
 
     if (providerScopedLibraries.isDefined) {
-      val providerScoped = providerScopedLibraries.get.fetch[LibraryData]()
+      val providerScoped = providerScopedLibraries.get.fetch[LibraryData](spark.get)
       val providerResults = providerScoped.filter(f => f.identifier == identifier)
       if (!providerResults.isEmpty) return Some(providerResults.head())
     }

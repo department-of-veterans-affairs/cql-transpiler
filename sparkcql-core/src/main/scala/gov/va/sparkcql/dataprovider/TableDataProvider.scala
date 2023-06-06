@@ -3,8 +3,9 @@ package gov.va.sparkcql.dataprovider
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import org.apache.spark.sql.functions._
+import gov.va.sparkcql.model.DataTypeRef
 
-class TableDataProvider(spark: SparkSession, schema: Option[String], table: String, resourceColumn: Option[String]) extends DataProvider(spark) {
+class TableDataProvider(schema: Option[String], table: String, resourceColumn: Option[String]) extends DataProvider() {
 
   lazy val tableRef = {
     if (schema.isDefined)
@@ -13,7 +14,11 @@ class TableDataProvider(spark: SparkSession, schema: Option[String], table: Stri
       s"${table}"
   }
 
-  def fetch[T <: Product : TypeTag](filter: Option[List[FilterElement]]): Dataset[T] = {
+  def fetch(dataType: DataTypeRef, spark: SparkSession): Dataset[Row] = {
+    ???
+  }
+
+  def fetch[T <: Product : TypeTag](filter: Option[List[FilterElement]], spark: SparkSession): Dataset[T] = {
     import spark.implicits._
     if (resourceColumn.isDefined) {
       spark.table(table).select(col(s"${resourceColumn.getOrElse(resourceColumn.get)}.*")).as[T]
@@ -25,5 +30,5 @@ class TableDataProvider(spark: SparkSession, schema: Option[String], table: Stri
 
 object TableDataProvider {
   def apply(schema: Option[String], table: String, resourceColumn: Option[String] = Some("resource")) 
-    = (spark: SparkSession) => new TableDataProvider(spark, schema, table, resourceColumn)
+    = new TableDataProvider(schema, table, resourceColumn)
 }

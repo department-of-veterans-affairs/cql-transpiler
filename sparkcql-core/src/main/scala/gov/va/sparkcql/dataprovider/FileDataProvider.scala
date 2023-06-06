@@ -9,19 +9,22 @@ import gov.va.sparkcql.compiler.CqlCompilerGateway
 
 final case class FileContent(value: String)
 
-class FileDataProvider(spark: SparkSession, path: String) extends DataProvider(spark) {
+class FileDataProvider(path: String) extends DataProvider() {
 
-  lazy val data = Files.search(path, ".cql").map(c => FileContent(scala.io.Source.fromFile(c).mkString)).toSeq
+  lazy val data = Files.search(path, ".*").map(c => FileContent(scala.io.Source.fromFile(c).mkString)).toSeq
 
-  def fetch[T <: Product : TypeTag](filter: Option[List[FilterElement]]): Dataset[T] = {
-    val convertedData = data.map(d => convert[T](d)).asInstanceOf[Seq[LibraryData]]
+  def fetch(dataType: DataTypeRef, spark: SparkSession): Dataset[Row] = {
+    ???
+  }
+
+  def fetch[T <: Product : TypeTag](filter: Option[List[FilterElement]], spark: SparkSession): Dataset[T] = {
+    val convertedData = data.map(d => convert[T](d)).asInstanceOf[Seq[T]]
     val encoder = Encoders.product[T]
     spark.createDataset(convertedData.asInstanceOf[Seq[T]])(encoder)
   }
 
   def convert[T : TypeTag](content: FileContent): LibraryData = {
     typeOf[T] match {
-      //case x: LibraryData => 
       case x if typeOf[T] <:< typeOf[LibraryData] =>
         val id = VersionedIdentifier(CqlCompilerGateway.parseVersionedIdentifier(content.value))
         new LibraryData(id, content.value)
@@ -31,5 +34,5 @@ class FileDataProvider(spark: SparkSession, path: String) extends DataProvider(s
 }
 
 object FileDataProvider {
-  def apply(path: String) = (spark: SparkSession) => new FileDataProvider(spark, path)  
+  def apply(path: String) = new FileDataProvider(path)
 }

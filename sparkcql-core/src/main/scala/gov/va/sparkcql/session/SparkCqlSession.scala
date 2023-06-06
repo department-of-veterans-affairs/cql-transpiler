@@ -1,29 +1,25 @@
 package gov.va.sparkcql.session
 
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.model.Binding
-import gov.va.sparkcql.model.VersionedIdentifier
+import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import gov.va.sparkcql.compiler.CqlCompiler
 import gov.va.sparkcql.evaluator.Evaluation
-import gov.va.sparkcql.model.BindableData
 import scala.collection.mutable.MutableList
 import gov.va.sparkcql.dataprovider.DataProvider
-import gov.va.sparkcql.model.LibraryData
-import org.apache.spark.sql.Dataset
+import gov.va.sparkcql.model.{VersionedIdentifier, LibraryData, DataTypeRef}
 
-class SparkCqlSession private(spark: SparkSession, boundProviders: Map[Type, DataProvider]) {
+class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
-  lazy val compiler = new CqlCompiler(bound[LibraryData](), Some(spark))
+  lazy val compiler = new CqlCompiler(builder.libraryDataProvider, Some(builder.spark))
 
   def retrieve[T <: Product : TypeTag](): Dataset[T] = {
-    val clinicalDataProvider = bound[T]().getOrElse(throw new Exception(s"No binding for type ${typeOf[T].termSymbol}."))
-    clinicalDataProvider.fetch[T]()
+    val clinicalDataProvider = builder.clinicalDataProvider.getOrElse(throw new Exception(s"No clinical data provider defined."))
+    clinicalDataProvider.fetch[T](builder.spark)
   }
 
-  def expression[T](cqlExpression: String): Dataset[T] = {
-    val compilation = compiler.compile(List(cqlExpression))
-    ???
+  def retrieve(dataType: DataTypeRef): Dataset[Row] = {
+    val clinicalDataProvider = builder.clinicalDataProvider.getOrElse(throw new Exception(s"No clinical data provider defined."))
+    clinicalDataProvider.fetch(dataType, builder.spark)
   }
 
   def cql[T](libraryContent: String): Evaluation = {
@@ -40,21 +36,6 @@ class SparkCqlSession private(spark: SparkSession, boundProviders: Map[Type, Dat
     ???
   }
 
-  protected def bound[T : TypeTag](): Option[DataProvider] = {
-    Some(boundProviders(typeOf[T]))
-    // val matched = boundProviders.filter(p => {
-    //   typeOf[T] match {
-    //     case p.typeTag => true
-    //     case _ => false
-    //   }
-    // })
-    // if (matched.size > 0) {
-    //   Some(matched.head.provider)
-    // } else {
-    //   None
-    // }
-  }
-
   protected def convertCompilationToEvaluation(): Evaluation = {
     ???
   }
@@ -64,21 +45,31 @@ object SparkCqlSession {
 
   class Builder private[SparkCqlSession](val spark: SparkSession) {
 
-    private val bindings = MutableList[Binding[BindableData]]()
+    var libraryDataProvider: Option[DataProvider] = None
+    var terminologyDataProvider: Option[DataProvider] = None
+    var clinicalDataProvider: Option[DataProvider] = None
 
-    def withBinding(binding: Binding[BindableData]): Builder = {
-      bindings += binding
+    def withLibraryDataProvider(provider: DataProvider): Builder = {
+      libraryDataProvider = Some(provider)
       this
     }
 
-    def withBinding(binding: List[Binding[BindableData]]): Builder = {
-      bindings ++= binding
+    def withTerminologyDataProvider(provider: DataProvider): Builder = {
+      terminologyDataProvider = Some(provider)
       this
+    }
+
+    def withClinicalDataProvider(provider: DataProvider): Builder = {
+      clinicalDataProvider = Some(provider)
+      this
+    }
+
+    def withClinicalDataProvider(system: String, provider: DataProvider): Builder = {
+      ???
     }
 
     def create(): SparkCqlSession = {
-      val boundProviders = bindings.map(f => (f.typeTag, f.partialProvider(spark))).toMap
-      new SparkCqlSession(spark, boundProviders)
+      new SparkCqlSession(this)
     }
   }
 
