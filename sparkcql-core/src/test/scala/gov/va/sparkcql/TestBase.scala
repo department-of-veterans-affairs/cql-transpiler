@@ -10,7 +10,7 @@ abstract class TestBase extends AnyFlatSpec {
 
   lazy val spark = {
     SparkSession.builder()
-      .master("local[*]")
+      .master("local[1]")
       .getOrCreate()
   }
 }

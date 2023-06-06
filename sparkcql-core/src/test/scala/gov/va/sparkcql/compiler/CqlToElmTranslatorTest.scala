@@ -40,6 +40,8 @@ class CqlCompilerTest extends TestBase {
     assert(compiler.compile(List("library MyLibrary version '1'", "library MyLibrary version '2'")).libraries.length == 2)
   }
 
+  // TODO: Add Provider Scoped scenarios
+
   it should "successfully translate more complex scripts" in {
     val resourcePaths = Array(
       "cql/BasicRetrieve.cql",

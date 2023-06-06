@@ -1,9 +1,9 @@
 package gov.va.sparkcql.evaluator
 
-import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.{Dataset, Row}
 import gov.va.sparkcql.model.VersionedIdentifier
 
-case class ElmEvaluation[T](defineMap: Map[StatementDef, Seq[Dataset[T]]])
+case class Evaluation(defineMap: Map[StatementDef, Seq[Dataset[Row]]])
 case class StatementDef(library: VersionedIdentifier, defineName: String)
 
 // class DataPackage {

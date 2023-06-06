@@ -2,7 +2,7 @@ subprojects {
     apply plugin: 'scala'
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
-    
+
     compileJava {
         sourceCompatibility = "${targetJavaVersion}"
         targetCompatibility = "${targetJavaVersion}"
@@ -22,7 +22,7 @@ subprojects {
     
     test {
         testLogging {
-            events "PASSED", "FAILED", "STANDARD_ERROR"
+            events "PASSED", "FAILED", "STANDARD_ERROR", "STANDARD_OUT"
         }
 
         jvmArgs = [

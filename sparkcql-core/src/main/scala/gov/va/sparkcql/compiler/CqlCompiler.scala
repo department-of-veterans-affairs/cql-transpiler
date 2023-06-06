@@ -19,28 +19,37 @@ import org.apache.spark.sql.SparkSession
   *
   * @param libraryProvider
   */
-class CqlCompiler() {
+class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[SparkSession]) {
 
-  def compile(libraryContents: List[String], providerScopedLibraries: DataProvider, spark: SparkSession): CqlCompilation = { 
-    execute(libraryContents, Some(providerScopedLibraries), Some(spark))
+  def this() {
+    this(None, None)
   }
-
+  
+  /**
+    * Builds a set of call-scoped CQL libraries based on its CQL text alone. The CQL scripts can reference 
+    * each other through [[https://cql.hl7.org/02-authorsguide.html#libraries Include Declarations]]
+    * or reference provider-scoped libraries set in the class constructor. Call-scoped libraries can contain
+    * fragments are remain anonymous (no [[https://cql.hl7.org/02-authorsguide.html#library Library Declaration required]]).
+    *
+    * @param libraryContents
+    * @return
+    */
   def compile(libraryContents: List[String]): CqlCompilation = {
-    execute(libraryContents, None, None)
+    execute(libraryContents)
   }
 
   /**
-    * Builds a specified set of libraries using their VersionedIdentifiers
+    * Builds a set of CQL libraries using their VersionedIdentifiers.
     *
     * @param libraryIdentifiers
     * @return
     */
-  def compile(libraryIdentifiers: Seq[VersionedIdentifier], providerScopedLibraries: DataProvider, spark: SparkSession): CqlCompilation = { 
-    val callScopedLibraries = libraryIdentifiers.map(lookupLibrary(_, None, Some(providerScopedLibraries), Some(spark)).get.content).toList
-    execute(callScopedLibraries, Some(providerScopedLibraries), Some(spark))
+  def compile(libraryIdentifiers: Seq[VersionedIdentifier]): CqlCompilation = { 
+    val callScopedLibraries = libraryIdentifiers.map(libraryDataFromId(_, None).get.content).toList
+    execute(callScopedLibraries)
   }
 
-  protected def execute(libraryContents: List[String], providerScopedLibraries: Option[DataProvider], spark: Option[SparkSession]): CqlCompilation = {
+  protected def execute(libraryContents: List[String]): CqlCompilation = {
 
     // Convert CQL text to LibraryData to map a VersionedIdentifier (VersionedIdentifier) to CQL
     val callScopedLibraries = libraryContents.map(content => {
@@ -52,7 +61,7 @@ class CqlCompiler() {
     })
 
     // Compile each CQL
-    val results = callScopedLibraries.map(f => executeOne(f.content, callScopedLibraries, providerScopedLibraries, spark)).toSeq
+    val results = callScopedLibraries.map(f => executeOne(f.content, callScopedLibraries)).toSeq
 
     // Collect any errors
     var elmErrors = results.toSeq.flatMap(l => {
@@ -76,20 +85,20 @@ class CqlCompiler() {
     CqlCompilation(results, elmErrors ++ batchErrors)
   }
 
-  protected def executeOne(libraryContent: String, callScopedLibraries: Seq[LibraryData], providerScopedLibraries: Option[DataProvider], spark: Option[SparkSession]): org.hl7.elm.r1.Library = {
+  protected def executeOne(libraryContent: String, callScopedLibraries: Seq[LibraryData]): org.hl7.elm.r1.Library = {
     CqlCompilerGateway.compile(
       libraryContent,
-      Some(id => lookupLibrary(VersionedIdentifier(id), Some(callScopedLibraries), providerScopedLibraries, spark).get.content))
+      Some(id => libraryDataFromId(VersionedIdentifier(id), Some(callScopedLibraries)).get.content))
   }
 
-  protected def lookupLibrary(identifier: VersionedIdentifier, callScopedLibraries: Option[Seq[LibraryData]], providerScopedLibraries: Option[DataProvider], spark: Option[SparkSession]): Option[LibraryData] = {
+  protected def libraryDataFromId(identifier: VersionedIdentifier, callScopedLibraries: Option[Seq[LibraryData]]): Option[LibraryData] = {
     if (callScopedLibraries.isDefined) {
       val callScoped = callScopedLibraries.get.filter(p => p.identifier == identifier)
       if (callScoped.length > 0) return Some(callScoped.head)
     }
 
     if (providerScopedLibraries.isDefined) {
-      val providerScoped = providerScopedLibraries.get.fetch[LibraryData](spark.get)
+      val providerScoped = providerScopedLibraries.get.fetch[LibraryData]()
       val providerResults = providerScoped.filter(f => f.identifier == identifier)
       if (!providerResults.isEmpty) return Some(providerResults.head())
     }

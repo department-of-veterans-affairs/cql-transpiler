@@ -15,62 +15,63 @@ object PopulationSize {
   final case object PopulationSize1000 extends PopulationSize
 }
 
-class SyntheaDataProvider(size: PopulationSize) extends DataProvider() {
+class SyntheaDataProvider(spark: SparkSession, size: PopulationSize) extends DataProvider(spark) {
 
   val TablePrefix = "Synthea"
   val DefaultResourceColumnName = "resource_data"
   val BundlesResourceType = "Bundles"
 
-  def initialize(spark: SparkSession): Unit = {
-    import spark.implicits._
+  val dfCache = HashMap[String, Dataset[Row]]()
 
+  import spark.implicits._
+
+  lazy val dfBundles = {
     val bundles = SyntheaDataProvider.loadBundles(size)
     
-    val dfBundles = spark.read.json(bundles.toDS)
+    spark.read.json(bundles.toDS)
       .select(explode(col("entry")).as("entry"))
       .select(
         to_json(struct(col("entry.resource.*"))).as(DefaultResourceColumnName),
         col("entry.resource.resourceType").as("resourceType"))
-    
-    dfBundles.select("resourceType").distinct().foreach(f => {
-      val resourceType = f.getAs[String]("resourceType")
+  }
+
+  def dfRef(resourceType: String): Dataset[Row] = {
+    dfCache.getOrElseUpdate(resourceType, {
       val resourceText = dfBundles
         .where(col("resourceType").equalTo(resourceType))
         .select(col(DefaultResourceColumnName))
         .toDF()
-            
-      val ds = spark.read.json(resourceText.as[String])
-        .select(struct("*").alias(DefaultResourceColumnName))
 
-      ds.createTempView(tableRef(resourceType))
+      spark.read.json(resourceText.as[String])
+        .select(struct("*").alias(DefaultResourceColumnName))
     })
   }
 
-  def tableRef(resourceType: String): String = {
-    s"${TablePrefix}${resourceType}"
-  }
-
-  def fetch[T <: Product](spark: SparkSession, filter: Option[List[FilterElement]])(implicit tag: TypeTag[T]): Dataset[T] = {
+  def fetch[T <: Product : TypeTag](filter: Option[List[FilterElement]]): Dataset[T] = {
     import spark.implicits._
-    val df = spark.table(tableRef(tag.tpe.termSymbol.fullName))
+    val tag = typeOf[T] match {
+      case x => x
+    }
+    
+    // TODO: Map trait name to table name
+    val resourceType = tag.typeSymbol.name.toTypeName.toString()
+    val df = dfRef(resourceType)
+    df.show()
     df.as[T]
-  }
-
-  def terminate(): Unit = {
   }
 }
 
 object SyntheaDataProvider {
   val instances = HashMap[PopulationSize, SyntheaDataProvider]()
 
-  def apply(size: PopulationSize): SyntheaDataProvider = {
-    instances.getOrElseUpdate(size, new SyntheaDataProvider(size))
+  def apply(size: PopulationSize) = (spark: SparkSession) => {
+    instances.getOrElseUpdate(size, new SyntheaDataProvider(spark, size))
   }
   
   def loadBundles(size: PopulationSize): Seq[String] = {
     size match {
       case PopulationSize.PopulationSize10 => load10Bundles
-      case PopulationSize.PopulationSize10 => load1000Bundles
+      case PopulationSize.PopulationSize1000 => load1000Bundles
       }
   }
 

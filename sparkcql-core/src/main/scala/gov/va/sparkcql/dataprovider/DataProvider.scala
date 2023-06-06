@@ -12,14 +12,11 @@ final case class CodeFilter() extends CodeFilterElement with FilterElement
 final case class DateFilter() extends DateFilterElement with FilterElement
 final case class OtherFilter() extends OtherFilterElement with FilterElement
 
-trait DataProvider {
-  def initialize(spark: SparkSession): Unit
+abstract class DataProvider(spark: SparkSession) {
 
-  def fetch[T <: Product](spark: SparkSession)(implicit tag: TypeTag[T]): Dataset[T] = {
-    fetch[T](spark, None)
+  def fetch[T <: Product : TypeTag](): Dataset[T] = {
+    fetch[T](None)
   }
 
-  def fetch[T <: Product](spark: SparkSession, filter: Option[List[FilterElement]])(implicit tag: TypeTag[T]): Dataset[T]
-
-  def terminate(): Unit
+  def fetch[T <: Product : TypeTag](filter: Option[List[FilterElement]]): Dataset[T]
 }
