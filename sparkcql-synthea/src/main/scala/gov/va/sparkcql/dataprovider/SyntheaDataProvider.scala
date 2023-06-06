@@ -43,20 +43,18 @@ class SyntheaDataProvider(spark: SparkSession, size: PopulationSize) extends Dat
         .toDF()
 
       spark.read.json(resourceText.as[String])
-        .select(struct("*").alias(DefaultResourceColumnName))
+        //.select(struct("*").alias(DefaultResourceColumnName))
     })
   }
 
   def fetch[T <: Product : TypeTag](filter: Option[List[FilterElement]]): Dataset[T] = {
     import spark.implicits._
-    val tag = typeOf[T] match {
-      case x => x
-    }
+    val tag = typeOf[T]
     
     // TODO: Map trait name to table name
-    val resourceType = tag.typeSymbol.name.toTypeName.toString()
+    // val resourceType = tag.typeSymbol.name.toTypeName.toString()
+    val resourceType = "Encounter"
     val df = dfRef(resourceType)
-    df.show()
     df.as[T]
   }
 }

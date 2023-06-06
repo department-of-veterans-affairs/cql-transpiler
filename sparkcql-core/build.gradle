@@ -20,7 +20,7 @@ dependencies {
 
     testImplementation "info.cqframework:quick:${cqfVersion}"
     testImplementation "info.cqframework:qdm:${cqfVersion}"
-    testImplementation project(":sparkcql-fhir")
+    testImplementation project(":sparkcql-model-fhir")
     testImplementation project(":sparkcql-synthea")
 }
 
