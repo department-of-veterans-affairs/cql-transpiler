@@ -12,11 +12,13 @@ class FileDataProviderTest extends TestBase {
 
   "A FileDataProvider" should "load and map CQL files" in {    
     val provider = FileDataProvider("./src/test/resources/cql")
-    assert(provider.fetch[LibraryData](spark).filter(_.identifier.id == "BasicRetrieve").count() == 1)
+    val adapter = provider.createAdapter(spark)
+    assert(adapter.read[LibraryData]().filter(_.identifier.id == "BasicRetrieve").count() == 1)
   }
 
   it should "load and map valuesets" in {
     val provider = FileDataProvider("./src/test/resources/valueset")
-    assert(provider.fetch[ValueSetData](spark).filter(_.name == "Emergency Department Visit").count() == 1)
+    val adapter = provider.createAdapter(spark)
+    assert(adapter.read[ValueSetData]().filter(_.name == "Emergency Department Visit").count() == 1)
   }
 }

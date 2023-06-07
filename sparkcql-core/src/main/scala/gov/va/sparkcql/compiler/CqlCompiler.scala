@@ -5,7 +5,7 @@ import scala.collection.JavaConverters._
 
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
-import gov.va.sparkcql.dataprovider.DataProvider
+import gov.va.sparkcql.dataprovider.{DataProvider, DataAdapter}
 import gov.va.sparkcql.model.{LibraryData, VersionedIdentifier}
 import org.apache.spark.sql.SparkSession
 
@@ -20,6 +20,8 @@ import org.apache.spark.sql.SparkSession
   * @param libraryProvider
   */
 class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[SparkSession]) {
+
+  lazy val adapterScopedLibraries = providerScopedLibraries.map[DataAdapter](_.createAdapter(spark.get)).headOption
 
   def this() {
     this(None, None)
@@ -98,7 +100,7 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     }
 
     if (providerScopedLibraries.isDefined) {
-      val providerScoped = providerScopedLibraries.get.fetch[LibraryData](spark.get)
+      val providerScoped = adapterScopedLibraries.get.read[LibraryData]()
       val providerResults = providerScoped.filter(f => f.identifier == identifier)
       if (!providerResults.isEmpty) return Some(providerResults.head())
     }

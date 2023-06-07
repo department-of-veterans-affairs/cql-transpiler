@@ -4,7 +4,7 @@ import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import gov.va.sparkcql.compiler.CqlCompiler
 import scala.collection.mutable.MutableList
-import gov.va.sparkcql.dataprovider.DataProvider
+import gov.va.sparkcql.dataprovider.{DataProvider, DataAdapter}
 import gov.va.sparkcql.model.{Evaluation, VersionedIdentifier, LibraryData, DataTypeRef}
 import gov.va.sparkcql.evaluator.ElmEvaluator
 
@@ -12,15 +12,16 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
   lazy val compiler = new CqlCompiler(builder.libraryDataProvider, Some(builder.spark))
   lazy val evaluator = new ElmEvaluator(builder.spark, builder.clinicalDataProvider, builder.terminologyDataProvider)
+  lazy val clinicalDataAdapter = builder.clinicalDataProvider.map[DataAdapter](_.createAdapter(builder.spark)).headOption
 
   def retrieve[T <: Product : TypeTag](): Dataset[T] = {
-    val clinicalDataProvider = builder.clinicalDataProvider.getOrElse(throw new Exception(s"No clinical data provider defined."))
-    clinicalDataProvider.fetch[T](builder.spark)
+    val adapter = clinicalDataAdapter.getOrElse(throw new Exception(s"No clinical data provider defined."))
+    adapter.read[T]()
   }
 
   def retrieve(dataType: DataTypeRef): Dataset[Row] = {
-    val clinicalDataProvider = builder.clinicalDataProvider.getOrElse(throw new Exception(s"No clinical data provider defined."))
-    clinicalDataProvider.fetch(dataType, builder.spark)
+    val adapter = clinicalDataAdapter.getOrElse(throw new Exception(s"No clinical data provider defined."))
+    adapter.read(dataType)
   }
 
   def cql[T](cqlText: String): Evaluation = {
