@@ -3,14 +3,15 @@ package gov.va.sparkcql.session
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import gov.va.sparkcql.compiler.CqlCompiler
-import gov.va.sparkcql.evaluator.Evaluation
 import scala.collection.mutable.MutableList
 import gov.va.sparkcql.dataprovider.DataProvider
-import gov.va.sparkcql.model.{VersionedIdentifier, LibraryData, DataTypeRef}
+import gov.va.sparkcql.model.{Evaluation, VersionedIdentifier, LibraryData, DataTypeRef}
+import gov.va.sparkcql.evaluator.ElmEvaluator
 
 class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
   lazy val compiler = new CqlCompiler(builder.libraryDataProvider, Some(builder.spark))
+  lazy val evaluator = new ElmEvaluator(builder.spark, builder.clinicalDataProvider, builder.terminologyDataProvider)
 
   def retrieve[T <: Product : TypeTag](): Dataset[T] = {
     val clinicalDataProvider = builder.clinicalDataProvider.getOrElse(throw new Exception(s"No clinical data provider defined."))
@@ -22,18 +23,26 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     clinicalDataProvider.fetch(dataType, builder.spark)
   }
 
-  def cql[T](libraryContent: String): Evaluation = {
-    cql(List(libraryContent))
+  def cql[T](cqlText: String): Evaluation = {
+    cql(List(cqlText))
   }
 
-  def cql[T](cqlContent: List[String]): Evaluation = {
-    val compilation = compiler.compile(cqlContent)
-    Evaluation(null)
+  def cql[T](cqlText: List[String]): Evaluation = {
+    cqlExec(Some(cqlText), None, None)
   }
 
   def cql[T](libraryIdentifiers: Seq[VersionedIdentifier]): Evaluation = {
-    val compilation = compiler.compile(libraryIdentifiers)
-    ???
+    cqlExec(None, Some(libraryIdentifiers), None)
+  }
+
+  protected def cqlExec(
+    cqlText: Option[List[String]],
+    libraryIdentifiers: Option[Seq[VersionedIdentifier]],
+    parameters: Option[Map[String, Object]]): Evaluation = {
+    
+    val compilation = if (cqlText.isDefined) { compiler.compile(cqlText.get) } else { compiler.compile(libraryIdentifiers.get) }
+    val evaluation = evaluator.evalCompilation(compilation)
+    evaluation
   }
 
   protected def convertCompilationToEvaluation(): Evaluation = {
@@ -49,22 +58,22 @@ object SparkCqlSession {
     var terminologyDataProvider: Option[DataProvider] = None
     var clinicalDataProvider: Option[DataProvider] = None
 
-    def withLibraryDataProvider(provider: DataProvider): Builder = {
+    def withLibraryData(provider: DataProvider): Builder = {
       libraryDataProvider = Some(provider)
       this
     }
 
-    def withTerminologyDataProvider(provider: DataProvider): Builder = {
+    def withTerminologyData(provider: DataProvider): Builder = {
       terminologyDataProvider = Some(provider)
       this
     }
 
-    def withClinicalDataProvider(provider: DataProvider): Builder = {
+    def withClinicalData(provider: DataProvider): Builder = {
       clinicalDataProvider = Some(provider)
       this
     }
 
-    def withClinicalDataProvider(system: String, provider: DataProvider): Builder = {
+    def withClinicalData(system: String, provider: DataProvider): Builder = {
       ???
     }
 

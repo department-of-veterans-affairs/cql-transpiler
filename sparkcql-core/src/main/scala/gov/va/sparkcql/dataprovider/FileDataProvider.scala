@@ -4,14 +4,22 @@ import scala.reflect.runtime.universe._
 import gov.va.sparkcql.common.Files
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import gov.va.sparkcql.model._
-import scala.collection.mutable.HashMap
 import gov.va.sparkcql.compiler.CqlCompilerGateway
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import scala.reflect.ClassTag
 
-final case class FileContent(value: String)
+final case class FileContent(path: String, ext: String, value: String)
 
 class FileDataProvider(path: String) extends DataProvider() {
 
-  lazy val data = Files.search(path, ".*").map(c => FileContent(scala.io.Source.fromFile(c).mkString)).toSeq
+  val currentDir = Files.currentDir()
+  println(currentDir)
+
+  lazy val data = Files.search(path, "*").map(c => {
+    val ext = c.split("\\.").last
+    FileContent(c, ext, scala.io.Source.fromFile(c).mkString)
+  }).toSeq
 
   def fetch(dataType: DataTypeRef, spark: SparkSession): Dataset[Row] = {
     ???
@@ -23,12 +31,16 @@ class FileDataProvider(path: String) extends DataProvider() {
     spark.createDataset(convertedData.asInstanceOf[Seq[T]])(encoder)
   }
 
-  def convert[T : TypeTag](content: FileContent): LibraryData = {
+  def convert[T <: Product : TypeTag](content: FileContent): T = {
     typeOf[T] match {
       case x if typeOf[T] <:< typeOf[LibraryData] =>
         val id = VersionedIdentifier(CqlCompilerGateway.parseVersionedIdentifier(content.value))
-        new LibraryData(id, content.value)
-      case _ => throw new Exception("Unable to convert type " + typeOf[T].termSymbol.name)
+        new LibraryData(id, content.value).asInstanceOf[T]
+      case x if typeOf[T] <:< typeOf[ValueSetData] =>
+        implicit val formats: Formats = DefaultFormats
+        parse(content.value).extract[ValueSetData].asInstanceOf[T]
+      case _ => 
+        throw new Exception("Unable to convert type " + typeOf[T].termSymbol.name)
     }
   }
 }

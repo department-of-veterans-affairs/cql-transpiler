@@ -35,7 +35,7 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     * @return
     */
   def compile(libraryContents: List[String]): CqlCompilation = {
-    execute(libraryContents)
+    compileExec(libraryContents)
   }
 
   /**
@@ -46,10 +46,10 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     */
   def compile(libraryIdentifiers: Seq[VersionedIdentifier]): CqlCompilation = { 
     val callScopedLibraries = libraryIdentifiers.map(libraryDataFromId(_, None).get.content).toList
-    execute(callScopedLibraries)
+    compileExec(callScopedLibraries)
   }
 
-  protected def execute(libraryContents: List[String]): CqlCompilation = {
+  protected def compileExec(libraryContents: List[String]): CqlCompilation = {
 
     // Convert CQL text to LibraryData to map a VersionedIdentifier (VersionedIdentifier) to CQL
     val callScopedLibraries = libraryContents.map(content => {
@@ -61,7 +61,7 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     })
 
     // Compile each CQL
-    val results = callScopedLibraries.map(f => executeOne(f.content, callScopedLibraries)).toSeq
+    val results = callScopedLibraries.map(f => compileExecOne(f.content, callScopedLibraries)).toSeq
 
     // Collect any errors
     var elmErrors = results.toSeq.flatMap(l => {
@@ -85,7 +85,7 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     CqlCompilation(results, elmErrors ++ batchErrors)
   }
 
-  protected def executeOne(libraryContent: String, callScopedLibraries: Seq[LibraryData]): org.hl7.elm.r1.Library = {
+  protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[LibraryData]): org.hl7.elm.r1.Library = {
     CqlCompilerGateway.compile(
       libraryContent,
       Some(id => libraryDataFromId(VersionedIdentifier(id), Some(callScopedLibraries)).get.content))

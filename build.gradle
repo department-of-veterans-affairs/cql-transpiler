@@ -19,10 +19,15 @@ subprojects {
         testImplementation 'org.scalatestplus:junit-4-12_2.12:3.2.2.0'
         testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     }
-    
+
     test {
         testLogging {
-            events "PASSED", "FAILED", "STANDARD_ERROR", "STANDARD_OUT"
+            events "PASSED", "FAILED", "STANDARD_ERROR"
+            showExceptions true
+            exceptionFormat "FULL"
+            showCauses true
+            showStackTraces true
+            showStandardStreams = false
         }
 
         jvmArgs = [
