@@ -1,20 +1,21 @@
 package gov.va.sparkcql.dataprovider
 
 import scala.reflect.runtime.universe._
-import gov.va.sparkcql.common.Files
+import gov.va.sparkcql.common.helper.FileHelper
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
-import gov.va.sparkcql.model._
 import gov.va.sparkcql.compiler.CqlCompilerGateway
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import gov.va.sparkcql.model.ext.elm.VersionedIdentifier
+import gov.va.sparkcql.model.providable._
 
 final case class FileContent(path: String, ext: String, value: String)
 
 class FileDataAdapter(spark: SparkSession, path: String) extends DataAdapter(spark) {
-  val currentDir = Files.currentDir()
+  val currentDir = FileHelper.currentDir()
   println(currentDir)
 
-  lazy val data = Files.search(path, "*").map(c => {
+  lazy val data = FileHelper.search(path, "*").map(c => {
     val ext = c.split("\\.").last
     FileContent(c, ext, scala.io.Source.fromFile(c).mkString)
   }).toSeq

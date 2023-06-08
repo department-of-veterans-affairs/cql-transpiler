@@ -5,7 +5,6 @@ import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import org.hl7.elm.r1.CodeFilterElement
 import org.hl7.elm.r1.DateFilterElement
 import org.hl7.elm.r1.OtherFilterElement
-import gov.va.sparkcql.model.DataTypeRef
 
 trait DataProvider {
   def createAdapter(spark: SparkSession): DataAdapter

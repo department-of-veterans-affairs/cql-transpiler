@@ -11,32 +11,6 @@
 				"panel": "shared"
 			},
 			"options": {"cwd": "${workspaceFolder}/"}
-		},
-		{
-			"label": "Test sparkcql",
-			"type": "shell",
-			"group": "build",
-			"command": "python",
-			"args": ["-m", "pytest", "-k", "test_literal_definitions"],
-			"presentation": {
-				"reveal": "always",
-				"clear": true,
-				"panel": "shared"
-			},
-			"options": {"cwd": "${workspaceFolder}/sparkcql"}
-		},
-		{
-			"label": "Build CQL Scripts",
-			"type": "shell",
-			"group": "build",
-			"command": "TODO",
-			"args": ["cql", "compile", "--input=./src/test/resources"],
-			"presentation": {
-				"reveal": "always",
-				"clear": true,
-				"panel": "shared"
-			},
-			"options": {"cwd": "${workspaceFolder}"}
 		}
 	]
 }

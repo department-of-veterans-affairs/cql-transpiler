@@ -3,7 +3,6 @@ package gov.va.sparkcql.dataprovider
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import org.apache.spark.sql.functions._
-import gov.va.sparkcql.model._
 import scala.collection.mutable.HashMap
 
 class SyntheaDataAdapter(spark: SparkSession, size: PopulationSize) extends DataAdapter(spark) {

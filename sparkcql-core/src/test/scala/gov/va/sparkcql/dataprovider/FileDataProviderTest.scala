@@ -3,7 +3,7 @@ package gov.va.sparkcql.dataprovider
 import scala.reflect.runtime.universe._
 import gov.va.sparkcql.TestBase
 import org.hl7.elm.r1.VersionedIdentifier
-import gov.va.sparkcql.model.{LibraryData, ValueSetData}
+import gov.va.sparkcql.model.providable._
 import org.apache.spark.sql.{Dataset, Encoders}
 
 class FileDataProviderTest extends TestBase {

@@ -3,7 +3,6 @@ package gov.va.sparkcql.dataprovider
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import org.apache.spark.sql.functions._
-import gov.va.sparkcql.model.DataTypeRef
 
 class TableDataAdapter(spark: SparkSession, schema: Option[String], table: String, resourceColumn: Option[String]) extends DataAdapter(spark) {
 

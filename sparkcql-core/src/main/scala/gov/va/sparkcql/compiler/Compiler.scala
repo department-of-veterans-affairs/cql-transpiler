@@ -5,12 +5,10 @@ import scala.collection.JavaConverters._
 
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
-import gov.va.sparkcql.dataprovider.{DataProvider, DataAdapter}
-import gov.va.sparkcql.model.{LibraryData, VersionedIdentifier}
+import gov.va.sparkcql.dataprovider.{DataProvider, DataAdapter, DataTypeRef}
+import gov.va.sparkcql.model.providable._
+import gov.va.sparkcql.model.ext.elm.VersionedIdentifier
 import org.apache.spark.sql.SparkSession
-
-// TODO: Return all errors instead of throwing them.
-// TODO: General quality improvement
 
 /**
   * Three scopes are searched when resolving library references (in order of precedence):
@@ -19,7 +17,7 @@ import org.apache.spark.sql.SparkSession
   *
   * @param libraryProvider
   */
-class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[SparkSession]) {
+class Compiler(providerScopedLibraries: Option[DataProvider], spark: Option[SparkSession]) {
 
   lazy val adapterScopedLibraries = providerScopedLibraries.map[DataAdapter](_.createAdapter(spark.get)).headOption
 
@@ -36,7 +34,7 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     * @param libraryContents
     * @return
     */
-  def compile(libraryContents: List[String]): CqlCompilation = {
+  def compile(libraryContents: List[String]): Compilation = {
     compileExec(libraryContents)
   }
 
@@ -46,12 +44,12 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
     * @param libraryIdentifiers
     * @return
     */
-  def compile(libraryIdentifiers: Seq[VersionedIdentifier]): CqlCompilation = { 
+  def compile(libraryIdentifiers: Seq[VersionedIdentifier]): Compilation = { 
     val callScopedLibraries = libraryIdentifiers.map(libraryDataFromId(_, None).get.content).toList
     compileExec(callScopedLibraries)
   }
 
-  protected def compileExec(libraryContents: List[String]): CqlCompilation = {
+  protected def compileExec(libraryContents: List[String]): Compilation = {
 
     // Convert CQL text to LibraryData to map a VersionedIdentifier (VersionedIdentifier) to CQL
     val callScopedLibraries = libraryContents.map(content => {
@@ -84,7 +82,7 @@ class CqlCompiler(providerScopedLibraries: Option[DataProvider], spark: Option[S
       .map(f => s"Duplicate CQL library detected ${f._1.toString()}")
       .toSeq
 
-    CqlCompilation(results, elmErrors ++ batchErrors)
+    Compilation(results, elmErrors ++ batchErrors)
   }
 
   protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[LibraryData]): org.hl7.elm.r1.Library = {

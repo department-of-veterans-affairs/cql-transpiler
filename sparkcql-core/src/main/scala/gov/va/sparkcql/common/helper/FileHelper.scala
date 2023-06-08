@@ -1,8 +1,8 @@
-package gov.va.sparkcql.common
+package gov.va.sparkcql.common.helper
 
 import java.io.File
 
-object Files {
+object FileHelper {
   def currentDir() = {
     System.getProperty("user.dir")
   }

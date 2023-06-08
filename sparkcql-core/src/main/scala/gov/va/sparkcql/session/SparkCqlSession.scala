@@ -2,17 +2,19 @@ package gov.va.sparkcql.session
 
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
-import gov.va.sparkcql.compiler.CqlCompiler
+import gov.va.sparkcql.compiler.Compiler
 import scala.collection.mutable.MutableList
-import gov.va.sparkcql.dataprovider.{DataProvider, DataAdapter}
-import gov.va.sparkcql.model.{Evaluation, VersionedIdentifier, LibraryData, DataTypeRef}
-import gov.va.sparkcql.evaluator.ElmEvaluator
+import gov.va.sparkcql.dataprovider._
+import gov.va.sparkcql.dataprovider.DataTypeRef
+import gov.va.sparkcql.model.ext.elm.VersionedIdentifier
+import gov.va.sparkcql.evaluator.{Evaluator, Evaluation}
 
 class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
-  lazy val compiler = new CqlCompiler(builder.libraryDataProvider, Some(builder.spark))
-  lazy val evaluator = new ElmEvaluator(builder.spark, builder.clinicalDataProvider, builder.terminologyDataProvider)
+  lazy val compiler = new Compiler(builder.libraryDataProvider, Some(builder.spark))
   lazy val clinicalDataAdapter = builder.clinicalDataProvider.map[DataAdapter](_.createAdapter(builder.spark)).headOption
+  lazy val terminologyDataAdapter = builder.clinicalDataProvider.map[DataAdapter](_.createAdapter(builder.spark)).headOption
+  lazy val evaluator = new Evaluator(None, builder.spark, clinicalDataAdapter, terminologyDataAdapter)
 
   def retrieve[T <: Product : TypeTag](): Dataset[T] = {
     val adapter = clinicalDataAdapter.getOrElse(throw new Exception(s"No clinical data provider defined."))
@@ -42,8 +44,8 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     parameters: Option[Map[String, Object]]): Evaluation = {
     
     val compilation = if (cqlText.isDefined) { compiler.compile(cqlText.get) } else { compiler.compile(libraryIdentifiers.get) }
-    val evaluation = evaluator.evalCompilation(compilation)
-    evaluation
+    val evaluation = evaluator.eval(compilation)
+    evaluation.asInstanceOf[Evaluation]
   }
 
   protected def convertCompilationToEvaluation(): Evaluation = {

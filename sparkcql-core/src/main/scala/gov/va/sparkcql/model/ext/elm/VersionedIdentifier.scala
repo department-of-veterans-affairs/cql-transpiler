@@ -1,4 +1,4 @@
-package gov.va.sparkcql.model
+package gov.va.sparkcql.model.ext.elm
 
 case class VersionedIdentifier(id: String, system: Option[String], version: Option[String]) {
   override def toString(): String = {
