@@ -5,7 +5,7 @@ import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.model.fhir.r4._
 import gov.va.sparkcql.dataprovider.{FileDataProvider, SyntheaDataProvider, PopulationSize, DataTypeRef}
-import gov.va.sparkcql.model.ext.elm.VersionedIdentifier
+import gov.va.sparkcql.model.elm.VersionedIdentifier
 
 class SparkCqlSessionTest extends TestBase {
 

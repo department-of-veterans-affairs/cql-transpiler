@@ -2,19 +2,19 @@ package gov.va.sparkcql.session
 
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
-import gov.va.sparkcql.compiler.Compiler
+import gov.va.sparkcql.translation.cql2elm.CqlToElmTranslator
+import gov.va.sparkcql.translation.elm2spark.ElmToSparkTranslator
 import scala.collection.mutable.MutableList
 import gov.va.sparkcql.dataprovider._
 import gov.va.sparkcql.dataprovider.DataTypeRef
-import gov.va.sparkcql.model.ext.elm.VersionedIdentifier
-import gov.va.sparkcql.evaluator.{Evaluator, Evaluation}
+import gov.va.sparkcql.model.elm.VersionedIdentifier
 
 class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
-  lazy val compiler = new Compiler(builder.libraryDataProvider, Some(builder.spark))
+  lazy val cqlToElm = new CqlToElmTranslator(builder.libraryDataProvider, Some(builder.spark))
   lazy val clinicalDataAdapter = builder.clinicalDataProvider.map[DataAdapter](_.createAdapter(builder.spark)).headOption
   lazy val terminologyDataAdapter = builder.clinicalDataProvider.map[DataAdapter](_.createAdapter(builder.spark)).headOption
-  lazy val evaluator = new Evaluator(None, builder.spark, clinicalDataAdapter, terminologyDataAdapter)
+  lazy val elmToSpark = new ElmToSparkTranslator(builder.spark, clinicalDataAdapter, terminologyDataAdapter)
 
   def retrieve[T <: Product : TypeTag](): Dataset[T] = {
     val adapter = clinicalDataAdapter.getOrElse(throw new Exception(s"No clinical data provider defined."))
@@ -43,8 +43,8 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     libraryIdentifiers: Option[Seq[VersionedIdentifier]],
     parameters: Option[Map[String, Object]]): Evaluation = {
     
-    val compilation = if (cqlText.isDefined) { compiler.compile(cqlText.get) } else { compiler.compile(libraryIdentifiers.get) }
-    val evaluation = evaluator.eval(compilation)
+    val compilation = if (cqlText.isDefined) { cqlToElm.translate(cqlText.get) } else { cqlToElm.translate(libraryIdentifiers.get) }
+    val evaluation = elmToSpark.translate(None, compilation)
     evaluation.asInstanceOf[Evaluation]
   }
 

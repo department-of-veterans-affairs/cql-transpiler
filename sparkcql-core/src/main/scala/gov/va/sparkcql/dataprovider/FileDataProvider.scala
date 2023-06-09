@@ -3,7 +3,7 @@ package gov.va.sparkcql.dataprovider
 import scala.reflect.runtime.universe._
 import gov.va.sparkcql.common.helper.FileHelper
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
-import gov.va.sparkcql.compiler.CqlCompilerGateway
+import gov.va.sparkcql.translation.cql2elm.CqlCompilerGateway
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
