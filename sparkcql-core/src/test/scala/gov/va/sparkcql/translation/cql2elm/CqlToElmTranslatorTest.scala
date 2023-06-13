@@ -53,12 +53,4 @@ class CqlToElmTranslatorTest extends TestBase {
     val cqlToElm = new CqlToElmTranslator()
     assertNoElmErrors(cqlToElm.translate(targets.toList))
   }
-
-  def assertNoElmErrors(libraries: Seq[Library]): Boolean = {
-    val errors = libraries.flatMap(_.getAnnotation().asScala).collect {
-      case e: CqlToElmError => e
-      case _ => None
-    }
-    errors.length == 0
-  }
 }

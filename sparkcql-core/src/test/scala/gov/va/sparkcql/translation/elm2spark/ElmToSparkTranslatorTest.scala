@@ -4,6 +4,7 @@ import gov.va.sparkcql.TestBase
 import collection.JavaConverters._
 import java.io.StringWriter
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
 import gov.va.sparkcql.dataprovider.{FileDataProvider, SyntheaDataProvider, PopulationSize, DataAdapter}
 import gov.va.sparkcql.model.fhir.r4._
 import gov.va.sparkcql.model.elm.ElmTypes
@@ -34,12 +35,16 @@ class ElmToSparkTranslatorTest extends TestBase {
 
   it should "filter based on MeasurementPeriod parameter" in {
     val evaluator = new ElmToSparkTranslator(spark, clinicalDataAdapter, terminologyDataAdapter)
-    val libraries = cqlToElm.translate(List(
-      """using QUICK
-          define "testEncounter":
-            ["Encounter"] E
-          """
+    val libraries = cqlToElm.translate(List("""
+      library Test
+      using QUICK
+      parameter MeasurementPeriod Interval<Date>
+      define "Encounter A":
+          [Encounter] E
+          where E.period ends during MeasurementPeriod"""
       ))
+    writeElm(libraries)
+    assertNoElmErrors(libraries)
     val parameters = Some(Map("MeasurementPeriod" -> ElmTypes.DateInterval(ElmTypes.Date("2013-01-01"), ElmTypes.Date("2014-01-01"), true, false)))
     val evaluation = elmToSpark.translate(parameters, libraries)
     showData(evaluation)
@@ -51,8 +56,8 @@ class ElmToSparkTranslatorTest extends TestBase {
 
   def writeElm(libraries: Seq[Library]): Unit = {
     libraries.map(library => {
-      val name = if (library.getIdentifier().getId() != null) { library.getIdentifier().getId() } else { java.util.UUID.randomUUID.toString } + ".json"
-      val writer = new FileWriter(new File(name))
+      val name = if (library.getIdentifier().getId() != null) { library.getIdentifier().getId() } else { java.util.UUID.randomUUID.toString }
+      val writer = new FileWriter(new File(name + ".json"))
       ElmLibraryWriterFactory.getWriter(LibraryContentType.JSON.mimeType()).write(library, writer)
     })
   }

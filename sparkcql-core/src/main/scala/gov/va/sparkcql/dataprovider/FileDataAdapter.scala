@@ -31,6 +31,8 @@ class FileDataAdapter(spark: SparkSession, path: String) extends DataAdapter(spa
   }
 
   def convert[T <: Product : TypeTag](content: FileContent): T = {
+    // TODO: FileDataProvider should generically handle the data it provides. The code below breaks
+    // that rule. Need a more appropriate design long term.
     typeOf[T] match {
       case x if typeOf[T] <:< typeOf[LibraryData] =>
         val id = VersionedIdentifier(CqlCompilerGateway.parseVersionedIdentifier(content.value))

@@ -39,10 +39,11 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   }
 
   protected def cqlExec(
-    cqlText: Option[List[String]],
-    libraryIdentifiers: Option[Seq[VersionedIdentifier]],
-    parameters: Option[Map[String, Object]]): Evaluation = {
+      cqlText: Option[List[String]],
+      libraryIdentifiers: Option[Seq[VersionedIdentifier]],
+      parameters: Option[Map[String, Object]]): Evaluation = {
     
+    // TODO: Convert Elm agnostic params to Elm types
     val compilation = if (cqlText.isDefined) { cqlToElm.translate(cqlText.get) } else { cqlToElm.translate(libraryIdentifiers.get) }
     val evaluation = elmToSpark.translate(None, compilation)
     evaluation.asInstanceOf[Evaluation]
