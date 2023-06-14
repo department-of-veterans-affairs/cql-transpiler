@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 import org.hl7.elm.r1.Library
 import org.hl7.cql_annotations.r1.CqlToElmError
+import gov.va.sparkcql.core.Log
 
 @RunWith(classOf[JUnitRunner])
 abstract class TestBase extends AnyFlatSpec {
@@ -22,7 +23,7 @@ abstract class TestBase extends AnyFlatSpec {
       case e: CqlToElmError => true
       case _ => false
     }
-    val x = errors.length 
+    val x = errors.length
     assert(errors.length == 0, errors.headOption.getOrElse(""))
   }  
 }

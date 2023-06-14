@@ -27,7 +27,6 @@ subprojects {
             exceptionFormat "FULL"
             showCauses true
             showStackTraces true
-            showStandardStreams = false
         }
 
         jvmArgs = [

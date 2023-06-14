@@ -4,12 +4,12 @@ import scala.reflect.runtime.universe._
 import gov.va.sparkcql.core.helper.FileHelper
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
-import gov.va.sparkcql.core.model.providable._
 import gov.va.sparkcql.core.model.{DataType, ValueSet, CqlContent}
 import org.json4s._
 import org.json4s.jackson.Serialization.{read, write}
 import gov.va.sparkcql.core.model.elm.VersionedIdentifier
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
+import gov.va.sparkcql.core.Log
 
 protected case class FileContent(path: String, value: String)
 
@@ -21,7 +21,6 @@ class FileSourceAdapter(spark: SparkSession, path: String, modelAdapter: ModelAd
   private type JsonString = String
 
   val currentDir = FileHelper.currentDir()
-  println(currentDir)
   
   lazy val fileContents = FileHelper.search(path, "*").map(c => {
     val ext = c.split("\\.").last
@@ -37,7 +36,7 @@ class FileSourceAdapter(spark: SparkSession, path: String, modelAdapter: ModelAd
       if (schema.isDefined) {
         Some(spark.read.schema(schema.get).json(jsonData.toDS()))
       } else {
-        println(s"WARNING: No schema found for ${dataType.toString()}. Attempting to infer schema.")
+        Log.warn(s"No schema found for ${dataType.toString()}. Attempting to infer schema.")
         Some(spark.read.json(jsonData.toDS()))
       }
     } else {

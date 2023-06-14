@@ -3,7 +3,6 @@ package gov.va.sparkcql.core.adapter.source
 import scala.reflect.runtime.universe._
 import gov.va.sparkcql.TestBase
 import org.hl7.elm.r1.VersionedIdentifier
-import gov.va.sparkcql.core.model.providable._
 import org.apache.spark.sql.{Dataset, Encoders}
 import org.apache.spark.sql.functions._
 import gov.va.sparkcql.core.model.{DataType, ValueSet, CqlContent}

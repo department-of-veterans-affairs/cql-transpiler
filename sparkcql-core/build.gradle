@@ -6,6 +6,9 @@ dependencies {
         // spark upgrades to a newer version.
         exclude group: 'org.antlr', module: 'antlr4-runtime'
     }
+
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
     implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
     implementation "org.json4s:json4s-native_2.12:${json4sVersion}"

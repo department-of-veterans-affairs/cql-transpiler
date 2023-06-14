@@ -7,6 +7,7 @@ import gov.va.sparkcql.core.model.xsd.QName
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import org.apache.spark.sql.types.StructType
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
+import gov.va.sparkcql.core.Log
 
 sealed class SourceComposite(spark: SparkSession, modelAdapter: ModelAdapter)
     extends SourceAdapter(spark, modelAdapter) with Composable[SourceAdapter] {
@@ -17,7 +18,7 @@ sealed class SourceComposite(spark: SparkSession, modelAdapter: ModelAdapter)
       if (df.isDefined && df.get.schema.fields.length > 0) {
         df
       } else {
-        println("WARNING: SourceAdapter returned a columnless dataframe when None should have been returned. Ignoring output.")
+        Log.warn("SourceAdapter returned a columnless dataframe when None should have been returned. Ignoring output.")
         None
       }
     })

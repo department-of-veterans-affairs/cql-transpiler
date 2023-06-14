@@ -10,6 +10,7 @@ import gov.va.sparkcql.core.adapter.source.{SourceAdapterFactory, SourceAdapter,
 import gov.va.sparkcql.core.adapter.model.{ModelAdapterFactory, ModelAdapter, ModelComposite}
 import gov.va.sparkcql.core.model.DataType
 import gov.va.sparkcql.core.adapter.model.NativeModel
+import gov.va.sparkcql.core.Log
 
 class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
@@ -77,7 +78,7 @@ object SparkCqlSession {
 
     def create(): SparkCqlSession = {
       if (modelAdapterFactories.length == 0) {
-        println("WARNING: No model adapters specified.")
+        Log.warn("No model adapters specified.")
       }
 
       modelAdapterFactories += new NativeModel()
