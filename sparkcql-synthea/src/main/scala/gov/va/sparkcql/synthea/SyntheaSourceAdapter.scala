@@ -37,7 +37,7 @@ class SyntheaSourceAdapter(spark: SparkSession, size: PopulationSize, modelAdapt
         .select(col(DefaultResourceColumnName))
         .toDF()
 
-      if (resourceText.count() > 0) {
+      if (resourceText.schema.fields.length > 0) {
         Some(spark.read.json(resourceText.as[String]))
       } else {
         None

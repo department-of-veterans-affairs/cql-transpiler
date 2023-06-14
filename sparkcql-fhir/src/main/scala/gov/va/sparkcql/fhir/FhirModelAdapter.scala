@@ -12,6 +12,6 @@ class FhirModelAdapter extends ModelAdapter {
     None
   }
 
-  override def deserialize[T: TypeTag](data: String): Option[T] = ???
+  override def deserialize[T: TypeTag](data: String): Option[T] = None
   
 }

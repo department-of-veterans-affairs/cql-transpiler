@@ -5,6 +5,7 @@ import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
 
 class FileSource(path: String) extends SourceAdapterFactory {
+  
   def create(spark: SparkSession, modelAdapter: ModelAdapter): SourceAdapter = {
     new FileSourceAdapter(spark, path, modelAdapter)
   }

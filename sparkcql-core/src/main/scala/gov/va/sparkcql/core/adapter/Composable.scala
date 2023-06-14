@@ -16,19 +16,11 @@ trait Composable[T] {
     this.asInstanceOf[T]
   }
 
-  def first[R](f: (T) => Option[R]): Option[R] = {
-    adapters
-    .view
-    .flatMap(a => {
-      f(a)
-    }).headOption
-  }
-
   def composeFirst[R](f: (T) => Option[R]): Option[R] = {
     adapters
       .view
       .flatMap(a => {
         f(a)
       }).headOption
-  }  
+  }
 }

@@ -10,9 +10,9 @@ abstract class SourceAdapter(spark: SparkSession, modelAdapter: ModelAdapter) {
   def read(dataType: DataType): Option[Dataset[Row]]
 
   def read[T <: Product : TypeTag](): Option[Dataset[T]] = {
-    val modelTypeRef = DataType[T]
+    val dataType = DataType[T]
     val encoder = Encoders.product[T]
-    val df = read(modelTypeRef)
+    val df = read(dataType)
     if (df.isDefined) {
       Some(df.get.as[T](encoder))
     } else {

@@ -9,10 +9,14 @@ import org.apache.spark.sql.types.StructType
 sealed class ModelComposite extends ModelAdapter with Composable[ModelAdapter] {
 
   override def schema(dataType: DataType): Option[StructType] = {
-    first(f => Option(f.schema(dataType))).getOrElse(throw new Exception(s"Unable to find schema ${dataType.toString()}"))
+    composeFirst[StructType](f => {
+      f.schema(dataType)
+    }).orElse(throw new Exception(s"Unable to find schema ${dataType.toString()}"))
   }
 
   override def deserialize[T : TypeTag](data: String): Option[T] = {
-    first(f => Option(f.deserialize[T](data))).getOrElse(throw new Exception(s"Unable to deserialize type ${typeOf[T].typeSymbol.fullName}"))
+    composeFirst[T](f => {
+      f.deserialize[T](data)
+    }).orElse(throw new Exception(s"Unable to deserialize type ${typeOf[T].typeSymbol.fullName}"))
   }
 }

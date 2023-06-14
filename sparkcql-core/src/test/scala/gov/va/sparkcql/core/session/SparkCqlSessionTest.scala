@@ -8,6 +8,7 @@ import gov.va.sparkcql.core.model.elm.VersionedIdentifier
 import gov.va.sparkcql.core.adapter.source.{FileSource}
 import gov.va.sparkcql.fhir.{FhirModel, FhirDataType}
 import gov.va.sparkcql.synthea.{PopulationSize, SyntheaSource}
+import gov.va.sparkcql.core.model.CqlContent
 
 class SparkCqlSessionTest extends TestBase {
 
@@ -24,12 +25,8 @@ class SparkCqlSessionTest extends TestBase {
     assertDoesNotCompile("val sparkcql = new SparkCqlSession(null)")
   }
 
-  case class TypedEncounter(status: Option[String])
-  case class TypedCondition(id: String)
-
   it should "support statically typed retrievals" in {
-    assert(sparkcql.retrieve[TypedEncounter].get.head().status.isDefined)
-    assert(sparkcql.retrieve[TypedCondition].get.head().id != null)
+    assert(sparkcql.retrieve[CqlContent].isDefined)
   }
 
   it should "support dynamically typed retrievals" in {

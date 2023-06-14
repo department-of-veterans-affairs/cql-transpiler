@@ -15,6 +15,9 @@ protected case class FileContent(path: String, value: String)
 
 class FileSourceAdapter(spark: SparkSession, path: String, modelAdapter: ModelAdapter) extends SourceAdapter(spark, modelAdapter) {
 
+  assert(path != null)
+  assert(path != "")
+
   private type JsonString = String
 
   val currentDir = FileHelper.currentDir()
@@ -27,6 +30,7 @@ class FileSourceAdapter(spark: SparkSession, path: String, modelAdapter: ModelAd
 
   def read(dataType: DataType): Option[Dataset[Row]] = {
     import spark.implicits._ 
+    val x = this.path
     val jsonData = fileContents.flatMap(c => convert(dataType, c))
     if (jsonData.length > 0) {
       val schema = modelAdapter.schema(dataType)
