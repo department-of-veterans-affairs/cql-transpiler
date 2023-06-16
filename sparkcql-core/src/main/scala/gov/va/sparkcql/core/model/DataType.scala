@@ -1,7 +1,6 @@
 package gov.va.sparkcql.core.model
 
 import scala.reflect.runtime.universe._
-import gov.va.sparkcql.core.model.xsd.QName
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.Encoders
 
@@ -29,9 +28,5 @@ object DataType {
     val name = tokens.last
     
     DataType(system, name, None)
-  }
-
-  def apply(qname: QName): DataType = {
-    DataType(qname.uri, qname.name, None)
   }
 }

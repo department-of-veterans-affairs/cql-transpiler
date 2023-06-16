@@ -8,16 +8,13 @@ import org.hl7.elm.r1.CodeSystemRef
 import org.hl7.cql_annotations.r1._
 import gov.va.sparkcql.core.adapter.source.SourceAdapter
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
-import gov.va.sparkcql.core.model.elm.ElmTypes
-import gov.va.sparkcql.core.model.xsd.QName
 import gov.va.sparkcql.core.model.{DataType, StatementEvaluation}
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.model.{Evaluation, LibraryEvaluation, StatementEvaluation}
-import gov.va.sparkcql.core.model.elm.ElmTypes.DateTimeInterval
 
 abstract class ElmToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapters: Option[ModelAdapter], spark: SparkSession) {
 
-  def translate(parameters: Option[Map[String, ElmTypes.Any]], libraryCollection: Seq[Library]): Evaluation
+  def translate(parameters: Option[Map[String, Object]], libraryCollection: Seq[Library]): Evaluation
 
   /**
   * Purpose is to provide eval dispatch and exhaustiveness checks for all ELM types. The type of each ELM
@@ -33,9 +30,9 @@ abstract class ElmToSparkTranslator(sourceAdapters: Option[SourceAdapter], model
   implicit class EvalExtension(node: Element) {
     def eval(ctx: TranslationContext): Any = {
       node match {
-        case null => Log.info("Ignoring null evaluation")
+        case null => Log.warn("Skipping null value detected during evaluation.")
         case _ => 
-          Log.info(s"Evaluating ${node.getClass().getName()}")
+          Log.debug(s"Evaluating ${node.getClass().getName()}")
           dispatch(node, ctx)
       }
     }

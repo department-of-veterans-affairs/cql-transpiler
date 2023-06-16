@@ -22,7 +22,7 @@ class PseudoQuickMeasureTests extends IntegrationTestBase {
   }
 
   "A PseudoMeasureTest" should "should calculate Emergency Department" in {
-    val parameter = sparkcql.parameter("Measurement Period").dateTimeInterval("2003-01-01", "2004-01-01")
+    val parameter = sparkcql.parameter("Measurement Period").dateTimeInterval("2013-01-01", "2014-01-01")
     val evaluation = sparkcql.cql(parameter, Seq(VersionedId("ED_QUICK", None, Some("1.0"))))
     assertEvaluation(evaluation)
     diagnoseEvaluation(evaluation)

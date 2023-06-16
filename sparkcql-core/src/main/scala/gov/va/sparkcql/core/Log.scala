@@ -16,32 +16,54 @@ object Log {
   val logger = LoggerFactory.getLogger(classOf[Log])
 
   def error(msg: String): Unit = {
-    logger.error(msg)
-    if (outputToConsole) {
-      System.err.println(ConsoleColors.BRIGHT_RED + "ERROR: " + msg + ConsoleColors.RESET)
+    if (logger.isErrorEnabled()) {
+      logger.error(msg)
+      if (outputToConsole) {
+        System.err.println(ConsoleColors.BRIGHT_RED + "ERROR: " + msg + ConsoleColors.RESET)
+      }
     }
   }
 
   def warn(msg: String): Unit = {
-    logger.warn(msg)
-    if (outputToConsole) {
-      System.err.println(ConsoleColors.BRIGHT_YELLOW + "WARNING: " + msg + ConsoleColors.RESET)
+    if (logger.isWarnEnabled()) {
+      logger.warn(msg)
+      if (outputToConsole) {
+        System.err.println(ConsoleColors.BRIGHT_YELLOW + "WARNING: " + msg + ConsoleColors.RESET)
+      }
     }
   }
 
   def info(msg: String): Unit = {
-    logger.info(msg)
-    if (outputToConsole) {
-      System.err.println(ConsoleColors.BRIGHT_WHITE + msg + ConsoleColors.RESET)
+    if (logger.isInfoEnabled()) {
+      logger.info(msg)
+      if (outputToConsole) {
+        System.err.println(ConsoleColors.BRIGHT_WHITE + msg + ConsoleColors.RESET)
+      }
     }
   }
 
   def info[T](df: Dataset[T]): Unit = {
+    info(capture(df))
+  }
+
+  def debug(msg: String): Unit = {
+    if (logger.isDebugEnabled()) {
+      logger.info(msg)
+      if (outputToConsole) {
+        System.err.println(ConsoleColors.BRIGHT_WHITE + msg + ConsoleColors.RESET)
+      }
+    }
+  }
+
+  def debug[T](df: Dataset[T]): Unit = {
+    debug(capture(df))
+  }
+
+  protected def capture[T](df: Dataset[T]): String = {
     val outCapture = new ByteArrayOutputStream
     Console.withOut(outCapture) {
       df.show()
     }
-    val result = new String(outCapture.toByteArray)
-    info(result)
+    new String(outCapture.toByteArray)
   }
 }

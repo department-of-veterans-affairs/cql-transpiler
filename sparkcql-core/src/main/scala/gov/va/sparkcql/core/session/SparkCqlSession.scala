@@ -11,7 +11,6 @@ import gov.va.sparkcql.core.adapter.model.{ModelAdapterFactory, ModelAdapter, Mo
 import gov.va.sparkcql.core.model.{DataType, Evaluation}
 import gov.va.sparkcql.core.adapter.model.NativeModel
 import gov.va.sparkcql.core.Log
-import gov.va.sparkcql.core.model.elm.ElmTypes
 
 class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
@@ -36,7 +35,7 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     cql(List(cqlText))
   }
 
-  def cql[T](parameters: Map[String, ElmTypes.Any], cqlText: String): Evaluation = {
+  def cql[T](parameters: Map[String, Object], cqlText: String): Evaluation = {
     cql(parameters, List(cqlText))
   }
 
@@ -44,7 +43,7 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     cqlExec(Some(cqlText), None, None)
   }
 
-  def cql[T](parameters: Map[String, ElmTypes.Any], cqlText: List[String]): Evaluation = {
+  def cql[T](parameters: Map[String, Object], cqlText: List[String]): Evaluation = {
     cqlExec(Some(cqlText), None, Some(parameters))
   }
 
@@ -52,14 +51,14 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     cqlExec(None, Some(libraryIdentifiers), None)
   }
 
-  def cql[T](parameters: Map[String, ElmTypes.Any], libraryIdentifiers: Seq[VersionedId]): Evaluation = {
+  def cql[T](parameters: Map[String, Object], libraryIdentifiers: Seq[VersionedId]): Evaluation = {
     cqlExec(None, Some(libraryIdentifiers), Some(parameters))
   }
 
   protected def cqlExec(
       cqlText: Option[List[String]],
       libraryIdentifiers: Option[Seq[VersionedId]],
-      parameters: Option[Map[String, ElmTypes.Any]]): Evaluation = {
+      parameters: Option[Map[String, Object]]): Evaluation = {
     
     val compilation = if (cqlText.isDefined) { cqlToElm.translate(cqlText.get) } else { cqlToElm.translate(libraryIdentifiers.get) }
     val evaluation = elmToSpark.translate(parameters, compilation)
@@ -70,7 +69,7 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     ???
   }
 
-  def parameter(name: String): Parameter = new Parameter(name)
+  def parameter(name: String): ParameterBuilder = new ParameterBuilder(name)
 }
 
 object SparkCqlSession {

@@ -8,18 +8,19 @@ import org.hl7.elm.r1.CodeSystemRef
 import org.hl7.cql_annotations.r1._
 import gov.va.sparkcql.core.adapter.source.SourceAdapter
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
-import gov.va.sparkcql.core.model.elm.ElmTypes
-import gov.va.sparkcql.core.model.xsd.QName
 import gov.va.sparkcql.core.model.{DataType, StatementEvaluation}
+import gov.va.sparkcql.core.conversion.Conversion._
+import javax.xml.namespace.QName
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.model.{Evaluation, LibraryEvaluation, StatementEvaluation}
-import gov.va.sparkcql.core.model.elm.ElmTypes.DateTimeInterval
+import java.time.{ZonedDateTime, LocalDate, LocalDateTime}
+import java.sql.{Timestamp}
 
 class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapters: Option[ModelAdapter], spark: SparkSession) 
     extends ElmToSparkTranslator(sourceAdapters, modelAdapters, spark) {
 
-  def translate(parameters: Option[Map[String, ElmTypes.Any]], libraryCollection: Seq[Library]): Evaluation = {
-    val initialCtx = TranslationContext(parameterValues = parameters)
+  def translate(parameters: Option[Map[String, Object]], libraryCollection: Seq[Library]): Evaluation = {
+    val initialCtx = TranslationContext(suppliedParameters = parameters)
     val libraryEvals = libraryCollection.flatMap(l => {
       val libEval = l.eval(initialCtx).to[LibraryEvaluation]
       Some(libEval)
@@ -35,16 +36,24 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   */
   protected def dispatch(node: Element, ctx: TranslationContext): Any = {
     node match {
-      case n: AliasedQuerySource => visit(n, ctx)
-      case n: And => visit(n, ctx)
-      case n: End => visit(n, ctx)
-      case n: ExpressionDef => visit(n, ctx)
-      case n: In => visit(n, ctx)
-      case n: Library => visit(n, ctx)
-      case n: ParameterRef => visit(n, ctx)
-      case n: Property => visit(n, ctx)
-      case n: Query => visit(n, ctx)
-      case n: Retrieve => visit(n, ctx)
+      case n: After => after(n, ctx)
+      case n: AliasedQuerySource => aliasedQuerySource(n, ctx)
+      case n: And => and(n, ctx)
+      case n: DateTime => dateTime(n, ctx)
+      case n: End => end(n, ctx)
+      case n: Equal => equal(n, ctx)
+      case n: ExpressionDef => expressionDef(n, ctx)
+      case n: Greater => greater(n, ctx)
+      case n: In => in(n, ctx)
+      case n: Less => less(n, ctx)
+      case n: Library => library(n, ctx)
+      case n: Literal => literal(n, ctx)
+      case n: NotEqual => notEqual(n, ctx)
+      case n: ParameterRef => parameterRef(n, ctx)
+      case n: Property => property(n, ctx)
+      case n: Query => query(n, ctx)
+      case n: Retrieve => retrieve(n, ctx)
+      case n: Start => start(n, ctx)
       case n: SingletonFrom => None
       
       case n: Null => None
@@ -56,7 +65,69 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
     }
   }
 
-  protected def visit(n: Library, ctx: TranslationContext): LibraryEvaluation = {
+  protected def after(n: After, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, _.gt(_))
+  }
+
+  protected def aliasedQuerySource(n: AliasedQuerySource, ctx: TranslationContext): Option[Dataset[Row]] = {
+    val source = n.getExpression().eval(ctx).to[Option[Dataset[Row]]]
+
+    if (n.getAlias() != null) {
+      source.map(_.alias(n.getAlias()))
+    } else {
+      source
+    }
+  }
+
+  protected def and(n: And, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, _.and(_))
+  }
+
+  protected def binaryExpression(n: BinaryExpression, ctx: TranslationContext, op: (Column, Column) => Column): Column = {
+    assert(n.getOperand().size() == 2, s"Unexpected length of ${n.getOperand().size()} for binary expression ${n.getClass().getName()}")
+    val leftOp = n.getOperand().get(0).eval(ctx).to[Column]
+    val rightOp = n.getOperand().get(1).eval(ctx).to[Column]
+    op(leftOp, rightOp)
+  }
+
+  protected def codeSystemRef(n: CodeSystemRef, ctx: TranslationContext): Unit = {
+    ???
+  }
+
+  protected def dateTime(n: DateTime, ctx: TranslationContext): Column = {
+    //val value = ElmTypes.DateTime(n.get)
+    null
+  }
+
+  protected def end(n: End, ctx: TranslationContext): Column = {
+    val operand: Column = n.getOperand().eval(ctx).to[Column]
+    val endProperty = "end"   // TODO
+    operand.apply(endProperty)
+  }
+
+  protected def equal(n: Equal, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, _.equalTo(_))
+  }
+
+  protected def expressionDef(n: ExpressionDef, ctx: TranslationContext): StatementEvaluation = {
+    val result = n.getExpression().eval(ctx).to[Option[Dataset[Row]]]
+    val libraryRef = ctx.library.get.getIdentifier()
+    StatementEvaluation(n, result, libraryRef)
+  }
+
+  protected def greater(n: Greater, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, _.gt(_))
+  }
+
+  protected def in(n: In, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, (left, right) => left.between(right("low"), right("high")))
+  }
+
+  protected def less(n: Less, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, _.lt(_))
+  }
+
+  protected def library(n: Library, ctx: TranslationContext): LibraryEvaluation = {
     val errors = n.getAnnotation().asScala.filter(p => p.isInstanceOf[CqlToElmError])
 
     if (errors.length == 0) {
@@ -68,17 +139,41 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
     }
   }
 
-  protected def visit(n: ExpressionDef, ctx: TranslationContext): StatementEvaluation = {
-    val result = n.getExpression().eval(ctx).to[Option[Dataset[Row]]]
-    val libraryRef = ctx.library.get.getIdentifier()
-    StatementEvaluation(n, result, libraryRef)
+  protected def literal(n: Literal, ctx: TranslationContext): Column = {
+    val value = convert[Literal, Any](n)
+    lit(value)
   }
 
-  protected def visit(n: CodeSystemRef, ctx: TranslationContext): Unit = {
-    ???
+  protected def notEqual(n: NotEqual, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, _.notEqual(_))
   }
 
-  protected def visit(n: Query, ctx: TranslationContext): Option[Dataset[Row]] = {
+  protected def parameterRef(n: ParameterRef, ctx: TranslationContext): Column = {
+    val param = ctx.suppliedParameters.map(_.filter(_._1 == n.getName()))
+      .getOrElse(throw new Exception(s"Parameter ${n.getName()} was not supplied."))
+    val paramValue = param(n.getName())
+    
+    paramValue match {
+      case p: Interval if p.getLow().isInstanceOf[Date] && p.getHigh().isInstanceOf[Date] => 
+        val low = convert[Date, LocalDate](p.getLow().to[Date])
+        val high = convert[Date, LocalDate](p.getLow().to[Date])
+        struct(lit(low).alias("low"), lit(high).alias("high"))
+        
+      case p: Interval if p.getLow().isInstanceOf[DateTime] && p.getHigh().isInstanceOf[DateTime] => 
+        val low = convert[DateTime, LocalDateTime](p.getLow().to[DateTime])
+        val high = convert[DateTime, LocalDateTime](p.getHigh().to[DateTime])
+        val lowTimestamp = convert[LocalDateTime, Timestamp](low)
+        val highTimestamp = convert[LocalDateTime, Timestamp](high)
+
+        struct(lit(lowTimestamp).alias("low"), lit(highTimestamp).alias("high"))
+    }
+  }
+
+  protected def property(n: Property, ctx: TranslationContext): Column = {
+    col(s"${n.getScope()}.${n.getPath()}")
+  }
+
+  protected def query(n: Query, ctx: TranslationContext): Option[Dataset[Row]] = {
     val querySource = n.getSource().asScala.toSeq.flatMap(_.eval(ctx).to[Option[Dataset[Row]]]).headOption
     val newCtx = ctx.copy(dataset = querySource.headOption)
 
@@ -92,50 +187,17 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
     newCtx.dataset.map(_.filter(whereClause))
   }
 
-  protected def visit(n: Retrieve, ctx: TranslationContext): Option[Dataset[Row]] = {
+  protected def retrieve(n: Retrieve, ctx: TranslationContext): Option[Dataset[Row]] = {
+    val dataType = convert[QName, DataType](n.getDataType())
     sourceAdapters match {
-      case Some(value) => value.read(DataType(QName(n.getDataType())))
+      case Some(value) => value.read(dataType)
       case None => None
     }
   }
 
-  protected def visit(n: AliasedQuerySource, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val source = n.getExpression().eval(ctx).to[Option[Dataset[Row]]]
-
-    if (n.getAlias() != null) {
-      source.map(_.alias(n.getAlias()))
-    } else {
-      source
-    }
-  }
-
-  protected def visit(n: And, ctx: TranslationContext): Column = {
-    n.getOperand().asScala.foldLeft[Column](lit(true))((c, expr) => {
-      val op = expr.eval(ctx).to[Column]
-      c.and(op)
-    })
-  }
-
-  protected def visit(n: In, ctx: TranslationContext): Column = {
-    assert(n.getOperand().size() == 2, "Unexpected length for In operator")
-    val leftOp = n.getOperand().get(0).eval(ctx).to[Column]
-    val rightOp = n.getOperand().get(1).eval(ctx).to[Column]
-    leftOp.between(rightOp("low"),rightOp("high"))
-  }
-
-  protected def visit(n: End, ctx: TranslationContext): Column = {
+  protected def start(n: Start, ctx: TranslationContext): Column = {
     val operand: Column = n.getOperand().eval(ctx).to[Column]
-    val endProperty = "end"   // TODO
-    operand.apply(endProperty)
-  }
-
-  protected def visit(n: Property, ctx: TranslationContext): Column = {
-    col(s"${n.getScope()}.${n.getPath()}")
-  }
-
-  protected def visit(n: ParameterRef, ctx: TranslationContext): Column = {
-    val param = ctx.parameterValues.map(_.filter(_._1 == n.getName()).head._2)
-    val p = param.getOrElse(throw new Exception(s"Unknown parameter ${n.getName()}"))
-    ElmTypeConversion.convert(p)
+    val startProperty = "start"   // TODO
+    operand.apply(startProperty)
   }
 }

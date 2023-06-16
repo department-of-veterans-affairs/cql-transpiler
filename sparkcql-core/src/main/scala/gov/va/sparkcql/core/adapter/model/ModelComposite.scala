@@ -3,7 +3,6 @@ package gov.va.sparkcql.core.adapter.model
 import scala.reflect.runtime.universe._
 import gov.va.sparkcql.core.adapter.Composable
 import gov.va.sparkcql.core.model.DataType
-import gov.va.sparkcql.core.model.xsd.QName
 import org.apache.spark.sql.types.StructType
 
 sealed class ModelComposite extends ModelAdapter with Composable[ModelAdapter] {
