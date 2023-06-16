@@ -7,7 +7,6 @@ import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
 import gov.va.sparkcql.core.model.{DataType, ValueSet, CqlContent}
 import org.json4s._
 import org.json4s.jackson.Serialization.{read, write}
-import gov.va.sparkcql.core.model.elm.VersionedIdentifier
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
 import gov.va.sparkcql.core.Log
 

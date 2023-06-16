@@ -10,89 +10,44 @@ import gov.va.sparkcql.core.adapter.source.SourceAdapter
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
 import gov.va.sparkcql.core.model.elm.ElmTypes
 import gov.va.sparkcql.core.model.xsd.QName
-import gov.va.sparkcql.core.model.DataType
+import gov.va.sparkcql.core.model.{DataType, StatementEvaluation}
+import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.core.model.{Evaluation, LibraryEvaluation, StatementEvaluation}
+import gov.va.sparkcql.core.model.elm.ElmTypes.DateTimeInterval
 
-class ElmToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapters: Option[ModelAdapter], spark: SparkSession) {
+abstract class ElmToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapters: Option[ModelAdapter], spark: SparkSession) {
 
-  def translate(parameters: Option[Map[String, ElmTypes.Any]], libraryCollection: Seq[Library]): Seq[ElmDatasetLink] = {
-    val initialCtx = TranslationContext(parameterValues = parameters)
-    libraryCollection.flatMap(eval(_, initialCtx))
-  }
+  def translate(parameters: Option[Map[String, ElmTypes.Any]], libraryCollection: Seq[Library]): Evaluation
 
-  protected def eval(n: Element, ctx: TranslationContext): Any = {
-    n match {
-      case n: Library => eval(n, ctx)
-      case n: ExpressionDef => eval(n, ctx)
-      case n: Query => eval(n, ctx)
-      case n: Retrieve => eval(n, ctx)
-      case n: In => eval(n, ctx)
-      case n: End => eval(n, ctx)
-      case n: Property => eval(n, ctx)
-      case null => null
-      case n => throw new Exception(s"Translation of ELM type '${n.getClass().getTypeName()}' to Spark is not implemented.")
+  /**
+  * Purpose is to provide eval dispatch and exhaustiveness checks for all ELM types. The type of each ELM
+  * node is unknown at compile time and the ELM isn't inheritable which limits our ability to use polymorphism. 
+  * This method converts a runtime type to a type known at compile time allowing the correct polymorpyhic
+  * implementation.
+  */
+  protected def dispatch(node: Element, ctx: TranslationContext): Any
+
+  /**
+    * Syntactical sugar to add .eval() to any ELM Element node to improve readability.
+    */
+  implicit class EvalExtension(node: Element) {
+    def eval(ctx: TranslationContext): Any = {
+      node match {
+        case null => Log.info("Ignoring null evaluation")
+        case _ => 
+          Log.info(s"Evaluating ${node.getClass().getName()}")
+          dispatch(node, ctx)
+      }
     }
   }
 
-  protected def eval(n: Library, ctx: TranslationContext): Seq[ElmDatasetLink] = {
-    val libraryExpressionDefs = n.getStatements().getDef().asScala.toSeq
-    libraryExpressionDefs.map(eval(_, ctx.copy(library = Some(n))))
-  }
-
-  protected def eval(expressionDef: ExpressionDef, ctx: TranslationContext): ElmDatasetLink = {
-    ElmDatasetLink(
-      expressionDef,
-      eval(expressionDef.getExpression(), ctx).asInstanceOf[Option[Dataset[Row]]], 
-      ctx.library.get.getIdentifier())
-  }
-
-  protected def eval(n: CodeSystemRef, ctx: TranslationContext): Unit = {
-    ???
-  }
-
-  protected def eval(n: Query, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val querySource = n.getSource().asScala.toSeq.map(eval(_, ctx))
-    assert(querySource.size <= 1, "Unexpectedly found multiple sources in query expression.")
-    val newCtx = ctx.copy(dataset = Some(querySource.head.get))
-
-    val queryAggregate = eval(n.getAggregate(), newCtx)
-    val queryLet = n.getLet().asScala.map(eval(_, newCtx))
-    val queryRelationship = n.getRelationship().asScala.map(eval(_, newCtx))
-    val queryReturn = eval(n.getReturn(), newCtx)
-    val querySort = eval(n.getSort(), newCtx)
-    val queryWhere = eval(n.getWhere(), newCtx)
-
-    Some(newCtx.dataset.get)
-  }
-
-  protected def eval(n: Retrieve, ctx: TranslationContext): Option[Dataset[Row]] = {
-    sourceAdapters.get.read(DataType(QName(n.getDataType())))
-  }
-
-  protected def eval(n: AliasedQuerySource, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val source = eval(n.getExpression(), ctx).asInstanceOf[Option[Dataset[Row]]]
-    if (n.getAlias() != null) {
-      Some(source.get.alias(n.getAlias()))
-    } else {
-      source
+  /**
+    * Syntactical sugar to add .to[] to any ELM Element node to improve readability.
+    * Alias for asInstanceOf[]
+    */
+  implicit class AsExtension(r: Any) {
+    def to[T]: T = {
+      r.asInstanceOf[T]
     }
-  }
-
-  protected def eval(n: In, ctx: TranslationContext): Unit = {
-    val ds = ctx.dataset.get
-    n.getOperand().asScala.foreach(o => {
-
-      val col = eval(o, ctx)
-    })
-    // ds.filter(col("").between(lit(""), lit("")))
-    ???
-  }
-
-  protected def eval(n: End, ctx: TranslationContext): Column = {
-    val operand = eval(n.getOperand(), ctx)
-    col("")
-  }
-
-  protected def eval(n: Property, ctx: TranslationContext): Column = {
-    col(s"${n.getScope()}.${n.getPath()}")
-  }
+  }    
 }

@@ -6,6 +6,7 @@ import org.apache.log4j.Level
 import org.apache.logging.slf4j.Log4jLogger
 import org.apache.spark.sql.{Dataset, Row}
 import java.io.ByteArrayOutputStream
+import org.apache.logging.log4j.{Level, LogManager}
 
 class Log {}
 

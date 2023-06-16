@@ -2,6 +2,7 @@
 .env
 **/.bin/
 **/bin/
+**/.temp/
 
 # Scala & Java
 **/.bloop/

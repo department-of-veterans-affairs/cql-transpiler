@@ -1,8 +1,6 @@
 package gov.va.sparkcql.core.model
 
-import gov.va.sparkcql.core.model.elm.VersionedIdentifier
-
-case class CqlContent(identifier: VersionedIdentifier, content: String) {
+case class CqlContent(identifier: VersionedId, content: String) {
   private def writeObject(out: java.io.ObjectOutputStream): Unit = {
     ???
   }

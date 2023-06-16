@@ -15,10 +15,14 @@ sealed class SourceComposite(spark: SparkSession, modelAdapter: ModelAdapter)
   def read(dataType: DataType): Option[Dataset[Row]] = {
     composeFirst(a => {
       val df = a.read(dataType)
-      if (df.isDefined && df.get.schema.fields.length > 0) {
-        df
+      if (df.isDefined) {
+        if (df.get.schema.fields.length > 0) {
+          df
+        } else {
+          Log.warn(s"${a.getClass().getSimpleName()} returned a columnless dataframe when None should have been returned. Ignoring output.")
+          None
+        }
       } else {
-        Log.warn("SourceAdapter returned a columnless dataframe when None should have been returned. Ignoring output.")
         None
       }
     })

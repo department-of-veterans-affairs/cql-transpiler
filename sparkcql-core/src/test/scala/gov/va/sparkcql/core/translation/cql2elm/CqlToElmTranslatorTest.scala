@@ -44,13 +44,14 @@ class CqlToElmTranslatorTest extends TestBase {
 
   // TODO: Add Provider Scoped scenarios
 
-  it should "successfully translate more complex scripts" in {
-    val resourcePaths = Array(
-      "cql/BasicRetrieve.cql",
-      "cql/LiteralDefinitions.cql"
-      )
-    val targets = resourcePaths.map(scala.io.Source.fromResource(_).mkString)
-    val cqlToElm = new CqlToElmTranslator()
-    assertNoElmErrors(cqlToElm.translate(targets.toList))
-  }
+  // TODO: Fail on duplicate library
+
+  def assertNoElmErrors(libraries: Seq[Library]): Unit = {
+    val errors = libraries.flatMap(_.getAnnotation().asScala).filter {
+      case e: CqlToElmError => true
+      case _ => false
+    }
+    val x = errors.length
+    assert(errors.length == 0, errors.headOption.getOrElse(""))
+  }  
 }

@@ -8,7 +8,7 @@ import gov.va.sparkcql.core.model.CqlContent
 import org.apache.spark.sql.Encoders
 import gov.va.sparkcql.core.model.ValueSet
 import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
-import gov.va.sparkcql.core.model.elm.VersionedIdentifier
+import gov.va.sparkcql.core.model.VersionedId
 
 class NativeModelAdapter extends ModelAdapter {
 
@@ -23,7 +23,7 @@ class NativeModelAdapter extends ModelAdapter {
   override def deserialize[T : TypeTag](data: String): Option[T] = {
     typeOf[T] match {
       case x if typeOf[T] <:< typeOf[CqlContent] =>
-        val id = VersionedIdentifier(CqlCompilerGateway.parseVersionedIdentifier(data))
+        val id = VersionedId(CqlCompilerGateway.parseVersionedIdentifier(data))
         Some(new CqlContent(id, data).asInstanceOf[T])
       case _ => None
     }

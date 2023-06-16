@@ -3,14 +3,15 @@ package gov.va.sparkcql.core.session
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import gov.va.sparkcql.core.translation.cql2elm.CqlToElmTranslator
-import gov.va.sparkcql.core.translation.elm2spark.ElmToSparkTranslator
+import gov.va.sparkcql.core.translation.elm2spark.ElmR1ToSparkTranslator
 import scala.collection.mutable.MutableList
-import gov.va.sparkcql.core.model.elm.VersionedIdentifier
+import gov.va.sparkcql.core.model.VersionedId
 import gov.va.sparkcql.core.adapter.source.{SourceAdapterFactory, SourceAdapter, SourceComposite}
 import gov.va.sparkcql.core.adapter.model.{ModelAdapterFactory, ModelAdapter, ModelComposite}
-import gov.va.sparkcql.core.model.DataType
+import gov.va.sparkcql.core.model.{DataType, Evaluation}
 import gov.va.sparkcql.core.adapter.model.NativeModel
 import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.core.model.elm.ElmTypes
 
 class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
@@ -20,8 +21,8 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   lazy val sourceAdapters = builder.sourceAdapterFactories.map(f => f.create(builder.spark, models))
   lazy val sources = new SourceComposite(builder.spark, models).register(sourceAdapters.toList)
 
-  lazy val cqlToElm = new CqlToElmTranslator(Some(sources), Some(builder.spark))
-  lazy val elmToSpark = new ElmToSparkTranslator(Some(sources), Some(models), builder.spark)
+  lazy val cqlToElm = new CqlToElmTranslator(Some(sources))
+  lazy val elmToSpark = new ElmR1ToSparkTranslator(Some(sources), Some(models), builder.spark)
 
   def retrieve[T <: Product : TypeTag](): Option[Dataset[T]] = {
     sources.read[T]()
@@ -35,28 +36,41 @@ class SparkCqlSession private(builder: SparkCqlSession.Builder) {
     cql(List(cqlText))
   }
 
+  def cql[T](parameters: Map[String, ElmTypes.Any], cqlText: String): Evaluation = {
+    cql(parameters, List(cqlText))
+  }
+
   def cql[T](cqlText: List[String]): Evaluation = {
     cqlExec(Some(cqlText), None, None)
   }
 
-  def cql[T](libraryIdentifiers: Seq[VersionedIdentifier]): Evaluation = {
+  def cql[T](parameters: Map[String, ElmTypes.Any], cqlText: List[String]): Evaluation = {
+    cqlExec(Some(cqlText), None, Some(parameters))
+  }
+
+  def cql[T](libraryIdentifiers: Seq[VersionedId]): Evaluation = {
     cqlExec(None, Some(libraryIdentifiers), None)
+  }
+
+  def cql[T](parameters: Map[String, ElmTypes.Any], libraryIdentifiers: Seq[VersionedId]): Evaluation = {
+    cqlExec(None, Some(libraryIdentifiers), Some(parameters))
   }
 
   protected def cqlExec(
       cqlText: Option[List[String]],
-      libraryIdentifiers: Option[Seq[VersionedIdentifier]],
-      parameters: Option[Map[String, Object]]): Evaluation = {
+      libraryIdentifiers: Option[Seq[VersionedId]],
+      parameters: Option[Map[String, ElmTypes.Any]]): Evaluation = {
     
-    // TODO: Convert Elm agnostic params to Elm types
     val compilation = if (cqlText.isDefined) { cqlToElm.translate(cqlText.get) } else { cqlToElm.translate(libraryIdentifiers.get) }
-    val evaluation = elmToSpark.translate(None, compilation)
+    val evaluation = elmToSpark.translate(parameters, compilation)
     evaluation.asInstanceOf[Evaluation]
   }
 
   protected def convertCompilationToEvaluation(): Evaluation = {
     ???
   }
+
+  def parameter(name: String): Parameter = new Parameter(name)
 }
 
 object SparkCqlSession {

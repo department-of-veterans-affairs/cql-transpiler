@@ -23,8 +23,6 @@ dependencies {
 
     testImplementation "info.cqframework:quick:${cqfVersion}"
     testImplementation "info.cqframework:qdm:${cqfVersion}"
-    testImplementation project(":sparkcql-fhir")
-    testImplementation project(":sparkcql-synthea")
 }
 
 // Forces sparkcql-core-shadow to deploy jar to local maven repo where we'll pick it up

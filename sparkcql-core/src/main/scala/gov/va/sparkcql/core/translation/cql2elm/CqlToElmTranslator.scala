@@ -5,13 +5,10 @@ import scala.collection.JavaConverters._
 
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
-import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.adapter.source.SourceAdapter
-import gov.va.sparkcql.core.model.elm.VersionedIdentifier
-import gov.va.sparkcql.core.model.CqlContent
+import gov.va.sparkcql.core.model.{VersionedId, CqlContent}
 import org.hl7.elm.r1.Library
 import gov.va.sparkcql.core.adapter.source.SourceAdapterFactory
-
 
 /**
   * Three scopes are searched when resolving library references (in order of precedence):
@@ -20,10 +17,10 @@ import gov.va.sparkcql.core.adapter.source.SourceAdapterFactory
   *
   * @param libraryAdapter
   */
-class CqlToElmTranslator(sourceAdapters: Option[SourceAdapter], spark: Option[SparkSession]) {
+class CqlToElmTranslator(sourceAdapters: Option[SourceAdapter]) {
 
   def this() {
-    this(None, None)
+    this(None)
   }
   
   /**
@@ -45,20 +42,20 @@ class CqlToElmTranslator(sourceAdapters: Option[SourceAdapter], spark: Option[Sp
     * @param libraryIdentifiers
     * @return
     */
-  def translate(libraryIdentifiers: Seq[VersionedIdentifier]): Seq[Library] = { 
+  def translate(libraryIdentifiers: Seq[VersionedId]): Seq[Library] = { 
     val callScopedLibraries = libraryIdentifiers.map(libraryFromId(_, None).get.content).toList
     compileExec(callScopedLibraries)
   }
 
   protected def compileExec(libraryContents: List[String]): Seq[Library] = {
 
-    // Convert CQL text to CqlContent to map a VersionedIdentifier (VersionedIdentifier) to CQL
+    // Convert CQL text to CqlContent to map a VersionedId to CQL
     val callScopedLibraries = libraryContents.map(content => {
       var elmId = CqlCompilerGateway.parseVersionedIdentifier(content)
       if (elmId.getId() == null) {
         elmId.setId("Anonymous-" + java.util.UUID.randomUUID.toString)
       }
-      CqlContent(VersionedIdentifier(elmId), content)
+      CqlContent(VersionedId(elmId), content)
     })
 
     // Compile each CQL
@@ -89,10 +86,10 @@ class CqlToElmTranslator(sourceAdapters: Option[SourceAdapter], spark: Option[Sp
   protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[CqlContent]): org.hl7.elm.r1.Library = {
     CqlCompilerGateway.compile(
       libraryContent,
-      Some(id => libraryFromId(VersionedIdentifier(id), Some(callScopedLibraries)).get.content))
+      Some(id => libraryFromId(VersionedId(id), Some(callScopedLibraries)).get.content))
   }
 
-  protected def libraryFromId(identifier: VersionedIdentifier, callScopedLibraries: Option[Seq[CqlContent]]): Option[CqlContent] = {
+  protected def libraryFromId(identifier: VersionedId, callScopedLibraries: Option[Seq[CqlContent]]): Option[CqlContent] = {
     if (callScopedLibraries.isDefined) {
       val callScoped = callScopedLibraries.get.filter(p => p.identifier == identifier)
       if (callScoped.length > 0) return Some(callScoped.head)

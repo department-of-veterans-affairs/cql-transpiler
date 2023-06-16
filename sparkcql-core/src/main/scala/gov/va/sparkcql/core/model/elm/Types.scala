@@ -5,6 +5,8 @@ import gov.va.sparkcql.core.model
 object ElmTypes {
   sealed trait Any
 
+  case class Null() extends Any
+
   case class Boolean(value: Boolean) extends Any
   case class Date(value: java.lang.String) extends Any
   case class Time(value: java.lang.String) extends Any
@@ -29,6 +31,10 @@ object ElmTypes {
   case class DecimalInterval(low: Decimal, high: Decimal, lowClosed: scala.Boolean, highClosed: scala.Boolean) extends Any
   case class QuantityInterval(low: Quantity, high: Quantity, lowClosed: scala.Boolean, highClosed: scala.Boolean) extends Any
   case class DateInterval(low: Date, high: Date, lowClosed: scala.Boolean, highClosed: scala.Boolean) extends Any
-  case class DateTimeInterval(low: Time, high: Time, lowClosed: scala.Boolean, highClosed: scala.Boolean) extends Any
+  case class DateTimeInterval(low: DateTime, high: DateTime, lowClosed: scala.Boolean, highClosed: scala.Boolean) extends Any
   case class TimeInterval(low: scala.Int, high: scala.Int, lowClosed: scala.Boolean, highClosed: scala.Boolean) extends Any
+
+  object Date {
+    def apply(year: Int, month: Int, day: Int) = new ElmTypes.Date(s"${year}-${month}-${day}")
+  }  
 }
