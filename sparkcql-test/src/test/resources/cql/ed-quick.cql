@@ -22,4 +22,4 @@ context Patient
 define "ED Encounter":
   ["Encounter": "Emergency Department Visit"] ED
     where ED.period ends during day of "Measurement Period"
-    //and ED.period starts after @2014-01-25T14:30
+    and ED.period ends before @2015-12-27T14:30

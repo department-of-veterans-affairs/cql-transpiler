@@ -8,7 +8,8 @@ trait Convertable[S, T] {
   def convert(source: S): T
 }
 
-object Conversion extends ElmConversion with NativeConversion {
+object Conversion extends ElmConversion with NativeConversion with DateConversion {
+
   /**
     * NOTE: We could have explicitly routed each request of source/target to correct implementation
     * but typeclasses via implicits does this for us.
@@ -17,5 +18,5 @@ object Conversion extends ElmConversion with NativeConversion {
     * @param converter
     * @return
     */
-  def convert[S, T](source: S)(implicit converter: Convertable[S, T]) = converter.convert(source)
+  def convert[S, T](s: S)(implicit converter: Convertable[S, T]) = converter.convert(s)
 }

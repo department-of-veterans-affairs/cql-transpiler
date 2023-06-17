@@ -39,6 +39,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
       case n: After => after(n, ctx)
       case n: AliasedQuerySource => aliasedQuerySource(n, ctx)
       case n: And => and(n, ctx)
+      case n: Before => before(n, ctx)
       case n: DateTime => dateTime(n, ctx)
       case n: End => end(n, ctx)
       case n: Equal => equal(n, ctx)
@@ -90,13 +91,17 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
     op(leftOp, rightOp)
   }
 
+  protected def before(n: Before, ctx: TranslationContext): Column = {
+    binaryExpression(n, ctx, _.lt(_))
+  }
+
   protected def codeSystemRef(n: CodeSystemRef, ctx: TranslationContext): Unit = {
     ???
   }
 
   protected def dateTime(n: DateTime, ctx: TranslationContext): Column = {
-    //val value = ElmTypes.DateTime(n.get)
-    null
+    //lit(convert[DateTime, Timestamp](n))
+    lit(n.convert[Timestamp])
   }
 
   protected def end(n: End, ctx: TranslationContext): Column = {
@@ -159,13 +164,10 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
         val high = convert[Date, LocalDate](p.getLow().to[Date])
         struct(lit(low).alias("low"), lit(high).alias("high"))
         
-      case p: Interval if p.getLow().isInstanceOf[DateTime] && p.getHigh().isInstanceOf[DateTime] => 
-        val low = convert[DateTime, LocalDateTime](p.getLow().to[DateTime])
-        val high = convert[DateTime, LocalDateTime](p.getHigh().to[DateTime])
-        val lowTimestamp = convert[LocalDateTime, Timestamp](low)
-        val highTimestamp = convert[LocalDateTime, Timestamp](high)
-
-        struct(lit(lowTimestamp).alias("low"), lit(highTimestamp).alias("high"))
+      case p: Interval if p.getLow().isInstanceOf[DateTime] && p.getHigh().isInstanceOf[DateTime] =>
+        val low = convert[DateTime, Timestamp](p.getLow().to[DateTime])
+        val high = convert[DateTime, Timestamp](p.getHigh().to[DateTime])
+        struct(lit(low).alias("low"), lit(high).alias("high"))
     }
   }
 
