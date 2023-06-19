@@ -41,25 +41,4 @@ abstract class ElmToSparkTranslator(sourceAdapters: Option[SourceAdapter], model
       }
     }
   }
-
-  /**
-    * Syntactical sugar to add .to[] to any ELM Element node to improve readability.
-    * Alias for node.asInstanceOf[]
-    */
-  implicit class ToExtension[T](node: T) {
-    def to[T]: T = {
-      node.asInstanceOf[T]
-    }
-  }
-
-  /**
-    * Syntactical sugar to add .into[] to any ELM Element node to improve readability.
-    * Alias for convert[S, T](node)
-    */
-  implicit class IntoExtension[S : TypeTag](node: S) {
-    def convert[T : TypeTag](implicit evidence: Convertable[S, T]): T = {
-      Log.debug(s"${typeOf[S].typeSymbol.fullName} >> ${typeOf[T].typeSymbol.fullName}")
-      Conversion.convert(node)
-    }
-  }
 }

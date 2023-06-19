@@ -22,7 +22,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   def translate(parameters: Option[Map[String, Object]], libraryCollection: Seq[Library]): Evaluation = {
     val initialCtx = TranslationContext(suppliedParameters = parameters)
     val libraryEvals = libraryCollection.flatMap(l => {
-      val libEval = l.eval(initialCtx).to[LibraryEvaluation]
+      val libEval = l.eval(initialCtx).castTo[LibraryEvaluation]
       Some(libEval)
     })
     Evaluation(parameters, libraryEvals)
@@ -33,6 +33,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   * node is unknown at compile time and the ELM isn't inheritable which limits our ability to use polymorphism. 
   * This method converts a runtime type to a type known at compile time allowing the correct polymorpyhic
   * implementation.
+  * Typeclass could be used here as well but you'd lose the "exhaustiveness".
   */
   protected def dispatch(node: Element, ctx: TranslationContext): Any = {
     node match {
@@ -71,7 +72,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   }
 
   protected def aliasedQuerySource(n: AliasedQuerySource, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val source = n.getExpression().eval(ctx).to[Option[Dataset[Row]]]
+    val source = n.getExpression().eval(ctx).castTo[Option[Dataset[Row]]]
 
     if (n.getAlias() != null) {
       source.map(_.alias(n.getAlias()))
@@ -86,8 +87,8 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
 
   protected def binaryExpression(n: BinaryExpression, ctx: TranslationContext, op: (Column, Column) => Column): Column = {
     assert(n.getOperand().size() == 2, s"Unexpected length of ${n.getOperand().size()} for binary expression ${n.getClass().getName()}")
-    val leftOp = n.getOperand().get(0).eval(ctx).to[Column]
-    val rightOp = n.getOperand().get(1).eval(ctx).to[Column]
+    val leftOp = n.getOperand().get(0).eval(ctx).castTo[Column]
+    val rightOp = n.getOperand().get(1).eval(ctx).castTo[Column]
     op(leftOp, rightOp)
   }
 
@@ -100,12 +101,11 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   }
 
   protected def dateTime(n: DateTime, ctx: TranslationContext): Column = {
-    //lit(convert[DateTime, Timestamp](n))
-    lit(n.convert[Timestamp])
+    lit(n.convertTo[Timestamp])
   }
 
   protected def end(n: End, ctx: TranslationContext): Column = {
-    val operand: Column = n.getOperand().eval(ctx).to[Column]
+    val operand: Column = n.getOperand().eval(ctx).castTo[Column]
     val endProperty = "end"   // TODO
     operand.apply(endProperty)
   }
@@ -115,7 +115,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   }
 
   protected def expressionDef(n: ExpressionDef, ctx: TranslationContext): StatementEvaluation = {
-    val result = n.getExpression().eval(ctx).to[Option[Dataset[Row]]]
+    val result = n.getExpression().eval(ctx).castTo[Option[Dataset[Row]]]
     val libraryRef = ctx.library.get.getIdentifier()
     StatementEvaluation(n, result, libraryRef)
   }
@@ -137,7 +137,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
 
     if (errors.length == 0) {
       val libraryExpressionDefs = n.getStatements().getDef().asScala.toSeq
-      val statementEvals = libraryExpressionDefs.map(_.eval(ctx.copy(library = Some(n))).to[StatementEvaluation])
+      val statementEvals = libraryExpressionDefs.map(_.eval(ctx.copy(library = Some(n))).castTo[StatementEvaluation])
       LibraryEvaluation(n, statementEvals)
     } else {
       LibraryEvaluation(n, Seq[StatementEvaluation]())
@@ -145,7 +145,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   }
 
   protected def literal(n: Literal, ctx: TranslationContext): Column = {
-    val value = convert[Literal, Any](n)
+    val value = n.convertTo[Any]
     lit(value)
   }
 
@@ -160,13 +160,13 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
     
     paramValue match {
       case p: Interval if p.getLow().isInstanceOf[Date] && p.getHigh().isInstanceOf[Date] => 
-        val low = convert[Date, LocalDate](p.getLow().to[Date])
-        val high = convert[Date, LocalDate](p.getLow().to[Date])
+        val low = p.getLow().castTo[Date].convertTo[LocalDate]
+        val high = p.getLow().castTo[Date].convertTo[LocalDate]
         struct(lit(low).alias("low"), lit(high).alias("high"))
         
       case p: Interval if p.getLow().isInstanceOf[DateTime] && p.getHigh().isInstanceOf[DateTime] =>
-        val low = convert[DateTime, Timestamp](p.getLow().to[DateTime])
-        val high = convert[DateTime, Timestamp](p.getHigh().to[DateTime])
+        val low = p.getLow().castTo[DateTime].convertTo[Timestamp]
+        val high = p.getHigh().castTo[DateTime].convertTo[Timestamp]
         struct(lit(low).alias("low"), lit(high).alias("high"))
     }
   }
@@ -176,7 +176,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   }
 
   protected def query(n: Query, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val querySource = n.getSource().asScala.toSeq.flatMap(_.eval(ctx).to[Option[Dataset[Row]]]).headOption
+    val querySource = n.getSource().asScala.toSeq.flatMap(_.eval(ctx).castTo[Option[Dataset[Row]]]).headOption
     val newCtx = ctx.copy(dataset = querySource.headOption)
 
     val aggregateClause = n.getAggregate().eval(newCtx)
@@ -184,13 +184,13 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
     val relationshipClause = n.getRelationship().asScala.map(_.eval(newCtx))
     val returnClause = n.getReturn().eval(newCtx)
     val sortClause = n.getSort().eval(newCtx)
-    val whereClause = n.getWhere().eval(newCtx).to[Column]
+    val whereClause = n.getWhere().eval(newCtx).castTo[Column]
 
     newCtx.dataset.map(_.filter(whereClause))
   }
 
   protected def retrieve(n: Retrieve, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val dataType = convert[QName, DataType](n.getDataType())
+    val dataType = n.getDataType().convertTo[DataType]
     sourceAdapters match {
       case Some(value) => value.read(dataType)
       case None => None
@@ -198,7 +198,7 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   }
 
   protected def start(n: Start, ctx: TranslationContext): Column = {
-    val operand: Column = n.getOperand().eval(ctx).to[Column]
+    val operand: Column = n.getOperand().eval(ctx).castTo[Column]
     val startProperty = "start"   // TODO
     operand.apply(startProperty)
   }
