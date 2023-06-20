@@ -1,12 +1,23 @@
 package gov.va.sparkcql.core.adapter.model
 
 import scala.reflect.runtime.universe._
+import scala.collection.JavaConverters._
+import javax.xml.namespace.QName
 import org.apache.spark.sql.types.StructType
-import gov.va.sparkcql.core.model.DataType
 
-abstract class ModelAdapter() {
+case class ModelCapabilityStatement(cqlModelSupport: Boolean, valueSetModelSupport: Boolean, supportedDataTypes: Option[List[QName]])
 
-  def schema(dataType: DataType): Option[StructType]
+trait ModelAdapter {
 
-  def deserialize[T : TypeTag](data: String): Option[T]
+  val NoneCapabilityStatement = ModelCapabilityStatement(false, false, None)
+
+  def namespaceUri(): String
+
+  def makeLocalDataType(localName: String): QName = {
+    new QName(namespaceUri(), localName)
+  }
+
+  def stateCapabilities(): ModelCapabilityStatement
+
+  def schemaOf(dataType: QName): Option[StructType]
 }

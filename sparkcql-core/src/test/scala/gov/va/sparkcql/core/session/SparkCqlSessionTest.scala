@@ -3,7 +3,7 @@ package gov.va.sparkcql.core.session
 import gov.va.sparkcql.TestBase
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.core.model.{DataType, CqlContent}
+import gov.va.sparkcql.core.model.{CqlContent}
 import gov.va.sparkcql.core.adapter.source.{FileSource}
 import gov.va.sparkcql.core.Log
 

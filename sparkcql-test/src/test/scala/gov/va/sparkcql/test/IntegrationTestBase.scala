@@ -22,6 +22,8 @@ abstract class IntegrationTestBase extends AnyFlatSpec {
   lazy val spark = {
     SparkSession.builder()
       .master("local[1]")
+      .config("spark.foo.man.chu", "true")
+      .config("spark.foo.man.shoe", false)
       .getOrCreate()
   }
 

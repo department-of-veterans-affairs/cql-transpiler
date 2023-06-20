@@ -36,7 +36,7 @@ class SyntheaSourceAdapterTest extends TestBase {
   }
 
   it should "return None for non-FHIR data types" in {
-    assert(sparkcql.retrieve(DataType("http://example.com", "NotFhir", None)).isEmpty)
+    assert(sparkcql.retrieve(DataType("http://example.com", "NotFhir")).isEmpty)
   }
 
   // it should "retrieve encounters when using PopulationSize10" in {

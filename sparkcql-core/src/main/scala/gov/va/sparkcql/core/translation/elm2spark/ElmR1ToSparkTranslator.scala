@@ -8,7 +8,7 @@ import org.hl7.elm.r1.CodeSystemRef
 import org.hl7.cql_annotations.r1._
 import gov.va.sparkcql.core.adapter.source.SourceAdapter
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
-import gov.va.sparkcql.core.model.{DataType, StatementEvaluation}
+import gov.va.sparkcql.core.model.{StatementEvaluation}
 import gov.va.sparkcql.core.conversion.Conversion._
 import javax.xml.namespace.QName
 import gov.va.sparkcql.core.Log
@@ -190,9 +190,9 @@ class ElmR1ToSparkTranslator(sourceAdapters: Option[SourceAdapter], modelAdapter
   }
 
   protected def retrieve(n: Retrieve, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val dataType = n.getDataType().convertTo[DataType]
+    val dataType = n.getDataType()
     sourceAdapters match {
-      case Some(value) => value.read(dataType)
+      case Some(value) => value.acquireData(dataType)
       case None => None
     }
   }

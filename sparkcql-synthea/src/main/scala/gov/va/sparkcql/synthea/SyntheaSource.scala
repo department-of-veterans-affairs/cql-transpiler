@@ -19,7 +19,7 @@ class SyntheaSource(size: PopulationSize) extends SourceAdapterFactory {
   val instances = HashMap[PopulationSize, SyntheaSourceAdapter]()
 
   def create(spark: SparkSession, modelAdapter: ModelAdapter): SourceAdapter = {
-    instances.getOrElseUpdate(size, new SyntheaSourceAdapter(spark, size, modelAdapter))
+    instances.getOrElseUpdate(size, new SyntheaSourceAdapter(modelAdapter, spark, size))
   }
 }
 

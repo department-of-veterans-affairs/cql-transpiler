@@ -6,29 +6,32 @@ import gov.va.sparkcql.core.translation.cql2elm.CqlToElmTranslator
 import gov.va.sparkcql.core.translation.elm2spark.ElmR1ToSparkTranslator
 import scala.collection.mutable.MutableList
 import gov.va.sparkcql.core.model.VersionedId
-import gov.va.sparkcql.core.adapter.source.{SourceAdapterFactory, SourceAdapter, SourceComposite}
-import gov.va.sparkcql.core.adapter.model.{ModelAdapterFactory, ModelAdapter, ModelComposite}
-import gov.va.sparkcql.core.model.{DataType, Evaluation}
+import gov.va.sparkcql.core.adapter.source.{SourceAdapterFactory, SourceAdapter}
+import gov.va.sparkcql.core.adapter.source.CompositeSourceAdapter
+import gov.va.sparkcql.core.adapter.model.{ModelAdapterFactory, ModelAdapter}
+import gov.va.sparkcql.core.adapter.model.CompositeModelAdapter
+import gov.va.sparkcql.core.model.{Evaluation}
 import gov.va.sparkcql.core.adapter.model.NativeModel
 import gov.va.sparkcql.core.Log
+import javax.xml.namespace.QName
 
 class SparkCqlSession private(builder: SparkCqlSession.Builder) {
   
   lazy val modelAdapters = builder.modelAdapterFactories.map(f => f.create())
-  lazy val models = new ModelComposite().register(modelAdapters.toList)
+  lazy val models = new CompositeModelAdapter(modelAdapters.toList)
 
   lazy val sourceAdapters = builder.sourceAdapterFactories.map(f => f.create(builder.spark, models))
-  lazy val sources = new SourceComposite(builder.spark, models).register(sourceAdapters.toList)
+  lazy val sources = new CompositeSourceAdapter(models, builder.spark, sourceAdapters.toList)
 
   lazy val cqlToElm = new CqlToElmTranslator(Some(sources))
   lazy val elmToSpark = new ElmR1ToSparkTranslator(Some(sources), Some(models), builder.spark)
 
   def retrieve[T <: Product : TypeTag](): Option[Dataset[T]] = {
-    sources.read[T]()
+    sources.acquireData[T]()
   }
 
-  def retrieve(dataType: DataType): Option[Dataset[Row]] = {
-    sources.read(dataType)
+  def retrieve(dataType: QName): Option[Dataset[Row]] = {
+    sources.acquireData(dataType)
   }
 
   def cql[T](cqlText: String): Evaluation = {

@@ -5,10 +5,10 @@ import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import org.apache.spark.sql.functions._
 import scala.collection.mutable.HashMap
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
-import gov.va.sparkcql.core.model.DataType
 import gov.va.sparkcql.core.adapter.source.SourceAdapter
+import javax.xml.namespace.QName
 
-class SyntheaSourceAdapter(spark: SparkSession, size: PopulationSize, modelAdapter: ModelAdapter) extends SourceAdapter(spark, modelAdapter) {
+class SyntheaSourceAdapter(val modelAdapter: ModelAdapter, val spark: SparkSession, size: PopulationSize) extends SourceAdapter {
 
   import spark.implicits._
 
@@ -45,10 +45,10 @@ class SyntheaSourceAdapter(spark: SparkSession, size: PopulationSize, modelAdapt
     })
   }
 
-  def read(dataType: DataType): Option[Dataset[Row]] = {
+  def acquireData(dataType: QName): Option[Dataset[Row]] = {
     // Quick check to avoid eager loading when the requested type clearly isn't supported.
-    if (dataType.system.toLowerCase() == "http://hl7.org/fhir") {
-      val resourceType = dataType.name
+    if (dataType.getNamespaceURI.toLowerCase() == "http://hl7.org/fhir") {
+      val resourceType = dataType.getLocalPart()
       val df = createDataSet(resourceType)
       df
     } else {

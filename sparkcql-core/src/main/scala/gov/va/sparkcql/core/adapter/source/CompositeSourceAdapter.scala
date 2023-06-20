@@ -1,19 +1,25 @@
 package gov.va.sparkcql.core.adapter.source
 
 import scala.reflect.runtime.universe._
-import gov.va.sparkcql.core.adapter.Composable
-import gov.va.sparkcql.core.model.DataType
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import org.apache.spark.sql.types.StructType
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
 import gov.va.sparkcql.core.Log
+import javax.xml.namespace.QName
 
-sealed class SourceComposite(spark: SparkSession, modelAdapter: ModelAdapter)
-    extends SourceAdapter(spark, modelAdapter) with Composable[SourceAdapter] {
+class CompositeSourceAdapter(val modelAdapter: ModelAdapter, val spark: SparkSession, adapters: List[SourceAdapter]) extends SourceAdapter {
 
-  def read(dataType: DataType): Option[Dataset[Row]] = {
+  protected def composeFirst[R](f: (SourceAdapter) => Option[R]): Option[R] = {
+    adapters
+      .view
+      .flatMap(a => {
+        f(a)
+      }).headOption
+  }
+  
+  def acquireData(dataType: QName): Option[Dataset[Row]] = {
     composeFirst(a => {
-      val df = a.read(dataType)
+      val df = a.acquireData(dataType)
       if (df.isDefined) {
         if (df.get.schema.fields.length > 0) {
           df

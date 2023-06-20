@@ -11,7 +11,7 @@ trait Convertable[S, T] {
 trait ConvertTo[T] {
 }
 
-object Conversion extends ElmConversion with NativeConversion with DateConversion {
+object Conversion extends ElmConversion with DateConversion {
 
   /**
     * NOTE: We could have explicitly routed each request of source/target to correct implementation

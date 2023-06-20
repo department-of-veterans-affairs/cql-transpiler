@@ -96,7 +96,7 @@ class CqlToElmTranslator(sourceAdapters: Option[SourceAdapter]) {
     }
 
     if (sourceAdapters.isDefined) {
-      val adapterScoped = sourceAdapters.get.read[CqlContent]()
+      val adapterScoped = sourceAdapters.get.acquireData[CqlContent]()
       val adapterResults = adapterScoped.get.filter(f => f.identifier == identifier)
       if (!adapterResults.isEmpty) return Some(adapterResults.head())
     }

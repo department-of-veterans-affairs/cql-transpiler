@@ -3,16 +3,20 @@ package gov.va.sparkcql.core.adapter.source
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
+import javax.xml.namespace.QName
 import gov.va.sparkcql.core.model.DataType
 
-abstract class SourceAdapter(spark: SparkSession, modelAdapter: ModelAdapter) {
+trait SourceAdapter {
 
-  def read(dataType: DataType): Option[Dataset[Row]]
+  val spark: SparkSession
+  val modelAdapter: ModelAdapter
 
-  def read[T <: Product : TypeTag](): Option[Dataset[T]] = {
-    val dataType = DataType[T]
+  def acquireData(dataType: QName): Option[Dataset[Row]]
+
+  def acquireData[T <: Product : TypeTag](): Option[Dataset[T]] = {
+    val dataType = DataType[T]()
     val encoder = Encoders.product[T]
-    val df = read(dataType)
+    val df = acquireData(dataType)
     if (df.isDefined) {
       Some(df.get.as[T](encoder))
     } else {
