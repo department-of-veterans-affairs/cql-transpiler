@@ -6,13 +6,12 @@ import org.hl7.elm.r1.VersionedIdentifier
 import org.apache.spark.sql.{Dataset, Encoders}
 import org.apache.spark.sql.functions._
 import gov.va.sparkcql.core.model.{DataType, ValueSet, CqlContent}
-import gov.va.sparkcql.core.adapter.model.{CompositeModelAdapter}
-import gov.va.sparkcql.core.adapter.model.CanonicalModelAdapter
+import gov.va.sparkcql.core.adapter.model.{CompositeModelAdapter, ModelAdapter}
 
 class FileSourceAdapterTest extends TestBase {
   
   import spark.implicits._
-  lazy val model = new CompositeModelAdapter(new CanonicalModelAdapter())
+  lazy val model = new CompositeModelAdapter(List[ModelAdapter]())
   lazy val source = new FileSourceAdapter(model, spark, "./src/test/resources")
 
   "A FileSourceAdapter" should "load and map CQL files (typed)" in {

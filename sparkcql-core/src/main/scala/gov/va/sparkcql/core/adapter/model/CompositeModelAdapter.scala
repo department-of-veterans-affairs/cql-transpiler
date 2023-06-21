@@ -4,8 +4,9 @@ import scala.reflect.runtime.universe._
 import org.apache.spark.sql.types.StructType
 import javax.xml.namespace.QName
 import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.core.adapter.{Composite}
 
-sealed class CompositeModelAdapter(adapters: List[ModelAdapter]) extends ModelAdapter {
+sealed class CompositeModelAdapter(adapters: List[ModelAdapter]) extends Composite with ModelAdapter  {
 
   def this(adapter: ModelAdapter) {
     this(List(adapter))

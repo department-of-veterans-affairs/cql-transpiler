@@ -2,6 +2,6 @@ package gov.va.sparkcql.core.adapter
 
 import scala.reflect.runtime.universe._
 
-trait AdapterConfig {
+trait Configuration {
   val adapterFactoryType: Type
 }

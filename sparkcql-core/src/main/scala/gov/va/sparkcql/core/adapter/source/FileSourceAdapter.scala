@@ -8,8 +8,8 @@ import gov.va.sparkcql.core.model.{DataType, ValueSet, CqlContent}
 import org.json4s._
 import org.json4s.jackson.Serialization.{read, write}
 import gov.va.sparkcql.core.adapter.model.CompositeModelAdapter
-import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.model.VersionedId
+import gov.va.sparkcql.core.Log
 import javax.xml.namespace.QName
 
 protected case class FileContent(path: String, value: String)

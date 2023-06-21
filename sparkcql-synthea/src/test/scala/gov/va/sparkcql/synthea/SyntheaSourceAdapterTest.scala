@@ -7,13 +7,12 @@ import org.hl7.elm.r1.Code
 import gov.va.sparkcql.core.session.SparkCqlSession
 import gov.va.sparkcql.fhir.FhirDataType
 import gov.va.sparkcql.core.model.DataType
-import gov.va.sparkcql.core.adapter.source.FileSourceAdapterConfig
 
 class SyntheaSourceAdapterTest extends TestBase {
   
   val sparkcql = {
     SparkCqlSession.build(spark)
-      .withConfig(SyntheaSourceAdapterConfig(PopulationSize.PopulationSize10))
+      .withConfig(SyntheaSourceConfiguration(PopulationSize.PopulationSize10))
       .create()
   }
 

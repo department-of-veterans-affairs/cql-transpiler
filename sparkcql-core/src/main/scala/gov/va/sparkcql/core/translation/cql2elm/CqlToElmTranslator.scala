@@ -5,10 +5,9 @@ import scala.collection.JavaConverters._
 
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
-import gov.va.sparkcql.core.adapter.source.SourceAdapter
+import gov.va.sparkcql.core.adapter.source.CompositeSourceAdapter
 import gov.va.sparkcql.core.model.{VersionedId, CqlContent}
 import org.hl7.elm.r1.Library
-import gov.va.sparkcql.core.adapter.source.SourceAdapterFactory
 
 /**
   * Three scopes are searched when resolving library references (in order of precedence):
@@ -17,7 +16,7 @@ import gov.va.sparkcql.core.adapter.source.SourceAdapterFactory
   *
   * @param libraryAdapter
   */
-class CqlToElmTranslator(sourceAdapters: Option[SourceAdapter]) {
+class CqlToElmTranslator(sourceAdapters: Option[CompositeSourceAdapter]) {
 
   def this() {
     this(None)

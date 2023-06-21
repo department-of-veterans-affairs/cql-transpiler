@@ -6,15 +6,15 @@ import gov.va.sparkcql.core.model.VersionedId
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.session.SparkCqlSession
 import gov.va.sparkcql.core.model.Evaluation
-import gov.va.sparkcql.synthea.{SyntheaSourceAdapterConfig, PopulationSize}
-import gov.va.sparkcql.core.adapter.source.FileSourceAdapterConfig
+import gov.va.sparkcql.synthea.{SyntheaSourceConfiguration, PopulationSize}
+import gov.va.sparkcql.core.adapter.source.FileSourceConfiguration
 
 class PseudoQuickMeasureTests extends IntegrationTestBase {
 
   val sparkcql: SparkCqlSession = {
     SparkCqlSession.build(spark)
-      .withConfig(FileSourceAdapterConfig("./src/test/resources/cql"))
-      .withConfig(SyntheaSourceAdapterConfig(PopulationSize.PopulationSize10))
+      .withConfig(FileSourceConfiguration("./src/test/resources/cql"))
+      .withConfig(SyntheaSourceConfiguration(PopulationSize.PopulationSize10))
       .create()
   }
 

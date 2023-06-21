@@ -6,8 +6,11 @@ import org.apache.spark.sql.types.StructType
 import gov.va.sparkcql.core.adapter.model.CompositeModelAdapter
 import gov.va.sparkcql.core.Log
 import javax.xml.namespace.QName
+import gov.va.sparkcql.core.adapter.{Composite}
 
-class CompositeSourceAdapter(val modelAdapters: CompositeModelAdapter, val spark: SparkSession, adapters: List[SourceAdapter]) extends SourceAdapter {
+class CompositeSourceAdapter(adapters: List[SourceAdapter]) extends Composite with SourceAdapter {
+
+  val spark: SparkSession = null
 
   def isDefaultConfigurable(): Boolean = true
   

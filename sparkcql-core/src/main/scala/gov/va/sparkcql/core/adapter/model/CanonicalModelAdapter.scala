@@ -2,14 +2,13 @@ package gov.va.sparkcql.core.adapter.model
 
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.types.StructType
-import gov.va.sparkcql.core.model.CqlContent
 import org.apache.spark.sql.Encoders
-import gov.va.sparkcql.core.model.{DataType, ValueSet}
+import gov.va.sparkcql.core.model.{CqlContent, DataType, ValueSet}
 import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
 import gov.va.sparkcql.core.model.VersionedId
 import javax.xml.namespace.QName
 
-class CanonicalModelAdapter extends ModelAdapter {
+class CanonicalModelAdapter() extends ModelAdapter {
 
   def namespaceUri(): String = "http://va.gov/sparkcql/core/model"
 

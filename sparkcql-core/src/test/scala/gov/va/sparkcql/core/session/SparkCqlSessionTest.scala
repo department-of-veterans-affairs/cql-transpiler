@@ -6,13 +6,13 @@ import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.model.{CqlContent}
 import gov.va.sparkcql.core.adapter.source.FileSourceAdapter
 import gov.va.sparkcql.core.Log
-import gov.va.sparkcql.core.adapter.source.FileSourceAdapterConfig
+import gov.va.sparkcql.core.adapter.source.FileSourceConfiguration
 
 class SparkCqlSessionTest extends TestBase {
 
   val sparkcql = {
     SparkCqlSession.build(spark)
-      .withConfig(FileSourceAdapterConfig("./src/test/resources/cql"))
+      .withConfig(FileSourceConfiguration("./src/test/resources/cql"))
       .create()
   }
 
