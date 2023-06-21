@@ -9,7 +9,7 @@ import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
 import gov.va.sparkcql.core.model.VersionedId
 import javax.xml.namespace.QName
 
-class NativeModelAdapter extends ModelAdapter {
+class CanonicalModelAdapter extends ModelAdapter {
 
   def namespaceUri(): String = "http://va.gov/sparkcql/core/model"
 

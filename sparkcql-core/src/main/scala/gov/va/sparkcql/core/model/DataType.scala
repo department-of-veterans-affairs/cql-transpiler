@@ -13,7 +13,7 @@ object DataType {
     val cls = typeOf[T]
     var tokens = cls.toString().split('.')
     assert(tokens.length > 2)
-    var baseUrl = s"http://${tokens(0)}.${tokens(1)}"
+    var baseUrl = s"http://${tokens(1)}.${tokens(0)}"
     var dirs = tokens.slice(2, tokens.length - 1)
     val system = Array(baseUrl, dirs.mkString("/")).mkString("/")
     val name = tokens.last

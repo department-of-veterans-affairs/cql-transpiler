@@ -1,6 +1,10 @@
 package gov.va.sparkcql.core.adapter.model
 
-trait ModelAdapterFactory {
+import gov.va.sparkcql.core.adapter.AdapterFactory
 
+trait ModelAdapterFactory extends AdapterFactory {
+  
+  def create(configuration: ModelAdapterConfig): ModelAdapter
+  
   def create(): ModelAdapter
 }

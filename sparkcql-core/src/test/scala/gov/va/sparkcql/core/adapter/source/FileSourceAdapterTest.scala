@@ -6,14 +6,14 @@ import org.hl7.elm.r1.VersionedIdentifier
 import org.apache.spark.sql.{Dataset, Encoders}
 import org.apache.spark.sql.functions._
 import gov.va.sparkcql.core.model.{DataType, ValueSet, CqlContent}
-import gov.va.sparkcql.core.adapter.model.NativeModel
-import gov.va.sparkcql.core.adapter.model.ModelAdapter
+import gov.va.sparkcql.core.adapter.model.{CompositeModelAdapter}
+import gov.va.sparkcql.core.adapter.model.CanonicalModelAdapter
 
 class FileSourceAdapterTest extends TestBase {
   
   import spark.implicits._
-  lazy val model = new NativeModel().create()
-  lazy val source = FileSource("./src/test/resources").create(spark, model)
+  lazy val model = new CompositeModelAdapter(new CanonicalModelAdapter())
+  lazy val source = new FileSourceAdapter(model, spark, "./src/test/resources")
 
   "A FileSourceAdapter" should "load and map CQL files (typed)" in {
     assert(source.acquireData[CqlContent]().get.filter(_.identifier.id == "BasicRetrieve").count() == 1)
@@ -29,8 +29,7 @@ class FileSourceAdapterTest extends TestBase {
   }
 
   it should "read empty gracefully" in {
-    lazy val emptySource = FileSource("./src/doesnotexist").create(spark, model)
+    lazy val emptySource = new FileSourceAdapter(model, spark, "./src/test/doesnotexist")
     assert(emptySource.acquireData(DataType[ValueSet]()).isEmpty)
   }
-
 }

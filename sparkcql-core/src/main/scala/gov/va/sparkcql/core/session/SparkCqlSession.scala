@@ -6,32 +6,26 @@ import gov.va.sparkcql.core.translation.cql2elm.CqlToElmTranslator
 import gov.va.sparkcql.core.translation.elm2spark.ElmR1ToSparkTranslator
 import scala.collection.mutable.MutableList
 import gov.va.sparkcql.core.model.VersionedId
-import gov.va.sparkcql.core.adapter.source.{SourceAdapterFactory, SourceAdapter}
-import gov.va.sparkcql.core.adapter.source.CompositeSourceAdapter
-import gov.va.sparkcql.core.adapter.model.{ModelAdapterFactory, ModelAdapter}
-import gov.va.sparkcql.core.adapter.model.CompositeModelAdapter
+import gov.va.sparkcql.core.adapter.{Adapter, AdapterConfig}
 import gov.va.sparkcql.core.model.{Evaluation}
-import gov.va.sparkcql.core.adapter.model.NativeModel
 import gov.va.sparkcql.core.Log
 import javax.xml.namespace.QName
+import gov.va.sparkcql.core.adapter.{AdapterServiceLoader, AdapterConfig}
+import gov.va.sparkcql.core.adapter.model.{CompositeModelAdapter, ModelAdapterConfig}
+import gov.va.sparkcql.core.adapter.source.{CompositeSourceAdapter, SourceAdapterConfig}
+import gov.va.sparkcql.core.adapter.data.{CompositeDataAdapter, DataAdapterConfig}
 
-class SparkCqlSession private(builder: SparkCqlSession.Builder) {
+class SparkCqlSession private(modelsAdapters: CompositeModelAdapter, sourceAdapters: CompositeSourceAdapter, dataAdapters: CompositeDataAdapter, spark: SparkSession) {
   
-  lazy val modelAdapters = builder.modelAdapterFactories.map(f => f.create())
-  lazy val models = new CompositeModelAdapter(modelAdapters.toList)
-
-  lazy val sourceAdapters = builder.sourceAdapterFactories.map(f => f.create(builder.spark, models))
-  lazy val sources = new CompositeSourceAdapter(models, builder.spark, sourceAdapters.toList)
-
-  lazy val cqlToElm = new CqlToElmTranslator(Some(sources))
-  lazy val elmToSpark = new ElmR1ToSparkTranslator(Some(sources), Some(models), builder.spark)
+  lazy val cqlToElm = new CqlToElmTranslator(Some(sourceAdapters))
+  lazy val elmToSpark = new ElmR1ToSparkTranslator(Some(sourceAdapters), Some(modelsAdapters), spark)
 
   def retrieve[T <: Product : TypeTag](): Option[Dataset[T]] = {
-    sources.acquireData[T]()
+    sourceAdapters.acquireData[T]()
   }
 
   def retrieve(dataType: QName): Option[Dataset[Row]] = {
-    sources.acquireData(dataType)
+    sourceAdapters.acquireData(dataType)
   }
 
   def cql[T](cqlText: String): Evaluation = {
@@ -79,27 +73,74 @@ object SparkCqlSession {
 
   class Builder private[SparkCqlSession](val spark: SparkSession) {
 
-    val sourceAdapterFactories = MutableList[SourceAdapterFactory]()
-    val modelAdapterFactories = MutableList[ModelAdapterFactory]()
+    val adapterConfigs = MutableList[AdapterConfig]()
 
-    def withSource(adapterFactory: SourceAdapterFactory): Builder = {
-      sourceAdapterFactories += adapterFactory
+    def withConfig(adapterConfig: AdapterConfig): Builder = {
+      adapterConfigs += adapterConfig
       this
     }
 
-    def withModel(adapterFactory: ModelAdapterFactory): Builder = {
-      modelAdapterFactories += adapterFactory
+    def withConfig(configPath: String): Builder = {
+      ???
       this
     }
 
     def create(): SparkCqlSession = {
-      if (modelAdapterFactories.length == 0) {
-        Log.warn("No model adapters specified.")
-      }
 
-      modelAdapterFactories += new NativeModel()
+      val loader = new AdapterServiceLoader()
 
-      new SparkCqlSession(this)
+      // TODO: Refactor below to avoid duplicate logic.
+
+      val modelAdapters = loader.modelAdapterFactories.flatMap(f => {
+        val cfg = lookupConfig(f.getClass())
+        if (cfg.isDefined) {
+          Some(f.create(cfg.get))
+        } else if (f.isDefaultConfigurable) {
+          Some(f.create())
+        } else { 
+          None 
+        }
+      })
+
+      val compositeModelAdapters = new CompositeModelAdapter(modelAdapters)
+
+      val sourceAdapters = loader.sourceAdapterFactories.flatMap(f => {
+        val cfg = lookupConfig(f.getClass())
+        if (cfg.isDefined) {
+          Some(f.create(cfg.get, compositeModelAdapters, spark))
+        } else if (f.isDefaultConfigurable) {
+          Some(f.create(compositeModelAdapters, spark))
+        } else {
+          None
+        }
+      })
+
+      val compositeSourceAdapters = new CompositeSourceAdapter(compositeModelAdapters, spark, sourceAdapters)
+
+      val dataAdapters = loader.dataAdapterFactories.flatMap(f => {
+        val cfg = lookupConfig(f.getClass())
+        if (cfg.isDefined) {
+          Some(f.create(cfg.get))
+        } else if (f.isDefaultConfigurable) {
+          Some(f.create())
+        } else {
+          None
+        }
+      })
+
+      val compositeDataAdapters = new CompositeDataAdapter(dataAdapters)
+
+      new SparkCqlSession(compositeModelAdapters, compositeSourceAdapters, compositeDataAdapters, spark)
+    }
+
+    protected def lookupConfig[C](adapterFactoryClass: Class[_]): Option[C] = {
+      val found = adapterConfigs.filter(cfg => {
+        val a = cfg.adapterFactoryType.toString()
+        val b = adapterFactoryClass.getName()
+        a == b
+      })
+      assert(found.size <= 1, "Found more than one applicable adapter configurations.")
+      found.headOption.asInstanceOf[Option[C]]
     }
   }
 

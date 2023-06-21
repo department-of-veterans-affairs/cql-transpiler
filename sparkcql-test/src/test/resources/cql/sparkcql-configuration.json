@@ -1,25 +1,13 @@
-[
-    {
-        "org.hl7.fhir.r4.model.Encounter": {
-            "codesystem": "",
-            "provider": {
-                "class": "SyntheaSource",
-                "configuration": {
-                    "path": ""
-                }
-            }
-        }
+{
+    "gov.va.sparkcql.core.adapter.source.FileSourceConfiguration": {
+        "path": [
+            "./src/test/resources/cql"
+        ]
     },
-    {
-        "org.hl7.fhir.r4.model.Encounter": {
-            "codesystem": "",
-            "provider": {
-                "class": "SparkTableSource",
-                "configuration": {
-                    "schema": "",
-                    "table": ""    
-                }
-            }
+    "gov.va.sparkcql.synthea.SyntheaSourceAdapter": [
+        {
+            "implementationGuide": "QI-Core",
+            "populationSize": "PopulationSize10"
         }
-    }
-]
+    ]
+}

@@ -5,17 +5,15 @@ import org.apache.spark.sql.{SparkSession, Dataset, DataFrame, Row}
 import org.apache.spark.sql.functions._
 import org.hl7.elm.r1.Code
 import gov.va.sparkcql.core.session.SparkCqlSession
-import gov.va.sparkcql.core.adapter.source.FileSource
-import gov.va.sparkcql.fhir.{FhirDataType, FhirModel}
+import gov.va.sparkcql.fhir.FhirDataType
 import gov.va.sparkcql.core.model.DataType
+import gov.va.sparkcql.core.adapter.source.FileSourceAdapterConfig
 
 class SyntheaSourceAdapterTest extends TestBase {
   
   val sparkcql = {
     SparkCqlSession.build(spark)
-      .withSource(FileSource("./src/test/resources/cql"))
-      .withSource(SyntheaSource(PopulationSize.PopulationSize10))
-      .withModel(FhirModel())
+      .withConfig(SyntheaSourceAdapterConfig(PopulationSize.PopulationSize10))
       .create()
   }
 

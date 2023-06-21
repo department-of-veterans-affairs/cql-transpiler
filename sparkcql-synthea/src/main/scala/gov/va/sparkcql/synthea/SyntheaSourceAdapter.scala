@@ -1,14 +1,15 @@
 package gov.va.sparkcql.synthea
 
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
+import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import org.apache.spark.sql.functions._
 import scala.collection.mutable.HashMap
 import gov.va.sparkcql.core.adapter.model.ModelAdapter
 import gov.va.sparkcql.core.adapter.source.SourceAdapter
 import javax.xml.namespace.QName
+import gov.va.sparkcql.core.adapter.model.CompositeModelAdapter
 
-class SyntheaSourceAdapter(val modelAdapter: ModelAdapter, val spark: SparkSession, size: PopulationSize) extends SourceAdapter {
+class SyntheaSourceAdapter(val modelAdapters: CompositeModelAdapter, val spark: SparkSession, size: PopulationSize) extends SourceAdapter {
 
   import spark.implicits._
 
@@ -44,15 +45,17 @@ class SyntheaSourceAdapter(val modelAdapter: ModelAdapter, val spark: SparkSessi
       }
     })
   }
+  
+  def isDataTypePresent(dataType: QName): Boolean = {
+    if (dataType.getNamespaceURI.toLowerCase() == "http://hl7.org/fhir") {
+      true
+    } else {
+      false
+    }
+  }
 
   def acquireData(dataType: QName): Option[Dataset[Row]] = {
-    // Quick check to avoid eager loading when the requested type clearly isn't supported.
-    if (dataType.getNamespaceURI.toLowerCase() == "http://hl7.org/fhir") {
-      val resourceType = dataType.getLocalPart()
-      val df = createDataSet(resourceType)
-      df
-    } else {
-      None
-    }
+    val resourceType = dataType.getLocalPart()
+    createDataSet(resourceType)
   }
 }

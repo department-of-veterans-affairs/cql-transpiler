@@ -4,16 +4,15 @@ import gov.va.sparkcql.TestBase
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.model.{CqlContent}
-import gov.va.sparkcql.core.adapter.source.{FileSource}
+import gov.va.sparkcql.core.adapter.source.FileSourceAdapter
 import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.core.adapter.source.FileSourceAdapterConfig
 
 class SparkCqlSessionTest extends TestBase {
 
   val sparkcql = {
     SparkCqlSession.build(spark)
-      .withSource(FileSource("./src/test/resources/cql"))
-      // TODO: Add mock source .withSource(SyntheaSource(PopulationSize.PopulationSize10))
-      // TODO: Add mock model  .withModel(FhirModel())
+      .withConfig(FileSourceAdapterConfig("./src/test/resources/cql"))
       .create()
   }
 

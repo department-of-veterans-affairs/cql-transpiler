@@ -7,6 +7,10 @@ import gov.va.sparkcql.core.Log
 
 sealed class CompositeModelAdapter(adapters: List[ModelAdapter]) extends ModelAdapter {
 
+  def this(adapter: ModelAdapter) {
+    this(List(adapter))
+  }
+
   def namespaceUri(): String = throw new Exception("Aggregating namespaces is invalid.")
 
   def stateCapabilities(): ModelCapabilityStatement = {

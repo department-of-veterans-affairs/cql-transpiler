@@ -3,21 +3,18 @@ package gov.va.sparkcql.test
 import collection.JavaConverters._
 import gov.va.sparkcql.core.model.{CqlContent}
 import gov.va.sparkcql.core.model.VersionedId
-import gov.va.sparkcql.core.adapter.source.{FileSource}
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.session.SparkCqlSession
-import gov.va.sparkcql.fhir.{FhirModel}
-import gov.va.sparkcql.synthea.{PopulationSize, SyntheaSource}
-import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.model.Evaluation
+import gov.va.sparkcql.synthea.{SyntheaSourceAdapterConfig, PopulationSize}
+import gov.va.sparkcql.core.adapter.source.FileSourceAdapterConfig
 
 class PseudoQuickMeasureTests extends IntegrationTestBase {
 
   val sparkcql: SparkCqlSession = {
     SparkCqlSession.build(spark)
-      .withSource(FileSource("./src/test/resources/cql"))
-      .withSource(SyntheaSource(PopulationSize.PopulationSize10))
-      .withModel(FhirModel())
+      .withConfig(FileSourceAdapterConfig("./src/test/resources/cql"))
+      .withConfig(SyntheaSourceAdapterConfig(PopulationSize.PopulationSize10))
       .create()
   }
 

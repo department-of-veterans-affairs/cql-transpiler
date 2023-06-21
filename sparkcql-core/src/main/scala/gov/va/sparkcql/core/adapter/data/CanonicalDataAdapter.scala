@@ -8,7 +8,7 @@
 // import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
 // import gov.va.sparkcql.core.model.VersionedId
 
-// class NativeModelAdapter extends DataAdapter {
+// class CanonicalModelAdapter extends DataAdapter {
 
 //   override def deserialize[T : TypeTag](data: String): Option[T] = {
 //     typeOf[T] match {
