@@ -21,7 +21,7 @@ class SparkCqlSessionTest extends TestBase {
   }
 
   it should "support statically typed retrievals" in {
-    assert(sparkcql.retrieve[IdentifiedContent].isDefined)
+    assert(sparkcql.retrieve[IdentifiedText].isDefined)
   }
 
   it should "support dynamically typed retrievals" in {

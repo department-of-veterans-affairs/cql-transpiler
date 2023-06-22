@@ -49,13 +49,13 @@ class CqlToElmTranslator(sources: List[Source]) {
 
   protected def compileExec(libraryContents: List[String]): Seq[Library] = {
 
-    // Convert CQL text to IdentifiedContent to map a VersionedId to CQL
+    // Convert CQL text to IdentifiedText to map a VersionedId to CQL
     val callScopedLibraries = libraryContents.map(content => {
       var elmId = CqlCompilerGateway.parseVersionedIdentifier(content)
       if (elmId.getId() == null) {
         elmId.setId("Anonymous-" + java.util.UUID.randomUUID.toString)
       }
-      IdentifiedContent(Identifier(elmId), content)
+      IdentifiedText(Identifier(elmId), content)
     })
 
     // Compile each CQL
@@ -83,19 +83,19 @@ class CqlToElmTranslator(sources: List[Source]) {
     results
   }
 
-  protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[IdentifiedContent]): org.hl7.elm.r1.Library = {
+  protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[IdentifiedText]): org.hl7.elm.r1.Library = {
     CqlCompilerGateway.compile(
       libraryContent,
       Some(id => libraryFromId(Identifier(id), Some(callScopedLibraries)).get.content))
   }
 
-  protected def libraryFromId(identifier: Identifier, callScopedLibraries: Option[Seq[IdentifiedContent]]): Option[IdentifiedContent] = {
+  protected def libraryFromId(identifier: Identifier, callScopedLibraries: Option[Seq[IdentifiedText]]): Option[IdentifiedText] = {
     if (callScopedLibraries.isDefined) {
       val callScoped = callScopedLibraries.get.filter(p => p.identifier == identifier)
       if (callScoped.length > 0) return Some(callScoped.head)
     }
 
-    val adapterScoped = sourceAggregate.acquireData[IdentifiedContent]()
+    val adapterScoped = sourceAggregate.acquireData[IdentifiedText]()
     val adapterResults = adapterScoped.get.filter(f => f.identifier == identifier)
     if (!adapterResults.isEmpty) return Some(adapterResults.head())
 

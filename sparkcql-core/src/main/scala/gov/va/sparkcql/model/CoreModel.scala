@@ -11,14 +11,14 @@ class CoreModel extends Model {
 
   override val supportedDataTypes: List[QName] = {
     List(
-      DataType[IdentifiedContent],
+      DataType[IdentifiedText],
       DataType[ValueSet]
     )
   }
 
   override def schemaOf(dataType: QName): Option[StructType] = {
     dataType match {
-      case x if x == DataType[IdentifiedContent]() => Some(Encoders.product[IdentifiedContent].schema)
+      case x if x == DataType[IdentifiedText]() => Some(Encoders.product[IdentifiedText].schema)
       case x if x == DataType[ValueSet]() => Some(Encoders.product[ValueSet].schema)
       case _ => None
     }

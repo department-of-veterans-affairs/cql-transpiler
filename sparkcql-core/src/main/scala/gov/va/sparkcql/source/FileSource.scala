@@ -38,7 +38,7 @@ class FileSource(val models: List[Model], val spark: SparkSession, path: String)
     
     val found = fileContents.filter(content => {
       dataType match {
-        case x if x == Model.toDataType[IdentifiedContent]() && content.path.endsWith(".cql") =>
+        case x if x == Model.toDataType[IdentifiedText]() && content.path.endsWith(".cql") =>
           true
         case x if x == Model.toDataType[ValueSet]() && content.path.endsWith(s".${x.getLocalPart.toLowerCase()}.json") =>
           true
@@ -68,11 +68,11 @@ class FileSource(val models: List[Model], val spark: SparkSession, path: String)
 
   def convert(dataType: QName, content: FileContent): Option[JsonString] = {
     dataType match {
-      case x if x == Model.toDataType[IdentifiedContent]() && content.path.endsWith(".cql") =>
+      case x if x == Model.toDataType[IdentifiedText]() && content.path.endsWith(".cql") =>
         // TODO: Refactor to move this logic into separate serialization system. Adapters shouldn't
         // need to know how to deserialize.
         val id = Identifier(CqlCompilerGateway.parseVersionedIdentifier(content.value))
-        val entity = new IdentifiedContent(id, content.value)
+        val entity = new IdentifiedText(id, content.value)
         implicit val formats: Formats = DefaultFormats
         Some(write(entity))
       case x if x == Model.toDataType[ValueSet]() && content.path.endsWith(s".${x.getLocalPart.toLowerCase()}.json") =>

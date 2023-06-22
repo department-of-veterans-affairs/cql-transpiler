@@ -13,7 +13,7 @@ class FileSourceAdapterTest extends TestBase {
   lazy val source = new FileSource(models, spark, "./src/test/resources")
 
   "A FileSourceAdapter" should "load and map CQL files (typed)" in {
-    assert(source.acquireData[IdentifiedContent]().get.filter(_.identifier.id == "BasicRetrieve").count() == 1)
+    assert(source.acquireData[IdentifiedText]().get.filter(_.identifier.id == "BasicRetrieve").count() == 1)
   }
 
   it should "load and map valuesets (typed)" in {
