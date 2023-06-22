@@ -7,8 +7,8 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 private[session] class ParameterBuilder(name: String) {
   
   def dateTimeInterval(low: String, high: String, lowClosed: Boolean = true, highClosed: Boolean = true): Map[String, Object] = {
-    val lowDateTime = low.convertTo[DateTime]
-    val highDateTime = high.convertTo[DateTime]
+    val lowDateTime = convert[String, DateTime](low)
+    val highDateTime = convert[String, DateTime](high)
 
     val interval = new Interval()
       .withLow(lowDateTime)

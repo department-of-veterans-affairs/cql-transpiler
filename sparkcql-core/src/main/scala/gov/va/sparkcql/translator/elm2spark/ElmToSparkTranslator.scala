@@ -11,8 +11,9 @@ import gov.va.sparkcql.converter.{Converter, Convertable}
 import gov.va.sparkcql.converter.Converter._
 import gov.va.sparkcql.model.{Model, ModelAggregator}
 import gov.va.sparkcql.source.{Source, SourceAggregator}
+import gov.va.sparkcql.translator.Translator
 
-abstract class ElmToSparkTranslator(models: List[Model], sources: List[Source], spark: SparkSession) {
+abstract class ElmToSparkTranslator(models: List[Model], sources: List[Source], spark: SparkSession) extends Translator {
 
   val modelAggregate = new ModelAggregator(models)
   val sourceAggregate = new SourceAggregator(sources)
@@ -39,6 +40,26 @@ abstract class ElmToSparkTranslator(models: List[Model], sources: List[Source], 
           Log.debug(s"Evaluating ${node.getClass().getName()}")
           dispatch(node, ctx)
       }
+    }
+  }
+
+  /**
+    * Syntactical sugar to add .convertTo[] to any ELM Element node to improve readability.
+    * Alias for Conversion.convert[S, T](node)
+    */
+  implicit class ConvertExtension[S](val s: S) {
+    def convertTo[T](implicit evidence: Convertable[S, T]): T = {
+      Converter.convert[S, T](s)
+    }
+  }
+
+  /**
+    * Syntactical sugar to add .castTo[] to any ELM Element node to improve readability.
+    * Alias for node.asInstanceOf[]
+    */
+  implicit class CastToExtension[T](val node: T) {
+    def castTo[T]: T = {
+      node.asInstanceOf[T]
     }
   }
 }
