@@ -4,8 +4,8 @@ import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
 import org.apache.spark.sql.functions._
 import scala.collection.mutable.HashMap
-import gov.va.sparkcql.core.source.{Source, SourceFactory, SourceConfiguration}
-import gov.va.sparkcql.core.model.Model
+import gov.va.sparkcql.source.{Source, SourceFactory, SourceConfiguration}
+import gov.va.sparkcql.model.Model
 
 class SyntheaSourceFactory() extends SourceFactory {
 

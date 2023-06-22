@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core.translator.cql2elm;
+package gov.va.sparkcql.translator.cql2elm;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

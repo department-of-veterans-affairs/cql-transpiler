@@ -1,5 +1,5 @@
 {
-    "gov.va.sparkcql.core.adapter.source.FileSourceConfiguration": {
+    "gov.va.sparkcql.adapter.source.FileSourceConfiguration": {
         "path": [
             "./src/test/resources/cql"
         ]

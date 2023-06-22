@@ -1,6 +1,6 @@
 package gov.va.sparkcql.fhir
 
-import gov.va.sparkcql.core.model.{Model, ModelFactory}
+import gov.va.sparkcql.model.{Model, ModelFactory}
 
 class FhirModelFactory extends ModelFactory {
 

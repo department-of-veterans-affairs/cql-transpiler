@@ -1,6 +1,6 @@
 package gov.va.sparkcql.fhir
 
-import gov.va.sparkcql.core.model.Model
+import gov.va.sparkcql.model.Model
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.types.StructType
 import javax.xml.namespace.QName

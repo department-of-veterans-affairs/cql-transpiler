@@ -5,8 +5,8 @@ import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import org.apache.spark.sql.functions._
 import scala.collection.mutable.HashMap
 import javax.xml.namespace.QName
-import gov.va.sparkcql.core.model.Model
-import gov.va.sparkcql.core.source.Source
+import gov.va.sparkcql.model.Model
+import gov.va.sparkcql.source.Source
 
 class SyntheaSource(val models: List[Model], val spark: SparkSession, size: PopulationSize) extends Source {
 
