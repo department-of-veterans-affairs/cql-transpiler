@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core.translation
+package gov.va.sparkcql.core.translator
 
 trait Translator {
   /**

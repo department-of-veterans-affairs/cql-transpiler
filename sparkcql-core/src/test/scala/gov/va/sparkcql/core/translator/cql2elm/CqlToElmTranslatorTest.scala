@@ -1,4 +1,4 @@
-package gov.va.sparkcql.compiler
+package gov.va.sparkcql.core.translator.cql2elm
 
 import gov.va.sparkcql.TestBase
 import org.junit.jupiter.api.Test
@@ -8,7 +8,6 @@ import collection.JavaConverters._
 import org.hl7.elm.r1.Library
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory
 import org.hl7.elm.r1.VersionedIdentifier
-import gov.va.sparkcql.core.translation.cql2elm.CqlToElmTranslator
 import org.hl7.cql_annotations.r1.CqlToElmError
 
 class CqlToElmTranslatorTest extends TestBase {

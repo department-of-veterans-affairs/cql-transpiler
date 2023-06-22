@@ -4,8 +4,8 @@ import scala.reflect.runtime.universe._
 import scala.collection.mutable.MutableList
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import javax.xml.namespace.QName
-import gov.va.sparkcql.core.translation.cql2elm.CqlToElmTranslator
-import gov.va.sparkcql.core.translation.elm2spark.ElmR1ToSparkTranslator
+import gov.va.sparkcql.core.translator.cql2elm.CqlToElmTranslator
+import gov.va.sparkcql.core.translator.elm2spark.ElmR1ToSparkTranslator
 import gov.va.sparkcql.core.model.{Evaluation, VersionedId}
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.di.{ComponentFactory, Configuration}

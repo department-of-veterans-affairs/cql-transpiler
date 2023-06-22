@@ -5,7 +5,7 @@
 // import gov.va.sparkcql.core.model.CqlContent
 // import org.apache.spark.sql.Encoders
 // import gov.va.sparkcql.core.model.ValueSet
-// import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
+// import gov.va.sparkcql.core.translator.cql2elm.CqlCompilerGateway
 // import gov.va.sparkcql.core.model.VersionedId
 
 // class CanonicalModelAdapter extends DataAdapter {

@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core.translation.elm2spark
+package gov.va.sparkcql.core.translator.elm2spark
 
 import scala.collection.JavaConverters._
 import org.apache.spark.sql.{SparkSession, Dataset, Row, Column}

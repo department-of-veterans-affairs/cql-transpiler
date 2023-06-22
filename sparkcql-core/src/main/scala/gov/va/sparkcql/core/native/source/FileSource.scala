@@ -3,7 +3,7 @@ package gov.va.sparkcql.core.native.source
 import scala.reflect.runtime.universe._
 import gov.va.sparkcql.core.io.Files
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
-import gov.va.sparkcql.core.translation.cql2elm.CqlCompilerGateway
+import gov.va.sparkcql.core.translator.cql2elm.CqlCompilerGateway
 import gov.va.sparkcql.core.model.{DataType, ValueSet, CqlContent}
 import org.json4s._
 import org.json4s.jackson.Serialization.{read, write}

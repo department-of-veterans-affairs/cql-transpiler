@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core.translation.cql2elm
+package gov.va.sparkcql.core.translator.cql2elm
 
 import org.cqframework.cql.cql2elm.CqlTranslator
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions

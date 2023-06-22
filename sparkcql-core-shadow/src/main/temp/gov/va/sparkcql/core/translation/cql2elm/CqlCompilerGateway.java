@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core.translation.cql2elm;
+package gov.va.sparkcql.core.translator.cql2elm;
 
 import java.util.Optional;
 import java.util.function.Function;
