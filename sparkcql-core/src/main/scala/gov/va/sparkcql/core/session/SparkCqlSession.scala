@@ -1,30 +1,31 @@
 package gov.va.sparkcql.core.session
 
 import scala.reflect.runtime.universe._
+import scala.collection.mutable.MutableList
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
+import javax.xml.namespace.QName
 import gov.va.sparkcql.core.translation.cql2elm.CqlToElmTranslator
 import gov.va.sparkcql.core.translation.elm2spark.ElmR1ToSparkTranslator
-import scala.collection.mutable.MutableList
-import gov.va.sparkcql.core.adapter.{Adapter, Factory, Configuration, AdapterLoader, AdapterSet}
-import gov.va.sparkcql.core.adapter.model.{CompositeModelAdapter, ModelAdapter}
-import gov.va.sparkcql.core.adapter.model.ModelConfiguration
-
-import gov.va.sparkcql.core.adapter.source.{CompositeSourceAdapter, SourceAdapter, SourceConfiguration}
 import gov.va.sparkcql.core.model.{Evaluation, VersionedId}
 import gov.va.sparkcql.core.Log
-import javax.xml.namespace.QName
+import gov.va.sparkcql.core.di.{ComponentFactory, Configuration}
+import gov.va.sparkcql.core.model.{Model, ModelAggregator}
+import gov.va.sparkcql.core.source.{Source, SourceAggregator}
 
-class SparkCqlSession private(adapterSet: AdapterSet, spark: SparkSession) {
+class SparkCqlSession private(models: List[Model], sources: List[Source], spark: SparkSession) {
 
-  lazy val cqlToElm = new CqlToElmTranslator(Some(adapterSet.source))
-  lazy val elmToSpark = new ElmR1ToSparkTranslator(Some(adapterSet.source), Some(adapterSet.model), spark)
+  val modelAggregate = new ModelAggregator(models)
+  val sourceAggregate = new SourceAggregator(sources)
+
+  lazy val cqlToElm = new CqlToElmTranslator(sources)
+  lazy val elmToSpark = new ElmR1ToSparkTranslator(models, sources, spark)
 
   def retrieve[T <: Product : TypeTag](): Option[Dataset[T]] = {
-    adapterSet.source.acquireData[T]()
+    sourceAggregate.acquireData[T]()
   }
 
   def retrieve(dataType: QName): Option[Dataset[Row]] = {
-    adapterSet.source.acquireData(dataType)
+    sourceAggregate.acquireData(dataType)
   }
 
   def cql[T](cqlText: String): Evaluation = {
@@ -72,10 +73,10 @@ object SparkCqlSession {
 
   class Builder private[SparkCqlSession](val spark: SparkSession) {
 
-    val adapterConfigs = MutableList[Configuration]()
+    val componentConfigurations = MutableList[Configuration]()
 
-    def withConfig(adapterConfig: Configuration): Builder = {
-      adapterConfigs += adapterConfig
+    def withConfig(configuration: Configuration): Builder = {
+      componentConfigurations += configuration
       this
     }
 
@@ -86,10 +87,11 @@ object SparkCqlSession {
 
     def create(): SparkCqlSession = {
 
-      val loader = new AdapterLoader(spark, adapterConfigs.toList)
-      val adapterSet = loader.createAdapters()
+      val mainFactory = new ComponentFactory()
+      val models = mainFactory.createModels()
+      val sources = mainFactory.createSources(componentConfigurations.toList, models, spark)
 
-      new SparkCqlSession(adapterSet, spark)
+      new SparkCqlSession(models, sources, spark)
     }
   }
 

@@ -4,9 +4,8 @@ import gov.va.sparkcql.TestBase
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.model.{CqlContent}
-import gov.va.sparkcql.core.adapter.source.FileSourceAdapter
 import gov.va.sparkcql.core.Log
-import gov.va.sparkcql.core.adapter.source.FileSourceConfiguration
+import gov.va.sparkcql.core.native.source.FileSourceConfiguration
 
 class SparkCqlSessionTest extends TestBase {
 

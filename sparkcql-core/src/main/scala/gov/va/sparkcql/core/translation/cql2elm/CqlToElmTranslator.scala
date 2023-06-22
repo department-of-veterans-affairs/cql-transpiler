@@ -1,13 +1,12 @@
 package gov.va.sparkcql.core.translation.cql2elm
 
 import scala.collection.JavaConverters._
-import scala.collection.JavaConverters._
 
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
-import gov.va.sparkcql.core.adapter.source.CompositeSourceAdapter
 import gov.va.sparkcql.core.model.{VersionedId, CqlContent}
 import org.hl7.elm.r1.Library
+import gov.va.sparkcql.core.source.{Source, SourceAggregator}
 
 /**
   * Three scopes are searched when resolving library references (in order of precedence):
@@ -16,10 +15,12 @@ import org.hl7.elm.r1.Library
   *
   * @param libraryAdapter
   */
-class CqlToElmTranslator(sourceAdapters: Option[CompositeSourceAdapter]) {
+class CqlToElmTranslator(sources: List[Source]) {
+
+  val sourceAggregate = new SourceAggregator(sources)
 
   def this() {
-    this(None)
+    this(List())
   }
   
   /**
@@ -94,11 +95,9 @@ class CqlToElmTranslator(sourceAdapters: Option[CompositeSourceAdapter]) {
       if (callScoped.length > 0) return Some(callScoped.head)
     }
 
-    if (sourceAdapters.isDefined) {
-      val adapterScoped = sourceAdapters.get.acquireData[CqlContent]()
-      val adapterResults = adapterScoped.get.filter(f => f.identifier == identifier)
-      if (!adapterResults.isEmpty) return Some(adapterResults.head())
-    }
+    val adapterScoped = sourceAggregate.acquireData[CqlContent]()
+    val adapterResults = adapterScoped.get.filter(f => f.identifier == identifier)
+    if (!adapterResults.isEmpty) return Some(adapterResults.head())
 
     throw new Exception(s"Unable to find library ${identifier.toString()}")
   }  

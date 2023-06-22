@@ -7,7 +7,7 @@ import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.session.SparkCqlSession
 import gov.va.sparkcql.core.model.Evaluation
 import gov.va.sparkcql.synthea.{SyntheaSourceConfiguration, PopulationSize}
-import gov.va.sparkcql.core.adapter.source.FileSourceConfiguration
+import gov.va.sparkcql.core.native.source.FileSourceConfiguration
 
 class PseudoQuickMeasureTests extends IntegrationTestBase {
 
