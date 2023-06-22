@@ -7,7 +7,7 @@ import javax.xml.namespace.QName
 import gov.va.sparkcql.core.translator.cql2elm.CqlToElmTranslator
 import gov.va.sparkcql.core.translator.elm2spark.ElmR1ToSparkTranslator
 import gov.va.sparkcql.core.types.Identifier
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 import gov.va.sparkcql.core.di.{ComponentFactory, Configuration}
 import gov.va.sparkcql.core.model.{Model, ModelAggregator}
 import gov.va.sparkcql.core.source.{Source, SourceAggregator}

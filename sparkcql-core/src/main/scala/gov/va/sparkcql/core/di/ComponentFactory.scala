@@ -7,7 +7,7 @@ import java.util.ServiceLoader
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.model._
 import gov.va.sparkcql.core.source._
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 
 class ComponentFactory {
 

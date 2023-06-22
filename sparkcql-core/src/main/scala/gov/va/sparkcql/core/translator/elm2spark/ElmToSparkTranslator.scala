@@ -6,7 +6,7 @@ import org.apache.spark.sql.{SparkSession, Dataset, Row, Column}
 import org.apache.spark.sql.functions._
 import org.hl7.elm.{r1 => elm}
 import org.hl7.cql_annotations.r1._
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 import gov.va.sparkcql.core.converter.{Converter, Convertable}
 import gov.va.sparkcql.core.converter.Converter._
 import gov.va.sparkcql.core.model.{Model, ModelAggregator}

@@ -3,7 +3,7 @@ package gov.va.sparkcql.core.model
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.types.StructType
 import javax.xml.namespace.QName
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 
 sealed class ModelAggregator(models: List[Model]) extends Model  {
 

@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core
+package gov.va.sparkcql.diagnostic
 
 import scala.concurrent.duration._
 

@@ -3,11 +3,10 @@ package gov.va.sparkcql.test
 import scala.reflect.runtime.universe._
 import collection.JavaConverters._
 import gov.va.sparkcql.core.types._
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 import gov.va.sparkcql.core.session.{SparkCqlSession, Evaluation}
 import gov.va.sparkcql.synthea.{SyntheaSourceConfiguration, PopulationSize}
 import gov.va.sparkcql.core.source.FileSourceConfiguration
-import gov.va.sparkcql.core.Stopwatch
 
 class PseudoQuickMeasureTests extends IntegrationTestBase {
 

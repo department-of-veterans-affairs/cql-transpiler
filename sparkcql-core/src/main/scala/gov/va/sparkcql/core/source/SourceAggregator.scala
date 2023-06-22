@@ -3,7 +3,7 @@ package gov.va.sparkcql.core.source
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import org.apache.spark.sql.types.StructType
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 import javax.xml.namespace.QName
 import gov.va.sparkcql.core.model.Model
 

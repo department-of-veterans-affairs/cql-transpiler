@@ -7,7 +7,7 @@ import org.hl7.elm.{r1 => elm}
 import org.hl7.cql_annotations.r1._
 import gov.va.sparkcql.core.converter.Converter._
 import javax.xml.namespace.QName
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 import java.time.{ZonedDateTime, LocalDate, LocalDateTime}
 import java.sql.{Timestamp}
 import gov.va.sparkcql.core.model.Model

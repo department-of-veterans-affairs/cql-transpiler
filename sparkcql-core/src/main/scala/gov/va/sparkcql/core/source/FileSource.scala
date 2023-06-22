@@ -8,7 +8,7 @@ import javax.xml.namespace.QName
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import gov.va.sparkcql.core.translator.cql2elm.CqlCompilerGateway
 import gov.va.sparkcql.core.types._
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 import gov.va.sparkcql.core.model.Model
 
 protected case class FileContent(path: String, value: String)

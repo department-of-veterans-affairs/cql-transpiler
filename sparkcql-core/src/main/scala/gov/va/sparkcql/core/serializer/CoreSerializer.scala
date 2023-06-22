@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core.serializer
+//package gov.va.sparkcql.core.serializer
 
 // import scala.reflect.runtime.universe._
 // import org.apache.spark.sql.types.StructType

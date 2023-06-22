@@ -4,7 +4,7 @@ import scala.reflect.runtime.universe._
 import scala.collection.JavaConverters._
 import javax.xml.namespace.QName
 import org.apache.spark.sql.types.StructType
-import gov.va.sparkcql.core.Log
+import gov.va.sparkcql.logging.Log
 
 trait Model {
 
