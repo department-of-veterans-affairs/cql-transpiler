@@ -1,5 +1,5 @@
 /*
-sparkcql-core-shadow must be built and used as a jar to properly shade CQF's ANTLR version from 
+sparkcql-shadow must be built and used as a jar to properly shade CQF's ANTLR version from 
 spark which uses an incompatible ANTLR version. The build will publish shadow to a local maven
 repository which can be used by downstream dependents. Alternatively, the shadow plugin supports
 "configuration: 'shadow'" which avoids publishing locally but this setting trips up Metals.
