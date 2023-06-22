@@ -6,7 +6,7 @@ import org.apache.spark.sql.functions._
 import org.hl7.elm.{r1 => elm}
 import org.hl7.cql_annotations.r1._
 import gov.va.sparkcql.core.model.{StatementEvaluation}
-import gov.va.sparkcql.core.conversion.Conversion._
+import gov.va.sparkcql.core.converter.Converter._
 import javax.xml.namespace.QName
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.model.{Evaluation, LibraryEvaluation, StatementEvaluation}

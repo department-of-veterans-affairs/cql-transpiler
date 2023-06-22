@@ -2,7 +2,7 @@
   * TODO: Provide thorough explanation of our use of the typeclass pattern to resolve
   * conversion implementations.
   */
-package gov.va.sparkcql.core.conversion
+package gov.va.sparkcql.core.converter
 
 trait Convertable[S, T] {
   def convert(source: S): T
@@ -11,7 +11,7 @@ trait Convertable[S, T] {
 trait ConvertTo[T] {
 }
 
-object Conversion extends ElmConversion with DateConversion {
+object Converter extends ElmConverter with DateConverter {
 
   /**
     * NOTE: We could have explicitly routed each request of source/target to correct implementation
@@ -29,7 +29,7 @@ object Conversion extends ElmConversion with DateConversion {
     */
   implicit class ConvertExtension[S](val s: S) extends AnyVal {
     def convertTo[T](implicit evidence: Convertable[S, T]): T = {
-      Conversion.convert[S, T](s)
+      Converter.convert[S, T](s)
     }
   }
 

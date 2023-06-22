@@ -1,7 +1,7 @@
-package gov.va.sparkcql.core.conversion
+package gov.va.sparkcql.core.converter
 
 import scala.reflect.runtime.universe._
-import gov.va.sparkcql.core.conversion.Conversion._
+import gov.va.sparkcql.core.converter.Converter._
 import gov.va.sparkcql.core.Log
 import org.hl7.elm
 import java.time.{ZonedDateTime, LocalDate, LocalDateTime}
@@ -9,7 +9,7 @@ import javax.xml.namespace.QName
 import java.time.ZoneId
 import java.sql.Timestamp
 
-trait DateConversion {
+trait DateConverter {
 
   val NanoToMillFactor = 1000000
 

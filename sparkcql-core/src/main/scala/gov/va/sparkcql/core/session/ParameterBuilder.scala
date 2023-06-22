@@ -1,6 +1,6 @@
 package gov.va.sparkcql.core.session
 
-import gov.va.sparkcql.core.conversion.Conversion._
+import gov.va.sparkcql.core.converter.Converter._
 import org.hl7.elm.r1.{Interval, DateTime, Date, Literal}
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 

@@ -1,12 +1,12 @@
-package gov.va.sparkcql.core.conversion
+package gov.va.sparkcql.core.converter
 
 import scala.reflect.runtime.universe._
-import gov.va.sparkcql.core.conversion.Conversion._
+import gov.va.sparkcql.core.converter.Converter._
 import gov.va.sparkcql.core.Log
 import org.hl7.elm
 import javax.xml.namespace.QName
 
-trait ElmConversion {
+trait ElmConverter {
 
   implicit val literalToInt: Convertable[elm.r1.Literal, Int] = (s: elm.r1.Literal) => s.getValue().toInt
 

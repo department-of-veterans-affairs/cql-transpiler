@@ -1,5 +1,6 @@
 package gov.va.sparkcql.test
 
+import scala.reflect.runtime.universe._
 import collection.JavaConverters._
 import gov.va.sparkcql.core.model.{CqlContent}
 import gov.va.sparkcql.core.model.VersionedId
@@ -8,6 +9,7 @@ import gov.va.sparkcql.core.session.SparkCqlSession
 import gov.va.sparkcql.core.model.Evaluation
 import gov.va.sparkcql.synthea.{SyntheaSourceConfiguration, PopulationSize}
 import gov.va.sparkcql.core.native.source.FileSourceConfiguration
+import gov.va.sparkcql.core.Stopwatch
 
 class PseudoQuickMeasureTests extends IntegrationTestBase {
 

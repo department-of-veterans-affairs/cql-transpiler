@@ -8,9 +8,8 @@ import org.hl7.elm.{r1 => elm}
 import org.hl7.cql_annotations.r1._
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.model.{Evaluation, LibraryEvaluation, StatementEvaluation}
-import gov.va.sparkcql.core.conversion.Conversion
-import gov.va.sparkcql.core.conversion.Conversion._
-import gov.va.sparkcql.core.conversion.Convertable
+import gov.va.sparkcql.core.converter.{Converter, Convertable}
+import gov.va.sparkcql.core.converter.Converter._
 import gov.va.sparkcql.core.model.{Model, ModelAggregator}
 import gov.va.sparkcql.core.source.{Source, SourceAggregator}
 
