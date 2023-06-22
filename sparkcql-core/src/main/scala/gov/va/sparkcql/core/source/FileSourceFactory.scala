@@ -1,8 +1,7 @@
-package gov.va.sparkcql.core.native.source
+package gov.va.sparkcql.core.source
 
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.core.source.{Source, SourceFactory, SourceConfiguration}
 import gov.va.sparkcql.core.model.Model
 
 class FileSourceFactory extends SourceFactory {

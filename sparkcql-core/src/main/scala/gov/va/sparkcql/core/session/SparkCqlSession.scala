@@ -6,7 +6,7 @@ import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import javax.xml.namespace.QName
 import gov.va.sparkcql.core.translator.cql2elm.CqlToElmTranslator
 import gov.va.sparkcql.core.translator.elm2spark.ElmR1ToSparkTranslator
-import gov.va.sparkcql.core.model.{Evaluation, VersionedId}
+import gov.va.sparkcql.core.types.Identifier
 import gov.va.sparkcql.core.Log
 import gov.va.sparkcql.core.di.{ComponentFactory, Configuration}
 import gov.va.sparkcql.core.model.{Model, ModelAggregator}
@@ -44,22 +44,22 @@ class SparkCqlSession private(models: List[Model], sources: List[Source], spark:
     cqlExec(Some(cqlText), None, Some(parameters))
   }
 
-  def cql[T](libraryIdentifiers: Seq[VersionedId]): Evaluation = {
+  def cql[T](libraryIdentifiers: Seq[Identifier]): Evaluation = {
     cqlExec(None, Some(libraryIdentifiers), None)
   }
 
-  def cql[T](parameters: Map[String, Object], libraryIdentifiers: Seq[VersionedId]): Evaluation = {
+  def cql[T](parameters: Map[String, Object], libraryIdentifiers: Seq[Identifier]): Evaluation = {
     cqlExec(None, Some(libraryIdentifiers), Some(parameters))
   }
 
   protected def cqlExec(
       cqlText: Option[List[String]],
-      libraryIdentifiers: Option[Seq[VersionedId]],
+      libraryIdentifiers: Option[Seq[Identifier]],
       parameters: Option[Map[String, Object]]): Evaluation = {
     
     val compilation = if (cqlText.isDefined) { cqlToElm.translate(cqlText.get) } else { cqlToElm.translate(libraryIdentifiers.get) }
-    val evaluation = elmToSpark.translate(parameters, compilation)
-    evaluation.asInstanceOf[Evaluation]
+    val translation = elmToSpark.translate(parameters, compilation)
+    Evaluation(compilation, translation)
   }
 
   protected def convertCompilationToEvaluation(): Evaluation = {

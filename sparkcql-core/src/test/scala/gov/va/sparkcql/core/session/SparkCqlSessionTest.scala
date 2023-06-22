@@ -3,9 +3,9 @@ package gov.va.sparkcql.core.session
 import gov.va.sparkcql.TestBase
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.core.model.{CqlContent}
+import gov.va.sparkcql.core.types._
 import gov.va.sparkcql.core.Log
-import gov.va.sparkcql.core.native.source.FileSourceConfiguration
+import gov.va.sparkcql.core.source.FileSourceConfiguration
 
 class SparkCqlSessionTest extends TestBase {
 
@@ -21,7 +21,7 @@ class SparkCqlSessionTest extends TestBase {
   }
 
   it should "support statically typed retrievals" in {
-    assert(sparkcql.retrieve[CqlContent].isDefined)
+    assert(sparkcql.retrieve[IdentifiedContent].isDefined)
   }
 
   it should "support dynamically typed retrievals" in {

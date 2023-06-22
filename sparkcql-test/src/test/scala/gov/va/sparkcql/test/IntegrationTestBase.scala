@@ -6,7 +6,7 @@ import org.scalatestplus.junit.JUnitRunner
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.core.Log
-import gov.va.sparkcql.core.model.Evaluation
+import gov.va.sparkcql.core.session.Evaluation
 import org.hl7.elm.r1.Library
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory
 import java.io.FileWriter

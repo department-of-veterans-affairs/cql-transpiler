@@ -1,4 +1,4 @@
-package gov.va.sparkcql.core.transformer
+package gov.va.sparkcql.core.serializer
 
 trait Serializer {
   /**

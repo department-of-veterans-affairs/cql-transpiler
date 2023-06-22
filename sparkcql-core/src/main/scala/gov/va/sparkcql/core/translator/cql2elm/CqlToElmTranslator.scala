@@ -4,7 +4,7 @@ import scala.collection.JavaConverters._
 
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
-import gov.va.sparkcql.core.model.{VersionedId, CqlContent}
+import gov.va.sparkcql.core.types._
 import org.hl7.elm.r1.Library
 import gov.va.sparkcql.core.source.{Source, SourceAggregator}
 
@@ -37,25 +37,25 @@ class CqlToElmTranslator(sources: List[Source]) {
   }
 
   /**
-    * Builds a set of CQL libraries using their VersionedIdentifiers.
+    * Builds a set of CQL libraries using their Identifiers.
     *
     * @param libraryIdentifiers
     * @return
     */
-  def translate(libraryIdentifiers: Seq[VersionedId]): Seq[Library] = { 
+  def translate(libraryIdentifiers: Seq[Identifier]): Seq[Library] = { 
     val callScopedLibraries = libraryIdentifiers.map(libraryFromId(_, None).get.content).toList
     compileExec(callScopedLibraries)
   }
 
   protected def compileExec(libraryContents: List[String]): Seq[Library] = {
 
-    // Convert CQL text to CqlContent to map a VersionedId to CQL
+    // Convert CQL text to IdentifiedContent to map a VersionedId to CQL
     val callScopedLibraries = libraryContents.map(content => {
       var elmId = CqlCompilerGateway.parseVersionedIdentifier(content)
       if (elmId.getId() == null) {
         elmId.setId("Anonymous-" + java.util.UUID.randomUUID.toString)
       }
-      CqlContent(VersionedId(elmId), content)
+      IdentifiedContent(Identifier(elmId), content)
     })
 
     // Compile each CQL
@@ -83,19 +83,19 @@ class CqlToElmTranslator(sources: List[Source]) {
     results
   }
 
-  protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[CqlContent]): org.hl7.elm.r1.Library = {
+  protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[IdentifiedContent]): org.hl7.elm.r1.Library = {
     CqlCompilerGateway.compile(
       libraryContent,
-      Some(id => libraryFromId(VersionedId(id), Some(callScopedLibraries)).get.content))
+      Some(id => libraryFromId(Identifier(id), Some(callScopedLibraries)).get.content))
   }
 
-  protected def libraryFromId(identifier: VersionedId, callScopedLibraries: Option[Seq[CqlContent]]): Option[CqlContent] = {
+  protected def libraryFromId(identifier: Identifier, callScopedLibraries: Option[Seq[IdentifiedContent]]): Option[IdentifiedContent] = {
     if (callScopedLibraries.isDefined) {
       val callScoped = callScopedLibraries.get.filter(p => p.identifier == identifier)
       if (callScoped.length > 0) return Some(callScoped.head)
     }
 
-    val adapterScoped = sourceAggregate.acquireData[CqlContent]()
+    val adapterScoped = sourceAggregate.acquireData[IdentifiedContent]()
     val adapterResults = adapterScoped.get.filter(f => f.identifier == identifier)
     if (!adapterResults.isEmpty) return Some(adapterResults.head())
 

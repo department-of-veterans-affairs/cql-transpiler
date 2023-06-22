@@ -2,13 +2,11 @@ package gov.va.sparkcql.test
 
 import scala.reflect.runtime.universe._
 import collection.JavaConverters._
-import gov.va.sparkcql.core.model.{CqlContent}
-import gov.va.sparkcql.core.model.VersionedId
+import gov.va.sparkcql.core.types._
 import gov.va.sparkcql.core.Log
-import gov.va.sparkcql.core.session.SparkCqlSession
-import gov.va.sparkcql.core.model.Evaluation
+import gov.va.sparkcql.core.session.{SparkCqlSession, Evaluation}
 import gov.va.sparkcql.synthea.{SyntheaSourceConfiguration, PopulationSize}
-import gov.va.sparkcql.core.native.source.FileSourceConfiguration
+import gov.va.sparkcql.core.source.FileSourceConfiguration
 import gov.va.sparkcql.core.Stopwatch
 
 class PseudoQuickMeasureTests extends IntegrationTestBase {
@@ -22,7 +20,7 @@ class PseudoQuickMeasureTests extends IntegrationTestBase {
 
   "A PseudoMeasureTest" should "should calculate Emergency Department" in {
     val parameter = sparkcql.parameter("Measurement Period").dateTimeInterval("2013-01-01", "2014-01-01")
-    val evaluation = sparkcql.cql(parameter, Seq(VersionedId("ED_QUICK", None, Some("1.0"))))
+    val evaluation = sparkcql.cql(parameter, Seq(Identifier("ED_QUICK", None, Some("1.0"))))
     assertEvaluation(evaluation)
     diagnoseEvaluation(evaluation)
   }

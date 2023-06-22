@@ -5,11 +5,9 @@ import org.apache.spark.sql.{SparkSession, Dataset, Row, Column}
 import org.apache.spark.sql.functions._
 import org.hl7.elm.{r1 => elm}
 import org.hl7.cql_annotations.r1._
-import gov.va.sparkcql.core.model.{StatementEvaluation}
 import gov.va.sparkcql.core.converter.Converter._
 import javax.xml.namespace.QName
 import gov.va.sparkcql.core.Log
-import gov.va.sparkcql.core.model.{Evaluation, LibraryEvaluation, StatementEvaluation}
 import java.time.{ZonedDateTime, LocalDate, LocalDateTime}
 import java.sql.{Timestamp}
 import gov.va.sparkcql.core.model.Model
@@ -18,13 +16,13 @@ import gov.va.sparkcql.core.source.Source
 class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: SparkSession) 
     extends ElmToSparkTranslator(models, sources, spark) {
 
-  def translate(parameters: Option[Map[String, Object]], libraryCollection: Seq[elm.Library]): Evaluation = {
+  def translate(parameters: Option[Map[String, Object]], libraryCollection: Seq[elm.Library]): Translation = {
     val initialCtx = TranslationContext(suppliedParameters = parameters)
     val libraryEvals = libraryCollection.flatMap(l => {
-      val libEval = l.eval(initialCtx).castTo[LibraryEvaluation]
+      val libEval = l.eval(initialCtx).castTo[LibraryTranslation]
       Some(libEval)
     })
-    Evaluation(parameters, libraryEvals)
+    Translation(parameters, libraryEvals)
   }
 
   /**
@@ -113,10 +111,10 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     binaryExpression(n, ctx, _.equalTo(_))
   }
 
-  protected def expressionDef(n: elm.ExpressionDef, ctx: TranslationContext): StatementEvaluation = {
+  protected def expressionDef(n: elm.ExpressionDef, ctx: TranslationContext): StatementTranslation = {
     val result = n.getExpression().eval(ctx).castTo[Option[Dataset[Row]]]
     val libraryRef = ctx.library.get.getIdentifier()
-    StatementEvaluation(n, result, libraryRef)
+    StatementTranslation(n, result, libraryRef)
   }
 
   protected def greater(n: elm.Greater, ctx: TranslationContext): Column = {
@@ -131,15 +129,15 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     binaryExpression(n, ctx, _.lt(_))
   }
 
-  protected def library(n: elm.Library, ctx: TranslationContext): LibraryEvaluation = {
+  protected def library(n: elm.Library, ctx: TranslationContext): LibraryTranslation = {
     val errors = n.getAnnotation().asScala.filter(p => p.isInstanceOf[CqlToElmError])
 
     if (errors.length == 0) {
       val libraryExpressionDefs = n.getStatements().getDef().asScala.toSeq
-      val statementEvals = libraryExpressionDefs.map(_.eval(ctx.copy(library = Some(n))).castTo[StatementEvaluation])
-      LibraryEvaluation(n, statementEvals)
+      val statementEvals = libraryExpressionDefs.map(_.eval(ctx.copy(library = Some(n))).castTo[StatementTranslation])
+      LibraryTranslation(n, statementEvals)
     } else {
-      LibraryEvaluation(n, Seq[StatementEvaluation]())
+      LibraryTranslation(n, Seq[StatementTranslation]())
     }
   }
 

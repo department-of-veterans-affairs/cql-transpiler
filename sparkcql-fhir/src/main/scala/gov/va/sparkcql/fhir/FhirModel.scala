@@ -11,25 +11,25 @@ class FhirModel extends Model {
   
   override val supportedDataTypes: List[QName] = {
     List(
-      makeLocalDataType("AllergyIntolerance"),
-      makeLocalDataType("CarePlan"),
-      makeLocalDataType("CareTeam"),
-      makeLocalDataType("Claim"),
-      makeLocalDataType("Condition"),
-      makeLocalDataType("Coverage"),
-      makeLocalDataType("Device"),
-      makeLocalDataType("DiagnosticReport"),
-      makeLocalDataType("Encounter"),
-      makeLocalDataType("Goal"),
-      makeLocalDataType("ImagingStudy"),
-      makeLocalDataType("Immunization"),
-      makeLocalDataType("Location"),
-      makeLocalDataType("MedicationRequest"),
-      makeLocalDataType("Observation"),
-      makeLocalDataType("Organization"),
-      makeLocalDataType("Patient"),
-      makeLocalDataType("Practitioner"),
-      makeLocalDataType("Procedure")
+      toDataType("AllergyIntolerance"),
+      toDataType("CarePlan"),
+      toDataType("CareTeam"),
+      toDataType("Claim"),
+      toDataType("Condition"),
+      toDataType("Coverage"),
+      toDataType("Device"),
+      toDataType("DiagnosticReport"),
+      toDataType("Encounter"),
+      toDataType("Goal"),
+      toDataType("ImagingStudy"),
+      toDataType("Immunization"),
+      toDataType("Location"),
+      toDataType("MedicationRequest"),
+      toDataType("Observation"),
+      toDataType("Organization"),
+      toDataType("Patient"),
+      toDataType("Practitioner"),
+      toDataType("Procedure")
     )
   }
 
