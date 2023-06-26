@@ -10,9 +10,6 @@ trait Convertable[S, T] {
   def convert(source: S): T
 }
 
-trait ConvertTo[T] {
-}
-
 object Converter extends ElmConverter with DateConverter {
 
   /**

@@ -24,4 +24,5 @@ class CoreModel extends Model {
     }
   }
 
+  override def metaInterval(typeName: String): (String, String) = ("low", "high")
 }

@@ -32,7 +32,7 @@ abstract class IntegrationTestBase extends AnyFlatSpec {
   }
 
   def diagnoseEvaluation(eval: Evaluation): Unit = {
-    eval.output.map(_.statements.map(_.result.map(Log.info(_))))
+    eval.output.map(_.statements.foreach(r => Log.info(r.result)))
     writeElm(eval.output.map(_.library))
   }
 

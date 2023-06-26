@@ -18,7 +18,7 @@ case class Evaluation(parameters: Option[Map[String, Object]], output: Seq[Libra
 }
 
 case class LibraryEvaluation(library: Library, statements: Seq[StatementEvaluation])
-case class StatementEvaluation(expressionDef: ExpressionDef, result: Option[DataFrame])
+case class StatementEvaluation(expressionDef: ExpressionDef, result: DataFrame)
 
 object Evaluation {
   def apply(compilation: Seq[Library], translation: Translation): Evaluation = {

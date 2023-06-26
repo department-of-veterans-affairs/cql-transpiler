@@ -61,10 +61,14 @@ object Log {
   }
 
   protected def capture[T](df: DataFrame): String = {
-    val outCapture = new ByteArrayOutputStream
-    Console.withOut(outCapture) {
-      df.show()
+    if (df != null) {
+      val outCapture = new ByteArrayOutputStream
+      Console.withOut(outCapture) {
+        df.show()
+      }
+      new String(outCapture.toByteArray)
+    } else {
+      "DataFrame is empty"
     }
-    new String(outCapture.toByteArray)
   }
 }

@@ -23,7 +23,7 @@ trait Model {
     new QName(namespaceUri, localName, version)
   }
 
-  // resolveIntervalLow(path: String)
+  def metaInterval(typeName: String): (String, String)
 }
 
 object Model {

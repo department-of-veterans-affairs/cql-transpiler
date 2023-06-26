@@ -32,4 +32,6 @@ sealed class ModelAggregator(models: List[Model]) extends Model  {
       None
     } 
   }
+
+  def metaInterval(typeName: String): (String, String) = ("N/A", "N/A")
 }

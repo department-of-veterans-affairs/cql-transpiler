@@ -36,4 +36,10 @@ class FhirModel extends Model {
   override def schemaOf(dataType: QName): Option[StructType] = {
     None
   }  
+
+  override def metaInterval(typeName: String): (String, String) = {
+    typeName.toLowerCase match {
+      case "period" => ("start", "end")
+    }
+  }
 }
