@@ -5,7 +5,7 @@ import gov.va.sparkcql.io.Files
 import org.json4s._
 import org.json4s.jackson.Serialization.{read, write}
 import javax.xml.namespace.QName
-import org.apache.spark.sql.{SparkSession, Dataset, Row}
+import org.apache.spark.sql.{SparkSession, DataFrame}
 import gov.va.sparkcql.translator.cql2elm.CqlCompilerGateway
 import gov.va.sparkcql.types._
 import gov.va.sparkcql.logging.Log
@@ -48,7 +48,7 @@ class FileSource(val models: List[Model], val spark: SparkSession, path: String)
     found.length > 0
   }
 
-  def acquireData(dataType: QName): Option[Dataset[Row]] = {
+  def acquireData(dataType: QName): Option[DataFrame] = {
     import spark.implicits._ 
     val x = this.path
     val jsonData = fileContents.flatMap(c => convert(dataType, c))

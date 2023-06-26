@@ -1,7 +1,7 @@
 package gov.va.sparkcql.translator.elm2spark
 
 import scala.collection.JavaConverters._
-import org.apache.spark.sql.{SparkSession, Dataset, Row, Column}
+import org.apache.spark.sql.{SparkSession, DataFrame, Column, Dataset, Row}
 import org.apache.spark.sql.functions._
 import org.hl7.elm.{r1 => elm}
 import org.hl7.cql_annotations.r1._
@@ -12,14 +12,15 @@ import java.time.{ZonedDateTime, LocalDate, LocalDateTime}
 import java.sql.{Timestamp}
 import gov.va.sparkcql.model.Model
 import gov.va.sparkcql.source.Source
+import scala.collection.mutable.{Stack, ArrayStack, MutableList, HashMap}
 
 class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: SparkSession) 
     extends ElmToSparkTranslator(models, sources, spark) {
 
-  def translate(parameters: Option[Map[String, Object]], libraryCollection: Seq[elm.Library]): Translation = {
-    val initialCtx = TranslationContext(suppliedParameters = parameters)
+  def translate(parameters: Map[String, Object], libraryCollection: Seq[elm.Library]): Translation = {
+    val initialContext = ContextStack().push(CallContext(parameters))
     val libraryEvals = libraryCollection.flatMap(l => {
-      val libEval = l.eval(initialCtx).castTo[LibraryTranslation]
+      val libEval = l.eval(initialContext).castTo[LibraryTranslation]
       Some(libEval)
     })
     Translation(parameters, libraryEvals)
@@ -32,7 +33,7 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
   * implementation.
   * Typeclass could be used here as well but you'd lose the "exhaustiveness".
   */
-  protected def dispatch(node: elm.Element, ctx: TranslationContext): Any = {
+  protected def dispatch(node: elm.Element, ctx: ContextStack): Any = {
     node match {
       case n: elm.After => after(n, ctx)
       case n: elm.AliasedQuerySource => aliasedQuerySource(n, ctx)
@@ -64,12 +65,12 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     }
   }
 
-  protected def after(n: elm.After, ctx: TranslationContext): Column = {
+  protected def after(n: elm.After, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, _.gt(_))
   }
 
-  protected def aliasedQuerySource(n: elm.AliasedQuerySource, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val source = n.getExpression().eval(ctx).castTo[Option[Dataset[Row]]]
+  protected def aliasedQuerySource(n: elm.AliasedQuerySource, ctx: ContextStack): Option[DataFrame] = {
+    val source = n.getExpression().eval(ctx).castTo[Option[DataFrame]]
 
     if (n.getAlias() != null) {
       source.map(_.alias(n.getAlias()))
@@ -78,81 +79,79 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     }
   }
 
-  protected def and(n: elm.And, ctx: TranslationContext): Column = {
+  protected def and(n: elm.And, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, _.and(_))
   }
 
-  protected def binaryExpression(n: elm.BinaryExpression, ctx: TranslationContext, op: (Column, Column) => Column): Column = {
+  protected def binaryExpression(n: elm.BinaryExpression, ctx: ContextStack, op: (Column, Column) => Column): Column = {
     assert(n.getOperand().size() == 2, s"Unexpected length of ${n.getOperand().size()} for binary expression ${n.getClass().getName()}")
     val leftOp = n.getOperand().get(0).eval(ctx).castTo[Column]
     val rightOp = n.getOperand().get(1).eval(ctx).castTo[Column]
     op(leftOp, rightOp)
   }
 
-  protected def before(n: elm.Before, ctx: TranslationContext): Column = {
+  protected def before(n: elm.Before, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, _.lt(_))
   }
 
-  protected def codeSystemRef(n: elm.CodeSystemRef, ctx: TranslationContext): Unit = {
+  protected def codeSystemRef(n: elm.CodeSystemRef, ctx: ContextStack): Unit = {
     ???
   }
 
-  protected def dateTime(n: elm.DateTime, ctx: TranslationContext): Column = {
+  protected def dateTime(n: elm.DateTime, ctx: ContextStack): Column = {
     lit(n.convertTo[Timestamp])
   }
 
-  protected def end(n: elm.End, ctx: TranslationContext): Column = {
+  protected def end(n: elm.End, ctx: ContextStack): Column = {
     val operand: Column = n.getOperand().eval(ctx).castTo[Column]
     val endProperty = "end"   // TODO
     operand.apply(endProperty)
   }
 
-  protected def equal(n: elm.Equal, ctx: TranslationContext): Column = {
+  protected def equal(n: elm.Equal, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, _.equalTo(_))
   }
 
-  protected def expressionDef(n: elm.ExpressionDef, ctx: TranslationContext): StatementTranslation = {
-    val result = n.getExpression().eval(ctx).castTo[Option[Dataset[Row]]]
-    val libraryRef = ctx.library.get.getIdentifier()
-    StatementTranslation(n, result, libraryRef)
+  protected def expressionDef(n: elm.ExpressionDef, ctx: ContextStack): ExpressionDefTranslation = {
+    val result = n.getExpression().eval(ctx).castTo[Option[DataFrame]]
+    ExpressionDefTranslation(n, result)
   }
 
-  protected def greater(n: elm.Greater, ctx: TranslationContext): Column = {
+  protected def greater(n: elm.Greater, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, _.gt(_))
   }
 
-  protected def in(n: elm.In, ctx: TranslationContext): Column = {
+  protected def in(n: elm.In, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, (left, right) => left.between(right("low"), right("high")))
   }
 
-  protected def less(n: elm.Less, ctx: TranslationContext): Column = {
+  protected def less(n: elm.Less, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, _.lt(_))
   }
 
-  protected def library(n: elm.Library, ctx: TranslationContext): LibraryTranslation = {
+  protected def library(n: elm.Library, ctx: ContextStack): LibraryTranslation = {
     val errors = n.getAnnotation().asScala.filter(p => p.isInstanceOf[CqlToElmError])
 
     if (errors.length == 0) {
       val libraryExpressionDefs = n.getStatements().getDef().asScala.toSeq
-      val statementEvals = libraryExpressionDefs.map(_.eval(ctx.copy(library = Some(n))).castTo[StatementTranslation])
+      val statementEvals = libraryExpressionDefs.map(_.eval(ContextStack(ctx)).castTo[ExpressionDefTranslation])
       LibraryTranslation(n, statementEvals)
     } else {
-      LibraryTranslation(n, Seq[StatementTranslation]())
+      LibraryTranslation(n, Seq[ExpressionDefTranslation]())
     }
   }
 
-  protected def literal(n: elm.Literal, ctx: TranslationContext): Column = {
+  protected def literal(n: elm.Literal, ctx: ContextStack): Column = {
     val value = n.convertTo[Any]
     lit(value)
   }
 
-  protected def notEqual(n: elm.NotEqual, ctx: TranslationContext): Column = {
+  protected def notEqual(n: elm.NotEqual, ctx: ContextStack): Column = {
     binaryExpression(n, ctx, _.notEqual(_))
   }
 
-  protected def parameterRef(n: elm.ParameterRef, ctx: TranslationContext): Column = {
-    val param = ctx.suppliedParameters.map(_.filter(_._1 == n.getName()))
-      .getOrElse(throw new Exception(s"Parameter ${n.getName()} was not supplied."))
+  protected def parameterRef(n: elm.ParameterRef, ctx: ContextStack): Column = {
+    val param = ctx.first[CallContext].parameter.filter(_._1 == n.getName())
     val paramValue = param(n.getName())
     
     paramValue match {
@@ -168,30 +167,35 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     }
   }
 
-  protected def property(n: elm.Property, ctx: TranslationContext): Column = {
+  protected def property(n: elm.Property, ctx: ContextStack): Column = {
     col(s"${n.getScope()}.${n.getPath()}")
   }
 
-  protected def query(n: elm.Query, ctx: TranslationContext): Option[Dataset[Row]] = {
-    val querySource = n.getSource().asScala.toSeq.flatMap(_.eval(ctx).castTo[Option[Dataset[Row]]]).headOption
-    val newCtx = ctx.copy(dataset = querySource.headOption)
+  protected def query(n: elm.Query, ctx: ContextStack): Option[DataFrame] = {
+    val querySource = n.getSource().asScala.map(a => {
+      a.eval(ctx).castTo[Option[DataFrame]]
+    })
 
-    val aggregateClause = n.getAggregate().eval(newCtx)
-    val letClause = n.getLet().asScala.map(_.eval(newCtx))
-    val relationshipClause = n.getRelationship().asScala.map(_.eval(newCtx))
-    val returnClause = n.getReturn().eval(newCtx)
-    val sortClause = n.getSort().eval(newCtx)
-    val whereClause = n.getWhere().eval(newCtx).castTo[Column]
+    val querySourceContext = QueryContext(querySource.map(s => QuerySourceContext(null, "name", s.get)).toList)
+    val queryCtx = ctx.push(querySourceContext)
 
-    newCtx.dataset.map(_.filter(whereClause))
+    val aggregateClause = n.getAggregate().eval(queryCtx)
+    val letClause = n.getLet().asScala.map(_.eval(queryCtx))
+    val relationshipClause = n.getRelationship().asScala.map(_.eval(queryCtx))
+    val returnClause = n.getReturn().eval(queryCtx)
+    val sortClause = n.getSort().eval(queryCtx)
+    val whereClause = n.getWhere().eval(queryCtx).castTo[Column]
+
+    // queryCtx.contextDf.map(_.filter(whereClause))
+    Some(queryCtx.last[QueryContext].source.head.df)
   }
 
-  protected def retrieve(n: elm.Retrieve, ctx: TranslationContext): Option[Dataset[Row]] = {
+  protected def retrieve(n: elm.Retrieve, ctx: ContextStack): Option[DataFrame] = {
     val dataType = n.getDataType()
     sourceAggregate.acquireData(dataType)
   }
 
-  protected def start(n: elm.Start, ctx: TranslationContext): Column = {
+  protected def start(n: elm.Start, ctx: ContextStack): Column = {
     val operand: Column = n.getOperand().eval(ctx).castTo[Column]
     val startProperty = "start"   // TODO
     operand.apply(startProperty)

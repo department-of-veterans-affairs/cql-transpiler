@@ -23,3 +23,10 @@ define "ED Encounter":
   ["Encounter": "Emergency Department Visit"] ED
     where ED.period ends during day of "Measurement Period"
     and ED.period ends before @2015-12-27T14:30
+
+define "Multi Query":
+  from ["Encounter": "Emergency Department Visit"] ED1,
+    ["Encounter": "Emergency Department Visit"] ED2,
+    ["Encounter": "Emergency Department Visit"] ED3
+      where ED1.period ends during day of "Measurement Period"
+      and ED1.period ends before @2015-12-27T14:30

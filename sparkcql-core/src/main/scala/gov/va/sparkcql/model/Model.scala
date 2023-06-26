@@ -22,6 +22,8 @@ trait Model {
     Log.error(s"TODO: Make sure this is correct: ${new QName(namespaceUri, localName, version).toString()}")
     new QName(namespaceUri, localName, version)
   }
+
+  // resolveIntervalLow(path: String)
 }
 
 object Model {

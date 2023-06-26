@@ -1,7 +1,7 @@
 package gov.va.sparkcql.source
 
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
+import org.apache.spark.sql.{SparkSession, DataFrame, Encoders, Dataset, Row}
 import javax.xml.namespace.QName
 import gov.va.sparkcql.model.DataType
 import gov.va.sparkcql.model.Model
@@ -16,7 +16,7 @@ trait Source {
 
   def isDataTypePresent(dataType: QName): Boolean
   
-  def acquireData(dataType: QName): Option[Dataset[Row]]
+  def acquireData(dataType: QName): Option[DataFrame]
 
   def acquireData[T <: Product : TypeTag](): Option[Dataset[T]] = {
     val dataType = DataType[T]()

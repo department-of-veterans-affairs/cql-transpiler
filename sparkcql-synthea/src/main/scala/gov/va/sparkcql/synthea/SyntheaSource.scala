@@ -1,7 +1,7 @@
 package gov.va.sparkcql.synthea
 
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.{SparkSession, Dataset, Row}
+import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.functions._
 import scala.collection.mutable.HashMap
 import javax.xml.namespace.QName
@@ -16,7 +16,7 @@ class SyntheaSource(val models: List[Model], val spark: SparkSession, size: Popu
   val DefaultResourceColumnName = "resource_data"
   val BundlesResourceType = "Bundles"
 
-  val dfCache = HashMap[String, Option[Dataset[Row]]]()
+  val dfCache = HashMap[String, Option[DataFrame]]()
 
   lazy val bundles = {
     SyntheaDataLoader.loadBundles(size)
@@ -30,7 +30,7 @@ class SyntheaSource(val models: List[Model], val spark: SparkSession, size: Popu
         col("entry.resource.resourceType").as("resourceType"))
   }
 
-  def createDataSet(resourceType: String): Option[Dataset[Row]] = {
+  def createDataFrame(resourceType: String): Option[DataFrame] = {
     dfCache.getOrElseUpdate(resourceType, {
       val resourceText = dfBundles
         .where(col("resourceType").equalTo(resourceType))
@@ -53,8 +53,8 @@ class SyntheaSource(val models: List[Model], val spark: SparkSession, size: Popu
     }
   }
 
-  def acquireData(dataType: QName): Option[Dataset[Row]] = {
+  def acquireData(dataType: QName): Option[DataFrame] = {
     val resourceType = dataType.getLocalPart()
-    createDataSet(resourceType)
+    createDataFrame(resourceType)
   }
 }

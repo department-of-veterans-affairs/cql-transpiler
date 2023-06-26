@@ -1,7 +1,7 @@
 package gov.va.sparkcql.source
 
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.{SparkSession, Dataset, Row}
+import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.types.StructType
 import gov.va.sparkcql.logging.Log
 import javax.xml.namespace.QName
@@ -17,7 +17,7 @@ sealed class SourceAggregator(sources: List[Source]) extends Source {
     sources.filter(_.isDataTypePresent(dataType)).length > 0
   }
   
-  override def acquireData(dataType: QName): Option[Dataset[Row]] = {
+  override def acquireData(dataType: QName): Option[DataFrame] = {
     val eligibleAdapters = sources.filter(_.isDataTypePresent(dataType))
     if (!eligibleAdapters.isEmpty) {
       val acquiredDf = eligibleAdapters.flatMap(a => {

@@ -4,6 +4,8 @@
   */
 package gov.va.sparkcql.converter
 
+// TODO: Consider rewriting to avoid implicits/typeclasses altogether: https://gist.github.com/jkpl/5279ee05cca8cc1ec452fc26ace5b68b
+
 trait Convertable[S, T] {
   def convert(source: S): T
 }

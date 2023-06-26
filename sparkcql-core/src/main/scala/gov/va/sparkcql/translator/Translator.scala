@@ -1,4 +1,4 @@
-package gov.va.sparkcql.translator
+package gov.va.sparkcql.translator.elm2spark
 
 trait Translator {
   /**

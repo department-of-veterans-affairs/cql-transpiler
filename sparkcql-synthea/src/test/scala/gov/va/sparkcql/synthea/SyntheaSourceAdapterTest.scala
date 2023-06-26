@@ -1,7 +1,7 @@
 package gov.va.sparkcql.synthea
 
 import gov.va.sparkcql.TestBase
-import org.apache.spark.sql.{SparkSession, Dataset, DataFrame, Row}
+import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.functions._
 import org.hl7.elm.r1.Code
 import gov.va.sparkcql.session.SparkCqlSession

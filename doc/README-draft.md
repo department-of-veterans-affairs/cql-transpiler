@@ -7,7 +7,7 @@
 - Consistency w/ Spark API style
 
 # Data Model
-The Data Models required by CQL are strongly typed DataSets modeled through Case Classes which Spark can more naturally and efficiently process compared to Java Beans. Scala limits each Case Class to 254 fields but FHIR models should stay under this limitation considering they're based on compositions of multiple types each with their own 254 limit.
+The Data Models required by CQL are strongly typed Dataset modeled through Case Classes which Spark can more naturally and efficiently process compared to Java Beans. Scala limits each Case Class to 254 fields but FHIR models should stay under this limitation considering they're based on compositions of multiple types each with their own 254 limit.
 
 FHIR R4 Model
 - Ignored

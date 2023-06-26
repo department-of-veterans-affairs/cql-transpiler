@@ -1,7 +1,7 @@
 package gov.va.sparkcql.synthea
 
 import scala.reflect.runtime.universe._
-import org.apache.spark.sql.{SparkSession, Dataset, Row, Encoders}
+import org.apache.spark.sql.{SparkSession, DataFrame, Encoders}
 import org.apache.spark.sql.functions._
 import scala.collection.mutable.HashMap
 import gov.va.sparkcql.source.{Source, SourceFactory, SourceConfiguration}

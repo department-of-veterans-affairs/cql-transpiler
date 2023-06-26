@@ -2,7 +2,7 @@ package gov.va.sparkcql.session
 
 import scala.reflect.runtime.universe._
 import scala.collection.mutable.MutableList
-import org.apache.spark.sql.{SparkSession, Dataset, Row}
+import org.apache.spark.sql.{SparkSession, DataFrame, Dataset, Row}
 import javax.xml.namespace.QName
 import gov.va.sparkcql.translator.cql2elm.CqlToElmTranslator
 import gov.va.sparkcql.translator.elm2spark.ElmR1ToSparkTranslator
@@ -11,6 +11,7 @@ import gov.va.sparkcql.logging.Log
 import gov.va.sparkcql.di.{ComponentFactory, Configuration}
 import gov.va.sparkcql.model.{Model, ModelAggregator}
 import gov.va.sparkcql.source.{Source, SourceAggregator}
+import scala.annotation.meta.param
 
 class SparkCqlSession private(models: List[Model], sources: List[Source], spark: SparkSession) {
 
@@ -24,7 +25,7 @@ class SparkCqlSession private(models: List[Model], sources: List[Source], spark:
     sourceAggregate.acquireData[T]()
   }
 
-  def retrieve(dataType: QName): Option[Dataset[Row]] = {
+  def retrieve(dataType: QName): Option[DataFrame] = {
     sourceAggregate.acquireData(dataType)
   }
 
@@ -57,8 +58,9 @@ class SparkCqlSession private(models: List[Model], sources: List[Source], spark:
       libraryIdentifiers: Option[Seq[Identifier]],
       parameters: Option[Map[String, Object]]): Evaluation = {
     
+    val params = parameters.getOrElse(Map[String, Object]())
     val compilation = if (cqlText.isDefined) { cqlToElm.translate(cqlText.get) } else { cqlToElm.translate(libraryIdentifiers.get) }
-    val translation = elmToSpark.translate(parameters, compilation)
+    val translation = elmToSpark.translate(params, compilation)
     Evaluation(compilation, translation)
   }
 

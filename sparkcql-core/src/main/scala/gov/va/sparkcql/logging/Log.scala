@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
 import org.apache.logging.slf4j.Log4jLogger
-import org.apache.spark.sql.{Dataset, Row}
+import org.apache.spark.sql.{DataFrame}
 import java.io.ByteArrayOutputStream
 import org.apache.logging.log4j.{Level, LogManager}
 import gov.va.sparkcql.io.ConsoleColors
@@ -43,7 +43,7 @@ object Log {
     }
   }
 
-  def info[T](df: Dataset[T]): Unit = {
+  def info[T](df: DataFrame): Unit = {
     info(capture(df))
   }
 
@@ -56,11 +56,11 @@ object Log {
     }
   }
 
-  def debug[T](df: Dataset[T]): Unit = {
+  def debug[T](df: DataFrame): Unit = {
     debug(capture(df))
   }
 
-  protected def capture[T](df: Dataset[T]): String = {
+  protected def capture[T](df: DataFrame): String = {
     val outCapture = new ByteArrayOutputStream
     Console.withOut(outCapture) {
       df.show()
