@@ -143,3 +143,139 @@ trait DateConverter {
     }
   }
 }
+
+object Dates {
+
+  val NanoToMillFactor = 1000000
+
+  def toElmDateTime(source: Object) = {
+    source match {
+      case s: ZonedDateTime => 
+        new elm.r1.DateTime()
+          .withYear(new elm.r1.Literal().withValue(s.getYear().toString()))
+          .withMonth(new elm.r1.Literal().withValue(s.getMonthValue().toString()))
+          .withDay(new elm.r1.Literal().withValue(s.getDayOfMonth().toString()))
+          .withHour(new elm.r1.Literal().withValue(s.getHour().toString()))
+          .withMinute(new elm.r1.Literal().withValue(s.getMinute().toString()))
+          .withSecond(new elm.r1.Literal().withValue(s.getSecond().toString()))
+          .withMillisecond(new elm.r1.Literal().withValue((s.getNano() / NanoToMillFactor).toString()))
+      case s: LocalDateTime => 
+        new elm.r1.DateTime()
+          .withYear(new elm.r1.Literal().withValue(s.getYear().toString()))
+          .withMonth(new elm.r1.Literal().withValue(s.getMonthValue().toString()))
+          .withDay(new elm.r1.Literal().withValue(s.getDayOfMonth().toString()))
+          .withHour(new elm.r1.Literal().withValue(s.getHour().toString()))
+          .withMinute(new elm.r1.Literal().withValue(s.getMinute().toString()))
+          .withSecond(new elm.r1.Literal().withValue(s.getSecond().toString()))
+          .withMillisecond(new elm.r1.Literal().withValue((s.getNano() / NanoToMillFactor).toString()))
+      // TODO: TimeZoneOffset
+      case s: LocalDate =>
+        Log.debug(s"Upcasting LocalDate to DateTime using midnight as time default.")
+        new elm.r1.DateTime()
+          .withYear(new elm.r1.Literal().withValue(s.getYear().toString()))
+          .withMonth(new elm.r1.Literal().withValue(s.getMonthValue().toString()))
+          .withDay(new elm.r1.Literal().withValue(s.getDayOfMonth().toString()))
+      case s: String =>
+        if (s.contains("+")) {
+          convert[ZonedDateTime, elm.r1.DateTime](ZonedDateTime.parse(s))
+        } else if (s.contains("T")) {
+          convert[LocalDateTime, elm.r1.DateTime](LocalDateTime.parse(s))
+        } else {
+          convert[LocalDate, elm.r1.DateTime](LocalDate.parse(s))
+        }
+    }
+  }
+
+  def toElmDate(source: Object) = {
+    source match {
+      case s: ZonedDateTime =>
+        Log.warn(s"Downcasting ZonedDateTime to Date might result in a loss of information.")
+        new elm.r1.Date()
+          .withYear(new elm.r1.Literal().withValue(s.getYear().toString()))
+          .withMonth(new elm.r1.Literal().withValue(s.getMonthValue().toString()))
+          .withDay(new elm.r1.Literal().withValue(s.getDayOfMonth().toString()))
+      case s: LocalDate =>
+        new elm.r1.Date()
+          .withYear(new elm.r1.Literal().withValue(s.getYear().toString()))
+          .withMonth(new elm.r1.Literal().withValue(s.getMonthValue().toString()))
+          .withDay(new elm.r1.Literal().withValue(s.getDayOfMonth().toString()))
+      case s: LocalDateTime =>
+        Log.warn(s"Downcasting LocalDateTime to Date might result in a loss of information.")
+        new elm.r1.Date()
+          .withYear(new elm.r1.Literal().withValue(s.getYear().toString()))
+          .withMonth(new elm.r1.Literal().withValue(s.getMonthValue().toString()))
+          .withDay(new elm.r1.Literal().withValue(s.getDayOfMonth().toString()))
+      case s: String =>
+        if (s.contains("+")) {
+          convert[ZonedDateTime, elm.r1.Date](ZonedDateTime.parse(s))
+        } else if (s.contains("T")) {
+          convert[LocalDateTime, elm.r1.Date](LocalDateTime.parse(s))
+        } else {
+          convert[LocalDate, elm.r1.Date](LocalDate.parse(s))
+        }
+    }
+  }  
+
+  def toZonedDateTime(source: Object) = {
+    source match {
+      case s: elm.r1.DateTime =>
+        Log.warn(s"Upcasting DateTime to ZonedDateTime using system default timezone.")
+        ZonedDateTime.of(
+          convert[elm.r1.Literal, Int](s.getYear().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getMonth().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getDay().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](literalOrElse(s.getHour(), "0")),
+          convert[elm.r1.Literal, Int](literalOrElse(s.getMinute(), "0")),
+          convert[elm.r1.Literal, Int](literalOrElse(s.getSecond(), "0")), 
+          convert[elm.r1.Literal, Int](literalOrElse(s.getMillisecond(), "0")) * NanoToMillFactor,
+          ZoneId.systemDefault())
+    }
+  }
+
+  def toLocalDateTime(source: Object) = {
+    source match {
+      case s: elm.r1.DateTime => 
+        LocalDateTime.of(
+          convert[elm.r1.Literal, Int](s.getYear().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getMonth().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getDay().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](literalOrElse(s.getHour(), "0")),
+          convert[elm.r1.Literal, Int](literalOrElse(s.getMinute(), "0")),
+          convert[elm.r1.Literal, Int](literalOrElse(s.getSecond(), "0")), 
+          convert[elm.r1.Literal, Int](literalOrElse(s.getMillisecond(), "0")) * NanoToMillFactor)
+    }
+  }
+
+  def toLocalDate(source: Object) = {
+    source match {
+      case s: elm.r1.DateTime =>
+        Log.warn(s"Downcasting DateTime to LocalDate might result in a loss of information.")
+        LocalDate.of(
+          convert[elm.r1.Literal, Int](s.getYear().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getMonth().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getDay().asInstanceOf[elm.r1.Literal]))
+      case s: elm.r1.Date =>
+        LocalDate.of(
+          convert[elm.r1.Literal, Int](s.getYear().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getMonth().asInstanceOf[elm.r1.Literal]),
+          convert[elm.r1.Literal, Int](s.getDay().asInstanceOf[elm.r1.Literal]))
+    }
+  }
+
+  def toTimestamp(source: Object): Object = {
+    source match {
+      case s: LocalDateTime => java.sql.Timestamp.valueOf(s)
+      case s: elm.r1.DateTime => 
+        val toLocalDateTime = this.toLocalDateTime(s)
+        this.toTimestamp(toLocalDateTime)
+    }
+  }
+
+  protected def literalOrElse(e: elm.r1.Element, default: String): elm.r1.Literal = {
+    if (e != null) {
+      e.asInstanceOf[elm.r1.Literal]
+    } else {
+      new elm.r1.Literal().withValue(default).asInstanceOf[elm.r1.Literal]
+    }
+  }
+}

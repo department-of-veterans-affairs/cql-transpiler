@@ -16,7 +16,7 @@ import gov.va.sparkcql.source.Source
 class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: SparkSession) 
     extends ElmToSparkTranslator(models, sources, spark) {
 
-  def translate(parameters: Map[String, Object], libraryCollection: Seq[elm.Library]): Translation = {
+  def translate(parameters: Map[String, Object], libraryCollection: List[elm.Library]): Translation = {
     val initialContext = ContextStack().push(CallContext(parameters))
     val libraryEvals = libraryCollection.flatMap(l => {
       val libEval = l.eval(initialContext).castTo[LibraryTranslation]
@@ -133,11 +133,11 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     val errors = n.getAnnotation().asScala.filter(p => p.isInstanceOf[CqlToElmError])
 
     if (errors.length == 0) {
-      val libraryExpressionDefs = n.getStatements().getDef().asScala.toSeq
+      val libraryExpressionDefs = n.getStatements().getDef().asScala.toList
       val statementEvals = libraryExpressionDefs.map(_.eval(ContextStack(ctx)).castTo[ExpressionDefTranslation])
       LibraryTranslation(n, statementEvals)
     } else {
-      LibraryTranslation(n, Seq[ExpressionDefTranslation]())
+      LibraryTranslation(n, List[ExpressionDefTranslation]())
     }
   }
 

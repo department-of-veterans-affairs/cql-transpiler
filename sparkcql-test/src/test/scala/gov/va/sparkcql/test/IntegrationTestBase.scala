@@ -25,6 +25,11 @@ abstract class IntegrationTestBase extends AnyFlatSpec {
       .getOrCreate()    
   }
 
+  def getResource(path: String): String = {
+    val stream = getClass.getResourceAsStream(path)
+    scala.io.Source.fromInputStream(stream).mkString
+  }
+
   def assertEvaluation(eval: Evaluation): Unit = {
     assert(eval.errors().length == 0, eval.errors().headOption.map(_.getMessage()))
   }
@@ -34,7 +39,7 @@ abstract class IntegrationTestBase extends AnyFlatSpec {
     writeElm(eval.output.map(_.library))
   }
 
-  private def writeElm(libraries: Seq[Library]): Unit = {
+  protected def writeElm(libraries: Seq[Library]): Unit = {
     libraries.map(library => {
       val name = if (library.getIdentifier().getId() != null) { library.getIdentifier().getId() } else { java.util.UUID.randomUUID.toString }
       Files.createDirectories(Paths.get(elmOutputFolder))

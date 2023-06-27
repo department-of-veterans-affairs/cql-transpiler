@@ -5,6 +5,7 @@ import gov.va.sparkcql.TestBase
 import org.apache.spark.sql.functions._
 import gov.va.sparkcql.types._
 import gov.va.sparkcql.model.Model
+import gov.va.sparkcql.logging.Log
 
 class FileSourceAdapterTest extends TestBase {
   
@@ -14,6 +15,7 @@ class FileSourceAdapterTest extends TestBase {
 
   "A FileSourceAdapter" should "load and map CQL files (typed)" in {
     assert(source.acquireData[IdentifiedText]().get.filter(_.identifier.id == "BasicRetrieve").count() == 1)
+    Log.info(source.acquireData[IdentifiedText]().get)
   }
 
   it should "load and map valuesets (typed)" in {

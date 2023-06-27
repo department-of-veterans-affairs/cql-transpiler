@@ -32,7 +32,7 @@ abstract class ElmToSparkTranslator(models: List[Model], sources: List[Source], 
   val modelAggregate = new ModelAggregator(models)
   val sourceAggregate = new SourceAggregator(sources)
 
-  def translate(parameters: Map[String, Object], libraryCollection: Seq[elm.Library]): Translation
+  def translate(parameters: Map[String, Object], libraryCollection: List[elm.Library]): Translation
 
   /**
   * Purpose is to provide eval dispatch and exhaustiveness checks for all ELM types. The type of each ELM

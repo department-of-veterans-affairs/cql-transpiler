@@ -21,6 +21,12 @@ subprojects {
     }
 
     test {
+        // onOutput { descriptor, event ->
+        //     if (event.destination == TestOutputEvent.Destination.StdErr) {
+        //         logger.error("Test: " + descriptor + ", error: " + event.message)
+        //     }
+        // }
+
         testLogging {
             events "PASSED", "FAILED", "STANDARD_ERROR"
             showExceptions true

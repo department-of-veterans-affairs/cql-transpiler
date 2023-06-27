@@ -32,7 +32,7 @@ class CqlToElmTranslator(sources: List[Source]) {
     * @param libraryContents
     * @return
     */
-  def translate(libraryContents: List[String]): Seq[Library] = {
+  def translate(libraryContents: List[String]): List[Library] = {
     compileExec(libraryContents)
   }
 
@@ -42,12 +42,12 @@ class CqlToElmTranslator(sources: List[Source]) {
     * @param libraryIdentifiers
     * @return
     */
-  def translate(libraryIdentifiers: Seq[Identifier]): Seq[Library] = { 
+  def translate(libraryIdentifiers: Seq[Identifier]): List[Library] = { 
     val callScopedLibraries = libraryIdentifiers.map(libraryFromId(_, None).get.content).toList
     compileExec(callScopedLibraries)
   }
 
-  protected def compileExec(libraryContents: List[String]): Seq[Library] = {
+  protected def compileExec(libraryContents: List[String]): List[Library] = {
 
     // Convert CQL text to IdentifiedText to map a VersionedId to CQL
     val callScopedLibraries = libraryContents.map(content => {
@@ -59,7 +59,7 @@ class CqlToElmTranslator(sources: List[Source]) {
     })
 
     // Compile each CQL
-    val results = callScopedLibraries.map(f => compileExecOne(f.content, callScopedLibraries)).toSeq
+    val results = callScopedLibraries.map(f => compileExecOne(f.content, callScopedLibraries))
 
     // Collect any errors
     var elmErrors = results.toSeq.flatMap(l => {
@@ -78,18 +78,17 @@ class CqlToElmTranslator(sources: List[Source]) {
       .map(f => (f._1, f._2.length))
       .filter(f => f._2 > 1)
       .map(f => s"Duplicate CQL library detected ${f._1.toString()}")
-      .toSeq
 
     results
   }
 
-  protected def compileExecOne(libraryContent: String, callScopedLibraries: Seq[IdentifiedText]): org.hl7.elm.r1.Library = {
+  protected def compileExecOne(libraryContent: String, callScopedLibraries: List[IdentifiedText]): org.hl7.elm.r1.Library = {
     CqlCompilerGateway.compile(
       libraryContent,
       Some(id => libraryFromId(Identifier(id), Some(callScopedLibraries)).get.content))
   }
 
-  protected def libraryFromId(identifier: Identifier, callScopedLibraries: Option[Seq[IdentifiedText]]): Option[IdentifiedText] = {
+  protected def libraryFromId(identifier: Identifier, callScopedLibraries: Option[List[IdentifiedText]]): Option[IdentifiedText] = {
     if (callScopedLibraries.isDefined) {
       val callScoped = callScopedLibraries.get.filter(p => p.identifier == identifier)
       if (callScoped.length > 0) return Some(callScoped.head)
