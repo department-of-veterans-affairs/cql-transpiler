@@ -72,7 +72,7 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     val source = n.getExpression().eval(ctx).castTo[DataFrame]
 
     if (n.getAlias() != null) {
-      QuerySourceResult(n.getResultTypeName, Some(n.getAlias()), source)
+      QuerySourceResult(n.getResultTypeName, Some(n.getAlias()), source.alias(n.getAlias()))
     } else {
       QuerySourceResult(n.getResultTypeName, None, source)
     }
@@ -121,6 +121,7 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
   }
 
   protected def visitIn(n: elm.In, ctx: ContextStack): Column = {
+    // TODO
     visitBinaryExpression(n, ctx, (left, right) => left.between(right("low"), right("high")))
   }
 
@@ -186,14 +187,18 @@ class ElmR1ToSparkTranslator(models: List[Model], sources: List[Source], spark: 
     )
     val queryCtx = ctx.push(queryContext)
 
-    val aggregateClause = n.getAggregate().eval(queryCtx)
     val letClause = n.getLet().asScala.map(_.eval(queryCtx))
+    
     val relationshipClause = n.getRelationship().asScala.map(_.eval(queryCtx))
-    val returnClause = n.getReturn().eval(queryCtx)
-    val sortClause = n.getSort().eval(queryCtx)
-    val whereClause = n.getWhere().eval(queryCtx).castTo[Column]
+    val relatedDf = queryCtx.last[QueryContext].source.head.df
 
-    queryCtx.last[QueryContext].source.head.df    // TODO: This should become a single DF after last clause
+    val whereClause = n.getWhere().eval(queryCtx).castTo[Column]
+    val aggregateClause = n.getAggregate().eval(queryCtx)
+    val sortClause = n.getSort().eval(queryCtx)
+    val returnClause = n.getReturn().eval(queryCtx).castTo[Column]
+
+    // relatedDf.filter(whereClause)
+    relatedDf
   }
 
   protected def visitRetrieve(n: elm.Retrieve, ctx: ContextStack): DataFrame = {

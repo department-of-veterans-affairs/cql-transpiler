@@ -49,7 +49,9 @@ abstract class ElmToSparkTranslator(models: List[Model], sources: List[Source], 
   implicit class EvalExtension(node: elm.Element) {
     def eval(ctx: ContextStack): Any = {
       node match {
-        case null => Log.warn("Skipping null value detected during translation.")
+        case null => 
+          Log.warn("Skipping null value detected during translation.")
+          null
         case _ => 
           Log.debug(s"Evaluating ${node.getClass().getName()}")
           dispatch(node, ctx)
@@ -71,8 +73,8 @@ abstract class ElmToSparkTranslator(models: List[Model], sources: List[Source], 
     * Syntactical sugar to add .castTo[] to any ELM Element node to improve readability.
     * Alias for node.asInstanceOf[]
     */
-  implicit class CastToExtension[T](val node: T) {
-    def castTo[T]: T = {
+  implicit class CastToExtension[T >: Null](val node: T) {
+    def castTo[T >: Null]: T = {
       node.asInstanceOf[T]
     }
   }

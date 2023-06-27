@@ -42,4 +42,10 @@ class FhirModel extends Model {
       case "period" => ("start", "end")
     }
   }
+
+  override def typeToElmMapping(typeName: String): Map[String, String] = {
+    typeName.toLowerCase match {
+      case "period" => Map("start" -> "low", "end" -> "high")
+    }
+  }
 }

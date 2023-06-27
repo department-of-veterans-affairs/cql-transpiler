@@ -21,12 +21,23 @@ context Patient
 
 define "ED Encounter":
   ["Encounter": "Emergency Department Visit"] ED
-    where ED.period ends during day of "Measurement Period"
-    and ED.period ends before @2015-12-27T14:30
-
+  where ED.period ends after @2013-12-27T14:30
+    // (@2013-12-27T14:30, @2013-12-28T14:30) ends during day of "Measurement Period"
+    //where ED.period ends during day of "Measurement Period"
+    //and ED.period ends before @2015-12-27T14:30
+/*
 define "Multi Query":
   from ["Encounter": "Emergency Department Visit"] ED1,
     ["Encounter": "Emergency Department Visit"] ED2,
     ["Encounter": "Emergency Department Visit"] ED3
       where ED1.period ends during day of "Measurement Period"
       and ED1.period ends before @2015-12-27T14:30
+
+define "Tuple Test Def":
+  ["Encounter": "Emergency Department Visit"] E
+    return Tuple {projected: E.period, consumed: E.period}
+
+define "Tuple Test Ref":
+  "Tuple Test Def" EDref
+    where EDref.projected ends during day of EDref.consumed
+*/

@@ -4,6 +4,7 @@ import javax.xml.namespace.QName
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.Encoders
 import gov.va.sparkcql.types._
+import javax.naming.OperationNotSupportedException
 
 class CoreModel extends Model {
 
@@ -25,4 +26,6 @@ class CoreModel extends Model {
   }
 
   override def metaInterval(typeName: String): (String, String) = ("low", "high")
+
+  def typeToElmMapping(typeName: String): Map[String, String] = Map()
 }

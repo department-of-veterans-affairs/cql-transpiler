@@ -4,16 +4,17 @@ import scala.reflect.runtime.universe._
 import org.apache.spark.sql.types.StructType
 import javax.xml.namespace.QName
 import gov.va.sparkcql.logging.Log
+import javax.naming.OperationNotSupportedException
 
-sealed class ModelAggregator(models: List[Model]) extends Model  {
+sealed class ModelAggregator(models: List[Model]) extends Model {
 
-  lazy val namespaceUri: String = throw new Exception("Aggregating namespaces is invalid.")
+  lazy val namespaceUri: String = throw new OperationNotSupportedException()
 
   lazy val supportedDataTypes: List[QName] = {
     models.flatMap(_.supportedDataTypes).distinct
   }
 
-  def resolveAdapter(dataType: QName): Option[Model] = {
+  def resolveModel(dataType: QName): Option[Model] = {
     models.filter(_.supportedDataTypes.contains(dataType)).headOption
   }
   
@@ -24,7 +25,7 @@ sealed class ModelAggregator(models: List[Model]) extends Model  {
   }
 
   def schemaOf(dataType: QName): Option[StructType] = {
-    val resolved = resolveAdapter(dataType)
+    val resolved = resolveModel(dataType)
     if (resolved.isDefined) {
       resolved.get.schemaOf(dataType)
     } else {
@@ -33,5 +34,7 @@ sealed class ModelAggregator(models: List[Model]) extends Model  {
     } 
   }
 
-  def metaInterval(typeName: String): (String, String) = ("N/A", "N/A")
+  def metaInterval(typeName: String): (String, String) = ("low", "high")    // TODO: Throw error
+
+  def typeToElmMapping(typeName: String): Map[String, String] = throw new OperationNotSupportedException()
 }

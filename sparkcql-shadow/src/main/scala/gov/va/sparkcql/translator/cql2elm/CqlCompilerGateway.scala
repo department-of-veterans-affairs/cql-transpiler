@@ -32,8 +32,9 @@ object CqlCompilerGateway {
     
     val translatorOptions = new CqlTranslatorOptions()
     translatorOptions.setOptions(
-      CqlTranslatorOptions.Options.EnableDateRangeOptimization,
+      //CqlTranslatorOptions.Options.EnableDateRangeOptimization,
       CqlTranslatorOptions.Options.EnableResultTypes,
+      //CqlTranslatorOptions.Options.EnableAnnotations
       )
 
     var translator = CqlTranslator.fromText(cqlText, modelManager, libraryManager, ucumService, translatorOptions)

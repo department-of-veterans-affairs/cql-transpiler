@@ -24,6 +24,8 @@ trait Model {
   }
 
   def metaInterval(typeName: String): (String, String)
+
+  def typeToElmMapping(typeName: String): Map[String, String]
 }
 
 object Model {
