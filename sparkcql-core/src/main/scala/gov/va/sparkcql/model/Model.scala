@@ -26,6 +26,8 @@ trait Model {
   def metaInterval(typeName: String): (String, String)
 
   def typeToElmMapping(typeName: String): Map[String, String]
+
+  def patientIdentifier(): QName = ???    // TODO: Need a way to identify a patient and relating b/w models
 }
 
 object Model {

@@ -4,13 +4,13 @@ import scala.reflect.runtime.universe._
 import scala.collection.mutable.MutableList
 import org.apache.spark.sql.{SparkSession, DataFrame, Dataset, Row}
 import javax.xml.namespace.QName
-import gov.va.sparkcql.translator.cql2elm.CqlToElmTranslator
-import gov.va.sparkcql.translator.elm2spark.ElmR1ToSparkTranslator
+import gov.va.sparkcql.compiler.Compiler
 import gov.va.sparkcql.types.Identifier
 import gov.va.sparkcql.logging.Log
 import gov.va.sparkcql.di.{ComponentFactory, Configuration}
 import gov.va.sparkcql.model.{Model, ModelAggregator}
 import gov.va.sparkcql.source.{Source, SourceAggregator}
+import gov.va.sparkcql.evaluator.Evaluator
 import scala.annotation.meta.param
 
 class SparkCqlSession private(models: List[Model], sources: List[Source], spark: SparkSession) {
@@ -18,8 +18,8 @@ class SparkCqlSession private(models: List[Model], sources: List[Source], spark:
   val modelAggregate = new ModelAggregator(models)
   val sourceAggregate = new SourceAggregator(sources)
 
-  lazy val cqlToElm = new CqlToElmTranslator(sources)
-  lazy val elmToSpark = new ElmR1ToSparkTranslator(models, sources, spark)
+  lazy val compiler = new Compiler(sources)
+  lazy val evaluator = new Evaluator(models, sources, spark)
 
   def retrieve[T <: Product : TypeTag](): Option[Dataset[T]] = {
     sourceAggregate.acquireData[T]()
@@ -59,8 +59,8 @@ class SparkCqlSession private(models: List[Model], sources: List[Source], spark:
       parameters: Option[Map[String, Object]]): Evaluation = {
     
     val params = parameters.getOrElse(Map[String, Object]())
-    val compilation = if (cqlText.isDefined) { cqlToElm.translate(cqlText.get) } else { cqlToElm.translate(libraryIdentifiers.get) }
-    val translation = elmToSpark.translate(params, compilation)
+    val compilation = if (cqlText.isDefined) { compiler.compile(cqlText.get) } else { compiler.compile(libraryIdentifiers.get) }
+    val translation = evaluator.evaluate(params, compilation)
     Evaluation(compilation, translation)
   }
 

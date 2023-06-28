@@ -1,24 +1,30 @@
-/**
-  * TODO: Provide thorough explanation of our use of the typeclass pattern to resolve
-  * conversion implementations.
-  */
 package gov.va.sparkcql.converter
 
-// TODO: Consider rewriting to avoid implicits/typeclasses altogether: https://gist.github.com/jkpl/5279ee05cca8cc1ec452fc26ace5b68b
+import scala.reflect.runtime.universe._
+import gov.va.sparkcql.logging.Log
 
-trait Convertable[S, T] {
-  def convert(source: S): T
-}
+object Converter {
 
-object Converter extends ElmConverter with DateConverter {
+  def convert[T: TypeTag](source: Object): T = {    
 
-  /**
-    * NOTE: We could have explicitly routed each request of source/target to correct implementation
-    * but typeclasses via implicits does this for us.
-    *
-    * @param source
-    * @param converter
-    * @return
-    */
-  def convert[S, T](s: S)(implicit converter: Convertable[S, T]) = converter.convert(s)
+    val targetType = typeOf[T]
+    
+    targetType.toString() match {
+      case "String" => Primitives.toString(source).asInstanceOf[T]
+      case "Boolean" => Primitives.toBoolean(source).asInstanceOf[T]
+      case "Decimal" => Primitives.toDecimal(source).asInstanceOf[T]
+      case "Integer" => Primitives.toInteger(source).asInstanceOf[T]
+      case "Int" => Primitives.toInteger(source).asInstanceOf[T]
+      case "Long" => Primitives.toLong(source).asInstanceOf[T]
+      
+      case "org.hl7.elm.r1.Date" => Dates.toElmDate(source).asInstanceOf[T]
+      case "org.hl7.elm.r1.DateTime" => Dates.toElmDateTime(source).asInstanceOf[T]
+      case "java.time.LocalDate" => Dates.toLocalDate(source).asInstanceOf[T]
+      case "java.time.LocalDateTime" => Dates.toLocalDateTime(source).asInstanceOf[T]
+      case "java.sql.Timestamp" => Dates.toTimestamp(source).asInstanceOf[T]
+      case "java.time.toZonedDateTime" => Dates.toZonedDateTime(source).asInstanceOf[T]
+
+      case _ => throw new Exception(s"Cannot convert type ${source.getClass().toString()} to ${targetType.toString()}")
+    }
+  }
 }

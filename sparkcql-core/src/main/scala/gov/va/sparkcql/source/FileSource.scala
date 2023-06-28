@@ -6,7 +6,7 @@ import org.json4s._
 import org.json4s.jackson.Serialization.{read, write}
 import javax.xml.namespace.QName
 import org.apache.spark.sql.{SparkSession, DataFrame}
-import gov.va.sparkcql.translator.cql2elm.CqlCompilerGateway
+import gov.va.sparkcql.compiler.CompilerGateway
 import gov.va.sparkcql.types._
 import gov.va.sparkcql.logging.Log
 import gov.va.sparkcql.model.Model
@@ -71,7 +71,7 @@ class FileSource(val models: List[Model], val spark: SparkSession, path: String)
       case x if x == Model.toDataType[IdentifiedText]() && content.path.endsWith(".cql") =>
         // TODO: Refactor to move this logic into separate serialization system. Adapters shouldn't
         // need to know how to deserialize.
-        val id = Identifier(CqlCompilerGateway.parseVersionedIdentifier(content.value))
+        val id = Identifier(CompilerGateway.parseVersionedIdentifier(content.value))
         val entity = new IdentifiedText(id, content.value)
         implicit val formats: Formats = DefaultFormats
         Some(write(entity))

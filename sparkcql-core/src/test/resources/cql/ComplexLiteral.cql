@@ -1,5 +1,7 @@
 library ComplexLiteral version '2.1'
 
+using QUICK
+
 valueset "Mock Valueset A": 'urn:oid:1.2.3.4.5.6.789'
 
 parameter "Measurement Period" Interval<DateTime>
@@ -35,10 +37,15 @@ define "Combined":
 
 define "MyTupleRef":
   "MyTupleLiteralList"
-
+/*
+define "MyEncounter":
+  [Encounter] E
+  where E.period ends before @2015-12-27T14:30
+*/
 define "OhNo":
   Tuple {
     Name: 'Patrick',
-    //FunList: "MyTupleLiteralList"    // IMPORTANT: CQL allows expressions of any type as tuple values which
-    //FunRetrieve: [Encounter]         // breaks our approach to translating to native spark.
+    FunList: "MyTupleLiteralList",   // IMPORTANT: CQL allows expressions of any type as tuple values whic
+    FunRetrieve1: [Encounter]         // breaks our approach to translating to native spark
+    //FunRetrieve2: "MyEncounter"         // breaks our approach to translating to native spark.
   }
