@@ -1,11 +1,5 @@
 library ComplexLiteral version '2.1'
 
-using QUICK
-
-valueset "Mock Valueset A": 'urn:oid:1.2.3.4.5.6.789'
-
-parameter "Measurement Period" Interval<DateTime>
-
 define "MyTupleLiteral":
   Tuple {
     Name: 'Patrick',
@@ -17,35 +11,36 @@ define "MyTupleLiteral":
 define "MyTupleLiteralList":
   {
     Tuple {
+      ID: 1,
       Name: 'Patrick',
       DOB: @2014-01-01,
       Address: Tuple { Line1: '41 Spinning Ave', City: 'Dayton', State: 'OH' },
       Phones: { Tuple { Number: '202-413-1234', Use: 'Home' } }
     },
     {
+      ID: 2,
       Name: 'Beth',
       DOB: @2014-01-01,
       Address: Tuple { Line1: '123 Main Ave', City: 'Anytown', State: 'GA' },
       Phones: { Tuple { Number: '202-413-1234', Use: 'Home' } }
-    }
+    },
+    {
+      ID: 1,
+      Name: 'Patrick',
+      DOB: @2014-01-01,
+      Address: Tuple { Line1: '123 Main Ave', City: 'Anytown', State: 'GA' },
+      Phones: { Tuple { Number: '202-413-1234', Use: 'Home' } }
+    }    
   }
 
-define "Combined":
+define "JoinedTuples":
   "MyTupleLiteralList" A
   with "MyTupleLiteral" B
-    such that A.Name = B.Name
+    such that A.ID = B.ID
 
-define "MyTupleRef":
-  "MyTupleLiteralList"
-/*
-define "MyEncounter":
-  [Encounter] E
-  where E.period ends before @2015-12-27T14:30
-*/
-define "OhNo":
+define "NestedTuples":
   Tuple {
-    Name: 'Patrick',
-    FunList: "MyTupleLiteralList",   // IMPORTANT: CQL allows expressions of any type as tuple values whic
-    FunRetrieve1: [Encounter]         // breaks our approach to translating to native spark
-    //FunRetrieve2: "MyEncounter"         // breaks our approach to translating to native spark.
+    Description: 'Demonstrates nesting',
+    NestedLiteral: "MyTupleLiteral",
+    NestedList: "MyTupleLiteralList"
   }

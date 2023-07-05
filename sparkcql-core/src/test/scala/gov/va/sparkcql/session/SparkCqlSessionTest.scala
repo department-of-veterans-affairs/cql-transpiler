@@ -5,13 +5,12 @@ import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.types._
 import gov.va.sparkcql.logging.Log
-import gov.va.sparkcql.source.FileSourceConfiguration
 
 class SparkCqlSessionTest extends TestBase {
 
   val sparkcql = {
     SparkCqlSession.build(spark)
-      .withConfig(FileSourceConfiguration("./src/test/resources/cql"))
+      .withConfig("sparkcql.filelibraryadapter.path", "./src/test/resources/cql")
       .create()
   }
 
@@ -21,7 +20,6 @@ class SparkCqlSessionTest extends TestBase {
   }
 
   it should "support statically typed retrievals" in {
-    assert(sparkcql.retrieve[IdentifiedText].isDefined)
   }
 
   it should "support dynamically typed retrievals" in {

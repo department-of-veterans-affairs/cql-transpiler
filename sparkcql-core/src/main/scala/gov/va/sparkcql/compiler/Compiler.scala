@@ -5,35 +5,31 @@ import scala.collection.JavaConverters._
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
 import gov.va.sparkcql.types._
-import org.hl7.elm.r1.Library
-import gov.va.sparkcql.source.{Source, SourceAggregator}
+import org.hl7.elm.r1.{Library, VersionedIdentifier}
+import gov.va.sparkcql.adapter.library.{LibraryAdapter, LibraryAdapterAggregator}
 
 /**
   * Three scopes are searched when resolving library references (in order of precedence):
   *  1. Call scope
   *  2. Adapter scope
   *
-  * @param libraryAdapter
+  * @param libraryAdapters
   */
-class Compiler(sources: List[Source]) {
+class Compiler(libraryAdapters: List[LibraryAdapter]) {
 
-  val sourceAggregate = new SourceAggregator(sources)
+  val libraryAggregate = new LibraryAdapterAggregator(libraryAdapters)
 
-  def this() {
-    this(List())
-  }
-  
   /**
     * Builds a set of call-scoped CQL libraries based on its CQL text alone. The CQL scripts can reference 
     * each other through [[https://cql.hl7.org/02-authorsguide.html#libraries Include Declarations]]
     * or reference adapter-scoped libraries set in the class constructor. Call-scoped libraries can contain
     * fragments are remain anonymous (no [[https://cql.hl7.org/02-authorsguide.html#library Library Declaration required]]).
     *
-    * @param libraryContents
+    * @param callScopedLibraryContents
     * @return
     */
-  def compile(libraryContents: List[String]): List[Library] = {
-    compileExec(libraryContents)
+  def compile(callScopedLibraryContents: List[String]): List[Library] = {
+    compileExec(callScopedLibraryContents)
   }
 
   /**
@@ -42,24 +38,24 @@ class Compiler(sources: List[Source]) {
     * @param libraryIdentifiers
     * @return
     */
-  def compile(libraryIdentifiers: Seq[Identifier]): List[Library] = { 
-    val callScopedLibraries = libraryIdentifiers.map(libraryFromId(_, None).get.content).toList
+  def compile(libraryIdentifiers: Seq[VersionedIdentifier]): List[Library] = { 
+    val callScopedLibraries = libraryIdentifiers.map(libraryFromId(_, None).get).toList
     compileExec(callScopedLibraries)
   }
 
-  protected def compileExec(libraryContents: List[String]): List[Library] = {
+  protected def compileExec(callScopedLibraryContents: List[String]): List[Library] = {
 
-    // Convert CQL text to IdentifiedText to map a VersionedId to CQL
-    val callScopedLibraries = libraryContents.map(content => {
-      var elmId = CompilerGateway.parseVersionedIdentifier(content)
-      if (elmId.getId() == null) {
-        elmId.setId("Anonymous-" + java.util.UUID.randomUUID.toString)
+    // Identify call scoped libraries
+    val callScopedLibraries = callScopedLibraryContents.flatMap(content => {
+      var identifier = CompilerGateway.parseVersionedIdentifier(content)
+      if (identifier.getId() == null) {
+        identifier.setId("Anonymous-" + java.util.UUID.randomUUID.toString)
       }
-      IdentifiedText(Identifier(elmId), content)
-    })
+      Map(identifier -> content)
+    }).toMap
 
     // Compile each CQL
-    val results = callScopedLibraries.map(f => compileExecOne(f.content, callScopedLibraries))
+    val results = callScopedLibraries.map(f => compileExecOne(f._2, callScopedLibraries))
 
     // Collect any errors
     var elmErrors = results.toSeq.flatMap(l => {
@@ -74,30 +70,32 @@ class Compiler(sources: List[Source]) {
     // Verify no duplicates exist between libraries within call scope. Cannot include adapter
     // scoped since it contains many more most of which aren't relevant to this compilation.
     val batchErrors = callScopedLibraries
-      .groupBy(_.identifier)
-      .map(f => (f._1, f._2.length))
+      .groupBy(_._1)
+      .map(f => (f._1, f._2.size))
       .filter(f => f._2 > 1)
       .map(f => s"Duplicate CQL library detected ${f._1.toString()}")
 
-    results
+    results.toList
   }
 
-  protected def compileExecOne(libraryContent: String, callScopedLibraries: List[IdentifiedText]): org.hl7.elm.r1.Library = {
+  protected def compileExecOne(libraryContent: String, callScopedLibraries: Map[VersionedIdentifier, String]): org.hl7.elm.r1.Library = {
     CompilerGateway.compile(
       libraryContent,
-      Some(id => libraryFromId(Identifier(id), Some(callScopedLibraries)).get.content))
+      Some(id => libraryFromId(id, Some(callScopedLibraries)).get))
   }
 
-  protected def libraryFromId(identifier: Identifier, callScopedLibraries: Option[List[IdentifiedText]]): Option[IdentifiedText] = {
-    if (callScopedLibraries.isDefined) {
-      val callScoped = callScopedLibraries.get.filter(p => p.identifier == identifier)
-      if (callScoped.length > 0) return Some(callScoped.head)
+  protected def libraryFromId(identifier: VersionedIdentifier, callScopedLibraries: Option[Map[VersionedIdentifier, String]]): Option[String] = {
+    val callScopedLibraryContent = callScopedLibraries.flatMap(_.get(identifier))
+
+    if (callScopedLibraryContent.isDefined) {
+      callScopedLibraryContent
+    } else {
+      val adapterScopedLibraryContent = libraryAggregate.getLibraryContent(identifier)
+      if (adapterScopedLibraryContent.isDefined) {
+        adapterScopedLibraryContent
+      } else {
+        throw new Exception(s"Unable to find library ${identifier.toString()}")
+      }
     }
-
-    val adapterScoped = sourceAggregate.acquireData[IdentifiedText]()
-    val adapterResults = adapterScoped.get.filter(f => f.identifier == identifier)
-    if (!adapterResults.isEmpty) return Some(adapterResults.head())
-
-    throw new Exception(s"Unable to find library ${identifier.toString()}")
   }  
 }

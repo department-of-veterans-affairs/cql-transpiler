@@ -9,16 +9,18 @@ import org.hl7.elm.r1.Library
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory
 import org.hl7.elm.r1.VersionedIdentifier
 import org.hl7.cql_annotations.r1.CqlToElmError
+import gov.va.sparkcql.adapter.library.LibraryAdapter
 
 class CompilerTest extends TestBase {
 
+  val libraryAdapters = List[LibraryAdapter]()
+  val compiler = new Compiler(libraryAdapters)
+
   "A CompilerTest" should "translate a single basic CQL to ELM" in {
-    val compiler = new Compiler()
     assert(compiler.compile(List("library MyLibrary version '1'")).head.getIdentifier().getId() == "MyLibrary")
   }
 
   it should "translate multiple dependent modules" in {
-    val compiler = new Compiler()
     assert(compiler.compile(List(
       """library MyLibrary version '1'
           using QUICK
@@ -27,21 +29,19 @@ class CompilerTest extends TestBase {
   }
 
   it should "support multiple anonymous libraries" in {
-    val compiler = new Compiler()
     assert(compiler.compile(List("define myconst: 123", "define myconst: 456", "define myconst: 789")).length == 3)
   }
 
   it should "not support duplicate named libraries with same version" in {
-    val compiler = new Compiler()
     assertNoElmErrors(compiler.compile(List("library MyLibrary version '1'", "library MyLibrary version '1'")))
   }
 
   it should "support duplicate named libraries with differing versions" in {
-    val compiler = new Compiler()
+    
     assert(compiler.compile(List("library MyLibrary version '1'", "library MyLibrary version '2'")).length == 2)
   }
 
-  // TODO: Add Provider Scoped scenarios
+  // TODO: Add Adapter Scoped scenarios w/ mock data
 
   // TODO: Fail on duplicate library
 
