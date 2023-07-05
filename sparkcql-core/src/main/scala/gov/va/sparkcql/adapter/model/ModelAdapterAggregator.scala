@@ -3,7 +3,7 @@ package gov.va.sparkcql.adapter.model
 import scala.reflect.runtime.universe._
 import org.apache.spark.sql.types.StructType
 import javax.xml.namespace.QName
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import javax.naming.OperationNotSupportedException
 
 sealed class ModelAdapterAggregator(modelAdapters: List[ModelAdapter]) extends ModelAdapter {

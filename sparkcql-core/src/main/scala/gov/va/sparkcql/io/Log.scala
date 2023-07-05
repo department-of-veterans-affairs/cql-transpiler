@@ -1,4 +1,4 @@
-package gov.va.sparkcql.logging
+package gov.va.sparkcql.io
 
 import org.slf4j.LoggerFactory
 import org.apache.log4j.Logger
@@ -7,7 +7,6 @@ import org.apache.logging.slf4j.Log4jLogger
 import org.apache.spark.sql.{DataFrame, Dataset}
 import java.io.ByteArrayOutputStream
 import org.apache.logging.log4j.{Level, LogManager}
-import gov.va.sparkcql.io.ConsoleColors
 
 class Log {}
 

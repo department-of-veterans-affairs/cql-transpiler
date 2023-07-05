@@ -1,7 +1,7 @@
 package gov.va.sparkcql.converter
 
 import scala.reflect.runtime.universe._
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 
 object Converter {
 

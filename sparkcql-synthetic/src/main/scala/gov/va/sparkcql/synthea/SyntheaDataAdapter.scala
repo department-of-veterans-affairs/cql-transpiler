@@ -5,7 +5,8 @@ import org.apache.spark.sql.functions._
 import scala.collection.mutable.HashMap
 import javax.xml.namespace.QName
 import gov.va.sparkcql.adapter.data.DataAdapter
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
+import gov.va.sparkcql.fhir.FhirModelAdapter
 
 class SyntheaDataAdapter(val spark: SparkSession, size: SampleSize) extends DataAdapter {
 
@@ -15,7 +16,7 @@ class SyntheaDataAdapter(val spark: SparkSession, size: SampleSize) extends Data
   val DefaultResourceColumnName = "resource_data"
   val DefaultResourceTypeColumnName = "resource_type"
   val BundlesResourceType = "Bundles"
-
+  val fhirAdapter = new FhirModelAdapter()
   val dfCache = HashMap[String, DataFrame]()
 
   lazy val bundles = {
@@ -31,46 +32,26 @@ class SyntheaDataAdapter(val spark: SparkSession, size: SampleSize) extends Data
         col("entry.resource.resourceType").as(DefaultResourceTypeColumnName))
   }
 
-  def getResourceTypeAsDataFrame(resourceType: String): DataFrame = {
+  def getAsDataFrame(dataType: QName): DataFrame = {
+    val resourceType = dataType.getLocalPart()
     dfCache.getOrElseUpdate(resourceType, {
       val resourceText = dfBundles
         .where(col(DefaultResourceTypeColumnName).equalTo(resourceType))
         .select(col(DefaultResourceColumnName))
         .toDF()
-      spark.read.json(resourceText.as[String])
+      var schema = fhirAdapter.schemaOf(dataType).getOrElse(
+        throw new Exception(s"Unable to resolve schema for type ${dataType.toString()}"))
+      spark.read.schema(schema).json(resourceText.as[String])
     })
   }
   
   def isDataTypeDefined(dataType: QName): Boolean = {
-    dataType.toString() match {
-        // Synthea Supported Types
-        case "{http://hl7.org/fhir}AllergyIntolerance" => true
-        case "{http://hl7.org/fhir}CarePlan" => true
-        case "{http://hl7.org/fhir}CareTeam" => true
-        case "{http://hl7.org/fhir}Claim" => true
-        case "{http://hl7.org/fhir}Condition" => true
-        case "{http://hl7.org/fhir}Coverage" => true
-        case "{http://hl7.org/fhir}Device" => true
-        case "{http://hl7.org/fhir}DiagnosticReport" => true
-        case "{http://hl7.org/fhir}Encounter" => true
-        case "{http://hl7.org/fhir}Goal" => true
-        case "{http://hl7.org/fhir}ImagingStudy" => true
-        case "{http://hl7.org/fhir}Immunization" => true
-        case "{http://hl7.org/fhir}Location" => true
-        case "{http://hl7.org/fhir}MedicationRequest" => true
-        case "{http://hl7.org/fhir}Observation" => true
-        case "{http://hl7.org/fhir}Organization" => true
-        case "{http://hl7.org/fhir}Patient" => true
-        case "{http://hl7.org/fhir}Practitioner" => true
-        case "{http://hl7.org/fhir}Procedure" => true
-        case _ => false
-    }
+    fhirAdapter.supportedDataTypes.contains(dataType)
   }
 
   def acquire(dataType: QName): Option[DataFrame] = {
     if (size != SampleSize.SampleSizeNone && isDataTypeDefined(dataType)) {
-      val resourceType = dataType.getLocalPart()
-      Some(getResourceTypeAsDataFrame(resourceType))
+      Some(getAsDataFrame(dataType))
     } else {
       None
     }

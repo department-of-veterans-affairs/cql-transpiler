@@ -5,7 +5,7 @@ import scala.collection.mutable.MutableList
 import org.apache.spark.sql.{SparkSession, DataFrame, Dataset, Row}
 import javax.xml.namespace.QName
 import gov.va.sparkcql.compiler.Compiler
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import gov.va.sparkcql.di.{Components, ComponentConfiguration}
 import gov.va.sparkcql.adapter.library.{LibraryAdapter, LibraryAdapterFactory}
 import gov.va.sparkcql.adapter.model.{ModelAdapter, ModelAdapterAggregator, ModelAdapterFactory}

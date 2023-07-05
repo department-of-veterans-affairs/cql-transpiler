@@ -1,7 +1,7 @@
 package gov.va.sparkcql.adapter.data
 
 import org.apache.spark.sql.{SparkSession, DataFrame}
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import javax.xml.namespace.QName
 
 sealed class DataAdapterAggregator(dataAdapters: List[DataAdapter]) extends DataAdapter {

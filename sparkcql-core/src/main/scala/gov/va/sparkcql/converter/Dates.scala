@@ -1,7 +1,7 @@
 package gov.va.sparkcql.converter
 
 import scala.reflect.runtime.universe._
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import org.hl7.elm
 import java.time.{ZonedDateTime, LocalDate, LocalDateTime}
 import javax.xml.namespace.QName

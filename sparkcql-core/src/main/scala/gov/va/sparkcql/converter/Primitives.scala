@@ -2,7 +2,7 @@ package gov.va.sparkcql.converter
 
 import scala.reflect.runtime.universe._
 import gov.va.sparkcql.converter.Converter._
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import org.hl7.elm.{r1 => elm}
 import javax.xml.namespace.QName
 

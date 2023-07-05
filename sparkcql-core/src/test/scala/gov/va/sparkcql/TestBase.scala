@@ -5,7 +5,7 @@ import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import gov.va.sparkcql.session.Evaluation
 import org.hl7.elm.{r1 => elm}
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory

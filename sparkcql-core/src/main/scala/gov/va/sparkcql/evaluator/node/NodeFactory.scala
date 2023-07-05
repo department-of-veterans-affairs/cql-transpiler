@@ -1,7 +1,7 @@
 package gov.va.sparkcql.evaluator.node
 
 import org.hl7.elm.{r1 => elm}
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import org.cqframework.cql.elm.tracking.Trackable
 
 object NodeFactory {

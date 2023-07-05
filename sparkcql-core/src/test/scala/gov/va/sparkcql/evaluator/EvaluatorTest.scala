@@ -4,7 +4,7 @@ import scala.reflect.runtime.universe._
 import collection.JavaConverters._
 import gov.va.sparkcql.converter.Converter
 import gov.va.sparkcql.types._
-import gov.va.sparkcql.logging.Log
+import gov.va.sparkcql.io.Log
 import org.hl7.elm.r1.{Interval, DateTime, Date, Literal}
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 import gov.va.sparkcql.compiler.Compiler
