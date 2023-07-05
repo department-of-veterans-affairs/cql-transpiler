@@ -6,18 +6,18 @@ import org.scalatestplus.junit.JUnitRunner
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.io.Log
-import gov.va.sparkcql.session.Evaluation
 import org.hl7.elm.r1.Library
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory
 import java.io.FileWriter
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import gov.va.sparkcql.translator.TranslationPack
 
 @RunWith(classOf[JUnitRunner])
 abstract class IntegrationTestBase extends AnyFlatSpec {
 
-  val elmOutputFolder = "./.temp/"
+  val elmOutputFolder = "../.temp/"
 
   lazy val spark = {
     SparkSession.builder()
@@ -30,11 +30,11 @@ abstract class IntegrationTestBase extends AnyFlatSpec {
     scala.io.Source.fromInputStream(stream).mkString
   }
 
-  def assertEvaluation(eval: Evaluation): Unit = {
+  def assertEvaluation(eval: TranslationPack): Unit = {
     assert(eval.errors().length == 0, eval.errors().headOption.map(_.getMessage()))
   }
 
-  def diagnoseEvaluation(eval: Evaluation): Unit = {
+  def diagnoseEvaluation(eval: TranslationPack): Unit = {
     eval.output.map(_.statements.foreach(r => Log.info(r.result)))
     writeElm(eval.output.map(_.library))
   }

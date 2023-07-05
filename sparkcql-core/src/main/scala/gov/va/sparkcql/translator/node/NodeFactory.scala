@@ -1,4 +1,4 @@
-package gov.va.sparkcql.evaluator.node
+package gov.va.sparkcql.translator.node
 
 import org.hl7.elm.{r1 => elm}
 import gov.va.sparkcql.io.Log

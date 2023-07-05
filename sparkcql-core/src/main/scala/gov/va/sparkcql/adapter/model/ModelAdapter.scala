@@ -20,9 +20,9 @@ trait ModelAdapter {
 
   def schemaOf(dataType: QName): Option[StructType]
   
-  def metaInterval(typeName: String): (String, String)
+  def intervalBoundTerms(): (String, String)
 
-  def typeToElmMapping(typeName: String): Map[String, String]
+  def contextDataType(contextName: String): QName
 
   def patientIdentifier(): QName = ???    // TODO: Need a way to identify a patient and relating b/w models
 }

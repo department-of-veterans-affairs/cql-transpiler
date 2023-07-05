@@ -1,6 +1,5 @@
-package gov.va.sparkcql.session
+package gov.va.sparkcql
 
-import gov.va.sparkcql.TestBase
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
 import gov.va.sparkcql.types._

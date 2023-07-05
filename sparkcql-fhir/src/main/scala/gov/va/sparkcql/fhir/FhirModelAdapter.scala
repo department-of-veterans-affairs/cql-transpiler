@@ -69,15 +69,9 @@ class FhirModelAdapter extends ModelAdapter {
     Some(schema)
   }  
 
-  override def metaInterval(typeName: String): (String, String) = {
-    typeName.toLowerCase match {
-      case "period" => ("start", "end")
-    }
-  }
+  override def intervalBoundTerms(): (String, String) = ("start", "end")
 
-  override def typeToElmMapping(typeName: String): Map[String, String] = {
-    typeName.toLowerCase match {
-      case "period" => Map("start" -> "low", "end" -> "high")
-    }
+  override def contextDataType(contextName: String): QName = {
+    new QName(namespaceUri, "Patient")
   }
 }

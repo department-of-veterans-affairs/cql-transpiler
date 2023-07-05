@@ -1,9 +1,9 @@
-package gov.va.sparkcql.evaluator.node
+package gov.va.sparkcql.translator.node
 
 import scala.reflect.runtime.universe._
 import org.hl7.elm.{r1 => elm}
 import gov.va.sparkcql.converter.Converter
-import gov.va.sparkcql.evaluator._
+import gov.va.sparkcql.translator._
 
 // trait EvaluationState
 // case object NotStarted extends EvaluationState
@@ -57,7 +57,7 @@ trait Node {
     ancestors.filter(_.parent == null).head
   }
 
-  def evaluate(context: Context): Object
+  def translate(context: Context): Object
 
   // def evaluation(): Object = {
   //   evaluationState match {

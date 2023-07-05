@@ -1,9 +1,9 @@
-package gov.va.sparkcql.evaluator.node
+package gov.va.sparkcql.translator.node
 
 import scala.collection.JavaConverters._
 import org.hl7.elm.{r1 => elm}
 import org.hl7.cql_annotations.r1.CqlToElmError
-import gov.va.sparkcql.evaluator._
+import gov.va.sparkcql.translator._
 
 class LibraryNode(val element: elm.Library) extends Node {
 
@@ -21,13 +21,13 @@ class LibraryNode(val element: elm.Library) extends Node {
     ).toList
   }
 
-  override def evaluate(context: Context): Object = {
+  override def translate(context: Context): Object = {
     val errors = element.getAnnotation().asScala.filter(p => p.isInstanceOf[CqlToElmError]).map(_.asInstanceOf[CqlToElmError])
 
     if (errors.length == 0) {
       val exprDefs = children[elm.ExpressionDef]()
-      val exprEvals = exprDefs.map(_.evaluate(context).asInstanceOf[ExpressionDefResult])
-      LibraryResult(element, exprEvals)
+      val exprEvals = exprDefs.map(_.translate(context).asInstanceOf[ExpressionDefTranslation])
+      LibraryTranslation(element, exprEvals)
     } else {
       throw new Exception(errors.head.getMessage())
     }

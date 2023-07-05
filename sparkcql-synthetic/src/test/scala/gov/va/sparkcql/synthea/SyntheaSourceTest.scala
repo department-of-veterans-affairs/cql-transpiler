@@ -4,7 +4,6 @@ import gov.va.sparkcql.TestBase
 import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.functions._
 import org.hl7.elm.r1.Code
-import gov.va.sparkcql.session.SparkCqlSession
 import gov.va.sparkcql.fhir.FhirModelAdapter
 import gov.va.sparkcql.di.ComponentConfiguration
 import gov.va.sparkcql.adapter.model.ModelAdapter

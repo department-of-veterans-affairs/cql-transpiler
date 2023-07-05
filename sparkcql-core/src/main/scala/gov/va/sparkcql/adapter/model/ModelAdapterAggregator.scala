@@ -18,13 +18,7 @@ sealed class ModelAdapterAggregator(modelAdapters: List[ModelAdapter]) extends M
     modelAdapters.filter(_.supportedDataTypes.contains(dataType)).headOption
   }
   
-  def ensureDataTypeSupported(dataType: QName): Unit = {
-    if (supportedDataTypes.contains(dataType)) {
-      throw new UnsupportedOperationException(String.format("No model adapter supports this operation for type '%s'.", dataType.toString()));
-    }
-  }
-
-  def schemaOf(dataType: QName): Option[StructType] = {
+  override def schemaOf(dataType: QName): Option[StructType] = {
     val resolved = resolveModel(dataType)
     if (resolved.isDefined) {
       resolved.get.schemaOf(dataType)
@@ -34,7 +28,9 @@ sealed class ModelAdapterAggregator(modelAdapters: List[ModelAdapter]) extends M
     } 
   }
 
-  def metaInterval(typeName: String): (String, String) = ("low", "high")    // TODO: Throw error or check all
+  override def intervalBoundTerms(): (String, String) = throw new OperationNotSupportedException()
 
-  def typeToElmMapping(typeName: String): Map[String, String] = throw new OperationNotSupportedException()
+  override def contextDataType(contextName: String): QName = {
+    new QName(namespaceUri, "Patient")
+  }
 }

@@ -1,4 +1,4 @@
-package gov.va.sparkcql.evaluator
+package gov.va.sparkcql.translator
 
 import org.apache.spark.sql.SparkSession
 
