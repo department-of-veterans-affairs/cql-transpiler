@@ -57,7 +57,7 @@ trait Node {
     ancestors.filter(_.parent == null).head
   }
 
-  def translate(context: Context): Object
+  def translate(env: Environment): Object
 
   // def evaluation(): Object = {
   //   evaluationState match {

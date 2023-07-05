@@ -52,6 +52,6 @@ class TranslatorTest extends TestBase {
   }
 
   it should "correctly translate ComplexLiteral using Spark" in {
-    //val r = rootNode.translate(context)
+    //val r = rootNode.translate(env)
   }
 }

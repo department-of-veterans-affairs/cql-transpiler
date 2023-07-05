@@ -8,10 +8,10 @@ class PackageNode(val element: List[elm.Library]) extends Node {
 
   override protected def resolveChildren(): List[Object] = element
   
-  override def translate(context: Context): Object = {
+  override def translate(env: Environment): Object = {
     val libraryEvals = children.map(l => {
-      l.translate(context).asInstanceOf[LibraryTranslation]
+      l.translate(env).asInstanceOf[LibraryTranslation]
     })
-    TranslationPack(context.parameters, libraryEvals)
+    TranslationPack(env.parameters, libraryEvals)
   }
 }

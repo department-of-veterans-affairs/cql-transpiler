@@ -9,7 +9,7 @@ import gov.va.sparkcql.translator._
 
 class DateNode(val element: elm.Date) extends Node {
 
-  override def translate(context: Context): Object = {
+  override def translate(env: Environment): Object = {
     val value = element.convertTo[LocalDate]
     lit(value)
   }

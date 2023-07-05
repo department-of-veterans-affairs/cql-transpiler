@@ -10,9 +10,9 @@ class ListNode(val element: elm.List) extends Node {
 
   override protected def resolveChildren(): List[Object] = element.getElement().asScala.toList
 
-  override def translate(context: Context): Object = {
-    import context.spark.implicits._
-    val items = children.map(_.translate(context).asInstanceOf[Column])
+  override def translate(env: Environment): Object = {
+    import env.spark.implicits._
+    val items = children.map(_.translate(env).asInstanceOf[Column])
     array(items:_*)
   }
 }

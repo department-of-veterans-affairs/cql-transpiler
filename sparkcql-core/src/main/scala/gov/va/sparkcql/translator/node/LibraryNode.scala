@@ -21,12 +21,12 @@ class LibraryNode(val element: elm.Library) extends Node {
     ).toList
   }
 
-  override def translate(context: Context): Object = {
+  override def translate(env: Environment): Object = {
     val errors = element.getAnnotation().asScala.filter(p => p.isInstanceOf[CqlToElmError]).map(_.asInstanceOf[CqlToElmError])
 
     if (errors.length == 0) {
       val exprDefs = children[elm.ExpressionDef]()
-      val exprEvals = exprDefs.map(_.translate(context).asInstanceOf[ExpressionDefTranslation])
+      val exprEvals = exprDefs.map(_.translate(env).asInstanceOf[ExpressionDefTranslation])
       LibraryTranslation(element, exprEvals)
     } else {
       throw new Exception(errors.head.getMessage())

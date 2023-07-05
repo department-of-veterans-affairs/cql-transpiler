@@ -10,8 +10,8 @@ import org.hl7.elm.{r1 => elm}
 class Translator(modelAdapters: List[ModelAdapter], dataAdapters: List[DataAdapter], spark: SparkSession) {
 
   def translate(parameters: Map[String, Object], libraries: List[elm.Library]): TranslationPack = {
-    val context = Context(parameters, spark)
+    val env = Environment(parameters, spark)
     val packageNode = new PackageNode(libraries)
-    packageNode.translate(context).asInstanceOf[TranslationPack]
+    packageNode.translate(env).asInstanceOf[TranslationPack]
   }
 }

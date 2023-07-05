@@ -7,7 +7,7 @@ class NullNode() extends Node {
 
   val element: elm.Element = null
 
-  override def translate(context: Context): Object = {
+  override def translate(env: Environment): Object = {
     null
   }
 }

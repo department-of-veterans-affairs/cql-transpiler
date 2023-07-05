@@ -8,7 +8,7 @@ import org.apache.spark.sql.functions._
 
 class LiteralNode(val element: elm.Literal) extends Node {
 
-  override def translate(context: Context): Object = {
+  override def translate(env: Environment): Object = {
     val value = element.convertTo[String]
     lit(value)
   }

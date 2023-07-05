@@ -9,15 +9,15 @@ class ExpressionDefNode(val element: elm.ExpressionDef) extends Node {
 
   override protected def resolveChildren(): List[Object] = List(element.getExpression)
 
-  override def translate(context: Context): Object = {
+  override def translate(env: Environment): Object = {
     assert(children.length == 1)
-    val eval = children.head.translate(context)
+    val eval = children.head.translate(env)
     if (eval.getClass() == classOf[DataFrame]) {
       ExpressionDefTranslation(element, eval.asInstanceOf[DataFrame])
     } else {
-      import context.spark.implicits._
+      import env.spark.implicits._
       val c = eval.asInstanceOf[Column]
-      val df = context.spark.createDataFrame(List())
+      val df = env.spark.createDataFrame(List())
       df.withColumn("value", eval.asInstanceOf[Column])
     }
   }
