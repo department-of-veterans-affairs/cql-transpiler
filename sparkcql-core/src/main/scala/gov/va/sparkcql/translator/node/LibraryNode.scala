@@ -12,7 +12,7 @@ class LibraryNode(val element: elm.Library) extends Node {
       (if (element.getCodeSystems() == null) { List() } else { element.getCodeSystems().getDef().asScala }) ++
       (if (element.getCodes() == null) { List() } else { element.getCodes().getDef().asScala }) ++
       (if (element.getConcepts() == null) { List() } else { element.getConcepts().getDef().asScala }) ++
-      (if (element.getContexts() == null) { List() } else { element.getContexts().getDef().asScala }) ++
+      (if (element.getContexts() == null) { List(createImplicitContext()) } else { element.getContexts().getDef().asScala }) ++
       (if (element.getIncludes() == null) { List() } else { element.getIncludes().getDef().asScala }) ++
       (if (element.getParameters() == null) { List() } else { element.getParameters().getDef().asScala }) ++
       (if (element.getStatements() == null) { List() } else { element.getStatements().getDef().asScala }) ++
@@ -32,4 +32,12 @@ class LibraryNode(val element: elm.Library) extends Node {
       throw new Exception(errors.head.getMessage())
     }
   }
+
+  def createImplicitContext() = new elm.ContextDef().withName("Patient")
+
+  // val context = {
+  //   val explicitContextDef = children[elm.ContextDef]
+  //   assert(explicitContextDef.size == 1)
+  //   explicitContextDef.head.asInstanceOf[ContextDefNode].contextDataFrame
+  // }
 }

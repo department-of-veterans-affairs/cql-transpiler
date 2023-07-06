@@ -4,7 +4,6 @@ import scala.collection.JavaConverters._
 
 import scala.collection.immutable.Map
 import scala.collection.mutable.{HashMap, MutableList}
-import gov.va.sparkcql.types._
 import org.hl7.elm.r1.{Library, VersionedIdentifier}
 import gov.va.sparkcql.adapter.library.{LibraryAdapter, LibraryAdapterAggregator}
 

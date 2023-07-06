@@ -29,8 +29,4 @@ sealed class ModelAdapterAggregator(modelAdapters: List[ModelAdapter]) extends M
   }
 
   override def intervalBoundTerms(): (String, String) = throw new OperationNotSupportedException()
-
-  override def contextDataType(contextName: String): QName = {
-    new QName(namespaceUri, "Patient")
-  }
 }

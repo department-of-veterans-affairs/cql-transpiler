@@ -22,7 +22,5 @@ trait ModelAdapter {
   
   def intervalBoundTerms(): (String, String)
 
-  def contextDataType(contextName: String): QName
-
   def patientIdentifier(): QName = ???    // TODO: Need a way to identify a patient and relating b/w models
 }

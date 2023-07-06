@@ -7,7 +7,6 @@ import org.json4s.jackson.Serialization.{read, write}
 import javax.xml.namespace.QName
 import org.apache.spark.sql.{SparkSession, DataFrame}
 import gov.va.sparkcql.compiler.CompilerGateway
-import gov.va.sparkcql.types._
 import gov.va.sparkcql.io.Log
 import org.hl7.elm.r1.VersionedIdentifier
 

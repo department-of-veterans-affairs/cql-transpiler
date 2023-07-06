@@ -70,8 +70,4 @@ class FhirModelAdapter extends ModelAdapter {
   }  
 
   override def intervalBoundTerms(): (String, String) = ("start", "end")
-
-  override def contextDataType(contextName: String): QName = {
-    new QName(namespaceUri, "Patient")
-  }
 }

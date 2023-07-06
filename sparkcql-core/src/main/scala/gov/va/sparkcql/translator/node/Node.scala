@@ -5,16 +5,10 @@ import org.hl7.elm.{r1 => elm}
 import gov.va.sparkcql.converter.Converter
 import gov.va.sparkcql.translator._
 
-// trait EvaluationState
-// case object NotStarted extends EvaluationState
-// case object InProgress extends EvaluationState
-// case object Complete extends EvaluationState
-
 trait Node {
   var parent: Node = null
   val element: Object
-  // var evaluationCache: Object = null
-  // var evaluationState: EvaluationState = NotStarted
+  // var translationCache: Option[Object]
   
   val children: List[Node]  = {
     val resolved = resolveChildren()
@@ -29,7 +23,8 @@ trait Node {
 
   def children[T: TypeTag](): List[Node]  = {
     val elementType = typeOf[T]
-    val found = children.filter(c => c.element != null && c.element.getClass().getName() == elementType.toString())
+    val found = children
+      .filter(c => c.element != null && c.element.getClass().getName() == elementType.toString())
     found
   }
 

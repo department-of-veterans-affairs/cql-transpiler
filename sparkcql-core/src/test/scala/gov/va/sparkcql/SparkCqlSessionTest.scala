@@ -2,7 +2,6 @@ package gov.va.sparkcql
 
 import collection.JavaConverters._
 import org.apache.spark.sql.SparkSession
-import gov.va.sparkcql.types._
 import gov.va.sparkcql.io.Log
 
 class SparkCqlSessionTest extends TestBase {

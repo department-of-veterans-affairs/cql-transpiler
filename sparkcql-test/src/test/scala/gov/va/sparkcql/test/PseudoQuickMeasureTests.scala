@@ -2,7 +2,6 @@ package gov.va.sparkcql.test
 
 import scala.reflect.runtime.universe._
 import collection.JavaConverters._
-import gov.va.sparkcql.types._
 import gov.va.sparkcql.io.Log
 import gov.va.sparkcql.SparkCqlSession
 import gov.va.sparkcql.adapter.library.FileLibraryAdapter

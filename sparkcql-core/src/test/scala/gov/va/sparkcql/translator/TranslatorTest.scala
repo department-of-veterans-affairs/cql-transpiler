@@ -3,7 +3,6 @@ package gov.va.sparkcql.translator
 import scala.reflect.runtime.universe._
 import collection.JavaConverters._
 import gov.va.sparkcql.converter.Converter
-import gov.va.sparkcql.types._
 import gov.va.sparkcql.io.Log
 import org.hl7.elm.r1.{Interval, DateTime, Date, Literal}
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
@@ -14,6 +13,7 @@ import gov.va.sparkcql.TestBase
 import org.apache.spark.sql.functions._
 import gov.va.sparkcql.adapter.model.ModelAdapterFactory
 import gov.va.sparkcql.di.ComponentConfiguration
+import gov.va.sparkcql.adapter.data.DataAdapterFactory
 
 class TranslatorTest extends TestBase {
 
@@ -25,7 +25,8 @@ class TranslatorTest extends TestBase {
   }
 
   val configuration = new ComponentConfiguration()
-  val models = Components.load[ModelAdapterFactory]().map(_.create(configuration))
+  val modelAdapters = Components.load[ModelAdapterFactory]().map(_.create(configuration))
+  val dataAdapters = Components.load[DataAdapterFactory]().map(_.create(configuration, spark))
   val compiler = new Compiler(List())
   val compilation = {
     val compilation = compiler.compile(List(getResource("/cql/ComplexLiteral.cql")))
@@ -33,8 +34,7 @@ class TranslatorTest extends TestBase {
     compilation
   }
 
-  lazy val context = Context(parameters, spark)
-  lazy val translator = new Translator(List(), List(), spark)
+  lazy val translator = new Translator(modelAdapters, dataAdapters, spark)
   lazy val translation = translator.translate(parameters, compilation)
   lazy val rootNode = new PackageNode(compilation)
 
