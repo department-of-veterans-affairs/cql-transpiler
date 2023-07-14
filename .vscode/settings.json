@@ -1,0 +1,52 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.eclipse.downloadSources": true,
+    "java.maven.downloadSources": true,
+    "java.test.config": {
+        "vmArgs": [
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+            "--add-opens=java.base/java.io=ALL-UNNAMED",
+            "--add-opens=java.base/java.net=ALL-UNNAMED",
+            "--add-opens=java.base/java.nio=ALL-UNNAMED",
+            "--add-opens=java.base/java.util=ALL-UNNAMED",
+            "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+            "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+            "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens=java.base/sun.nio.cs=ALL-UNNAMED",
+            "--add-opens=java.base/sun.security.action=ALL-UNNAMED",
+            "--add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
+        ]
+    },
+    "files.watcherExclude": {
+        "**/target": true
+    },
+    "files.exclude": {
+        "**/target": true,
+        "**/.metals": true,
+        "gradle": true,
+        "gradlew*": true,
+        "**/build/": true,
+        "**/bin/": true,
+        "**/.bloop": true,
+        "**/.gradle": true,
+        "**/spark-warehouse/": true,
+        "**/.mypy_cache/": true,
+        "**/.pytest_cache": true,
+        ".settings": true
+    },
+    "[scala]": {
+        "editor.tabSize": 2
+    },
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.linting.mypyEnabled": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.testing.pytestArgs": [
+        "sparkcql"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

@@ -1,0 +1,36 @@
+{
+    "resourceType": "Library",
+    "id": "",
+    "identifier": [
+        {
+            "value": "",
+            "system": ""
+        }
+    ],
+    "version": "",
+    "name": "",
+    "title": "",
+    "status": "active",
+    "type": {
+        "coding": [
+            {
+                "code": "logic-library"
+            }
+        ]
+    },
+    "date": "2018-11-10",
+    "content": [
+        {
+            "contentType": "text/cql",
+            "data": "",
+            "url": "",
+            "title": ""
+        },
+        {
+            "contentType": "text/cql",
+            "data": "",
+            "url": "",
+            "title": ""
+        }
+    ]
+}

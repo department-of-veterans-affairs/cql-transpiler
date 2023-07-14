@@ -1,0 +1,13 @@
+{
+    "gov.va.sparkcql.adapter.source.FileSourceConfiguration": {
+        "path": [
+            "./src/test/resources/cql"
+        ]
+    },
+    "gov.va.sparkcql.synthea.SyntheaSourceAdapter": [
+        {
+            "implementationGuide": "QI-Core",
+            "populationSize": "PopulationSize10"
+        }
+    ]
+}

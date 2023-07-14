@@ -1,0 +1,29 @@
+# General
+.env
+**/.bin/
+**/bin/
+**/.temp/
+
+# Scala & Java
+**/.bloop/
+target
+dependency-reduced-pom.xml
+**/.metals/
+
+# Gradle
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache
+.project
+.classpath
+
+# Spark
+**/spark-warehouse/
+
+# Python
+**/__pycache__
+**/.mypy_cache

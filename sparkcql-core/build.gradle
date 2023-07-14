@@ -1,0 +1,27 @@
+dependencies {
+    implementation("gov.va.sparkcql:sparkcql-shadow:${version}") {
+        // Shadow already embeds all transitive dependencies but without explicitly excluding
+        // ANTLR Gradle will upgrade spark's ANTLR to a higher, incompatible version. Alternatively,
+        // we could strictly define ANTLR's Spark compatible version but this might break in the 
+        // future if spark upgrades to a newer version.
+        exclude group: 'org.antlr', module: 'antlr4-runtime'
+    }
+
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
+    implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+    
+    // No references can be made to CQF components which have transitive dependencies
+    // to ANTLR due to version compatibility issues. Those references must be isolated
+    // in sparkcql-shadow. For instance, cql, cql-to-elm, etc.
+    implementation "info.cqframework:elm:${cqfVersion}"
+    implementation "info.cqframework:elm-jackson:${cqfVersion}"
+    implementation "info.cqframework:model-jackson:${cqfVersion}"
+    implementation "info.cqframework:engine:${cqfVersion}"
+}
+
+// Forces sparkcql-shadow to deploy jar to local maven repo where we'll pick it up
+compileJava {
+    dependsOn(':sparkcql-shadow:publishToMavenLocal')
+}
