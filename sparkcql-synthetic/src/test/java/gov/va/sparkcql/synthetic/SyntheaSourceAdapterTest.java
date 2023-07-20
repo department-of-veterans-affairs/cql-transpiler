@@ -20,7 +20,7 @@ public class SyntheaSourceAdapterTest {
 
     public SyntheaSourceAdapterTest() {
         this.spark = SparkSession.builder()
-            .master("local[1]")
+            .master("local[2]")
             .getOrCreate();
     }
 

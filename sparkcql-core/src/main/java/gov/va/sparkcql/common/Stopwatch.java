@@ -1,4 +1,4 @@
-package gov.va.sparkcql.diagnostic;
+package gov.va.sparkcql.common;
 
 import java.time.Duration;
 

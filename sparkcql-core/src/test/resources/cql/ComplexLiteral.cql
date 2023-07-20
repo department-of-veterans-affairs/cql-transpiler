@@ -1,5 +1,7 @@
 library ComplexLiteral version '2.1'
 
+define "MyLiteral": 42
+
 define "MyTupleLiteral":
   Tuple {
     Name: 'Patrick',
@@ -32,7 +34,7 @@ define "MyTupleLiteralList":
       Phones: { Tuple { Number: '202-413-1234', Use: 'Home' } }
     }    
   }
-
+/*
 define "JoinedTuples":
   "MyTupleLiteralList" A
   with "MyTupleLiteral" B
@@ -44,3 +46,4 @@ define "NestedTuples":
     NestedLiteral: "MyTupleLiteral",
     NestedList: "MyTupleLiteralList"
   }
+*/

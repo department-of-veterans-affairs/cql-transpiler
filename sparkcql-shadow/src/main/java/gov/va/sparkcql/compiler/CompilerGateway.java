@@ -34,7 +34,7 @@ public class CompilerGateway {
         }
 
         var translatorOptions = new CqlTranslatorOptions();
-        translatorOptions.setOptions(CqlTranslatorOptions.Options.EnableResultTypes);
+        translatorOptions.setOptions();
 
         var translator = CqlTranslator.fromText(cqlText, modelManager, libraryManager, ucumService, translatorOptions);
         return translator.toELM();

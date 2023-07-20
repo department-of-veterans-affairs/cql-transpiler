@@ -7,7 +7,7 @@ import org.hl7.elm.r1.VersionedIdentifier;
 
 import gov.va.sparkcql.compiler.CompilerGateway;
 
-import gov.va.sparkcql.io.Directory;
+import gov.va.sparkcql.common.Directory;
 
 public class FileLibraryAdapter implements LibraryAdapter {
 
@@ -15,14 +15,14 @@ public class FileLibraryAdapter implements LibraryAdapter {
 
     public FileLibraryAdapter(String path) {
         if (path == null || path == "") {
-            throw new RuntimeException("Path cannot be empty.");
+            contents = Map.of();
+        } else {
+            var compilerGateway = new CompilerGateway();
+            contents = Directory
+                .find(path, ".cql")
+                .map(Directory::readString) 
+                .collect(Collectors.toMap(compilerGateway::parseVersionedIdentifier, c -> c));
         }
-
-        var compilerGateway = new CompilerGateway();
-        contents = Directory
-            .find(path, ".cql")
-            .map(Directory::readString) 
-            .collect(Collectors.toMap(compilerGateway::parseVersionedIdentifier, c -> c));
     }
 
     @Override

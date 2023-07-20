@@ -44,5 +44,10 @@ public final class Configuration {
 
     public void write(Configuration componentConfiguration) {
         this.localConfiguration = componentConfiguration.localConfiguration;
-    }    
+    }
+
+    public Configuration with(String key, String value) {
+        write(key, value);
+        return this;
+    }
 }

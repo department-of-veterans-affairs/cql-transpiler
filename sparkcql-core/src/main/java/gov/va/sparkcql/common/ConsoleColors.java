@@ -1,4 +1,4 @@
-package gov.va.sparkcql.diagnostic;
+package gov.va.sparkcql.common;
 
 public class ConsoleColors {
     static String RESET =  "\u001B[0m";

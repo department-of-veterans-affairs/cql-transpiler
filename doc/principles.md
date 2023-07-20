@@ -1,0 +1,3 @@
+- Path of most efficiency: Optimize the CQL to Spark translation the same way a human would or better.
+- Full integration of CQL knowledge artifacts into big data tooling.
+- Provide a fluent API for CQL consistent with the Spark ecosystem.

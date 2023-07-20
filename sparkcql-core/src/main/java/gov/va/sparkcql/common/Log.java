@@ -1,4 +1,4 @@
-package gov.va.sparkcql.diagnostic;
+package gov.va.sparkcql.common;
 
 import org.apache.spark.sql.Dataset;
 import org.slf4j.LoggerFactory;

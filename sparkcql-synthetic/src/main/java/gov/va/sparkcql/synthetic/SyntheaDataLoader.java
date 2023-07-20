@@ -1,6 +1,6 @@
 package gov.va.sparkcql.synthetic;
 
-import gov.va.sparkcql.io.Resources;
+import gov.va.sparkcql.common.Resources;
 import java.util.List;
 
 class SyntheaDataLoader {

@@ -1,4 +1,4 @@
-package gov.va.sparkcql.io;
+package gov.va.sparkcql.common;
 
 import java.nio.charset.StandardCharsets;
 
