@@ -1,6 +1,6 @@
 package gov.va.sparkcql.translator;
 
-public enum ContextCardinality {
+public enum Cardinality {
     OneToOne,
     OneToMany
 }

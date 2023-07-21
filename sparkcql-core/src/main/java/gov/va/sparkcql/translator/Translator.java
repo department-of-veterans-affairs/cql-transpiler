@@ -102,26 +102,48 @@ public class Translator extends ElmBaseLibraryVisitor <Result, Environment> {
 
     @Override
     public Result visitTuple(Tuple node, Environment env) {
-        var elements = node.getElement().stream().map(n -> visitTupleElement(n, env)).toList();
-        var colList = elements.stream().filter(n -> n instanceof Column).map(n -> (Column)n).toList();
-        var dsList = elements.stream().filter(n -> n instanceof Dataset).map(n -> (Dataset<Row>)n).toList();
-        if (dsList.size() > 0) {
-            throw new NotImplementedException("Not implemented");
-        }
-        return struct(colList.toArray(Column[]::new));
+        var results = node.getElement().stream().map(n -> (DataResult)visitTupleElement(n, env)).toList();
+        var oneToOneDs = results.stream().map(r -> {
+            if (r.cardinality() == Cardinality.OneToMany) {
+                // TODO: Collapse Cardinality from Many down to One via Group By
+                throw new NotImplementedException("Assignment of retrived values not supported.");
+            }
+            return r.ds();
+        }).toList();
+        var folded = oneToOneDs.stream().reduce(env.getContextFrame(), (prev, current) -> {
+            return prev.join(current, prev.col("_column_id"), current.col("_column_id"));
+        });
+        return struct(collapsed.toArray(Column[]::new));
     }
 
     @Override
     public Result visitTupleElement(TupleElement node, Environment env) {
-        return match(visitExpression(node.getValue(), env))
-            .on(Column.class, c -> c.alias(node.getName()))
-            .on(Dataset.class, d -> d.alias(node.getName()))   // TODO: Force Cardinality to One-to-One
-            .end();
+        // var results = node.getElement().stream().map(n -> (DataResult)visitTupleElement(n, env)).toList();
+        // var oneToOneDs = results.stream().map(r -> {
+        //     if (r.cardinality() == Cardinality.OneToMany) {
+        //         // TODO: Collapse Cardinality from Many down to One via Group By
+        //         throw new NotImplementedException("Assignment of retrived values not supported.");
+        //     }
+        //     return r.ds();
+        // }).toList();
+        // var folded = oneToOneDs.stream().reduce(env.getContextFrame(), (prev, current) -> {
+        //     return prev.join(current, prev.col("_column_id"), current.col("_column_id"));
+        // });
+        var result = (DataResult)visitExpression(node.getValue(), env);
+        Dataset<Row> oneToOneDs = result.ds();
+        if (result.cardinality() == Cardinality.OneToMany) {
+            // TODO: Force Cardinality to Left Hand Side
+            throw new NotImplementedException("Assignment of retrived values not supported.");
+        }
+
+        var ds = oneToOneDs.select(oneToOneDs.col("_context_id"), expr("_value.*").alias("_value"));
+
+        return new DataResult(result).with(ds);
     }
 
     @Override
     public Result visitLiteral(Literal node, Environment env) {
-        return lit(node.getValue());
+        return new DataResult(env.getContextFrame(), List.of(lit(node.getValue())));
     }
 
     // @Override
@@ -129,7 +151,7 @@ public class Translator extends ElmBaseLibraryVisitor <Result, Environment> {
     //     var cols = node.getElement().stream().map(n -> {
     //         return match(visitExpression(n, env))
     //             .on(Column.class, c -> c)
-    //             .on(Dataset.class, d -> d.as(null))   // TODO: Force Cardinality to One-to-One
+    //             .on(Dataset.class, d -> d.as(null))   
     //             .end();
     //     }).toList();
 

@@ -9,21 +9,34 @@ import org.apache.spark.sql.Row;
 public class DataResult extends Result {
     
     private String alias;
-    private List<Column> appliedColumns;
+    private Column[] appliedColumns;
     private Dataset<Row> ds;
 
-    public DataResult(List<Result> children, Dataset<Row> ds, List<Column> appliedColumns, String alias) {
-        super(children);
-        this.alias = alias;
+    public DataResult() {
+    }
+
+    public DataResult(DataResult from) {
+        super(from);
+        this.alias = from.alias;
+        this.appliedColumns = from.appliedColumns;
+        this.ds = from.ds;
+    }
+
+    public DataResult with(Column[] appliedColumns) {
         this.appliedColumns = appliedColumns;
+        return this;
+    }
+
+    public DataResult with(Dataset<Row> ds) {
         this.ds = ds;
+        return this;
     }
 
     public String alias() {
         return this.alias;
     }
 
-    public List<Column> appliedColumns() {
+    public Column[] appliedColumns() {
         return this.appliedColumns;
     }
 
