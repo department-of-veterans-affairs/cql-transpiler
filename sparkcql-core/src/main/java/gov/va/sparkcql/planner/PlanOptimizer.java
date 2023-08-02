@@ -1,4 +1,4 @@
-package gov.va.sparkcql.optimizer;
+package gov.va.sparkcql.planner;
 
 import org.hl7.elm.r1.Library;
 
@@ -31,9 +31,11 @@ import org.hl7.elm.r1.Library;
  * 
  * NOTE: Could query results be used to "train" these constraints?
  */
-public class ElmRetrieveOptimizer {
+public class PlanOptimizer {
 
     public Library optimize(Library library) {
         return library;
     }
+
+    // TODO: Make All Options Configurable
 }
