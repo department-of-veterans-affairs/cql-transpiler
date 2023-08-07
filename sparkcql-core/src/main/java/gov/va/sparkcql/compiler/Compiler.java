@@ -3,16 +3,15 @@ package gov.va.sparkcql.compiler;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.cqframework.cql.cql2elm.LibrarySourceProvider;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 
-import gov.va.sparkcql.adapter.library.LibraryAdapter;
-import gov.va.sparkcql.adapter.library.LibraryAdapterAggregator;
+import gov.va.sparkcql.model.CqlSource;
+import gov.va.sparkcql.repository.CqlSourceRepository;
 
 /**
  * Scopes searched when resolving library references (in order of precedence):
@@ -22,17 +21,16 @@ import gov.va.sparkcql.adapter.library.LibraryAdapterAggregator;
 public class Compiler implements LibrarySourceProvider {
 
     protected CompilerGateway compilerGateway = new CompilerGateway();
-    protected LibraryAdapterAggregator libraryAdapters;
-    protected Map<VersionedIdentifier, String> identifiedLibraries;
+    protected List<CqlSource> cqlSources;
+    protected CqlSourceRepository cqlSourceRepository;
 
     public Compiler() {
         this.compilerGateway = new CompilerGateway();
-        this.libraryAdapters = new LibraryAdapterAggregator(List.of());
     }
 
-    public Compiler(List<LibraryAdapter> libraryAdapters) {
+    public Compiler(CqlSourceRepository cqlSourceRepository) {
         this.compilerGateway = new CompilerGateway();
-        this.libraryAdapters = new LibraryAdapterAggregator(libraryAdapters);
+        this.cqlSourceRepository = cqlSourceRepository;
     }
 
     /*
@@ -45,34 +43,35 @@ public class Compiler implements LibrarySourceProvider {
      * required]]).
      * 
      */
-    public List<Library> compile(String... callScopedLibrarySources) {
-
-        this.identifiedLibraries = Stream.of(callScopedLibrarySources)
-            .collect(Collectors.toMap(compilerGateway::parseVersionedIdentifier, l -> l));
+    public List<Library> compile(String... callScopedCqlSources) {
+        this.cqlSources = Stream.of(callScopedCqlSources)
+            .map(cqlText -> {
+                return new CqlSource()
+                    .withIdentifier(compilerGateway.parseVersionedIdentifier(cqlText))
+                    .withSource(cqlText);
+            }).toList();
 
         return compileIdentifiedLibraries();
     }
 
     public List<Library> compile(List<VersionedIdentifier> callScopedLibraryIdentifiers) {
-
-        this.identifiedLibraries = callScopedLibraryIdentifiers.stream()
-            .collect(Collectors.toMap(i -> i, i -> this.libraryAdapters.getLibrarySource(i)));
-        
+        this.cqlSources = this.cqlSourceRepository.findMany(callScopedLibraryIdentifiers);
         return compileIdentifiedLibraries();
     }
 
     protected List<Library> compileIdentifiedLibraries() {
-        return identifiedLibraries.entrySet().stream().map(entry -> compilerGateway.compile(entry.getValue(), this)).toList();
+        return cqlSources.stream().map(cs -> compilerGateway.compile(cs.getSource(), this)).toList();
     }
 
     @Override
     public InputStream getLibrarySource(org.hl7.elm.r1.VersionedIdentifier libraryIdentifier) {
-        var isCached = identifiedLibraries.containsKey(libraryIdentifier);
-        if (!isCached) {
-            var source = this.libraryAdapters.getLibrarySource(libraryIdentifier);
-            identifiedLibraries.put(libraryIdentifier, source);
+        var lookup = cqlSources.stream().filter(cs -> cs.getIdentifier().equals(libraryIdentifier)).findFirst();
+        if (lookup.isEmpty()) {
+            var cs = this.cqlSourceRepository.findOne(libraryIdentifier);
+            this.cqlSources.add(cs);
+            lookup = Optional.of(cs);
         }
 
-        return new ByteArrayInputStream(identifiedLibraries.get(libraryIdentifier).getBytes());
+        return new ByteArrayInputStream(lookup.get().getSource().getBytes());
     }
 }

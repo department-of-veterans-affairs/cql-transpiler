@@ -6,8 +6,11 @@ import java.util.List;
 
 import org.hl7.cql_annotations.r1.CqlToElmError;
 import org.hl7.elm.r1.Library;
+import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import gov.va.sparkcql.repository.CqlSourceFileRepository;
 
 public class CompilerTest {
 
@@ -56,6 +59,13 @@ public class CompilerTest {
             "library MyLibrary version '1'", "library MyLibrary version '2'"
         );
         assertLibraries(2, output);
+    }
+
+    @Test
+    public void should_allow_file_repository_loading() {
+        var fileCompiler = new Compiler(new CqlSourceFileRepository("./src/test/resources/cql"));
+        var output = fileCompiler.compile(List.of(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
+        assertLibraries(1, output);
     }
 
     private void assertLibraries(int expectedCount, List<Library> output) {

@@ -3,6 +3,8 @@
 **/.bin/
 **/bin/
 **/.temp/
+*.hprof
+.settings/org.eclipse.buildship.core.prefs
 
 # Scala & Java
 **/.bloop/
