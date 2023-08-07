@@ -7,10 +7,9 @@ subprojects {
         sourceCompatibility = "${targetJavaVersion}"
         targetCompatibility = "${targetJavaVersion}"
     }
-
+    
     repositories {
         mavenCentral()
-        mavenLocal()        // to pick up sparkcql-shadow
     }
 
     dependencies {

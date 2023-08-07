@@ -46,24 +46,6 @@ public class BaseBulkRetriever implements BulkRetriever {
     }
 
     @Override
-    public Row copy() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'copy'");
-    }
-
-    @Override
-    public Object get(int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
-    }
-
-    @Override
-    public int length() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'length'");
-    }
-
-    @Override
     public Dataset<Row> combine() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'combine'");

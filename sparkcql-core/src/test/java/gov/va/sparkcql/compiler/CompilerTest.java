@@ -10,6 +10,7 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import gov.va.sparkcql.common.configuration.ComponentFactory;
 import gov.va.sparkcql.repository.CqlSourceFileRepository;
 
 public class CompilerTest {
@@ -66,6 +67,12 @@ public class CompilerTest {
         var fileCompiler = new Compiler(new CqlSourceFileRepository("./src/test/resources/cql"));
         var output = fileCompiler.compile(List.of(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
         assertLibraries(1, output);
+    }
+
+    @Test
+    public void should_not_break_spark() {
+        var spark = ComponentFactory.createSpark();
+        var ds = spark.sql("select 12345 foo");
     }
 
     private void assertLibraries(int expectedCount, List<Library> output) {

@@ -9,7 +9,7 @@ import org.apache.spark.sql.Row;
 import gov.va.sparkcql.model.RetrievalPlan;
 import gov.va.sparkcql.model.RetrieveOperation;
 
-public interface BulkRetriever extends Row {
+public interface BulkRetriever {
 
     public Map<RetrieveOperation, Dataset<Row>> retrieve(RetrievalPlan plan);
 
