@@ -1,4 +1,4 @@
-package gov.va.sparkcql.repository;
+package gov.va.sparkcql.compiler;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.hl7.elm.r1.VersionedIdentifier;
 
 import gov.va.sparkcql.model.CqlSource;
 import gov.va.sparkcql.common.configuration.Configuration;
+import gov.va.sparkcql.common.repository.BaseFileRepository;
 import gov.va.sparkcql.common.configuration.ConfigKey;
-import gov.va.sparkcql.compiler.CompilerGateway;
 
 public class CqlSourceFileRepository extends BaseFileRepository<VersionedIdentifier, CqlSource> implements CqlSourceRepository {
 
@@ -27,9 +27,8 @@ public class CqlSourceFileRepository extends BaseFileRepository<VersionedIdentif
 
     @Override
     protected CqlSource deserialize(String contents) {
-        var compilerGateway = new CompilerGateway();
         return new CqlSource()
-            .withIdentifier(compilerGateway.parseVersionedIdentifier(contents))
+            .withIdentifier(new CqlParser().parseVersionedIdentifier(contents))
             .withSource(contents);
     }
 

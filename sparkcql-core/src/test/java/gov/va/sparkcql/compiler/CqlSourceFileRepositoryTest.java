@@ -1,4 +1,4 @@
-package gov.va.sparkcql.repository;
+package gov.va.sparkcql.compiler;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.configuration.ConfigKey;
 import gov.va.sparkcql.common.configuration.Configuration;
+import gov.va.sparkcql.compiler.CqlSourceFileRepository;
 
 public class CqlSourceFileRepositoryTest {
   
     @Test
     public void should_support_basic_read_ops() {
         var repository = new CqlSourceFileRepository("./src/test/resources/cql");
+        var x = repository.findOne(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0"));
         assertNotNull(repository.findOne(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0")));
         assertNotNull(repository.findOne(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0")));
         assertNull(repository.findOne(new VersionedIdentifier().withId("BasicRetrieve")));

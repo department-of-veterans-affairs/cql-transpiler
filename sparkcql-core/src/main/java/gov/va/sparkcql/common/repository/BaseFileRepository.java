@@ -1,4 +1,4 @@
-package gov.va.sparkcql.repository;
+package gov.va.sparkcql.common.repository;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public abstract class BaseFileRepository<K, T> implements Repository<K, T> {
 
     @Override
     public T findOne(K key) {
-        return entities.stream().filter(cs -> getEntityKey(cs).equals(key)).findFirst().orElse(null);
+        return entities.stream().filter(cs -> key.equals(getEntityKey(cs))).findFirst().orElse(null);
     }
 
     @Override
@@ -42,7 +42,7 @@ public abstract class BaseFileRepository<K, T> implements Repository<K, T> {
 
     @Override
     public Boolean exists(K key) {
-        var found = entities.stream().filter(cs -> getEntityKey(cs).equals(key)).findFirst();
+        var found = entities.stream().filter(cs -> key.equals(getEntityKey(cs))).findFirst();
         return found.isPresent();
     }
 }

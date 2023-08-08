@@ -7,11 +7,11 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
 import gov.va.sparkcql.model.RetrievalPlan;
-import gov.va.sparkcql.model.RetrieveOperation;
+import gov.va.sparkcql.model.RetrievalOperation;
 
 public interface BulkRetriever {
 
-    public Map<RetrieveOperation, Dataset<Row>> retrieve(RetrievalPlan plan);
+    public Map<RetrievalOperation, Dataset<Row>> retrieve(RetrievalPlan plan);
 
     public Collection<Object> retrieveContextTraversable(RetrievalPlan plan);
 
@@ -19,7 +19,7 @@ public interface BulkRetriever {
 
     public Boolean isCached();
     
-    public String makeCacheToken(RetrieveOperation retrieveOperation);
+    public String makeCacheToken(RetrievalOperation retrieveOperation);
 
     // public Object contextBundling();
 

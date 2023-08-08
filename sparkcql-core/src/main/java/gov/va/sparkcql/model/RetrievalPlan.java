@@ -1,5 +1,7 @@
 package gov.va.sparkcql.model;
 
-public class RetrievalPlan {
-    
+import gov.va.sparkcql.retriever.ContextDataIterator;
+
+public interface RetrievalPlan {
+    public ContextDataIterator retrieve(RetrievalPlan plan);
 }

@@ -1,12 +1,10 @@
-/*
-sparkcql-shadow must be built and used as a jar to properly shade CQF's ANTLR version from 
-spark which uses an incompatible ANTLR version.
-*/
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
 dependencies {
+    implementation project(':sparkcql-core')
+
     implementation "info.cqframework:cql:${cqfVersion}"
     implementation "info.cqframework:cql-to-elm:${cqfVersion}"
     implementation "info.cqframework:elm:${cqfVersion}"

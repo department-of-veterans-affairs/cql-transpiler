@@ -7,7 +7,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
 import gov.va.sparkcql.model.RetrievalPlan;
-import gov.va.sparkcql.model.RetrieveOperation;
+import gov.va.sparkcql.model.RetrievalOperation;
 
 public class BaseBulkRetriever implements BulkRetriever {
 
@@ -15,7 +15,7 @@ public class BaseBulkRetriever implements BulkRetriever {
     }
 
     @Override
-    public Map<RetrieveOperation, Dataset<Row>> retrieve(RetrievalPlan plan) {
+    public Map<RetrievalOperation, Dataset<Row>> retrieve(RetrievalPlan plan) {
         // Identify uncached retrievals.
 
         // For uncached retrievals, retrieve and cache them now.
@@ -34,7 +34,7 @@ public class BaseBulkRetriever implements BulkRetriever {
     }
 
     @Override
-    public String makeCacheToken(RetrieveOperation retrieveOperation) {
+    public String makeCacheToken(RetrievalOperation retrieveOperation) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'makeCacheToken'");
     }

@@ -9,7 +9,7 @@ import gov.va.sparkcql.model.RetrievalPlan;
 public class Planner {
     
     public RetrievalPlan plan(List<Library> libraries) {
-
-        return new RetrievalPlan();
+        return null;
+        //return new RetrievalPlan();
     }
 }

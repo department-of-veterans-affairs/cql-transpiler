@@ -1,5 +1,5 @@
 package gov.va.sparkcql.model;
 
-public class RetrieveOperation {
+public class ContextData {
     
 }
