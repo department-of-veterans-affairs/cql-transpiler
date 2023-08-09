@@ -11,4 +11,5 @@ dependencies {
        sparkcql-cqf provides that implementation.
     */
     implementation "info.cqframework:elm:${cqfVersion}"
+    implementation "info.cqframework:elm-jackson:${cqfVersion}"
 }

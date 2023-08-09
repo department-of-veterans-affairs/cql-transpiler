@@ -9,7 +9,13 @@ import gov.va.sparkcql.model.RetrievalPlan;
 public class Planner {
     
     public RetrievalPlan plan(List<Library> libraries) {
-        return null;
-        //return new RetrievalPlan();
+        var collector = new RetrieveAnalyzer();
+
+        var retrievalOperations = libraries.stream().flatMap(library -> {
+            return collector.visitLibrary(library, null).stream();
+        }).toList();
+
+        return new RetrievalPlan()
+            .withRetrievalOperations(retrievalOperations);
     }
 }

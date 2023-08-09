@@ -1,5 +1,19 @@
 # CQL Service Component
 
+## Workflow
+- Compile
+- Generate Plans
+    - Collect retrieves
+    - Optimize plans
+- Bulk Retrieve
+    - Acquire data
+	- Apply retrieval filters
+	- Group by Context (ContextID, List of RetrieveOps: List )
+	- Join by Context
+- MapPartitions 
+- Evaluate
+- Output
+
 ## Model Transitions
 
 CQL Authoring to Evaluation...

@@ -64,7 +64,7 @@
         {
           "type": "ValueSetDef",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet",
-          "name": "Emergency Department Visit",
+          "name": "Sample Valueset A",
           "id": "urn:oid:2.16.840.1.113883.3.117.1.7.1.292",
           "accessLevel": "Public"
         }
@@ -88,8 +88,8 @@
             "type": "SingletonFrom",
             "operand": {
               "type": "Retrieve",
-              "dataType": "{http://hl7.org/fhir}Patient",
-              "templateId": "patient-qicore-qicore-patient"
+              "dataType": "{http://gov.va/sparkcql/sample}Patient",
+              "templateId": "sample-patient"
             }
           },
           "name": "Patient",
@@ -107,18 +107,18 @@
                   "codes": {
                     "type": "ValueSetRef",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet",
-                    "name": "Emergency Department Visit",
+                    "name": "Sample Valueset A",
                     "preserve": true
                   },
                   "resultTypeSpecifier": {
                     "type": "ListTypeSpecifier",
                     "elementType": {
                       "type": "NamedTypeSpecifier",
-                      "name": "{http://hl7.org/fhir}Encounter"
+                      "name": "{http://gov.va/sparkcql/sample}SampleEntity"
                     }
                   },
-                  "dataType": "{http://hl7.org/fhir}Encounter",
-                  "templateId": "encounter-qicore-qicore-encounter",
+                  "dataType": "{http://gov.va/sparkcql/sample}SampleEntity",
+                  "templateId": "sample-encounter",
                   "codeProperty": "type",
                   "codeComparator": "in"
                 },
@@ -126,69 +126,19 @@
                   "type": "ListTypeSpecifier",
                   "elementType": {
                     "type": "NamedTypeSpecifier",
-                    "name": "{http://hl7.org/fhir}Encounter"
+                    "name": "{http://gov.va/sparkcql/sample}SampleEntity"
                   }
                 },
-                "alias": "ED"
+                "alias": "E"
               }
             ],
             "let": [],
             "relationship": [],
-            "where": {
-              "type": "After",
-              "operand": [
-                {
-                  "type": "End",
-                  "operand": {
-                    "type": "Property",
-                    "resultTypeSpecifier": {
-                      "type": "IntervalTypeSpecifier",
-                      "pointType": {
-                        "type": "NamedTypeSpecifier",
-                        "name": "{urn:hl7-org:elm-types:r1}DateTime"
-                      }
-                    },
-                    "path": "period",
-                    "scope": "ED"
-                  }
-                },
-                {
-                  "type": "DateTime",
-                  "year": {
-                    "type": "Literal",
-                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
-                    "value": "2013"
-                  },
-                  "month": {
-                    "type": "Literal",
-                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
-                    "value": "12"
-                  },
-                  "day": {
-                    "type": "Literal",
-                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
-                    "value": "27"
-                  },
-                  "hour": {
-                    "type": "Literal",
-                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
-                    "value": "14"
-                  },
-                  "minute": {
-                    "type": "Literal",
-                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
-                    "value": "30"
-                  },
-                  "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
-                }
-              ],
-              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
-            },
             "resultTypeSpecifier": {
               "type": "ListTypeSpecifier",
               "elementType": {
                 "type": "NamedTypeSpecifier",
-                "name": "{http://hl7.org/fhir}Encounter"
+                "name": "{http://gov.va/sparkcql/sample}SampleEntity"
               }
             }
           },
@@ -196,10 +146,10 @@
             "type": "ListTypeSpecifier",
             "elementType": {
               "type": "NamedTypeSpecifier",
-              "name": "{http://hl7.org/fhir}Encounter"
+              "name": "{http://gov.va/sparkcql/sample}SampleEntity"
             }
           },
-          "name": "ED Encounter",
+          "name": "Sample Definition A",
           "context": "Patient",
           "accessLevel": "Public"
         }
