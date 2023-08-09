@@ -1,14 +1,17 @@
 package gov.va.sparkcql.retriever;
 
+import java.lang.reflect.ParameterizedType;
+
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
 
 import gov.va.sparkcql.common.di.ServiceContext;
+import gov.va.sparkcql.common.log.Log;
 import gov.va.sparkcql.common.spark.SparkFactory;
 
-public abstract class SparkClinicalDataRepository implements ClinicalDataRepository {
+public abstract class SparkClinicalDataRepository<T> implements ClinicalDataRepository<T> {
 
     protected SparkSession spark;
 
@@ -16,37 +19,33 @@ public abstract class SparkClinicalDataRepository implements ClinicalDataReposit
         this.spark = ServiceContext.createOne(SparkFactory.class).create();
     }
 
-    protected void validateSchema(StructType schema) {
-        validateColumn(schema, "patientCorrelationId", "string");
-        validateColumn(schema, "practictionerCorrelationId", "string");
-        validateColumn(schema, "primaryCode", "string");
-        validateColumn(schema, "primaryStartDate", "timestamp");
-        validateColumn(schema, "primaryEndDate", "timestamp");
-        validateColumn(schema, "dataType", "string");
-        validateColumn(schema, "data", "struct");
+    @Override
+    @SuppressWarnings("unchecked")
+    public Class<T> getEntityClass() {
+        var clazz = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return clazz;
     }
 
-    private void validateColumn(StructType schema, String columnName, String typeName) {
-        typeName = typeName.toLowerCase();
-        if (schema.getFieldIndex(columnName).isEmpty()) {
-            throw new RuntimeException("Invalid Schema: Missing " + columnName + " column.");
-        }
-        var index = schema.fieldIndex(columnName);
-        var field = schema.fields()[index];
-        var fieldTypeName = field.dataType().typeName();
-        if (!fieldTypeName.equals(typeName)) {
-            throw new RuntimeException("Invalid Schema: Expected type " + typeName + " for column " + columnName + " but found " + fieldTypeName);
+    protected abstract StructType getCanonicalSchema();
+
+    protected void validateSchema(StructType schema) {
+        if (!schema.toDDL().equals(getCanonicalSchema().toDDL())) {
+            Log.warn(schema.toDDL());
+            Log.warn(getCanonicalSchema().toDDL());
+            throw new RuntimeException("Invalid schema for ClinicalDataRepository<" + getEntityClass().getSimpleName() + ">.");
         }
     }
 
     @Override
-    public Dataset<Row> acquireQueryable(Class<?> clazz) {
-        var ds = spark.table(resolveTable(clazz));
+    public Dataset<Row> queryable() {
+        var ds = acquire();
         validateSchema(ds.schema());
         return ds;
     }
 
-    protected String resolveTable(Class<?> clazz) {
-        return clazz.getSimpleName();
+    protected abstract Dataset<Row> acquire();
+
+    protected String resolveTable() {
+        return getEntityClass().getSimpleName();
     }
 }
