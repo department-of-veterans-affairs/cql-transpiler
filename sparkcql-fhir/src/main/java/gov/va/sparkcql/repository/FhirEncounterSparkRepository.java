@@ -6,7 +6,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoder;
 import org.hl7.fhir.r4.model.Encounter;
 
-import gov.va.sparkcql.model.ClinicalTable;
+import gov.va.sparkcql.model.ClinicalDataTable;
 
 public class FhirEncounterSparkRepository extends FhirSparkRepository<Encounter> implements FhirEncounterRepository {
 
@@ -22,13 +22,13 @@ public class FhirEncounterSparkRepository extends FhirSparkRepository<Encounter>
     }
 
     @Override
-    public ClinicalTable<Encounter> findOne(String key) {
+    public ClinicalDataTable<Encounter> findOne(String key) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findOne'");
     }
 
     @Override
-    public List<ClinicalTable<Encounter>> findMany(List<String> keys) {
+    public List<ClinicalDataTable<Encounter>> findMany(List<String> keys) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findMany'");
     }

@@ -14,7 +14,7 @@ import org.hl7.fhir.r4.model.Resource;
 import gov.va.sparkcql.common.configuration.Configuration;
 import gov.va.sparkcql.common.configuration.ConfigKey;
 import gov.va.sparkcql.common.factory.SparkFactory;
-import gov.va.sparkcql.model.ClinicalTable;
+import gov.va.sparkcql.model.ClinicalDataTable;
 
 public abstract class FhirSparkRepository<T extends Resource> implements FhirRepository<T> {
 
@@ -46,14 +46,14 @@ public abstract class FhirSparkRepository<T extends Resource> implements FhirRep
     }
 
     @Override
-    public ClinicalTable<T> findOne(String key) {
+    public ClinicalDataTable<T> findOne(String key) {
         var ds = spark.table(this.tableName).as(getEncoder());
         var r = ds.filter((FilterFunction<T>)f -> f.getId() == key).first();
         return null;
     }
 
     @Override
-    public List<ClinicalTable<T>> findMany(List<String> keys) {
+    public List<ClinicalDataTable<T>> findMany(List<String> keys) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findMany'");
     }

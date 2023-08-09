@@ -6,7 +6,7 @@ import javax.ws.rs.NotSupportedException;
 
 import gov.va.sparkcql.common.io.Directory;
 
-public abstract class BaseFileRepository<K, T> implements Repository<K, T> {
+public abstract class BaseFileRepository<T, ID> implements PointRepository<T, ID> {
 
     protected List<T> entities;
 
@@ -28,21 +28,21 @@ public abstract class BaseFileRepository<K, T> implements Repository<K, T> {
 
     protected abstract T deserialize(String contents);
 
-    protected abstract K getEntityKey(T entity);
+    protected abstract ID getEntityId(T entity);
 
     @Override
-    public T findOne(K key) {
-        return entities.stream().filter(cs -> key.equals(getEntityKey(cs))).findFirst().orElse(null);
+    public T findOne(ID id) {
+        return entities.stream().filter(cs -> id.equals(getEntityId(cs))).findFirst().orElse(null);
     }
 
     @Override
-    public List<T> findMany(List<K> keys) {
-        return entities.stream().filter(cs -> keys.contains(getEntityKey(cs))).toList();
+    public List<T> findMany(List<ID> ids) {
+        return entities.stream().filter(cs -> ids.contains(getEntityId(cs))).toList();
     }
 
     @Override
-    public Boolean exists(K key) {
-        var found = entities.stream().filter(cs -> key.equals(getEntityKey(cs))).findFirst();
+    public Boolean exists(ID id) {
+        var found = entities.stream().filter(cs -> id.equals(getEntityId(cs))).findFirst();
         return found.isPresent();
     }
 }

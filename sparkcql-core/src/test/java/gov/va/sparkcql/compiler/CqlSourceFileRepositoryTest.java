@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.configuration.ConfigKey;
 import gov.va.sparkcql.common.configuration.Configuration;
-import gov.va.sparkcql.compiler.CqlSourceFileRepository;
 
 public class CqlSourceFileRepositoryTest {
   

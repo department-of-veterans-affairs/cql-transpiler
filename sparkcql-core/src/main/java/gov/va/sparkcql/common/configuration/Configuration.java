@@ -47,6 +47,10 @@ public final class Configuration {
         }
     }
 
+    public <I, T> void writeBinding(Class<I> interfaceClass, Class<T> implementationClass) {
+        this.write(interfaceClass.getCanonicalName(), implementationClass.getCanonicalName());
+    }
+
     public void write(String key, String value) {
         runtimeConfig.put(key, value);
     }

@@ -10,7 +10,7 @@ import org.apache.spark.sql.Row;
 
 import gov.va.sparkcql.common.configuration.ConfigKey;
 import gov.va.sparkcql.common.configuration.Configuration;
-import gov.va.sparkcql.common.di.Components;
+import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.compiler.Compiler;
 import gov.va.sparkcql.compiler.CqlSourceRepository;
 import gov.va.sparkcql.retriever.BulkRetriever;
@@ -80,8 +80,8 @@ public class SparkCqlSession {
         }
 
         public SparkCqlSession create() {
-            CqlSourceRepository cqlSourceRepository = Components.createOne(CqlSourceRepository.class, cfg);
-            BulkRetriever bulkRetriever = Components.createOne(BulkRetriever.class, cfg);
+            CqlSourceRepository cqlSourceRepository = ServiceContext.createOne(CqlSourceRepository.class, cfg);
+            BulkRetriever bulkRetriever = ServiceContext.createOne(BulkRetriever.class, cfg);
             //var compiler = new Compiler(cqlSourceRepository);
             
             return new SparkCqlSession(null, bulkRetriever);

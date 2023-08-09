@@ -9,7 +9,7 @@ import gov.va.sparkcql.common.configuration.Configuration;
 import gov.va.sparkcql.common.repository.BaseFileRepository;
 import gov.va.sparkcql.common.configuration.ConfigKey;
 
-public class CqlSourceFileRepository extends BaseFileRepository<VersionedIdentifier, CqlSource> implements CqlSourceRepository {
+public class CqlSourceFileRepository extends BaseFileRepository<CqlSource, VersionedIdentifier> implements CqlSourceRepository {
 
     protected List<CqlSource> cqlSources;
 
@@ -33,7 +33,7 @@ public class CqlSourceFileRepository extends BaseFileRepository<VersionedIdentif
     }
 
     @Override
-    protected VersionedIdentifier getEntityKey(CqlSource entity) {
+    protected VersionedIdentifier getEntityId(CqlSource entity) {
         return entity.getIdentifier();
     }   
 }

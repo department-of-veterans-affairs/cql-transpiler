@@ -1,19 +1,18 @@
 package gov.va.sparkcql.compiler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
 import org.hl7.cql_annotations.r1.CqlToElmError;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.common.di.Components;
+import gov.va.sparkcql.common.di.ServiceContext;
 
 public class CqfCompilerTest {
 
@@ -69,6 +68,13 @@ public class CqfCompilerTest {
         var fileCompiler = new CqfCompiler(new CqlSourceFileRepository("./src/test/resources/cql"));
         var output = fileCompiler.compile(List.of(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
         assertLibraries(1, output);
+    }
+
+    @Test
+    public void should_be_service_creatable() {
+        var runtimeCompiler = ServiceContext.createOne(CompilerFactory.class).create();
+        assertNotNull(runtimeCompiler);
+        assertTrue(runtimeCompiler.getClass() == CqfCompiler.class);
     }
 
     private void assertLibraries(int expectedCount, List<Library> output) {
