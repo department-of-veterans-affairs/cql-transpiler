@@ -1,4 +1,4 @@
-package gov.va.sparkcql.retriever;
+package gov.va.sparkcql.repository;
 
 import java.lang.reflect.ParameterizedType;
 

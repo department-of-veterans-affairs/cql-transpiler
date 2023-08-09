@@ -12,7 +12,7 @@ import gov.va.sparkcql.common.configuration.ConfigKey;
 import gov.va.sparkcql.common.configuration.Configuration;
 import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.compiler.Compiler;
-import gov.va.sparkcql.compiler.CqlSourceRepository;
+import gov.va.sparkcql.repository.CqlSourceRepository;
 import gov.va.sparkcql.retriever.BulkRetriever;
 
 public class SparkCqlSession {

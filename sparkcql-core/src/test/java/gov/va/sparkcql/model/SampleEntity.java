@@ -1,6 +1,6 @@
-package gov.va.sparkcql.retriever;
+package gov.va.sparkcql.model;
 
-public class SampleData {
+public class SampleEntity {
 
     private String name;
 

@@ -1,8 +1,6 @@
-package gov.va.sparkcql.retriever;
+package gov.va.sparkcql.repository;
 
 import org.apache.spark.sql.Row;
-
-import gov.va.sparkcql.common.repository.QueryableRepository;
 
 public interface ClinicalDataRepository<E> extends QueryableRepository<Row> {
 

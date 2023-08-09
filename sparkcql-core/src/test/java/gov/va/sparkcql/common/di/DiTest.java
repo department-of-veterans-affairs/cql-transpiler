@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.configuration.Configuration;
 import gov.va.sparkcql.common.spark.SparkFactory;
-import gov.va.sparkcql.compiler.CqlSourceRepository;
+import gov.va.sparkcql.repository.CqlSourceRepository;
 
 public class DiTest {
 

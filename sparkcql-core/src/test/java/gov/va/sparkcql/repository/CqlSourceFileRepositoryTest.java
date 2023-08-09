@@ -1,4 +1,4 @@
-package gov.va.sparkcql.compiler;
+package gov.va.sparkcql.repository;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.configuration.ConfigKey;
 import gov.va.sparkcql.common.configuration.Configuration;
+import gov.va.sparkcql.repository.CqlSourceFileRepository;
 
 public class CqlSourceFileRepositoryTest {
   

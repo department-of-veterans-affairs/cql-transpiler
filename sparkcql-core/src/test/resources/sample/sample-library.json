@@ -1,0 +1,215 @@
+{
+  "library": {
+    "type": "Library",
+    "identifier": {
+      "type": "VersionedIdentifier",
+      "id": "SAMPLE_LIBRARY",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "type": "VersionedIdentifier",
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "type": "Library$Usings",
+      "def": [
+        {
+          "type": "UsingDef",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "type": "UsingDef",
+          "localIdentifier": "SampleModel",
+          "uri": "http://gov.va/sparkcql/sample"
+        }
+      ]
+    },
+    "parameters": {
+      "type": "Library$Parameters",
+      "def": [
+        {
+          "type": "ParameterDef",
+          "parameterTypeSpecifier": {
+            "type": "IntervalTypeSpecifier",
+            "pointType": {
+              "type": "NamedTypeSpecifier",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime"
+            },
+            "resultTypeSpecifier": {
+              "type": "IntervalTypeSpecifier",
+              "pointType": {
+                "type": "NamedTypeSpecifier",
+                "name": "{urn:hl7-org:elm-types:r1}DateTime"
+              }
+            }
+          },
+          "resultTypeSpecifier": {
+            "type": "IntervalTypeSpecifier",
+            "pointType": {
+              "type": "NamedTypeSpecifier",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime"
+            }
+          },
+          "name": "Measurement Period",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "valueSets": {
+      "type": "Library$ValueSets",
+      "def": [
+        {
+          "type": "ValueSetDef",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet",
+          "name": "Emergency Department Visit",
+          "id": "urn:oid:2.16.840.1.113883.3.117.1.7.1.292",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "contexts": {
+      "type": "Library$Contexts",
+      "def": [
+        {
+          "type": "ContextDef",
+          "name": "Patient"
+        }
+      ]
+    },
+    "statements": {
+      "type": "Library$Statements",
+      "def": [
+        {
+          "type": "ExpressionDef",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "type": "Retrieve",
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "templateId": "patient-qicore-qicore-patient"
+            }
+          },
+          "name": "Patient",
+          "context": "Patient"
+        },
+        {
+          "type": "ExpressionDef",
+          "expression": {
+            "type": "Query",
+            "source": [
+              {
+                "type": "AliasedQuerySource",
+                "expression": {
+                  "type": "Retrieve",
+                  "codes": {
+                    "type": "ValueSetRef",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet",
+                    "name": "Emergency Department Visit",
+                    "preserve": true
+                  },
+                  "resultTypeSpecifier": {
+                    "type": "ListTypeSpecifier",
+                    "elementType": {
+                      "type": "NamedTypeSpecifier",
+                      "name": "{http://hl7.org/fhir}Encounter"
+                    }
+                  },
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "templateId": "encounter-qicore-qicore-encounter",
+                  "codeProperty": "type",
+                  "codeComparator": "in"
+                },
+                "resultTypeSpecifier": {
+                  "type": "ListTypeSpecifier",
+                  "elementType": {
+                    "type": "NamedTypeSpecifier",
+                    "name": "{http://hl7.org/fhir}Encounter"
+                  }
+                },
+                "alias": "ED"
+              }
+            ],
+            "let": [],
+            "relationship": [],
+            "where": {
+              "type": "After",
+              "operand": [
+                {
+                  "type": "End",
+                  "operand": {
+                    "type": "Property",
+                    "resultTypeSpecifier": {
+                      "type": "IntervalTypeSpecifier",
+                      "pointType": {
+                        "type": "NamedTypeSpecifier",
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime"
+                      }
+                    },
+                    "path": "period",
+                    "scope": "ED"
+                  }
+                },
+                {
+                  "type": "DateTime",
+                  "year": {
+                    "type": "Literal",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                    "value": "2013"
+                  },
+                  "month": {
+                    "type": "Literal",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                    "value": "12"
+                  },
+                  "day": {
+                    "type": "Literal",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                    "value": "27"
+                  },
+                  "hour": {
+                    "type": "Literal",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                    "value": "14"
+                  },
+                  "minute": {
+                    "type": "Literal",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                    "value": "30"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "resultTypeSpecifier": {
+              "type": "ListTypeSpecifier",
+              "elementType": {
+                "type": "NamedTypeSpecifier",
+                "name": "{http://hl7.org/fhir}Encounter"
+              }
+            }
+          },
+          "resultTypeSpecifier": {
+            "type": "ListTypeSpecifier",
+            "elementType": {
+              "type": "NamedTypeSpecifier",
+              "name": "{http://hl7.org/fhir}Encounter"
+            }
+          },
+          "name": "ED Encounter",
+          "context": "Patient",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "annotation": [
+      {
+        "type": "CqlToElmInfo",
+        "translatorOptions": "EnableResultTypes"
+      }
+    ]
+  }
+}

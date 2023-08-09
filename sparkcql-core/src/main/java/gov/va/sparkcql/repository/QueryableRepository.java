@@ -1,4 +1,4 @@
-package gov.va.sparkcql.common.repository;
+package gov.va.sparkcql.repository;
 
 import org.apache.spark.sql.Dataset;
 

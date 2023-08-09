@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.di.ServiceContext;
+import gov.va.sparkcql.repository.CqlSourceFileRepository;
 
 public class CqfCompilerTest {
 

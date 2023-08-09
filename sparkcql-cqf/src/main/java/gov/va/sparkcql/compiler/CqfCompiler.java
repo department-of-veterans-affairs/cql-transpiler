@@ -17,6 +17,7 @@ import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 
 import gov.va.sparkcql.model.CqlSource;
+import gov.va.sparkcql.repository.CqlSourceRepository;
 
 public class CqfCompiler implements Compiler, LibrarySourceProvider {
 

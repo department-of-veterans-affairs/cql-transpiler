@@ -1,19 +1,19 @@
-package gov.va.sparkcql.retriever;
+package gov.va.sparkcql.repository;
 
 import java.util.List;
 
-import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.types.StructType;
 
 import gov.va.sparkcql.common.io.Resources;
+import gov.va.sparkcql.model.SampleEntity;
 
-public class SampleClinicalDataRepository extends SparkClinicalDataRepository<SampleData> {
+public class SampleClinicalDataRepository extends SparkClinicalDataRepository<SampleEntity> {
 
     private Dataset<Row> getRawData() {
-        var json = List.of(Resources.read("data/sample-clinical-table.json"));
+        var json = List.of(Resources.read("sample/sample-entity-data.json"));
         var jsonDs = spark.createDataset(json, Encoders.STRING());
         return spark.read().json(jsonDs);
     }

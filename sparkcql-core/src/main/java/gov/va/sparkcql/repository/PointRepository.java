@@ -1,4 +1,4 @@
-package gov.va.sparkcql.common.repository;
+package gov.va.sparkcql.repository;
 
 import java.util.List;
 

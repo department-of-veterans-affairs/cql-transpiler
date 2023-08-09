@@ -1,10 +1,12 @@
-package gov.va.sparkcql.retriever;
+package gov.va.sparkcql.repository;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.spark.sql.Encoders;
 import static org.apache.spark.sql.functions.col;
 import org.junit.jupiter.api.Test;
+
+import gov.va.sparkcql.model.SampleEntity;
 
 public class ClinicalDataRepositoryTest {
 
@@ -20,7 +22,7 @@ public class ClinicalDataRepositoryTest {
     @Test
     public void should_read_sample_repository_typed() {
         var repo = new SampleClinicalDataRepository();
-        var ds = repo.queryable().select(col("data.*")).as(Encoders.bean(SampleData.class));
+        var ds = repo.queryable().select(col("data.*")).as(Encoders.bean(SampleEntity.class));
         assertTrue(ds.first().getName().equals("sample name 1"));
     }
 }

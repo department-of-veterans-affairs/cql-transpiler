@@ -1,5 +1,7 @@
 package gov.va.sparkcql.compiler;
 
+import gov.va.sparkcql.repository.CqlSourceRepository;
+
 public class CqfCompilerFactory implements CompilerFactory {
 
     @Override
