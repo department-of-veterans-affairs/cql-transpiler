@@ -27,7 +27,7 @@ subprojects {
         // }
 
         testLogging {
-            events "PASSED", "FAILED", "STANDARD_ERROR"
+            events "PASSED", "FAILED", "STANDARD_ERROR", "STANDARD_OUT"
             showExceptions true
             exceptionFormat "FULL"
             showCauses true

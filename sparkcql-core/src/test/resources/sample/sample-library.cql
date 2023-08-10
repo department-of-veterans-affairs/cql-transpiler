@@ -9,7 +9,7 @@ parameter "Measurement Period" Interval<DateTime>
 context Patient
 
 define "Sample Definition A":
-  ["SampleEntity": "Sample Valueset A"] E
+  ["Entity": "Sample Valueset A"] E
 
 // define "Sample Definition B":
 // ["SampleEntity": "Sample Valueset A"] E

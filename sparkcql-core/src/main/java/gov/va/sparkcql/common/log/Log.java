@@ -56,6 +56,7 @@ public class Log {
                 System.setOut(printStream);
                 ds.show();
                 System.out.flush();
+                System.out.close();
                 return outStream.toString();
             } finally {
                 System.setOut(oldStream);

@@ -9,7 +9,7 @@ import org.hl7.elm.r1.Retrieve;
 
 import gov.va.sparkcql.model.RetrievalOperation;
 
-public class RetrieveAnalyzer extends ElmBaseLibraryVisitor<List<RetrievalOperation>, RetrievalOperation> {
+public class RetrieveCollector extends ElmBaseLibraryVisitor<List<RetrievalOperation>, RetrievalOperation> {
 
     @Override
     protected List<RetrievalOperation> defaultResult(Trackable elm, RetrievalOperation context) {

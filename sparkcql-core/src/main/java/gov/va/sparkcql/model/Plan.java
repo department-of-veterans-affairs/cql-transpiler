@@ -2,7 +2,7 @@ package gov.va.sparkcql.model;
 
 import java.util.List;
 
-public class RetrievalPlan {
+public class Plan {
     
     private List<RetrievalOperation> retrievalOperations;
 
@@ -14,8 +14,12 @@ public class RetrievalPlan {
         this.retrievalOperations = retrievalOperations;
     }
 
-    public RetrievalPlan withRetrievalOperations(List<RetrievalOperation> retrievalOperations) {
+    public Plan withRetrievalOperations(List<RetrievalOperation> retrievalOperations) {
         this.retrievalOperations = retrievalOperations;
         return this;
+    }
+
+    public String getContextSpecifier() {
+        return "Patient";       // TODO
     }
 }

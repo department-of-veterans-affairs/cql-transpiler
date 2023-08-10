@@ -12,7 +12,7 @@ public class ClinicalDataRepositoryTest {
 
     @Test
     public void should_read_sample_repository_untyped() {
-        var repo = new SampleClinicalDataRepository();
+        var repo = new SampleEntityDataRepository();
         var ds = repo.queryable();
         assertTrue(ds.count() == 3);
         assertTrue(ds.first().getAs("dataType").equals("SampleType"));
@@ -21,7 +21,7 @@ public class ClinicalDataRepositoryTest {
 
     @Test
     public void should_read_sample_repository_typed() {
-        var repo = new SampleClinicalDataRepository();
+        var repo = new SampleEntityDataRepository();
         var ds = repo.queryable().select(col("data.*")).as(Encoders.bean(SampleEntity.class));
         assertTrue(ds.first().getName().equals("sample name 1"));
     }

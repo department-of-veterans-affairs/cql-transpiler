@@ -8,12 +8,11 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.types.StructType;
 
 import gov.va.sparkcql.common.io.Resources;
-import gov.va.sparkcql.model.SampleEntity;
 
-public class SampleClinicalDataRepository extends SparkClinicalDataRepository<SampleEntity> {
+public abstract class SampleDataRepository<T> extends SparkClinicalDataRepository<T> {
 
     private Dataset<Row> getRawData() {
-        var json = List.of(Resources.read("sample/sample-entity-data.json"));
+        var json = List.of(Resources.read(getJsonDataPath()));
         var jsonDs = spark.createDataset(json, Encoders.STRING());
         return spark.read().json(jsonDs);
     }
@@ -30,8 +29,9 @@ public class SampleClinicalDataRepository extends SparkClinicalDataRepository<Sa
     @Override
     protected Dataset<Row> acquire() {
         var rawDs = getRawData();
-        
         var ds = spark.read().schema(getCanonicalSchema()).json(rawDs.toJSON());
         return ds;        
     }
+
+    protected abstract String getJsonDataPath();
 }
