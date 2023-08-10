@@ -14,8 +14,8 @@ public class ClinicalDataRepositoryTest {
     public void should_read_sample_repository_untyped() {
         var repo = new SampleEntityDataRepository();
         var ds = repo.queryable();
-        assertTrue(ds.count() == 3);
-        assertTrue(ds.first().getAs("dataType").equals("SampleType"));
+        assertTrue(ds.count() == 4);
+        assertTrue(ds.first().getAs("dataType").equals("Entity"));
         assertTrue(ds.first().getAs("primaryCode").equals("ABC"));
     }
 

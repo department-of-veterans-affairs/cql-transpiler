@@ -14,20 +14,18 @@ public class CqlSourceFileRepositoryTest {
   
     @Test
     public void should_support_basic_read_ops() {
-        var repository = new CqlSourceFileRepository("./src/test/resources/cql");
-        var x = repository.findOne(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0"));
-        assertNotNull(repository.findOne(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0")));
-        assertNotNull(repository.findOne(new VersionedIdentifier().withId("BasicRetrieve").withVersion("1.0")));
-        assertNull(repository.findOne(new VersionedIdentifier().withId("BasicRetrieve")));
+        var repository = new CqlSourceFileRepository("./src/test/resources/sample");
+        assertNotNull(repository.findOne(new VersionedIdentifier().withId("SAMPLE_LIBRARY").withVersion("1.0")));
+        assertNull(repository.findOne(new VersionedIdentifier().withId("SAMPLE_LIBRARY")));
     }
 
     @Test
     public void should_be_default_constructable() {
         var cfg = new Configuration();
-        cfg.write(ConfigKey.SPARKCQL_CQLSOURCEREPOSITORY_PATH, "./src/test/resources/cql");
+        cfg.write(ConfigKey.SPARKCQL_CQLSOURCEREPOSITORY_PATH, "./src/test/resources/sample");
         var repository = new CqlSourceFileRepository(cfg);
         assertNotNull(repository);
-        assertNotNull(repository.findOne(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
+        assertNotNull(repository.findOne(new VersionedIdentifier().withId("SAMPLE_LIBRARY").withVersion("1.0")));
     }
 
     @Test
