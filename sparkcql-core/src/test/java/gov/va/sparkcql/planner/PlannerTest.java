@@ -37,8 +37,8 @@ public class PlannerTest {
 
     @Test
     public void should_produce_unique_operation_hashes() {
-        var hash1 = plan.getRetrievalOperations().get(0).generateHash();
-        var hash2 = plan.getRetrievalOperations().get(1).generateHash();
+        var hash1 = plan.getRetrievalOperations().get(0).getHashKey();
+        var hash2 = plan.getRetrievalOperations().get(1).getHashKey();
         assertNotEquals(hash1, hash2);
     }    
 }

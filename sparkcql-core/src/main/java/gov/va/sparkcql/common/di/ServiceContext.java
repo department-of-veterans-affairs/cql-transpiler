@@ -25,7 +25,7 @@ public final class ServiceContext {
                 return providers.findFirst().get();
             }
         } catch (NoSuchElementException ex) {
-            throw new RuntimeException("ServiceContext couldn't find implementation found for " + clazz.getCanonicalName());
+            throw new RuntimeException("ServiceContext couldn't find implementation for " + clazz.getCanonicalName());
         } catch (Exception ex) {
             throw new RuntimeException("ServiceContext couldn't create implementation found for " + clazz.getCanonicalName());
         }

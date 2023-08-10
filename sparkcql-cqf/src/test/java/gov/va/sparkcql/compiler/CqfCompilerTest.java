@@ -11,6 +11,7 @@ import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opencds.cqf.cql.engine.execution.CqlEngine;
 
 import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.repository.CqlSourceFileRepository;

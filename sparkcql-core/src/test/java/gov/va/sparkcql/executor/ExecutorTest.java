@@ -8,24 +8,28 @@ import gov.va.sparkcql.common.io.Resources;
 import gov.va.sparkcql.model.Plan;
 import gov.va.sparkcql.planner.Planner;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonLibraryReader;
+import org.hl7.elm.r1.Library;
 
 public class ExecutorTest {
     
+    private List<Library> libraries;
     private Plan plan;
+    
 
     @BeforeEach
     public void setup() throws IOException {
         var libraryContents = Resources.read("sample/sample-library.json");
         var reader = new ElmJsonLibraryReader();
-        var sampleLibrary = reader.read(libraryContents);
+        this.libraries = List.of(reader.read(libraryContents));
         var planner = ServiceContext.createOne(Planner.class);
-        this.plan = planner.plan(List.of(sampleLibrary));
+        this.plan = planner.plan(this.libraries);
     }
 
     @Test
@@ -35,11 +39,17 @@ public class ExecutorTest {
     @Test
     public void should_retrieve_required_data() {
         var retriever = new SparkBulkRetriever();
-        retriever.retrieve(plan, null);
+        var ds = retriever.retrieve(plan, null);
+        assertEquals(ds.count(), 3);
+        assertEquals((String)ds.sort("patientCorrelationId").first().getAs("patientCorrelationId"), "1");
     }
 
     @Test
     public void should_execute_sample() {
-        assertTrue(true);
+        var retriever = ServiceContext.createOne(BulkRetriever.class);
+        var clinicalDs = retriever.retrieve(plan, null);
+        var executor = new DefaultExecutor();
+        var results = executor.execute(this.libraries, this.plan, clinicalDs, null);
+        results.show();
     }
 }

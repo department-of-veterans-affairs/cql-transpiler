@@ -55,7 +55,7 @@ public class SparkCqlSession {
 
     public Map<String, Dataset<Row>> eval(List<Library> libraries, Map<String, Object> parameters) {
         var plan = this.planner.plan(libraries);
-        var contextData = this.retriever.retrieve(plan, null);        
+        var contextData = this.retriever.retrieve(plan, null);
 
         // var translator = new Translator(spark, modelAdapters, libraryAdapters, dataAdapters);
         //translator.translate(libraries);

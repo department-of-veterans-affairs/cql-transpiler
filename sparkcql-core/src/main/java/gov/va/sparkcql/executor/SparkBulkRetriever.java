@@ -2,11 +2,11 @@ package gov.va.sparkcql.executor;
 
 import java.util.stream.Collectors;
 
-import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.hl7.elm.r1.Retrieve;
+
 import static org.apache.spark.sql.functions.collect_list;
-import static org.apache.spark.sql.functions.lit;
 
 import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.model.Plan;
@@ -21,27 +21,34 @@ public class SparkBulkRetriever implements BulkRetriever {
 
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
-        var acquired = plan.getRetrievalOperations()
-            .stream()
+        var acquired = plan.getRetrievalOperations().stream()
             .collect(Collectors.toMap(r -> r, r -> {
                 var repo = repositoryFactory.create(r.getRetrieve().getDataType());
                 return repo.queryable();
             }));
+        
+        // Apply filters defined by the retrieve operation. These are calculated during the planning
+        // generation of the ELM and subsequent planning phase.
+        var filtered = acquired.entrySet().stream()
+            .collect(Collectors.toMap(r -> r.getKey(), r -> {
+                var retrieve = r.getKey().getRetrieve();
+                var ds = r.getValue();
+                var f = applyFilters(ds, retrieve);
+                return ds;
+            }));
 
-        // Determine the established context if we're calculating patient, practitioner, or other.
+        // Determine the established context if we're calculating patient, practitioner, or unfiltered.
         var contextColumn = resolveContextColumn(plan.getContextSpecifier());
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member. Add a hash of the retrieve operation
         // so we can still look it up later.
-        var grouped = acquired.entrySet().stream().map(e -> {
-            var hash = e.getKey().generateHash();
+        var grouped = filtered.entrySet().stream().map(e -> {
+            var hash = e.getKey().getHashKey();
             var ds = e.getValue();
             var g = ds
                 .groupBy(ds.col(contextColumn))
-                .agg(collect_list(ds.col("data")))
-                .withColumn("hash", lit(hash));
-            g.show();
+                .agg(collect_list(ds.col("data")).alias(hash));
             return g;
         }).toList();
 
@@ -53,18 +60,14 @@ public class SparkBulkRetriever implements BulkRetriever {
         //
         // IMPORTANT: For best performance, all source data should be bucketed by the 
         // [Patient]CorrelationID to ensure these expensive joins are all colocated.
-        var joined = grouped.stream().reduce((left, right) -> {
-            var combined = left
-                .join(right, left.col(contextColumn).equalTo(right.col(contextColumn)), "inner");
-            return combined;
+        var combined = grouped.stream().reduce((left, right) -> {
+            var j = left
+                .join(right, left.col(contextColumn).equalTo(right.col(contextColumn)), "inner")
+                .drop(right.col(contextColumn));
+            return j;
         }).get();
 
-        joined.show();
-        // acquiredRetrieves.forEach((r, ds) -> {
-        //     ds.show();
-        // });
-
-        return null;
+        return combined;
     }
 
     protected String resolveContextColumn(String contextSpecifier) {
@@ -75,5 +78,25 @@ public class SparkBulkRetriever implements BulkRetriever {
         } else {
             throw new RuntimeException("Unsupported CQL context 'unfiltered'.");
         }
+    }
+
+    protected Dataset<Row> applyFilters(Dataset<Row> ds, Retrieve retrieve) {
+        ds = applyCodeInFilter(ds, retrieve);
+        ds = applyDateFilter(ds, retrieve);
+        return ds;
+    }
+
+    protected Dataset<Row> applyCodeInFilter(Dataset<Row> ds, Retrieve retrieve) {
+        var filter = retrieve.getCodeFilter();
+        if (filter.size() > 0)
+            throw new UnsupportedOperationException();
+        return ds;
+    }
+
+    protected Dataset<Row> applyDateFilter(Dataset<Row> ds, Retrieve retrieve) {
+        var filter = retrieve.getDateFilter();
+        if (filter.size() > 0)
+            throw new UnsupportedOperationException();
+        return ds;
     }
 }
