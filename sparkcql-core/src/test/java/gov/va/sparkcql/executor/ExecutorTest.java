@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.common.io.Resources;
+import gov.va.sparkcql.model.LibraryCollection;
 import gov.va.sparkcql.model.Plan;
 import gov.va.sparkcql.planner.Planner;
 
@@ -19,7 +20,7 @@ import org.hl7.elm.r1.Library;
 
 public class ExecutorTest {
     
-    private List<Library> libraries;
+    private LibraryCollection libraryCollection;
     private Plan plan;
     
 
@@ -27,9 +28,10 @@ public class ExecutorTest {
     public void setup() throws IOException {
         var libraryContents = Resources.read("sample/sample-library.json");
         var reader = new ElmJsonLibraryReader();
-        this.libraries = List.of(reader.read(libraryContents));
+        this.libraryCollection = new LibraryCollection();
+        this.libraryCollection.add(reader.read(libraryContents));
         var planner = ServiceContext.createOne(Planner.class);
-        this.plan = planner.plan(this.libraries);
+        this.plan = planner.plan(this.libraryCollection.stream().toList());
     }
 
     @Test
@@ -49,7 +51,8 @@ public class ExecutorTest {
         var retriever = ServiceContext.createOne(BulkRetriever.class);
         var clinicalDs = retriever.retrieve(plan, null);
         var executor = new DefaultExecutor();
-        var results = executor.execute(this.libraries, this.plan, clinicalDs, null);
+        var results = executor.execute(this.libraryCollection, this.plan, clinicalDs, null);
+        var x = results.collectAsList();
         results.show();
     }
 }

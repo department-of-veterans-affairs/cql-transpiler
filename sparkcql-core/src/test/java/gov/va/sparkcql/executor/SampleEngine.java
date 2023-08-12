@@ -15,8 +15,8 @@ public class SampleEngine implements Engine {
     public EvaluationResult evaluate(List<Library> libraries, Map<Retrieve, Object> clinicalData,
             Map<ValueSetDef, Object> terminologyData) {
 
-        return new EvaluationResult();
-            // .withEvaluatedResources(List.of(clinicalData.values()))
-            // .withExpressionResult(Map.of("Sample Definition A", clinicalData));
+        return new EvaluationResult()
+            .withEvaluatedResources(List.of("Hello"))
+            .withExpressionResult(Map.of("Sample Definition A", clinicalData));
     }
 }

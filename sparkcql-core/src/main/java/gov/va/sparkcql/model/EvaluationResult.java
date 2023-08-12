@@ -6,32 +6,32 @@ import java.util.Map;
 
 public class EvaluationResult implements Serializable {
 
-    private List<Object> evaluatedResources;
+    private List<String> evaluatedResources;
 
-    private Map<String, Object> expressionResult;
+    private Map<String, ?> expressionResult;
 
-    public List<Object> getEvaluatedResources() {
+    public List<String> getEvaluatedResources() {
         return evaluatedResources;
     }
 
-    public void setEvaluatedResources(List<Object> evaluatedResources) {
+    public void setEvaluatedResources(List<String> evaluatedResources) {
         this.evaluatedResources = evaluatedResources;
     }
 
-    public EvaluationResult withEvaluatedResources(List<Object> evaluatedResources) {
+    public EvaluationResult withEvaluatedResources(List<String> evaluatedResources) {
         this.evaluatedResources = evaluatedResources;
         return this;
     }
 
-    public Map<String, Object> getExpressionResult() {
+    public Map<String, ?> getExpressionResult() {
         return expressionResult;
     }
 
-    public void setExpressionResult(Map<String, Object> expressionResult) {
+    public void setExpressionResult(Map<String, ?> expressionResult) {
         this.expressionResult = expressionResult;
     }
 
-    public EvaluationResult withExpressionResult(Map<String, Object> expressionResult) {
+    public EvaluationResult withExpressionResult(Map<String, ?> expressionResult) {
         this.expressionResult = expressionResult;
         return this;
     }
