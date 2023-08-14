@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.common.io.Resources;
-import gov.va.sparkcql.model.LibraryCollection;
-import gov.va.sparkcql.model.Plan;
+import gov.va.sparkcql.entity.LibraryCollection;
+import gov.va.sparkcql.entity.Plan;
 import gov.va.sparkcql.planner.Planner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,7 +51,7 @@ public class ExecutorTest {
         var retriever = ServiceContext.createOne(BulkRetriever.class);
         var clinicalDs = retriever.retrieve(plan, null);
         var executor = new DefaultExecutor();
-        var results = executor.execute(this.libraryCollection, this.plan, clinicalDs, null);
+        var results = executor.execute(this.libraryCollection, this.plan, null, clinicalDs, null);
         var x = results.collectAsList();
         results.show();
     }

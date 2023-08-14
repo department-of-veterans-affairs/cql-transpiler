@@ -9,7 +9,7 @@ import org.hl7.elm.r1.Retrieve;
 import static org.apache.spark.sql.functions.collect_list;
 
 import gov.va.sparkcql.common.di.ServiceContext;
-import gov.va.sparkcql.model.Plan;
+import gov.va.sparkcql.entity.Plan;
 import gov.va.sparkcql.repository.ClinicalDataRepositoryFactory;
 
 public class SparkBulkRetriever implements BulkRetriever {
@@ -24,7 +24,7 @@ public class SparkBulkRetriever implements BulkRetriever {
         var acquired = plan.getRetrievalOperations().stream()
             .collect(Collectors.toMap(r -> r, r -> {
                 var repo = repositoryFactory.create(r.getRetrieve().getDataType());
-                return repo.queryable();
+                return repo.acquire();
             }));
         
         // Apply filters defined by the retrieve operation. These are calculated during the planning

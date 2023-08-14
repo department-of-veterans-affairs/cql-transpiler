@@ -7,7 +7,7 @@ import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.elm.r1.Retrieve;
 
-import gov.va.sparkcql.model.RetrievalOperation;
+import gov.va.sparkcql.entity.RetrievalOperation;
 
 public class RetrieveCollector extends ElmBaseLibraryVisitor<List<RetrievalOperation>, RetrievalOperation> {
 

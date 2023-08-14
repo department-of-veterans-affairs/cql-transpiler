@@ -1,4 +1,4 @@
-package gov.va.sparkcql.model;
+package gov.va.sparkcql.entity;
 
 import java.util.Base64;
 import org.hl7.elm.r1.Retrieve;

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.common.io.Resources;
-import gov.va.sparkcql.model.Plan;
+import gov.va.sparkcql.entity.Plan;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

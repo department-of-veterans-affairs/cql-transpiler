@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.hl7.elm.r1.Library;
 
-import gov.va.sparkcql.model.Plan;
+import gov.va.sparkcql.entity.Plan;
 
 public interface Planner {
     

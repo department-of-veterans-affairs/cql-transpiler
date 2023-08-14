@@ -1,6 +1,6 @@
 package gov.va.sparkcql.repository;
 
-import gov.va.sparkcql.model.SampleEntity;
+import gov.va.sparkcql.entity.SampleEntity;
 
 public class SampleEntityDataRepository extends SampleDataRepository<SampleEntity> {
 

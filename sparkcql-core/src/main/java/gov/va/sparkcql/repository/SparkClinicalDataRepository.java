@@ -37,13 +37,11 @@ public abstract class SparkClinicalDataRepository<T> implements ClinicalDataRepo
     }
 
     @Override
-    public Dataset<Row> queryable() {
+    public Dataset<Row> acquire() {
         var ds = acquire();
         validateSchema(ds.schema());
         return ds;
     }
-
-    protected abstract Dataset<Row> acquire();
 
     protected String resolveTable() {
         return getEntityClass().getSimpleName();

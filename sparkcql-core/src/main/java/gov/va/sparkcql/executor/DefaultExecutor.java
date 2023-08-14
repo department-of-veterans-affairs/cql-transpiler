@@ -1,6 +1,7 @@
 package gov.va.sparkcql.executor;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.spark.sql.Dataset;
@@ -10,14 +11,15 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.api.java.function.MapPartitionsFunction;
 
 import gov.va.sparkcql.common.di.ServiceContext;
-import gov.va.sparkcql.model.EvaluationResult;
-import gov.va.sparkcql.model.LibraryCollection;
-import gov.va.sparkcql.model.Plan;
+import gov.va.sparkcql.entity.EvaluationResult;
+import gov.va.sparkcql.entity.LibraryCollection;
+import gov.va.sparkcql.entity.Plan;
+import gov.va.sparkcql.model.Model;
 
 public class DefaultExecutor implements Executor {
 
     @Override
-    public Dataset<EvaluationResult> execute(LibraryCollection libraryCollection, Plan plan, Dataset<Row> clinicalDs, Dataset<Row> terminologyDs) {
+    public Dataset<EvaluationResult> execute(LibraryCollection libraryCollection, Plan plan, List<Model> models, Dataset<Row> clinicalDs, Dataset<Row> terminologyDs) {
 
         // Spark distributes our processing code to each executor node, an operation requiring
         // serialization of all enclosed objects. The ELM does not implement the Serialization
@@ -43,6 +45,7 @@ public class DefaultExecutor implements Executor {
 
                     @Override
                     public EvaluationResult next() {
+                        // Iterate to the next context element for those defined within the partition.
                         var nextRow = row.next();
 
                         try {

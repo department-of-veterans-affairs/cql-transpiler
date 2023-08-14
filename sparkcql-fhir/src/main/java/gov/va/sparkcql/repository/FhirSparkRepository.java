@@ -14,7 +14,7 @@ import org.hl7.fhir.r4.model.Resource;
 import gov.va.sparkcql.common.configuration.Configuration;
 import gov.va.sparkcql.common.configuration.ConfigKey;
 import gov.va.sparkcql.common.factory.SparkFactory;
-import gov.va.sparkcql.model.ClinicalDataTable;
+import gov.va.sparkcql.entity.ClinicalDataTable;
 
 public abstract class FhirSparkRepository<T extends Resource> implements FhirRepository<T> {
 

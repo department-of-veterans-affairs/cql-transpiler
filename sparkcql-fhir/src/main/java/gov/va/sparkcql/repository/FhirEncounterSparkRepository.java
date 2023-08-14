@@ -6,7 +6,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoder;
 import org.hl7.fhir.r4.model.Encounter;
 
-import gov.va.sparkcql.model.ClinicalDataTable;
+import gov.va.sparkcql.entity.ClinicalDataTable;
 
 public class FhirEncounterSparkRepository extends FhirSparkRepository<Encounter> implements FhirEncounterRepository {
 

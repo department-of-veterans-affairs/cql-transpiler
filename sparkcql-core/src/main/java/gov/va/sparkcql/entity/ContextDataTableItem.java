@@ -1,3 +1,4 @@
+package gov.va.sparkcql.entity;
 // package gov.va.sparkcql.model;
 
 // import java.util.List;

@@ -1,4 +1,4 @@
-package gov.va.sparkcql.model;
+package gov.va.sparkcql.entity;
 
 public class SampleEntity {
 
@@ -17,6 +17,7 @@ public class SampleEntity {
     public String getDescription() {
         return description;
     }
+    
     public void setDescription(String description) {
         this.description = description;
     }

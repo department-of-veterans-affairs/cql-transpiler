@@ -7,7 +7,7 @@ import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ValueSetDef;
 
-import gov.va.sparkcql.model.EvaluationResult;
+import gov.va.sparkcql.entity.EvaluationResult;
 
 public class SampleEngine implements Engine {
 

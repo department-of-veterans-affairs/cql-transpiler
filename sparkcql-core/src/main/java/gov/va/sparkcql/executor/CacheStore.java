@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.xml.namespace.QName;
 
-import gov.va.sparkcql.model.RetrievalOperation;
+import gov.va.sparkcql.entity.RetrievalOperation;
 
 public interface CacheStore {
 

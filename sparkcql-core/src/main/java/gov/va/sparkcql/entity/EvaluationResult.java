@@ -1,4 +1,4 @@
-package gov.va.sparkcql.model;
+package gov.va.sparkcql.entity;
 
 import java.io.Serializable;
 import java.util.List;
