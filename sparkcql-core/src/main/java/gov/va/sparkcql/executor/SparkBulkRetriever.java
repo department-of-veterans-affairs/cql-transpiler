@@ -6,18 +6,24 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.hl7.elm.r1.Retrieve;
 
+import com.google.inject.Inject;
+
 import static org.apache.spark.sql.functions.collect_list;
 
-import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.entity.Plan;
 import gov.va.sparkcql.repository.ClinicalDataRepositoryFactory;
 
 public class SparkBulkRetriever implements BulkRetriever {
 
+    ClinicalDataRepositoryFactory repositoryFactory;
+
+    @Inject
+    public SparkBulkRetriever(ClinicalDataRepositoryFactory repositoryFactory) {
+        this.repositoryFactory = repositoryFactory;
+    }
+
     @Override
     public Dataset<Row> retrieve(Plan plan, Object terminologyProvider) {
-
-        var repositoryFactory = ServiceContext.createOne(ClinicalDataRepositoryFactory.class);
 
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.

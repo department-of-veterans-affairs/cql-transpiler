@@ -8,14 +8,11 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import gov.va.sparkcql.common.configuration.ConfigKey;
-import gov.va.sparkcql.common.configuration.Configuration;
-import gov.va.sparkcql.common.di.ServiceContext;
+import gov.va.sparkcql.common.configuration.SystemConfiguration;
 import gov.va.sparkcql.compiler.Compiler;
 import gov.va.sparkcql.executor.BulkRetriever;
 import gov.va.sparkcql.executor.Executor;
 import gov.va.sparkcql.planner.Planner;
-import gov.va.sparkcql.repository.CqlSourceRepository;
 
 public class SparkCqlSession {
 
@@ -83,21 +80,16 @@ public class SparkCqlSession {
         private Builder() {
         }
 
-        Configuration cfg = new Configuration();
+        SystemConfiguration cfg = new SystemConfiguration();
 
         public Builder withConfig(String key, String value) {
             cfg.write(key, value);
             return this;
         }
         
-        public Builder withConfig(ConfigKey key, String value) {
-            cfg.write(key, value);
-            return this;
-        }
-
         public SparkCqlSession create() {
-            CqlSourceRepository cqlSourceRepository = ServiceContext.createOne(CqlSourceRepository.class, cfg);
-            BulkRetriever bulkRetriever = ServiceContext.createOne(BulkRetriever.class, cfg);
+            // CqlSourceRepository cqlSourceRepository = ServiceContext.createOne(CqlSourceRepository.class, cfg);
+            // BulkRetriever bulkRetriever = ServiceContext.createOne(BulkRetriever.class, cfg);
             //var compiler = new Compiler(cqlSourceRepository);
             
             // return new SparkCqlSession(null, bulkRetriever);

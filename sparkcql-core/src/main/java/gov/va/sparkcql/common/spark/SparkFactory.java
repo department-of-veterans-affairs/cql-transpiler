@@ -2,7 +2,7 @@ package gov.va.sparkcql.common.spark;
 
 import org.apache.spark.sql.SparkSession;
 
-import gov.va.sparkcql.common.di.NullaryFactory;
+public interface SparkFactory {
 
-public interface SparkFactory extends NullaryFactory<SparkSession> {
+    SparkSession create();
 }

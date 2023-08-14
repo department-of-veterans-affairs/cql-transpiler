@@ -5,8 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.common.di.ServiceContext;
-import gov.va.sparkcql.common.spark.SparkFactory;
+import gov.va.sparkcql.common.spark.LocalSparkFactory;
 
 public class CqlParserTest {
 
@@ -25,7 +24,7 @@ public class CqlParserTest {
     @Test
     public void should_not_break_spark() {
         // Confirms the proper Spark ANTLR version is loaded instead of CQF's higher version.
-        var spark = ServiceContext.createOne(SparkFactory.class).create();
+        var spark = new LocalSparkFactory().create();
         var ds = spark.sql("select 12345 foo");
     }
 }

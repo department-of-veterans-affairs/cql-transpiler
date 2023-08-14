@@ -7,7 +7,8 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
 
-import gov.va.sparkcql.common.di.ServiceContext;
+import com.google.inject.Inject;
+
 import gov.va.sparkcql.common.log.Log;
 import gov.va.sparkcql.common.spark.SparkFactory;
 
@@ -15,8 +16,9 @@ public abstract class SparkClinicalDataRepository<T> implements ClinicalDataRepo
 
     protected SparkSession spark;
 
-    public SparkClinicalDataRepository() {
-        this.spark = ServiceContext.createOne(SparkFactory.class).create();
+    @Inject
+    public SparkClinicalDataRepository(SparkFactory sparkFactory) {
+        this.spark = sparkFactory.create();
     }
 
     @Override

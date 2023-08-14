@@ -10,7 +10,6 @@ import org.apache.spark.sql.Row;
 
 import org.apache.spark.api.java.function.MapPartitionsFunction;
 
-import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.entity.EvaluationResult;
 import gov.va.sparkcql.entity.LibraryCollection;
 import gov.va.sparkcql.entity.Plan;
@@ -19,7 +18,7 @@ import gov.va.sparkcql.model.Model;
 public class DefaultExecutor implements Executor {
 
     @Override
-    public Dataset<EvaluationResult> execute(LibraryCollection libraryCollection, Plan plan, List<Model> models, Dataset<Row> clinicalDs, Dataset<Row> terminologyDs) {
+    public Dataset<EvaluationResult> execute(LibraryCollection libraryCollection, Plan plan, List<Model> models, Engine engine, Dataset<Row> clinicalDs, Dataset<Row> terminologyDs) {
 
         // Spark distributes our processing code to each executor node, an operation requiring
         // serialization of all enclosed objects. The ELM does not implement the Serialization
@@ -27,8 +26,6 @@ public class DefaultExecutor implements Executor {
         // See Plan and LibraryCollection for examples.
 
         try {
-
-            var engine = ServiceContext.createOne(Engine.class);
 
             var results = clinicalDs.mapPartitions((MapPartitionsFunction<Row, EvaluationResult>) row -> {
 

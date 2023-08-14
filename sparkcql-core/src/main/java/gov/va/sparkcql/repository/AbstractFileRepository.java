@@ -2,24 +2,18 @@ package gov.va.sparkcql.repository;
 
 import java.util.List;
 
-import javax.ws.rs.NotSupportedException;
-
 import gov.va.sparkcql.common.io.Directory;
 
-public abstract class BaseFileRepository<T, ID> implements PointRepository<T, ID> {
+public abstract class AbstractFileRepository<T, ID> implements PointRepository<T, ID> {
 
     protected List<T> entities;
 
-    public BaseFileRepository() {
-        throw new NotSupportedException("Must override default constructor.");
-    }
-
-    public BaseFileRepository(String path, String extension) {
-        if (path == null || path == "") {
+    public AbstractFileRepository(FileRepositoryConfiguration cfg) {
+        if (cfg.getPath() == null || cfg.getPath() == "") {
             entities = List.of();
         } else {
             this.entities = Directory
-                .find(path, extension)
+                .find(cfg.getPath(), cfg.getExtension())
                 .map(Directory::readString)
                 .map(contents -> deserialize(contents))
                 .toList();

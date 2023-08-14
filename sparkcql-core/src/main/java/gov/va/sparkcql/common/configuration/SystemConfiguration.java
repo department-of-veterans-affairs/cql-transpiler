@@ -3,31 +3,10 @@ package gov.va.sparkcql.common.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Configuration {
+public final class SystemConfiguration {
 
-    private static Configuration globalConfig = new Configuration();
     private Map<String, String> runtimeConfig = new HashMap<String, String>();
     
-    public static void setGlobalConfig(Configuration globalConfiguration) {
-        Configuration.globalConfig = globalConfiguration;
-    }
-
-    public static Configuration getGlobalConfig() {
-        return Configuration.globalConfig;
-    }
-
-    private String enumToKey(ConfigKey key) {
-        return key.toString().replace('_', '.').toLowerCase();
-    }
-
-    public String read(ConfigKey key) {
-        return read(key, null);
-    }
-
-    public String read(ConfigKey key, String defaultValue) {
-        return read(enumToKey(key), defaultValue);
-    }
-
     public String read(String key) {
         return read(key, null);
     }
@@ -53,9 +32,5 @@ public final class Configuration {
 
     public void write(String key, String value) {
         runtimeConfig.put(key, value);
-    }
-
-    public void write(ConfigKey key, String value) {
-        runtimeConfig.put(enumToKey(key), value);
     }
 }

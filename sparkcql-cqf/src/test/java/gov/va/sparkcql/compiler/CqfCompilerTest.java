@@ -1,8 +1,6 @@
 package gov.va.sparkcql.compiler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -11,10 +9,9 @@ import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opencds.cqf.cql.engine.execution.CqlEngine;
 
-import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.repository.CqlSourceFileRepository;
+import gov.va.sparkcql.repository.MutableFileRepositoryConfiguration;
 
 public class CqfCompilerTest {
 
@@ -22,7 +19,9 @@ public class CqfCompilerTest {
 
     @BeforeEach
     public void setup() {
-        compiler = new CqfCompiler();
+        compiler = new CqfCompiler(
+            new CqlSourceFileRepository(
+                new MutableFileRepositoryConfiguration("./src/test/resources/cql", "cql")));
     }
 
     @Test
@@ -67,16 +66,9 @@ public class CqfCompilerTest {
 
     @Test
     public void should_allow_file_repository_loading() {
-        var fileCompiler = new CqfCompiler(new CqlSourceFileRepository("./src/test/resources/cql"));
-        var output = fileCompiler.compile(List.of(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
+        // Compiling by ID will force use of the CqlSourceFileRepository.
+        var output = compiler.compile(List.of(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
         assertLibraries(1, output);
-    }
-
-    @Test
-    public void should_be_service_creatable() {
-        var runtimeCompiler = ServiceContext.createOne(CompilerFactory.class).create();
-        assertNotNull(runtimeCompiler);
-        assertTrue(runtimeCompiler.getClass() == CqfCompiler.class);
     }
 
     private void assertLibraries(int expectedCount, List<Library> output) {

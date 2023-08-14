@@ -13,5 +13,5 @@ import gov.va.sparkcql.model.Model;
 
 public interface Executor extends Serializable {
     
-    public Dataset<EvaluationResult> execute(LibraryCollection libraryCollection, Plan plan, List<Model> models, Dataset<Row> clinicalDs, Dataset<Row> terminologyDs);
+    public Dataset<EvaluationResult> execute(LibraryCollection libraryCollection, Plan plan, List<Model> models, Engine engine, Dataset<Row> clinicalDs, Dataset<Row> terminologyDs);
 }

@@ -3,7 +3,6 @@ package gov.va.sparkcql.planner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.common.di.ServiceContext;
 import gov.va.sparkcql.common.io.Resources;
 import gov.va.sparkcql.entity.Plan;
 
@@ -26,7 +25,7 @@ public class PlannerTest {
         var libraryContents = Resources.read("sample/sample-library.json");
         var reader = new ElmJsonLibraryReader();
         this.sampleLibrary = reader.read(libraryContents);
-        var planner = ServiceContext.createOne(Planner.class);
+        var planner = new DefaultPlanner();
         this.plan = planner.plan(List.of(sampleLibrary));
     }
 

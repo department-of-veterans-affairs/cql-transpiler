@@ -24,9 +24,6 @@ public class CqfCompiler implements Compiler, LibrarySourceProvider {
     protected List<CqlSource> inScopeCqlSources;
     protected CqlSourceRepository cqlSourceRepository;
 
-    public CqfCompiler() {
-    }
-    
     public CqfCompiler(CqlSourceRepository cqlSourceRepository) {
         this.cqlSourceRepository = cqlSourceRepository;
     }
