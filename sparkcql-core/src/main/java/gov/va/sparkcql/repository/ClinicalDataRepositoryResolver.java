@@ -4,10 +4,13 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import com.google.inject.Inject;
+
 public class ClinicalDataRepositoryResolver {
 
     private Set<ClinicalDataRepository<?>> repos;
 
+    @Inject
     public ClinicalDataRepositoryResolver(Set<ClinicalDataRepository<?>> repositories) {
         this.repos = repositories;
     }

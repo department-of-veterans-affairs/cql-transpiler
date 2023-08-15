@@ -33,15 +33,13 @@ public class Plan implements Serializable {
     }
 
     // The ELM does not implement the Serialization interface so we must provide manual serialization.
-	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException
-	{
+	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
         String json = (String)input.readObject();
         var plan = ElmJsonMapper.getMapper().readValue(json, Plan.class);
         this.retrievalOperations = plan.retrievalOperations;
 	}
 
-	private void writeObject(ObjectOutputStream output) throws IOException
-	{
+	private void writeObject(ObjectOutputStream output) throws IOException {
         var json = ElmJsonMapper.getMapper().writeValueAsString(this);
         output.writeObject(json);
 	}

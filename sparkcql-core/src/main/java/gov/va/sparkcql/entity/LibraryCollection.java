@@ -22,8 +22,7 @@ public class LibraryCollection implements List<Library>, Serializable {
     }
 
     // The ELM does not implement the Serialization interface so we must provide manual serialization.
-	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException
-	{
+	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
         // Read the length written during serialization.
         var size = input.readInt();
         // Use the ELM mapper to deserialize back into a list of Libraries.
@@ -33,8 +32,7 @@ public class LibraryCollection implements List<Library>, Serializable {
         }
 	}
 
-	private void writeObject(ObjectOutputStream output) throws IOException
-	{
+	private void writeObject(ObjectOutputStream output) throws IOException {
         // Write the length so we know how many items to read during deserialization.
         output.writeInt(this.libraries.size());
         // Use the ELM mapper to serialize a list of Libraries.

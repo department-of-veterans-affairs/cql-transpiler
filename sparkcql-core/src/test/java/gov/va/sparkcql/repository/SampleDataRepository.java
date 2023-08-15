@@ -21,11 +21,6 @@ public abstract class SampleDataRepository<T> extends SparkClinicalDataRepositor
         super(sparkFactory);
     }
 
-    @Override
-    public QName getEntityDataType() {
-        return new QName("http://gov.va/sparkcql/sample", getEntityClass().getSimpleName());
-    }
-
     private Dataset<Row> getRawData() {
         var json = List.of(Resources.read(getJsonDataPath()));
         var jsonDs = spark.createDataset(json, Encoders.STRING());

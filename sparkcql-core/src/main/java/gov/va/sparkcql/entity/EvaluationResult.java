@@ -1,38 +1,7 @@
 package gov.va.sparkcql.entity;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
-public class EvaluationResult implements Serializable {
-
-    private List<String> evaluatedResources;
-
-    private Map<String, ?> expressionResult;
-
-    public List<String> getEvaluatedResources() {
-        return evaluatedResources;
-    }
-
-    public void setEvaluatedResources(List<String> evaluatedResources) {
-        this.evaluatedResources = evaluatedResources;
-    }
-
-    public EvaluationResult withEvaluatedResources(List<String> evaluatedResources) {
-        this.evaluatedResources = evaluatedResources;
-        return this;
-    }
-
-    public Map<String, ?> getExpressionResult() {
-        return expressionResult;
-    }
-
-    public void setExpressionResult(Map<String, ?> expressionResult) {
-        this.expressionResult = expressionResult;
-    }
-
-    public EvaluationResult withExpressionResult(Map<String, ?> expressionResult) {
-        this.expressionResult = expressionResult;
-        return this;
-    }
+public class EvaluationResult extends GenericResult<Dataset<Row>> {
 }

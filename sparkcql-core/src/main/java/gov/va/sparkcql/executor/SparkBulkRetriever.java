@@ -11,15 +11,16 @@ import com.google.inject.Inject;
 import static org.apache.spark.sql.functions.collect_list;
 
 import gov.va.sparkcql.entity.Plan;
-import gov.va.sparkcql.repository.ClinicalDataRepositoryFactory;
+import gov.va.sparkcql.repository.ClinicalDataRepositoryResolver;
 
 public class SparkBulkRetriever implements BulkRetriever {
 
-    ClinicalDataRepositoryFactory repositoryFactory;
+    private ClinicalDataRepositoryResolver repositoryResolver;
+    private String CONTEXT_CORRELATION_ID = "contextCorrelationId";
 
     @Inject
-    public SparkBulkRetriever(ClinicalDataRepositoryFactory repositoryFactory) {
-        this.repositoryFactory = repositoryFactory;
+    public SparkBulkRetriever(ClinicalDataRepositoryResolver repositoryResolver) {
+        this.repositoryResolver = repositoryResolver;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class SparkBulkRetriever implements BulkRetriever {
         // links back to retrieve definition which required it.
         var acquired = plan.getRetrievalOperations().stream()
             .collect(Collectors.toMap(r -> r, r -> {
-                var repo = repositoryFactory.create(r.getRetrieve().getDataType());
+                var repo = repositoryResolver.resolveType(r.getRetrieve().getDataType());
                 return repo.acquire();
             }));
         
@@ -69,7 +70,8 @@ public class SparkBulkRetriever implements BulkRetriever {
         var combined = grouped.stream().reduce((left, right) -> {
             var j = left
                 .join(right, left.col(contextColumn).equalTo(right.col(contextColumn)), "inner")
-                .drop(right.col(contextColumn));
+                .drop(right.col(contextColumn))
+                .withColumnRenamed(contextColumn, CONTEXT_CORRELATION_ID);      // give a a generalized name
             return j;
         }).get();
 

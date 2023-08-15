@@ -1,5 +1,7 @@
 package gov.va.sparkcql.repository;
 
+import javax.xml.namespace.QName;
+
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.common.spark.SparkFactory;
@@ -15,5 +17,10 @@ public class SamplePatientDataRepository extends SampleDataRepository<SampleEnti
     @Override
     protected String getJsonDataPath() {
         return "sample/sample-data-patient.json";
+    }
+
+    @Override
+    public QName getEntityDataType() {
+        return new QName("http://gov.va/sparkcql/sample", "Patient");
     }
 }

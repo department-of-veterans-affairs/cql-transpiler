@@ -8,9 +8,9 @@ import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ValueSetDef;
 
-import gov.va.sparkcql.entity.EvaluationResult;
+import gov.va.sparkcql.entity.EngineResult;
 
 public interface Engine extends Serializable {
 
-    public EvaluationResult evaluate(List<Library> libraries, Map<Retrieve, Object> clinicalData, Map<ValueSetDef, Object> terminologyData);
+    public EngineResult evaluate(String contextCorrelationId, List<Library> libraries, Map<Retrieve, List<Object>> clinicalData, Map<ValueSetDef, List<Object>> terminologyData);
 }
