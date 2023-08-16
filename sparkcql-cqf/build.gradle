@@ -5,6 +5,8 @@ plugins {
 dependencies {
     implementation project(':sparkcql-core')
 
+    implementation "com.google.inject:guice:${guiceVersion}"
+
     implementation "info.cqframework:cql:${cqfVersion}"
     implementation "info.cqframework:cql-to-elm:${cqfVersion}"
     implementation "info.cqframework:elm:${cqfVersion}"

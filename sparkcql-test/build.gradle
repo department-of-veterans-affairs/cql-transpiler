@@ -1,9 +1,10 @@
 dependencies {
     testImplementation project(":sparkcql-cqf")
-
     testImplementation project(":sparkcql-core")
     // testImplementation project(":sparkcql-fhir")
     // testImplementation project(":sparkcql-synthetic")
+
+    testImplementation "com.google.inject:guice:${guiceVersion}"
 
     testImplementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
     testImplementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"

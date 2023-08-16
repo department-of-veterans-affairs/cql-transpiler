@@ -1,0 +1,300 @@
+[
+    {
+        "resourceType": "Encounter",
+        "id": "f78d73fc-9f9b-46d5-93aa-f5db86ba914c",
+        "status": "finished",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "EMER"
+        },
+        "type": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "410429000",
+                        "display": "Cardiac Arrest"
+                    }
+                ],
+                "text": "Cardiac Arrest"
+            }
+        ],
+        "subject": {
+            "reference": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+            "display": "Mr. Aaron697 Brekke496"
+        },
+        "participant": [
+            {
+                "individual": {
+                    "reference": "urn:uuid:0000016d-3a85-4cca-0000-000000000122",
+                    "display": "Dr. Bennett146 Breitenberg711"
+                }
+            }
+        ],
+        "period": {
+            "start": "1965-11-15T06:22:41-05:00",
+            "end": "1965-11-15T08:07:41-05:00"
+        },
+        "serviceProvider": {
+            "reference": "urn:uuid:8ad64ecf-c817-3753-bee7-006a8e662e06",
+            "display": "MORTON HOSPITAL"
+        }
+    },
+    {
+        "resourceType": "Encounter",
+        "id": "83803f0a-38cf-4a0f-bdf4-b1c7cd857ffd",
+        "status": "finished",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "AMB"
+        },
+        "type": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "162673000",
+                        "display": "General examination of patient (procedure)"
+                    }
+                ],
+                "text": "General examination of patient (procedure)"
+            }
+        ],
+        "subject": {
+            "reference": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+            "display": "Mr. Aaron697 Brekke496"
+        },
+        "participant": [
+            {
+                "individual": {
+                    "reference": "urn:uuid:0000016d-3a85-4cca-0000-00000000b4d2",
+                    "display": "Dr. Mason910 Quitzon246"
+                }
+            }
+        ],
+        "period": {
+            "start": "1977-02-21T06:22:41-05:00",
+            "end": "1977-02-21T06:52:41-05:00"
+        },
+        "serviceProvider": {
+            "reference": "urn:uuid:78f24216-8805-3436-ae9f-53aa1cb276b7",
+            "display": "PCP116891"
+        }
+    },
+    {
+        "resourceType": "Encounter",
+        "id": "6932cd4f-fa1a-4e81-b3ce-fc181847a305",
+        "status": "finished",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "AMB"
+        },
+        "type": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "162673000",
+                        "display": "General examination of patient (procedure)"
+                    }
+                ],
+                "text": "General examination of patient (procedure)"
+            }
+        ],
+        "subject": {
+            "reference": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+            "display": "Mr. Aaron697 Brekke496"
+        },
+        "participant": [
+            {
+                "individual": {
+                    "reference": "urn:uuid:0000016d-3a85-4cca-0000-00000000b4d2",
+                    "display": "Dr. Mason910 Quitzon246"
+                }
+            }
+        ],
+        "period": {
+            "start": "1987-12-21T06:22:41-05:00",
+            "end": "1987-12-21T06:37:41-05:00"
+        },
+        "serviceProvider": {
+            "reference": "urn:uuid:78f24216-8805-3436-ae9f-53aa1cb276b7",
+            "display": "PCP116891"
+        }
+    },
+    {
+        "resourceType": "Encounter",
+        "id": "b1b4f643-b677-4099-bc1c-f51916d22b73",
+        "status": "finished",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "AMB"
+        },
+        "type": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "185349003",
+                        "display": "Encounter for check up (procedure)"
+                    }
+                ],
+                "text": "Encounter for check up (procedure)"
+            }
+        ],
+        "subject": {
+            "reference": "urn:uuid:8d0d9fec-0faf-4990-a37e-27c7b7156f04",
+            "display": "Mr. Truman805 Durgan499"
+        },
+        "participant": [
+            {
+                "individual": {
+                    "reference": "urn:uuid:0000016d-3a85-4cca-0000-000000000190",
+                    "display": "Dr. Stephaine613 Hoeger474"
+                }
+            }
+        ],
+        "period": {
+            "start": "1989-10-04T20:19:27-04:00",
+            "end": "2014-08-20T20:19:27-04:00"
+        },
+        "serviceProvider": {
+            "reference": "urn:uuid:ac8356a5-78f8-3a63-8a1e-59e832fd54e7",
+            "display": "NASHOBA VALLEY MEDICAL CENTER"
+        }
+    },
+    {
+        "resourceType": "Encounter",
+        "id": "bb1fa02b-a7f4-42a0-ac69-d5b5c7db487e",
+        "status": "finished",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "AMB"
+        },
+        "type": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "162673000",
+                        "display": "General examination of patient (procedure)"
+                    }
+                ],
+                "text": "General examination of patient (procedure)"
+            }
+        ],
+        "subject": {
+            "reference": "urn:uuid:8d0d9fec-0faf-4990-a37e-27c7b7156f04",
+            "display": "Mr. Truman805 Durgan499"
+        },
+        "participant": [
+            {
+                "individual": {
+                    "reference": "urn:uuid:0000016d-3a85-4cca-0000-000000005ece",
+                    "display": "Dr. Cristina921 Lozano749"
+                }
+            }
+        ],
+        "period": {
+            "start": "2007-04-04T20:19:27-04:00",
+            "end": "2007-04-04T20:49:27-04:00"
+        },
+        "serviceProvider": {
+            "reference": "urn:uuid:6f8ad572-8023-3796-8582-e3ebc6113fb7",
+            "display": "PCP36211"
+        }
+    },
+    {
+        "resourceType": "Encounter",
+        "id": "dab0edd8-066f-4dc9-8d37-ec2a7a9c6768",
+        "status": "finished",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "AMB"
+        },
+        "type": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "185345009",
+                        "display": "Encounter for symptom"
+                    }
+                ],
+                "text": "Encounter for symptom"
+            }
+        ],
+        "subject": {
+            "reference": "urn:uuid:8d0d9fec-0faf-4990-a37e-27c7b7156f04",
+            "display": "Mr. Truman805 Durgan499"
+        },
+        "participant": [
+            {
+                "individual": {
+                    "reference": "urn:uuid:0000016d-3a85-4cca-0000-000000000190",
+                    "display": "Dr. Stephaine613 Hoeger474"
+                }
+            }
+        ],
+        "period": {
+            "start": "2010-08-30T20:19:27-04:00",
+            "end": "2010-08-30T20:34:27-04:00"
+        },
+        "reasonCode": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "195662009",
+                        "display": "Acute viral pharyngitis (disorder)"
+                    }
+                ]
+            }
+        ],
+        "serviceProvider": {
+            "reference": "urn:uuid:ac8356a5-78f8-3a63-8a1e-59e832fd54e7",
+            "display": "NASHOBA VALLEY MEDICAL CENTER"
+        }
+    },
+    {
+        "resourceType": "Encounter",
+        "id": "686314c4-be2c-4edf-b4af-b8fcd4535a1d",
+        "status": "finished",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "AMB"
+        },
+        "type": [
+            {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "162673000",
+                        "display": "General examination of patient (procedure)"
+                    }
+                ],
+                "text": "General examination of patient (procedure)"
+            }
+        ],
+        "subject": {
+            "reference": "urn:uuid:8d0d9fec-0faf-4990-a37e-27c7b7156f04",
+            "display": "Mr. Truman805 Durgan499"
+        },
+        "participant": [
+            {
+                "individual": {
+                    "reference": "urn:uuid:0000016d-3a85-4cca-0000-000000005ece",
+                    "display": "Dr. Cristina921 Lozano749"
+                }
+            }
+        ],
+        "period": {
+            "start": "2011-04-13T20:19:27-04:00",
+            "end": "2011-04-13T20:49:27-04:00"
+        },
+        "serviceProvider": {
+            "reference": "urn:uuid:6f8ad572-8023-3796-8582-e3ebc6113fb7",
+            "display": "PCP36211"
+        }
+    }
+]

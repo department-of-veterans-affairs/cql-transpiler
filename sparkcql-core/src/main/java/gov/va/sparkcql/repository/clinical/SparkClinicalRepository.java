@@ -33,19 +33,15 @@ public abstract class SparkClinicalRepository<T> implements ClinicalRepository<T
 
     protected abstract StructType getCanonicalSchema();
 
-    protected abstract Dataset<Row> bind();
-
     protected void validateSchema(StructType schema) {
         if (!schema.toDDL().equals(getCanonicalSchema().toDDL())) {
-            Log.warn(schema.toDDL());
-            Log.warn(getCanonicalSchema().toDDL());
-            throw new RuntimeException("Invalid schema for ClinicalDataRepository<" + getEntityClass().getSimpleName() + ">.");
+            Log.warn("Actual and Expected schemas for type " + getEntityDataType().getName() + " differ.");
         }
     }
 
     @Override
     public Dataset<Row> acquire() {
-        var ds = bind();
+        var ds = spark.table(tableResolutionStrategy.resolveTableBinding(getEntityDataType()));
         validateSchema(ds.schema());
         return ds;
     }

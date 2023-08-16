@@ -1,7 +1,11 @@
 dependencies {
     implementation project(":sparkcql-core")
     implementation project(":sparkcql-fhir")
+
+    implementation "com.google.inject:guice:${guiceVersion}"
+
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
     implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+    
     implementation "info.cqframework:elm:${cqfVersion}"
 }

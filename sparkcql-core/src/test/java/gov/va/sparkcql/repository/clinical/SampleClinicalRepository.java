@@ -27,14 +27,15 @@ public abstract class SampleClinicalRepository<T> extends SparkClinicalRepositor
     }
 
     @Override
-    protected Dataset<Row> bind() {
+    public Dataset<Row> acquire() {
         var json = List.of(Resources.read(getJsonDataPath()));
         var jsonDs = spark.createDataset(json, Encoders.STRING());
         var rawDs = spark.read().json(jsonDs);
         var ds = spark.read().schema(getCanonicalSchema()).json(rawDs.toJSON());
+        validateSchema(ds.schema());
         return ds;
     }
-    
+
     @Override
     protected StructType getCanonicalSchema() {
         var rawDs = getRawData();

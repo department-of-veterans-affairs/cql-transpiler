@@ -11,7 +11,7 @@ import gov.va.sparkcql.configuration.LocalSparkFactory;
 import gov.va.sparkcql.domain.SampleDomain;
 import gov.va.sparkcql.repository.resolution.NoneResolutionStrategy;
 
-public class ClinicalDataRepositoryTest extends AbstractTest {
+public class ClinicalRepositoryTest extends AbstractTest {
 
     @Test
     public void should_read_sample_repository_untyped() {
