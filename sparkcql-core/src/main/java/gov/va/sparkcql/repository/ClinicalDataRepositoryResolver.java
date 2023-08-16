@@ -2,9 +2,9 @@ package gov.va.sparkcql.repository;
 
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import com.google.inject.Inject;
+
+import gov.va.sparkcql.entity.DataType;
 
 public class ClinicalDataRepositoryResolver {
 
@@ -22,7 +22,7 @@ public class ClinicalDataRepositoryResolver {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> ClinicalDataRepository<T> resolveType(QName dataType) {
+    public <T> ClinicalDataRepository<T> resolveType(DataType dataType) {
         var repo = repos.stream().filter(r -> r.getEntityDataType().equals(dataType));
         return (ClinicalDataRepository<T>)repo.findFirst().get();
     }

@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import static org.apache.spark.sql.functions.collect_list;
 
+import gov.va.sparkcql.entity.DataType;
 import gov.va.sparkcql.entity.Plan;
 import gov.va.sparkcql.repository.ClinicalDataRepositoryResolver;
 
@@ -30,7 +31,7 @@ public class SparkBulkRetriever implements BulkRetriever {
         // links back to retrieve definition which required it.
         var acquired = plan.getRetrievalOperations().stream()
             .collect(Collectors.toMap(r -> r, r -> {
-                var repo = repositoryResolver.resolveType(r.getRetrieve().getDataType());
+                var repo = repositoryResolver.resolveType(new DataType(r.getRetrieve().getDataType()));
                 return repo.acquire();
             }));
         

@@ -13,9 +13,10 @@ import com.google.inject.Inject;
 
 import org.apache.spark.api.java.function.MapPartitionsFunction;
 
+import gov.va.sparkcql.entity.DataType;
+import gov.va.sparkcql.entity.DataTypedList;
 import gov.va.sparkcql.entity.ExecutionResult;
 import gov.va.sparkcql.entity.ExpressionReference;
-import gov.va.sparkcql.entity.GenericTypeSpecifiedElement;
 import gov.va.sparkcql.entity.LibraryCollection;
 import gov.va.sparkcql.entity.Plan;
 import gov.va.sparkcql.model.ModelAdapterResolver;
@@ -81,7 +82,7 @@ public class DefaultExecutor implements Executor {
                         return dataCol.stream().map(item -> {
                             var dataRow = (Row)item;
                             var dataJson = dataRow.json();
-                            var dataType = r.getRetrieve().getDataType();
+                            var dataType = new DataType(r.getRetrieve().getDataType());
                             var modelAdapter = modelAdapterResolver.resolveNamespace(dataType);
                             var instance = modelAdapter.deserialize(dataType, dataJson);
                             return instance;
@@ -100,31 +101,32 @@ public class DefaultExecutor implements Executor {
             // Pack up evaluated resources (resources used somewhere in the calculation) and
             // expression results (output of a CQL Expression Def) and return it.
             
-            List<GenericTypeSpecifiedElement<String>> evaluatedResults = List.of();
+            List<DataTypedList<String>> evaluatedResults = List.of();
             if (engineResult.getEvaluatedResources() != null) {
                 evaluatedResults = engineResult.getEvaluatedResources().stream().map(t -> {
-                    var modelAdapter = modelAdapterResolver.resolveType(t.getResultTypeName());
-                    return new GenericTypeSpecifiedElement<String>()
-                        .withResultTypeName(t.getResultTypeName())
-                        .withResultValue(modelAdapter.serialize(t.getResultValue()));
+                    var modelAdapter = modelAdapterResolver.resolveType(t.getDataType());
+                    var valuesSerialized = t.getValues().stream().map(v -> modelAdapter.serialize(v)).toList();
+                    return new DataTypedList<String>()
+                        .withDataType(t.getDataType())
+                        .withValues(valuesSerialized);
                 }).toList();
             }
 
-            Map<ExpressionReference, GenericTypeSpecifiedElement<String>> expressionResults = Map.of();
+            Map<ExpressionReference, DataTypedList<String>> expressionResults = Map.of();
             if (engineResult.getExpressionResults() != null) {
                 expressionResults = engineResult.getExpressionResults().entrySet().stream().map(t -> {
-                    var modelAdapter = modelAdapterResolver.resolveType(t.getValue().getResultTypeName());
-                    var e = new GenericTypeSpecifiedElement<String>()
-                        .withResultTypeName(t.getValue().getResultTypeName())
-                        .withResultValue(modelAdapter.serialize(t.getValue().getResultValue()));
+                    var modelAdapter = modelAdapterResolver.resolveType(t.getValue().getDataType());
+                    var valuesSerialized = t.getValue().getValues().stream().map(v -> modelAdapter.serialize(v)).toList();
+                    var e = new DataTypedList<String>()
+                        .withDataType(t.getValue().getDataType())
+                        .withValues(valuesSerialized);
                     return Map.entry(t.getKey(), e);
                 }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             }
-            
-            var executionResult = new ExecutionResult();
-            executionResult.setEvaluatedResources(evaluatedResults);
-            executionResult.setExpressionResults(expressionResults);
-            return executionResult;
+
+            return new ExecutionResult()
+                .withEvaluatedResources(evaluatedResults)
+                .withExpressionResults(expressionResults);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }        

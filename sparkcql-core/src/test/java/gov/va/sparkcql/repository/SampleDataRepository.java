@@ -2,8 +2,6 @@ package gov.va.sparkcql.repository;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;

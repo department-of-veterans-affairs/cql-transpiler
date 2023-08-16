@@ -1,10 +1,9 @@
 package gov.va.sparkcql.repository;
 
-import javax.xml.namespace.QName;
-
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.common.spark.SparkFactory;
+import gov.va.sparkcql.entity.DataType;
 import gov.va.sparkcql.entity.SampleEntity;
 
 public class SamplePatientDataRepository extends SampleDataRepository<SampleEntity> {
@@ -20,7 +19,9 @@ public class SamplePatientDataRepository extends SampleDataRepository<SampleEnti
     }
 
     @Override
-    public QName getEntityDataType() {
-        return new QName("http://gov.va/sparkcql/sample", "Patient");
+    public DataType getEntityDataType() {
+        return new DataType()
+            .withNamespaceUri("http://va.gov/sparkcql/sample")
+            .withName("Patient");
     }
 }

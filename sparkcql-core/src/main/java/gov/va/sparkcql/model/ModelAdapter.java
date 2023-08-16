@@ -1,14 +1,14 @@
 package gov.va.sparkcql.model;
 
-import javax.xml.namespace.QName;
+import gov.va.sparkcql.entity.DataType;
 
 public interface ModelAdapter {
 
     public String getNamespaceUri();
 
-    public Object deserialize(QName dataType, String json);
+    public Object deserialize(DataType dataType, String json);
 
     public String serialize(Object entity);
 
-    public Boolean isTypeDefined(QName dataType);
+    public Boolean isTypeDefined(DataType dataType);
 }

@@ -3,9 +3,9 @@ package gov.va.sparkcql.model;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import com.google.inject.Inject;
+
+import gov.va.sparkcql.entity.DataType;
 
 public class ModelAdapterResolver implements Serializable {
     
@@ -21,11 +21,11 @@ public class ModelAdapterResolver implements Serializable {
         return adapter.findFirst().get();
     }
 
-    public <T> ModelAdapter resolveNamespace(QName dataType) {
-        return resolveNamespace(dataType.getNamespaceURI());
+    public <T> ModelAdapter resolveNamespace(DataType dataType) {
+        return resolveNamespace(dataType.getNamespaceUri());
     }
 
-    public <T> ModelAdapter resolveType(QName dataType) {
+    public <T> ModelAdapter resolveType(DataType dataType) {
         var adapter = modelAdapters.stream().filter(a -> a.isTypeDefined(dataType));
         return adapter.findFirst().get();
     }

@@ -1,10 +1,9 @@
 package gov.va.sparkcql.entity;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class GenericResult<T> implements Serializable {
+public class GenericResults<T, S extends GenericResults<T, S>> {
 
     private List<T> evaluatedResources;
 
@@ -18,9 +17,10 @@ public class GenericResult<T> implements Serializable {
         this.evaluatedResources = evaluatedResources;
     }
 
-    public GenericResult<T> withEvaluatedResources(List<T> evaluatedResources) {
+    @SuppressWarnings("unchecked")
+    public S withEvaluatedResources(List<T> evaluatedResources) {
         this.evaluatedResources = evaluatedResources;
-        return this;
+        return (S)this;
     }
 
     public Map<ExpressionReference, T> getExpressionResults() {
@@ -31,8 +31,9 @@ public class GenericResult<T> implements Serializable {
         this.expressionResults = expressionResults;
     }
 
-    public GenericResult<T> withExpressionResults(Map<ExpressionReference, T> expressionResults) {
+    @SuppressWarnings("unchecked")
+    public S withExpressionResults(Map<ExpressionReference, T> expressionResults) {
         this.expressionResults = expressionResults;
-        return this;
+        return (S)this;
     }
 }
