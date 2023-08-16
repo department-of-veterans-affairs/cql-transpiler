@@ -1,6 +1,6 @@
 package gov.va.sparkcql.domain;
 
-public class SampleEntity {
+public class SampleDomain {
 
     private String name;
 

@@ -11,14 +11,17 @@ import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.log.Log;
+import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
 
 public abstract class SparkClinicalRepository<T> implements ClinicalRepository<T> {
 
     protected SparkSession spark;
+    protected TableResolutionStrategy tableResolutionStrategy;
 
     @Inject
-    public SparkClinicalRepository(SparkFactory sparkFactory) {
+    public SparkClinicalRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         this.spark = sparkFactory.create();
+        this.tableResolutionStrategy = tableResolutionStrategy;
     }
 
     @Override
@@ -30,6 +33,8 @@ public abstract class SparkClinicalRepository<T> implements ClinicalRepository<T
 
     protected abstract StructType getCanonicalSchema();
 
+    protected abstract Dataset<Row> bind();
+
     protected void validateSchema(StructType schema) {
         if (!schema.toDDL().equals(getCanonicalSchema().toDDL())) {
             Log.warn(schema.toDDL());
@@ -40,7 +45,7 @@ public abstract class SparkClinicalRepository<T> implements ClinicalRepository<T
 
     @Override
     public Dataset<Row> acquire() {
-        var ds = acquire();
+        var ds = bind();
         validateSchema(ds.schema());
         return ds;
     }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gov.va.sparkcql.domain.SampleEntity;
+import gov.va.sparkcql.domain.SampleDomain;
 import gov.va.sparkcql.domain.SamplePatient;
 import gov.va.sparkcql.service.adapter.ModelAdapter;
 import gov.va.sparkcql.types.DataType;
@@ -25,7 +25,7 @@ public class SampleModel implements ModelAdapter, Serializable {
                     return m.readValue(json, SamplePatient.class);
             
                 case "{http://va.gov/sparkcql/sample}Entity": 
-                    return m.readValue(json, SampleEntity.class);	
+                    return m.readValue(json, SampleDomain.class);	
                 
                 default: 
                     return null;

@@ -1,4 +1,4 @@
-package gov.va.sparkcql.compiler;
+package gov.va.sparkcql.service.compiler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

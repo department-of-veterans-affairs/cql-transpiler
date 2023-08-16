@@ -8,8 +8,10 @@ import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.repository.clinical.ClinicalRepository;
-import gov.va.sparkcql.repository.clinical.SampleEntityDataRepository;
-import gov.va.sparkcql.repository.clinical.SamplePatientDataRepository;
+import gov.va.sparkcql.repository.clinical.SampleDomainClinicalRepository;
+import gov.va.sparkcql.repository.clinical.SamplePatientClinicalRepository;
+import gov.va.sparkcql.repository.resolution.NoneResolutionStrategy;
+import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.service.adapter.ModelAdapter;
 import gov.va.sparkcql.service.adapter.SampleModel;
 import gov.va.sparkcql.service.planner.DefaultPlanner;
@@ -29,10 +31,11 @@ public class ExecutorTest extends AbstractTest {
     protected void configure() {
         super.configure();
         var clinicalDataBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<ClinicalRepository<?>>() {});
-        clinicalDataBinder.addBinding().to(SamplePatientDataRepository.class);
-        clinicalDataBinder.addBinding().to(SampleEntityDataRepository.class);
+        clinicalDataBinder.addBinding().to(SamplePatientClinicalRepository.class);
+        clinicalDataBinder.addBinding().to(SampleDomainClinicalRepository.class);
         var modelAdapterBinder = Multibinder.newSetBinder(binder(), ModelAdapter.class);
         modelAdapterBinder.addBinding().to(SampleModel.class);
+        bind(TableResolutionStrategy.class).to(NoneResolutionStrategy.class);
         bind(BulkRetriever.class).to(SparkBulkRetriever.class);
         bind(Engine.class).to(SampleEngine.class);
         bind(Executor.class).to(DefaultExecutor.class);

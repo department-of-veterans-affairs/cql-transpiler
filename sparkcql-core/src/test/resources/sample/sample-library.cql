@@ -12,5 +12,5 @@ define "Sample Definition A":
   ["Entity": "Sample Valueset A"] E
 
 // define "Sample Definition B":
-// ["SampleEntity": "Sample Valueset A"] E
+// ["SampleDomain": "Sample Valueset A"] E
 //   where E.name = "sample name 2"

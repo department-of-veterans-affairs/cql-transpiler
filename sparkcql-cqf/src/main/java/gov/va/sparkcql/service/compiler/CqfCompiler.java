@@ -1,4 +1,4 @@
-package gov.va.sparkcql.compiler;
+package gov.va.sparkcql.service.compiler;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -18,8 +18,6 @@ import org.hl7.elm.r1.VersionedIdentifier;
 
 import gov.va.sparkcql.domain.CqlSource;
 import gov.va.sparkcql.repository.cql.CqlSourceRepository;
-import gov.va.sparkcql.service.compiler.Compiler;
-import gov.va.sparkcql.service.compiler.CqlParser;
 
 public class CqfCompiler implements Compiler, LibrarySourceProvider {
 

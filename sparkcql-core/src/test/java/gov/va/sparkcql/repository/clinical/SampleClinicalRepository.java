@@ -11,19 +11,28 @@ import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.io.Resources;
-import gov.va.sparkcql.repository.clinical.SparkClinicalRepository;
+import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
 
-public abstract class SampleDataRepository<T> extends SparkClinicalRepository<T> {
+public abstract class SampleClinicalRepository<T> extends SparkClinicalRepository<T> {
 
     @Inject
-    public SampleDataRepository(SparkFactory sparkFactory) {
-        super(sparkFactory);
+    public SampleClinicalRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+        super(sparkFactory, tableResolutionStrategy);
     }
 
     private Dataset<Row> getRawData() {
         var json = List.of(Resources.read(getJsonDataPath()));
         var jsonDs = spark.createDataset(json, Encoders.STRING());
         return spark.read().json(jsonDs);
+    }
+
+    @Override
+    protected Dataset<Row> bind() {
+        var json = List.of(Resources.read(getJsonDataPath()));
+        var jsonDs = spark.createDataset(json, Encoders.STRING());
+        var rawDs = spark.read().json(jsonDs);
+        var ds = spark.read().schema(getCanonicalSchema()).json(rawDs.toJSON());
+        return ds;
     }
     
     @Override
@@ -33,13 +42,6 @@ public abstract class SampleDataRepository<T> extends SparkClinicalRepository<T>
         ddl = ddl.replace("primaryStartDate STRING", "primaryStartDate TIMESTAMP");
         ddl = ddl.replace("primaryEndDate STRING", "primaryEndDate TIMESTAMP");
         return StructType.fromDDL(ddl);
-    }
-
-    @Override
-    public Dataset<Row> acquire() {
-        var rawDs = getRawData();
-        var ds = spark.read().schema(getCanonicalSchema()).json(rawDs.toJSON());
-        return ds;        
     }
 
     protected abstract String getJsonDataPath();

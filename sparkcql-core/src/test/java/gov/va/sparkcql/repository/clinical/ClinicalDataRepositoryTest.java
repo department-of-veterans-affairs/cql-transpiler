@@ -8,13 +8,14 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.configuration.LocalSparkFactory;
-import gov.va.sparkcql.domain.SampleEntity;
+import gov.va.sparkcql.domain.SampleDomain;
+import gov.va.sparkcql.repository.resolution.NoneResolutionStrategy;
 
 public class ClinicalDataRepositoryTest extends AbstractTest {
 
     @Test
     public void should_read_sample_repository_untyped() {
-        var repo = new SampleEntityDataRepository(new LocalSparkFactory());
+        var repo = new SampleDomainClinicalRepository(new LocalSparkFactory(), new NoneResolutionStrategy());
         var ds = repo.acquire();
         assertTrue(ds.count() == 4);
         assertTrue(ds.first().getAs("dataType").equals("Entity"));
@@ -23,8 +24,8 @@ public class ClinicalDataRepositoryTest extends AbstractTest {
 
     @Test
     public void should_read_sample_repository_typed() {
-        var repo = new SampleEntityDataRepository(new LocalSparkFactory());
-        var ds = repo.acquire().select(col("data.*")).as(Encoders.bean(SampleEntity.class));
+        var repo = new SampleDomainClinicalRepository(new LocalSparkFactory(), new NoneResolutionStrategy());
+        var ds = repo.acquire().select(col("data.*")).as(Encoders.bean(SampleDomain.class));
         assertTrue(ds.first().getName().equals("sample name 1"));
     }
 }

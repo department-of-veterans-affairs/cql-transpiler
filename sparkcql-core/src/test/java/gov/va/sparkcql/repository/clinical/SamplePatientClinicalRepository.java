@@ -3,14 +3,15 @@ package gov.va.sparkcql.repository.clinical;
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.domain.SampleEntity;
+import gov.va.sparkcql.domain.SampleDomain;
+import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 
-public class SamplePatientDataRepository extends SampleDataRepository<SampleEntity> {
+public class SamplePatientClinicalRepository extends SampleClinicalRepository<SampleDomain> {
 
     @Inject
-    public SamplePatientDataRepository(SparkFactory sparkFactory) {
-        super(sparkFactory);
+    public SamplePatientClinicalRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+        super(sparkFactory, tableResolutionStrategy);
     }
 
     @Override
