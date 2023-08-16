@@ -1,9 +1,7 @@
-package gov.va.sparkcql.diagnostic;
+package gov.va.sparkcql.common.diagnostic;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-
-import gov.va.sparkcql.common.diagnostic.Stopwatch;
 
 public class StopwatchTest {
 

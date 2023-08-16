@@ -2,7 +2,7 @@ package gov.va.sparkcql.repository;
 
 import java.util.List;
 
-import gov.va.sparkcql.io.Resources;
+import gov.va.sparkcql.common.io.Resources;
 
 class SyntheaDataLoader {
 
