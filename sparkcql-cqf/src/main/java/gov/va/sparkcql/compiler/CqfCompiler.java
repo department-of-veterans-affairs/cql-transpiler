@@ -16,8 +16,10 @@ import org.fhir.ucum.UcumException;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 
-import gov.va.sparkcql.entity.CqlSource;
-import gov.va.sparkcql.repository.CqlSourceRepository;
+import gov.va.sparkcql.domain.CqlSource;
+import gov.va.sparkcql.repository.cql.CqlSourceRepository;
+import gov.va.sparkcql.service.compiler.Compiler;
+import gov.va.sparkcql.service.compiler.CqlParser;
 
 public class CqfCompiler implements Compiler, LibrarySourceProvider {
 

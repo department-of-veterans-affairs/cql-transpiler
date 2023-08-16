@@ -8,11 +8,11 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import gov.va.sparkcql.common.configuration.SystemConfiguration;
-import gov.va.sparkcql.compiler.Compiler;
-import gov.va.sparkcql.executor.BulkRetriever;
-import gov.va.sparkcql.executor.Executor;
-import gov.va.sparkcql.planner.Planner;
+import gov.va.sparkcql.configuration.SystemConfiguration;
+import gov.va.sparkcql.service.compiler.Compiler;
+import gov.va.sparkcql.service.executor.BulkRetriever;
+import gov.va.sparkcql.service.executor.Executor;
+import gov.va.sparkcql.service.planner.Planner;
 
 public class SparkCqlSession {
 

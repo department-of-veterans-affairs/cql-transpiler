@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.common.spark.LocalSparkFactory;
+import gov.va.sparkcql.configuration.LocalSparkFactory;
+import gov.va.sparkcql.service.compiler.CqlParser;
 
 public class CqlParserTest {
 

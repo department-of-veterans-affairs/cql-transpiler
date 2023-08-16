@@ -8,11 +8,11 @@ package gov.va.sparkcql.repository;
 
 // import org.apache.spark.sql.SparkSession;
 
-// import gov.va.sparkcql.common.configuration.Configuration;
-// import gov.va.sparkcql.common.log.Log;
+// import gov.va.sparkcql.configuration.Configuration;
+// import gov.va.sparkcql.log.Log;
 // import gov.va.sparkcql.model.CqlSource;
-// import gov.va.sparkcql.common.configuration.ComponentFactory;
-// import gov.va.sparkcql.common.configuration.ConfigKey;
+// import gov.va.sparkcql.configuration.ComponentFactory;
+// import gov.va.sparkcql.configuration.ConfigKey;
 
 // public abstract class BaseSparkRepository<K, T> implements Repository<K, T> {
 

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.SparkCqlSession;
-import gov.va.sparkcql.common.configuration.ConfigKey;
+import gov.va.sparkcql.configuration.ConfigKey;
 
 public class SimpleMeasureEvaluationTest {
 

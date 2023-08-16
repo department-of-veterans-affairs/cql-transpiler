@@ -9,7 +9,7 @@
 // import org.junit.jupiter.api.Test;
 
 // import gov.va.sparkcql.repository.SyntheticPopulationSize;
-// import gov.va.sparkcql.common.configuration.Configuration;
+// import gov.va.sparkcql.configuration.Configuration;
 // import gov.va.sparkcql.repository.SyntheaDataAdapterFactory;
 // import gov.va.sparkcql.repository.SyntheaSourceAdapter;
 
