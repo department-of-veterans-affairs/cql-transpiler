@@ -41,7 +41,7 @@ public class SparkBulkRetriever implements BulkRetriever {
             .collect(Collectors.toMap(r -> r.getKey(), r -> {
                 var retrieve = r.getKey().getRetrieve();
                 var ds = r.getValue();
-                var f = applyFilters(ds, retrieve);
+                ds = applyFilters(ds, retrieve);
                 return ds;
             }));
 
@@ -64,7 +64,7 @@ public class SparkBulkRetriever implements BulkRetriever {
         // together as a single row per context member. For example, a given patient will now
         // have a single row of data containing nested fields and lists of the clinical data
         // required by the runtime engine. A single dataset, single row per context member
-        // also allows for simpler distributed processing.
+        // also allows for simpler distributed processing since we can Map over the range.
         //
         // IMPORTANT: For best performance, all source data should be bucketed by the 
         // [Patient]CorrelationID to ensure these expensive joins are all colocated.

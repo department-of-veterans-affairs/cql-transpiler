@@ -70,6 +70,6 @@ public class ExecutorTest extends AbstractTest {
         var clinicalDs = retriever.retrieve(plan, null);
         var results = executor.execute(this.libraryCollection, this.plan, clinicalDs, null);
         var x = results.collectAsList();
-        results.show();
+        results.show(10, false);
     }
 }

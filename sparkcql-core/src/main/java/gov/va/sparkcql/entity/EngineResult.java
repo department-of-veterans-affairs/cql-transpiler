@@ -1,4 +1,4 @@
 package gov.va.sparkcql.entity;
 
-public class EngineResult extends GenericResults<DataTypedList<Object>, EngineResult> {
+public class EngineResult extends GenericResult<DataTypedList<Object>, EngineResult> {
 }

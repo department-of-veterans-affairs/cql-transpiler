@@ -3,7 +3,7 @@ package gov.va.sparkcql.entity;
 import java.util.List;
 import java.util.Map;
 
-public class GenericResults<T, S extends GenericResults<T, S>> {
+public class GenericResult<T, S extends GenericResult<T, S>> {
 
     private List<T> evaluatedResources;
 

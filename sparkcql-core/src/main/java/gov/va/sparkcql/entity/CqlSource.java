@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.hl7.elm.r1.VersionedIdentifier;
 
-public final class CqlSource implements Serializable {
+public final class CqlSource {
 
     private VersionedIdentifier identifier;
     private String source;

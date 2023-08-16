@@ -32,7 +32,7 @@ public class Plan implements Serializable {
         return "Patient";       // TODO
     }
 
-    // The ELM does not implement the Serialization interface so we must provide manual serialization.
+    // The ELM encounters serialization issues during Spark broadcasting so we implement serialization manually.
 	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
         String json = (String)input.readObject();
         var plan = ElmJsonMapper.getMapper().readValue(json, Plan.class);

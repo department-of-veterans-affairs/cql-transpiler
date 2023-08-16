@@ -3,5 +3,5 @@ package gov.va.sparkcql.entity;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-public class EvaluationResult extends GenericResults<DataTypedElement<Dataset<Row>>, EvaluationResult> {
+public class EvaluationResult extends GenericResult<DataTypedValue<Dataset<Row>>, EvaluationResult> {
 }
