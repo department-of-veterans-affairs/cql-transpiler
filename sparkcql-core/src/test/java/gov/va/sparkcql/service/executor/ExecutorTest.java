@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.AbstractTest;
-import gov.va.sparkcql.adapter.ModelAdapter;
 import gov.va.sparkcql.adapter.SampleModel;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.domain.LibraryCollection;
@@ -14,6 +13,7 @@ import gov.va.sparkcql.repository.clinical.SampleDomainClinicalRepository;
 import gov.va.sparkcql.repository.clinical.SamplePatientClinicalRepository;
 import gov.va.sparkcql.repository.resolution.NoneResolutionStrategy;
 import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
+import gov.va.sparkcql.service.modeladapter.ModelAdapter;
 import gov.va.sparkcql.service.planner.DefaultPlanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

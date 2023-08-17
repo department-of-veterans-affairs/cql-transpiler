@@ -2,18 +2,22 @@ package gov.va.sparkcql.repository;
 
 import java.util.List;
 
+import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.io.Directory;
 
 public abstract class AbstractFileRepository<T, ID> implements PointRepository<T, ID> {
 
     protected List<T> entities;
 
-    public AbstractFileRepository(FileRepositoryConfiguration cfg) {
-        if (cfg.getPath() == null || cfg.getPath() == "") {
+    public AbstractFileRepository(SystemConfiguration cfg) {
+        var path = cfg.getCqlSourceFileRepositoryPath();
+        var extension = cfg.getCqlSourceFileRepositoryExt();
+
+        if (path == null || path == "") {
             entities = List.of();
         } else {
             this.entities = Directory
-                .find(cfg.getPath(), cfg.getExtension())
+                .find(path, extension)
                 .map(Directory::readString)
                 .map(contents -> deserialize(contents))
                 .toList();

@@ -7,14 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.repository.FileRepositoryConfiguration;
-import gov.va.sparkcql.repository.MutableFileRepositoryConfiguration;
-import gov.va.sparkcql.repository.cql.CqlSourceFileRepository;
+import gov.va.sparkcql.configuration.SystemConfiguration;
 
 public class CqlSourceFileRepositoryTest {
 
-    FileRepositoryConfiguration cfg = new MutableFileRepositoryConfiguration("./src/test/resources/sample", "cql");
+    SystemConfiguration cfg;
   
+    public CqlSourceFileRepositoryTest() {
+        this.cfg = new SystemConfiguration();
+        this.cfg.write("", "./src/test/resources/sample");
+        this.cfg.write("", "cql");
+    }
+
     @Test
     public void should_support_basic_read_ops() {
         var repository = new CqlSourceFileRepository(cfg);

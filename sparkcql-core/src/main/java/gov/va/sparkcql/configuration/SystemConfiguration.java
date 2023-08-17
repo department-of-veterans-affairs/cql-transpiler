@@ -3,7 +3,11 @@ package gov.va.sparkcql.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class SystemConfiguration {
+public class SystemConfiguration {
+
+    private String CQL_SOURCE_FILE_REPOSITORY_PATH = "sparkcql.cqlsourcefilerepository.path";
+    private String CQL_SOURCE_FILE_REPOSITORY_EXT = "sparkcql.cqlsourcefilerepository.extension";
+    private String RESOLUTION_STRATEGY_FORMULA = "sparkcql.resolutionstrategy.formula";
 
     private Map<String, String> runtimeConfig = new HashMap<String, String>();
     
@@ -32,5 +36,44 @@ public final class SystemConfiguration {
 
     public void write(String key, String value) {
         runtimeConfig.put(key, value);
+    }
+
+    public String getCqlSourceFileRepositoryPath() {
+        return read(CQL_SOURCE_FILE_REPOSITORY_PATH, "./");
+    }
+
+    public void setCqlSourceFileRepositoryPath(String path) {
+        write(CQL_SOURCE_FILE_REPOSITORY_PATH, path);
+    }
+
+    public SystemConfiguration withCqlSourceFileRepositoryPath(String path) {
+        write(CQL_SOURCE_FILE_REPOSITORY_PATH, path);
+        return this;
+    }
+
+    public String getCqlSourceFileRepositoryExt() {
+        return read(CQL_SOURCE_FILE_REPOSITORY_EXT, "cql");
+    }
+
+    public void setCqlSourceFileRepositoryExt(String extension) {
+        write(CQL_SOURCE_FILE_REPOSITORY_EXT, extension);
+    }
+
+    public SystemConfiguration withCqlSourceFileRepositoryExt(String extension) {
+        write(CQL_SOURCE_FILE_REPOSITORY_EXT, extension);
+        return this;
+    }
+
+    public String getResolutionStrategyFormula() {
+        return read(RESOLUTION_STRATEGY_FORMULA, "${model}.${domain}");
+    }
+
+    public void setResolutionStrategyFormula(String formula) {
+        write(RESOLUTION_STRATEGY_FORMULA, formula);
+    }
+
+    public SystemConfiguration withResolutionStrategyFormula(String formula) {
+        write(RESOLUTION_STRATEGY_FORMULA, formula);
+        return this;
     }
 }

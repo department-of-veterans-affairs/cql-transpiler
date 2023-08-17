@@ -25,4 +25,9 @@ public class SampleDomainClinicalRepository extends SampleClinicalRepository<Sam
             .withNamespaceUri("http://va.gov/sparkcql/sample")
             .withName("Entity");
     }
+
+    @Override
+    public Class<SampleEntity> getEntityClass() {
+        return SampleEntity.class;
+    }
 }

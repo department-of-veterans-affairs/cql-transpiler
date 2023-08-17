@@ -13,4 +13,9 @@ public class FhirConditionSparkRepository extends FhirSparkRepository<Condition>
     public FhirConditionSparkRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         super(sparkFactory, tableResolutionStrategy);
     }
+
+    @Override
+    public Class<Condition> getEntityClass() {
+        return Condition.class;
+    }
 }

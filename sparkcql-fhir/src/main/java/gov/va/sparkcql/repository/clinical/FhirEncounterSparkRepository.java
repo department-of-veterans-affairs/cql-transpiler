@@ -13,4 +13,9 @@ public class FhirEncounterSparkRepository extends FhirSparkRepository<Encounter>
     public FhirEncounterSparkRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         super(sparkFactory, tableResolutionStrategy);
     }
+
+    @Override
+    public Class<Encounter> getEntityClass() {
+        return Encounter.class;
+    }
 }

@@ -18,4 +18,27 @@ dependencies {
 
 shadowJar {
     relocate 'org.antlr.v4', 'shadow.org.antlr.v4'
+    // archiveBaseName.set('shadow')
+    // archiveClassifier.set('')
+    // archiveVersion.set('') 
+    zip64 = true
+    dependencies {
+        include(dependency("info.cqframework:"))
+        // exclude(project(':sparkcql-core'))
+        // exclude(dependency("com.google.*:"))
+        // exclude(dependency("com.ibm.*:"))
+        // exclude(dependency("com.ctc.*:"))
+        // exclude(dependency("com.univocity.*:"))
+        // exclude(dependency("com.isotericsoftware.*:"))
+        // exclude(dependency("com.twitter.*:"))
+        // exclude(dependency("org.apache.*:"))
+        // exclude(dependency("org.glassfish.*:"))
+        // exclude(dependency("org.json4s.*:"))
+        // exclude(dependency("org.xerial.*:"))
+        // exclude(dependency("scala.*:"))
+        // exclude(dependency("scala*:"))
+        // exclude(dependency("scala.collection.*:"))
+        // exclude(dependency("linux.*:"))
+        // exclude(dependency("io.*:"))
+    }
 }

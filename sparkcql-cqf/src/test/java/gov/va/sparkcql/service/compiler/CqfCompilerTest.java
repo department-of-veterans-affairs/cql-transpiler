@@ -10,9 +10,8 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.repository.MutableFileRepositoryConfiguration;
+import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.repository.cql.CqlSourceFileRepository;
-import gov.va.sparkcql.service.compiler.Compiler;
 
 public class CqfCompilerTest {
 
@@ -20,9 +19,10 @@ public class CqfCompilerTest {
 
     @BeforeEach
     public void setup() {
+        var cfg = new SystemConfiguration();
+        cfg.setCqlSourceFileRepositoryPath("./src/test/resources/cql");
         compiler = new CqfCompiler(
-            new CqlSourceFileRepository(
-                new MutableFileRepositoryConfiguration("./src/test/resources/cql", "cql")));
+            new CqlSourceFileRepository(cfg));
     }
 
     @Test

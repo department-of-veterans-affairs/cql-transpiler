@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.va.sparkcql.domain.SampleEntity;
 import gov.va.sparkcql.domain.SamplePatient;
+import gov.va.sparkcql.service.modeladapter.ModelAdapter;
 import gov.va.sparkcql.types.DataType;
 
 public class SampleModel implements ModelAdapter, Serializable {

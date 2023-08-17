@@ -4,14 +4,17 @@ import java.util.List;
 
 import org.hl7.elm.r1.VersionedIdentifier;
 
+import com.google.inject.Inject;
+
+import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.domain.CqlSource;
 import gov.va.sparkcql.repository.AbstractFileRepository;
-import gov.va.sparkcql.repository.FileRepositoryConfiguration;
 import gov.va.sparkcql.service.compiler.CqlParser;
 
 public class CqlSourceFileRepository extends AbstractFileRepository<CqlSource, VersionedIdentifier> implements CqlSourceRepository {
 
-    public CqlSourceFileRepository(FileRepositoryConfiguration cfg) {
+    @Inject
+    public CqlSourceFileRepository(SystemConfiguration cfg) {
         super(cfg);
     }
 

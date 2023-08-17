@@ -31,7 +31,7 @@ public class FormulaResolutionStrategy implements TableResolutionStrategy {
         addToken("version", modelId.getVersion());
         addToken("domain", dataType.getName());
         
-        var formula = this.systemConfiguration.read("sparkcql.resolutionstrategy.formula", "${model}.${domain}");
+        var formula = this.systemConfiguration.getResolutionStrategyFormula();
         for (var tokenEntry : tokens.entrySet()) {
             formula = formula.replace(tokenEntry.getKey(), tokenEntry.getValue());
         }

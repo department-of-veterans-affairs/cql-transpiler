@@ -1,8 +1,5 @@
 package gov.va.sparkcql.repository.clinical;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
-
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -22,13 +19,6 @@ public abstract class SparkClinicalRepository<T> implements ClinicalRepository<T
     public SparkClinicalRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         this.spark = sparkFactory.create();
         this.tableResolutionStrategy = tableResolutionStrategy;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Class<T> getEntityClass() {
-        var clazz = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        return clazz;
     }
 
     protected abstract StructType getCanonicalSchema();

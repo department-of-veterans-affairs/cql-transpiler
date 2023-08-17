@@ -13,11 +13,11 @@ import com.google.inject.Inject;
 
 import org.apache.spark.api.java.function.MapPartitionsFunction;
 
-import gov.va.sparkcql.adapter.ModelAdapterCollection;
 import gov.va.sparkcql.domain.ExecutionResult;
 import gov.va.sparkcql.domain.ExpressionReference;
 import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.domain.Plan;
+import gov.va.sparkcql.service.modeladapter.ModelAdapterCollection;
 import gov.va.sparkcql.types.DataType;
 import gov.va.sparkcql.types.DataTypedList;
 
