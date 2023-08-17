@@ -13,21 +13,21 @@ import com.google.inject.Inject;
 
 import org.apache.spark.api.java.function.MapPartitionsFunction;
 
+import gov.va.sparkcql.adapter.ModelAdapterCollection;
 import gov.va.sparkcql.domain.ExecutionResult;
 import gov.va.sparkcql.domain.ExpressionReference;
 import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.service.adapter.ModelAdapterResolver;
 import gov.va.sparkcql.types.DataType;
 import gov.va.sparkcql.types.DataTypedList;
 
 public class DefaultExecutor implements Executor {
 
-    private ModelAdapterResolver modelAdapterResolver;
+    private ModelAdapterCollection modelAdapterResolver;
     private Engine engine;
 
     @Inject
-    public DefaultExecutor(ModelAdapterResolver modelAdapterResolver, Engine engine) {
+    public DefaultExecutor(ModelAdapterCollection modelAdapterResolver, Engine engine) {
         this.modelAdapterResolver = modelAdapterResolver;
         this.engine = engine;
     }
@@ -83,7 +83,7 @@ public class DefaultExecutor implements Executor {
                             var dataRow = (Row)item;
                             var dataJson = dataRow.json();
                             var dataType = new DataType(r.getRetrieve().getDataType());
-                            var modelAdapter = modelAdapterResolver.resolveNamespace(dataType);
+                            var modelAdapter = modelAdapterResolver.forNamespace(dataType);
                             var instance = modelAdapter.deserialize(dataType, dataJson);
                             return instance;
                         }).toList();
@@ -104,7 +104,7 @@ public class DefaultExecutor implements Executor {
             List<DataTypedList<String>> evaluatedResults = List.of();
             if (engineResult.getEvaluatedResources() != null) {
                 evaluatedResults = engineResult.getEvaluatedResources().stream().map(t -> {
-                    var modelAdapter = modelAdapterResolver.resolveType(t.getDataType());
+                    var modelAdapter = modelAdapterResolver.forType(t.getDataType());
                     var valuesSerialized = t.getValues().stream().map(v -> modelAdapter.serialize(v)).toList();
                     return new DataTypedList<String>()
                         .withDataType(t.getDataType())
@@ -115,7 +115,7 @@ public class DefaultExecutor implements Executor {
             Map<ExpressionReference, DataTypedList<String>> expressionResults = Map.of();
             if (engineResult.getExpressionResults() != null) {
                 expressionResults = engineResult.getExpressionResults().entrySet().stream().map(t -> {
-                    var modelAdapter = modelAdapterResolver.resolveType(t.getValue().getDataType());
+                    var modelAdapter = modelAdapterResolver.forType(t.getValue().getDataType());
                     var valuesSerialized = t.getValue().getValues().stream().map(v -> modelAdapter.serialize(v)).toList();
                     var e = new DataTypedList<String>()
                         .withDataType(t.getValue().getDataType())

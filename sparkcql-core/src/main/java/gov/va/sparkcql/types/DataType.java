@@ -16,6 +16,11 @@ public class DataType {
         this.name = dataType.getLocalPart();
     }
 
+    public DataType(String namespaceUri, String name) {
+        this.namespaceUri = namespaceUri;
+        this.name = name;
+    }
+
     public String getNamespaceUri() {
         return namespaceUri;
     }

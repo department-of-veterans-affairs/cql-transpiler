@@ -1,5 +1,8 @@
 package gov.va.sparkcql.repository.clinical;
 
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.Metadata;
+import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
@@ -41,7 +44,18 @@ public abstract class FhirSparkRepository<T> extends SparkClinicalRepository<T> 
     protected StructType getCanonicalSchema() {
         var schemaConverter = new SchemaConverter(fhirContext, dataTypeMappings, EncoderConfig.apply(maxNestingLevel, null, false));
         Class<IBaseResource> entityClass = (Class<IBaseResource>)getEntityClass();
-        var schema = schemaConverter.resourceSchema(entityClass);
+        var fhirSchema = schemaConverter.resourceSchema(entityClass);
+
+        var schema = new StructType(new StructField[]{
+            new StructField("patientCorrelationId", DataTypes.StringType, false, Metadata.empty()),
+            new StructField("practictionerCorrelationId", DataTypes.StringType, true, Metadata.empty()),
+            new StructField("primaryCode", DataTypes.StringType, true, Metadata.empty()),
+            new StructField("primaryStartDate", DataTypes.DateType, true, Metadata.empty()),
+            new StructField("primaryEndDate", DataTypes.DateType, true, Metadata.empty()),
+            new StructField("dataType", DataTypes.StringType, false, Metadata.empty()),
+            new StructField("data", fhirSchema, false, Metadata.empty()),
+        });
+
         return schema;
     }
 }

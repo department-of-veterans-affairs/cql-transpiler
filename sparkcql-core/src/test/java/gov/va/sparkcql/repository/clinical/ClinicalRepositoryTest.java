@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.configuration.LocalSparkFactory;
-import gov.va.sparkcql.domain.SampleDomain;
+import gov.va.sparkcql.domain.SampleEntity;
 import gov.va.sparkcql.repository.resolution.NoneResolutionStrategy;
 
 public class ClinicalRepositoryTest extends AbstractTest {
@@ -25,7 +25,9 @@ public class ClinicalRepositoryTest extends AbstractTest {
     @Test
     public void should_read_sample_repository_typed() {
         var repo = new SampleDomainClinicalRepository(new LocalSparkFactory(), new NoneResolutionStrategy());
-        var ds = repo.acquire().select(col("data.*")).as(Encoders.bean(SampleDomain.class));
+        var ds = repo.acquire().select(col("data.*")).as(Encoders.bean(SampleEntity.class));
         assertTrue(ds.first().getName().equals("sample name 1"));
     }
+
+    // TODO: Should throw error for invalid container schema
 }

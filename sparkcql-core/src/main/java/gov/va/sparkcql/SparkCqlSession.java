@@ -28,6 +28,8 @@ public class SparkCqlSession {
         this.executor = executor;
     }
 
+    // TODO: Show Canonical Schemas
+
     public Map<String, Dataset<Row>> eval(String libraryName, String version, Map<String, Object> parameters) {
         var compilation = compiler.compile(List.of(new VersionedIdentifier().withId(libraryName).withVersion(version)));
         return eval(compilation, parameters);

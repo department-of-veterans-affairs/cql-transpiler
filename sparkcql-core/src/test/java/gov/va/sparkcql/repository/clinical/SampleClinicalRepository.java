@@ -32,7 +32,7 @@ public abstract class SampleClinicalRepository<T> extends SparkClinicalRepositor
         var jsonDs = spark.createDataset(json, Encoders.STRING());
         var rawDs = spark.read().json(jsonDs);
         var ds = spark.read().schema(getCanonicalSchema()).json(rawDs.toJSON());
-        validateSchema(ds.schema());
+        SparkClinicalSchemaHelper.validateSchema(ds.schema(), getCanonicalSchema(), getEntityDataType());
         return ds;
     }
 

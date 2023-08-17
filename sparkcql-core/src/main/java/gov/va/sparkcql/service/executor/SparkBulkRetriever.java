@@ -11,16 +11,17 @@ import com.google.inject.Inject;
 import static org.apache.spark.sql.functions.collect_list;
 
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.repository.clinical.ClinicalRepositoryResolver;
+import gov.va.sparkcql.repository.clinical.ClinicalRepositoryCollection;
+import gov.va.sparkcql.repository.clinical.SparkClinicalSchemaHelper;
 import gov.va.sparkcql.types.DataType;
 
 public class SparkBulkRetriever implements BulkRetriever {
 
-    private ClinicalRepositoryResolver repositoryResolver;
+    private ClinicalRepositoryCollection repositoryResolver;
     private String CONTEXT_CORRELATION_ID = "contextCorrelationId";
 
     @Inject
-    public SparkBulkRetriever(ClinicalRepositoryResolver repositoryResolver) {
+    public SparkBulkRetriever(ClinicalRepositoryCollection repositoryResolver) {
         this.repositoryResolver = repositoryResolver;
     }
 
@@ -31,8 +32,10 @@ public class SparkBulkRetriever implements BulkRetriever {
         // links back to retrieve definition which required it.
         var acquired = plan.getRetrievalOperations().stream()
             .collect(Collectors.toMap(r -> r, r -> {
-                var repo = repositoryResolver.resolveType(new DataType(r.getRetrieve().getDataType()));
-                return repo.acquire();
+                var repo = repositoryResolver.forType(new DataType(r.getRetrieve().getDataType()));
+                var ds = repo.acquire();
+                SparkClinicalSchemaHelper.validateRequiredElements(ds.schema(), repo.getEntityDataType());
+                return ds;
             }));
         
         // Apply filters defined by the retrieve operation. These are calculated during the planning

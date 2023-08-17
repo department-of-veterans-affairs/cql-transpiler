@@ -14,30 +14,27 @@ import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.repository.resolution.FormulaResolutionStrategy;
 import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
 
-public class FhirDataRepositoryTest implements SparkFactory {
+public class FhirDataRepositoryTest {
 
+    private SparkFactory sparkFactory;
     private TableResolutionStrategy resolutionStrategy;
 
     @BeforeEach
     public void setup() {
         var cfg = new SystemConfiguration();
         cfg.write("sparkcql.resolutionstrategy.formula", "${domain}");
+        this.sparkFactory = new LocalSparkFactory();
         this.resolutionStrategy = new FormulaResolutionStrategy(cfg);
     }
 
-    @Override
-    public SparkSession create() {
-        var spark = new LocalSparkFactory().create();
-        registerData(spark, "Encounter");
-        return spark;
-    }
-
-    private void registerData(SparkSession spark, String dataTypeName) {
+    private <T, R extends FhirSparkRepository<T>> void registerData(SparkSession spark, R repo) {
         try {
-            var json = Resources.read(dataTypeName + ".json");
+            var dataType = repo.getEntityDataType();
+            var schema = repo.getCanonicalSchema();
+            var json = Resources.read(dataType.getName() + ".json");
             var jsonDs = spark.createDataset(List.of(json), Encoders.STRING());
-            var rawDs = spark.read().json(jsonDs);
-            rawDs.createTempView(dataTypeName.toLowerCase());
+            var rawDs = spark.read().schema(schema).json(jsonDs);
+            rawDs.createTempView(dataType.getName().toLowerCase());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -45,7 +42,9 @@ public class FhirDataRepositoryTest implements SparkFactory {
 
     @Test
     public void should_acquire_encounter_data() {
-        var repo = new FhirEncounterSparkRepository(this, resolutionStrategy);
+        var spark = sparkFactory.create();
+        var repo = new FhirEncounterSparkRepository(sparkFactory, resolutionStrategy);
+        registerData(spark, repo);
         repo.acquire().show();
     }
 }
