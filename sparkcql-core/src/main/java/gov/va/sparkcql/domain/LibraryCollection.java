@@ -21,6 +21,9 @@ public class LibraryCollection implements List<Library>, Serializable {
         this.libraries = new ArrayList<>();
     }
 
+    public LibraryCollection(List<Library> libraries) {
+    }
+    
     // The ELM encounters serialization issues during Spark broadcasting so we implement serialization manually.
 	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
         // Read the length written during serialization.

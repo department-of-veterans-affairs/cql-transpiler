@@ -10,4 +10,6 @@ dependencies {
 
     implementation "au.csiro.pathling:encoders:${pathlingVersion}"
     implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${hapiVersion}"
+    implementation "info.cqframework:elm:${cqfVersion}"
+    //testImplementation "info.cqframework:cql-to-elm:${cqfVersion}"
 }

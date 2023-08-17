@@ -1,6 +1,6 @@
 package gov.va.sparkcql.types;
 
-public class VersionedIdentifier {
+public class QualifiedIdentifier {
     
     private String id = "";
 
@@ -8,22 +8,22 @@ public class VersionedIdentifier {
 
     private String version = "";
 
-    public VersionedIdentifier(String id) {
+    public QualifiedIdentifier(String id) {
         this.id = id;
     }
 
-    public VersionedIdentifier(String system, String id) {
+    public QualifiedIdentifier(String system, String id) {
         this.system = system;
         this.id = id;
     }
 
-    public VersionedIdentifier(String system, String id, String version) {
+    public QualifiedIdentifier(String system, String id, String version) {
         this.system = system;
         this.id = id;
         this.version = version;
     }
 
-    public VersionedIdentifier(org.hl7.elm.r1.VersionedIdentifier versionedIdentifier) {
+    public QualifiedIdentifier(org.hl7.elm.r1.VersionedIdentifier versionedIdentifier) {
         this.id = versionedIdentifier.getId();
         this.system = versionedIdentifier.getSystem();
         this.version = versionedIdentifier.getVersion();
@@ -66,7 +66,7 @@ public class VersionedIdentifier {
             return false;
         if (getClass() != o.getClass())
             return false;
-        var vid = (VersionedIdentifier)o;
+        var vid = (QualifiedIdentifier)o;
         return this.system.equals(vid.system) && this.id.equals(vid.id) && this.version.equals(vid.system);
     }
 }

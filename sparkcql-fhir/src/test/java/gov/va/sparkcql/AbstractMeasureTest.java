@@ -20,6 +20,8 @@ import gov.va.sparkcql.service.executor.Executor;
 import gov.va.sparkcql.service.executor.SparkBulkRetriever;
 import gov.va.sparkcql.service.modeladapter.FhirModelAdapter;
 import gov.va.sparkcql.service.modeladapter.ModelAdapter;
+import gov.va.sparkcql.service.planner.DefaultPlanner;
+import gov.va.sparkcql.service.planner.Planner;
 import gov.va.sparkcql.service.compiler.Compiler;
 import gov.va.sparkcql.service.compiler.CqfCompiler;
 
@@ -35,6 +37,7 @@ public class AbstractMeasureTest extends AbstractModule {
 
         bind(Compiler.class).to(CqfCompiler.class);
         bind(CqlSourceRepository.class).to(CqlSourceFileRepository.class);
+        bind(Planner.class).to(DefaultPlanner.class);
         bind(SparkFactory.class).to(LocalSparkFactory.class);
         bind(BulkRetriever.class).to(SparkBulkRetriever.class);
         bind(Engine.class).to(CqfEngine.class);

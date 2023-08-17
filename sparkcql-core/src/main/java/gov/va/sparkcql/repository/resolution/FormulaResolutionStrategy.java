@@ -3,9 +3,10 @@ package gov.va.sparkcql.repository.resolution;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hl7.elm.r1.VersionedIdentifier;
+
 import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.types.DataType;
-import gov.va.sparkcql.types.VersionedIdentifier;
 
 public class FormulaResolutionStrategy implements TableResolutionStrategy {
 
@@ -41,14 +42,14 @@ public class FormulaResolutionStrategy implements TableResolutionStrategy {
 
     public VersionedIdentifier getWellKnownModelIdentifier(DataType dataType) {
         if (dataType.getNamespaceUri() == "http://hl7.org/fhir")
-            return new VersionedIdentifier("fhir");
+            return new VersionedIdentifier().withId("fhir");
         
         if (dataType.getNamespaceUri().startsWith("urn:healthit-gov:qdm:")) {
             var tokens = dataType.getNamespaceUri().split(":");
-            return new VersionedIdentifier("", "qdm", tokens[tokens.length - 1]);
+            return new VersionedIdentifier().withId("qdm").withVersion(tokens[tokens.length - 1]);
         }
 
-        return new VersionedIdentifier("", "default");
+        return new VersionedIdentifier().withId("default");
     }
 
     protected void addToken(String name, String value) {

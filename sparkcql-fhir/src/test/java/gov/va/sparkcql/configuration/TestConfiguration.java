@@ -1,6 +1,4 @@
-package gov.va.sparkcql;
-
-import gov.va.sparkcql.configuration.SystemConfiguration;
+package gov.va.sparkcql.configuration;
 
 public class TestConfiguration extends SystemConfiguration {
     public TestConfiguration() {

@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import gov.va.sparkcql.domain.CqlSource;
 import gov.va.sparkcql.repository.cql.CqlSourceRepository;
 
-public class CqfCompiler implements Compiler, LibrarySourceProvider {
+public class CqfCompiler implements Compiler {
 
     protected List<CqlSource> inScopeCqlSources;
     protected CqlSourceRepository cqlSourceRepository;
@@ -48,7 +48,11 @@ public class CqfCompiler implements Compiler, LibrarySourceProvider {
     }
 
     private List<Library> compileIdentifiedLibraries() {
-        return inScopeCqlSources.stream().map(cs -> execCompile(cs.getSource(), this)).toList();
+        // The LibrarySourceProvider interface allows integration with CQF. However,
+        // the implementation must be hidden away since our component is shaded.
+        LibrarySourceProvider librarySourceProvider = new CqfLibrarySourceProvider(this.inScopeCqlSources, this.cqlSourceRepository);
+
+        return inScopeCqlSources.stream().map(cs -> execCompile(cs.getSource(), librarySourceProvider)).toList();
     }
 
     private Library execCompile(String cqlText, LibrarySourceProvider librarySourceProvider) {
@@ -71,15 +75,26 @@ public class CqfCompiler implements Compiler, LibrarySourceProvider {
         return translator.toELM();
     }
 
-    @Override
-    public InputStream getLibrarySource(org.hl7.elm.r1.VersionedIdentifier libraryIdentifier) {
-        var lookup = inScopeCqlSources.stream().filter(cs -> cs.getIdentifier().equals(libraryIdentifier)).findFirst();
-        if (lookup.isEmpty()) {
-            var cs = this.cqlSourceRepository.findOne(libraryIdentifier);
-            this.inScopeCqlSources.add(cs);
-            lookup = Optional.of(cs);
-        }
+    static class CqfLibrarySourceProvider implements LibrarySourceProvider {
 
-        return new ByteArrayInputStream(lookup.get().getSource().getBytes());
-    }
+        protected List<CqlSource> inScopeCqlSources;
+        protected CqlSourceRepository cqlSourceRepository;
+    
+        public CqfLibrarySourceProvider(List<CqlSource> inScopeCqlSources, CqlSourceRepository cqlSourceRepository) {
+            this.inScopeCqlSources = inScopeCqlSources;
+            this.cqlSourceRepository = cqlSourceRepository;
+        }
+    
+        @Override
+        public InputStream getLibrarySource(VersionedIdentifier libraryIdentifier) {
+            var lookup = inScopeCqlSources.stream().filter(cs -> cs.getIdentifier().equals(libraryIdentifier)).findFirst();
+            if (lookup.isEmpty()) {
+                var cs = this.cqlSourceRepository.findOne(libraryIdentifier);
+                this.inScopeCqlSources.add(cs);
+                lookup = Optional.of(cs);
+            }
+    
+            return new ByteArrayInputStream(lookup.get().getSource().getBytes());
+        }
+    }    
 }
