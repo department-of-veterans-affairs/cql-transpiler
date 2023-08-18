@@ -10,8 +10,8 @@ define "All Encounters": ["Encounter"] E
 
 define "Encounters After 2013": ["Encounter"] E where E.period ends after @2013-12-27T14:30
 
-define "ED Encounters": ["Encounter"] ["Encounter": "Emergency Department Visit"] E
+define "ED Encounters": ["Encounter": "Emergency Department Visit"] E
 
-define "ED Encounters After 2013": ["Encounter"] ["Encounter": "Emergency Department Visit"] E where E.period ends after @2013-12-27T14:30
+define "ED Encounters After 2013": ["Encounter": "Emergency Department Visit"] E where E.period ends after @2013-12-27T14:30
 
-define "All Conditions": ["Encounter"] C
+define "All Conditions": ["Condition"] C

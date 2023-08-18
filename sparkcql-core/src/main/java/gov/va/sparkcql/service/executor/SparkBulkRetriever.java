@@ -2,6 +2,7 @@ package gov.va.sparkcql.service.executor;
 
 import java.util.stream.Collectors;
 
+import gov.va.sparkcql.domain.RetrievalOperation;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.hl7.elm.r1.Retrieve;
@@ -27,7 +28,6 @@ public class SparkBulkRetriever implements BulkRetriever {
 
     @Override
     public Dataset<Row> retrieve(Plan plan, Object terminologyProvider) {
-
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
         var acquired = plan.getRetrievalOperations().stream()

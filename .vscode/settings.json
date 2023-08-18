@@ -5,6 +5,9 @@
     "java.eclipse.downloadSources": true,
     "java.maven.downloadSources": true,
     "java.test.config": {
+        "classPaths": [
+            "${workspaceFolder}/sparkcql-cqf/build/libs/sparkcql-cqf-1.0-SNAPSHOT-all.jar",
+        ],
         "vmArgs": [
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
             "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",

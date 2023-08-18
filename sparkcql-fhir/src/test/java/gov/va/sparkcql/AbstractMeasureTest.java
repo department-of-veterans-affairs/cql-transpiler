@@ -8,6 +8,8 @@ import com.google.inject.multibindings.Multibinder;
 
 import gov.va.sparkcql.configuration.LocalSparkFactory;
 import gov.va.sparkcql.configuration.SparkFactory;
+import gov.va.sparkcql.configuration.SystemConfiguration;
+import gov.va.sparkcql.configuration.TestConfiguration;
 import gov.va.sparkcql.repository.clinical.ClinicalRepository;
 import gov.va.sparkcql.repository.clinical.SyntheticFhirEncounterRepository;
 import gov.va.sparkcql.repository.cql.CqlSourceFileRepository;
@@ -35,6 +37,7 @@ public class AbstractMeasureTest extends AbstractModule {
         var modelAdapterBinder = Multibinder.newSetBinder(binder(), ModelAdapter.class);
         modelAdapterBinder.addBinding().to(FhirModelAdapter.class);
 
+        bind(SystemConfiguration.class).to(TestConfiguration.class);
         bind(Compiler.class).to(CqfCompiler.class);
         bind(CqlSourceRepository.class).to(CqlSourceFileRepository.class);
         bind(Planner.class).to(DefaultPlanner.class);
