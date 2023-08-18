@@ -16,14 +16,11 @@ public class ClinicalRepositoryCollection {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> ClinicalRepository<T> forType(Class<T> entityClass) {
-        var repo = repos.stream().filter(r -> r.getEntityClass() == entityClass);
-        return (ClinicalRepository<T>)repo.findFirst().get();
-    }
-
-    @SuppressWarnings("unchecked")
     public <T> ClinicalRepository<T> forType(DataType dataType) {
         var repo = repos.stream().filter(r -> r.getEntityDataType().equals(dataType));
+        if (repo.count() == 0) {
+            throw new RuntimeException("Unable to find repository for data type " + dataType.toString());
+        }
         return (ClinicalRepository<T>)repo.findFirst().get();
     }
 }

@@ -1,6 +1,5 @@
 subprojects {
     apply plugin: 'java-library'
-    apply plugin: 'maven-publish'
     apply plugin: 'eclipse'
 
     compileJava {
@@ -10,7 +9,6 @@ subprojects {
     
     repositories {
         mavenCentral()
-        mavenLocal()        // to pick up shaded jars (e.g. sparkcql-cqf)
     }
 
     dependencies {

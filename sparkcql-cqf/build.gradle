@@ -1,24 +1,9 @@
 /*
 sparkcql-cqf must shade CQF's ANTLR version from spark which uses an incompatible version.
-While the shadow plugin supports "configuration: 'shadow'" the shaded jar is never added to
-the classpath in VS code during integrated tests. The workaround is to publish to a local
-maven repository which can then be picked up by other packages in this project.
+The shadow plugin supports "configuration: 'shadow'" to correctly reference the shaded jar.
 */
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.1'
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            groupId = group
-            version = version
-        }
-    }
-    repositories {
-        mavenCentral()
-    }
 }
 
 dependencies {

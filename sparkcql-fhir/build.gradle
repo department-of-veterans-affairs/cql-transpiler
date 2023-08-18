@@ -1,8 +1,6 @@
 dependencies {
     implementation project(':sparkcql-core')
-    implementation("gov.va.sparkcql:sparkcql-cqf:${version}") {
-        exclude group: 'org.antlr', module: 'antlr4-runtime'
-    }
+    implementation project(path: ':sparkcql-cqf', configuration: 'shadow')
 
     implementation "com.google.inject:guice:${guiceVersion}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
@@ -14,9 +12,4 @@ dependencies {
     implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${hapiVersion}"
     implementation "info.cqframework:elm:${cqfVersion}"
     implementation "info.cqframework:quick:${cqfVersion}"
-}
-
-// Forces sparkcql-cqf (shaded) to deploy locally where we'll pick it up
-compileJava {
-    dependsOn(':sparkcql-cqf:publishToMavenLocal')
 }
