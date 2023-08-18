@@ -1,21 +1,19 @@
 package gov.va.sparkcql.repository.clinical;
 
-import org.hl7.fhir.r4.model.Encounter;
-
 import com.google.inject.Inject;
-
 import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
+import org.hl7.fhir.r4.model.Patient;
 
-public class FhirEncounterSparkRepository extends FhirSparkRepository<Encounter> implements FhirEncounterClinicalRepository {
+public class FhirPatientSparkRepository extends FhirSparkRepository<Patient> implements FhirPatientClinicalRepository {
 
     @Inject
-    public FhirEncounterSparkRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+    public FhirPatientSparkRepository(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         super(sparkFactory, tableResolutionStrategy);
     }
 
     @Override
-    public Class<Encounter> getEntityClass() {
-        return Encounter.class;
+    public Class<Patient> getEntityClass() {
+        return Patient.class;
     }
 }

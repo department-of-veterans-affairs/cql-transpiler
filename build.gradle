@@ -2,7 +2,7 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'eclipse'
-    
+
     compileJava {
         sourceCompatibility = "${targetJavaVersion}"
         targetCompatibility = "${targetJavaVersion}"
@@ -10,6 +10,7 @@ subprojects {
     
     repositories {
         mavenCentral()
+        mavenLocal()        // to pick up shaded jars (e.g. sparkcql-cqf)
     }
 
     dependencies {
@@ -19,13 +20,7 @@ subprojects {
     test {
         useJUnitPlatform()
         maxParallelForks = Runtime.runtime.availableProcessors()
-
-        // onOutput { descriptor, event ->
-        //     if (event.destination == TestOutputEvent.Destination.StdErr) {
-        //         logger.error("Test: " + descriptor + ", error: " + event.message)
-        //     }
-        // }
-
+        
         testLogging {
             events "PASSED", "FAILED", "STANDARD_ERROR", "STANDARD_OUT"
             showExceptions true
@@ -54,8 +49,8 @@ subprojects {
     }
 
     configurations.all {
-        resolutionStrategy { 
+        resolutionStrategy {
             force 'com.fasterxml.jackson.core:jackson-databind:2.14.3'      // resolves conflict w/ Pathling & HAPI 
         }
-    }    
+    }
 }

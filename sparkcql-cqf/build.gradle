@@ -1,5 +1,24 @@
+/*
+sparkcql-cqf must shade CQF's ANTLR version from spark which uses an incompatible version.
+While the shadow plugin supports "configuration: 'shadow'" the shaded jar is never added to
+the classpath in VS code during integrated tests. The workaround is to publish to a local
+maven repository which can then be picked up by other packages in this project.
+*/
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.1'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = group
+            version = version
+        }
+    }
+    repositories {
+        mavenCentral()
+    }
 }
 
 dependencies {
@@ -18,10 +37,23 @@ dependencies {
 
 shadowJar {
     relocate 'org.antlr.v4', 'shadow.org.antlr.v4'
+    relocate 'org.antlr.runtime', 'shadow.org.antlr.runtime'
+    archiveBaseName.set(null)
+    archiveClassifier = null
     dependencies {
+        // TODO: Try to speed up the build by only including what we need instead of excluding what we don't.
+        //       Alternatively, could isolate Spark dependencies (significant size) from sparkcql-core.
         // include(dependency("info.cqframework:"))
         // include(dependency(":sparkcql-core"))
-        // include(dependency("shadow.org.antlr.v4:"))
+        // include(dependency(":antlr4:"))
+        // include(dependency("org.slf4j:slf4j-api:${slf4jVersion}"))
+        // include(dependency("info.cqframework:cql:${cqfVersion}"))
+        // include(dependency("info.cqframework:cql-to-elm:${cqfVersion}"))
+        // include(dependency("info.cqframework:elm:${cqfVersion}"))
+        // include(dependency("info.cqframework:elm-jackson:${cqfVersion}"))
+        // include(dependency("info.cqframework:model-jackson:${cqfVersion}"))
+        // include(dependency("org.fhir:ucum:${ucumVersion}"))
+        // include(dependency("info.cqframework:engine:${cqfVersion}"))
         exclude(project(':sparkcql-core'))
         exclude(dependency("com.google.*:"))
         exclude(dependency("com.ibm.*:"))
