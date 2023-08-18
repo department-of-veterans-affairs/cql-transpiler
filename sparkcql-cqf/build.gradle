@@ -7,10 +7,14 @@ plugins {
 }
 
 dependencies {
-    implementation project(':sparkcql-core')
-
+    implementation(project(':sparkcql-core')) {
+        exclude group: 'org.apache.spark', module: 'spark-core_2.12'
+        exclude group: 'org.apache.spark', module: 'spark-sql_2.12'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    
     implementation "com.google.inject:guice:${guiceVersion}"
-
+    
     implementation "info.cqframework:cql:${cqfVersion}"
     implementation "info.cqframework:cql-to-elm:${cqfVersion}"
     implementation "info.cqframework:elm:${cqfVersion}"
@@ -26,20 +30,6 @@ shadowJar {
     archiveBaseName.set(null)
     archiveClassifier = null
     dependencies {
-        // TODO: Try to speed up the build by only including what we need instead of excluding what we don't.
-        //       Alternatively, could isolate Spark dependencies (significant size) from sparkcql-core.
-        // include(dependency("info.cqframework:"))
-        // include(dependency(":sparkcql-core"))
-        // include(dependency(":antlr4:"))
-        // include(dependency("org.slf4j:slf4j-api:${slf4jVersion}"))
-        // include(dependency("info.cqframework:cql:${cqfVersion}"))
-        // include(dependency("info.cqframework:cql-to-elm:${cqfVersion}"))
-        // include(dependency("info.cqframework:elm:${cqfVersion}"))
-        // include(dependency("info.cqframework:elm-jackson:${cqfVersion}"))
-        // include(dependency("info.cqframework:model-jackson:${cqfVersion}"))
-        // include(dependency("org.fhir:ucum:${ucumVersion}"))
-        // include(dependency("info.cqframework:engine:${cqfVersion}"))
-        exclude(project(':sparkcql-core'))
         exclude(dependency("com.google.*:"))
         exclude(dependency("com.ibm.*:"))
         exclude(dependency("com.ctc.*:"))
