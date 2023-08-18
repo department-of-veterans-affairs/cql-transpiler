@@ -1,6 +1,5 @@
 package gov.va.sparkcql.service.modeladapter;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -25,12 +24,9 @@ import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Procedure;
 
 import ca.uhn.fhir.context.FhirContext;
-import gov.va.sparkcql.service.modeladapter.ModelAdapter;
 import gov.va.sparkcql.types.DataType;
 
-public class FhirModelAdapter implements ModelAdapter, Serializable {
-
-    FhirContext ctx = FhirContext.forR4();
+public class FhirModelAdapter implements ModelAdapter {
 
     @Override
     public String getNamespaceUri() {
@@ -42,7 +38,8 @@ public class FhirModelAdapter implements ModelAdapter, Serializable {
     public Object deserialize(DataType dataType, String json) {
         try {
             var clazz = (Class<IBaseResource>)getDataTypeToClassMapping().get(dataType);
-            var parser = ctx.newJsonParser();
+            FhirContext fhirContext = FhirContext.forR4();
+            var parser = fhirContext.newJsonParser();
             var parsed = parser.parseResource(clazz, json);
             return parsed;
         } catch (Exception e) {
@@ -53,7 +50,8 @@ public class FhirModelAdapter implements ModelAdapter, Serializable {
     @Override
     public String serialize(Object entity) {
         try {
-            var parser = ctx.newJsonParser();
+            FhirContext fhirContext = FhirContext.forR4();
+            var parser = fhirContext.newJsonParser();
             var json = parser.encodeResourceToString((IBaseResource)entity);
             return json;
         } catch (Exception e) {

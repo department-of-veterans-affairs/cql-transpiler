@@ -22,6 +22,7 @@ public class LibraryCollection implements List<Library>, Serializable {
     }
 
     public LibraryCollection(List<Library> libraries) {
+        this.libraries = new ArrayList<Library>(libraries);
     }
     
     // The ELM encounters serialization issues during Spark broadcasting so we implement serialization manually.

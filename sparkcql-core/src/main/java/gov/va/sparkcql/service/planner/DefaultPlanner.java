@@ -13,7 +13,7 @@ public class DefaultPlanner implements Planner {
 
         var retrievalOperations = libraries.stream().flatMap(library -> {
             return collector.visitLibrary(library, null).stream();
-        }).toList();
+        }).distinct().toList();
 
         return new Plan()
             .withRetrievalOperations(retrievalOperations);

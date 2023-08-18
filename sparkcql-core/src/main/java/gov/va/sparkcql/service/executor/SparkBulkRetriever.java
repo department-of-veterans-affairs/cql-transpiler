@@ -1,8 +1,9 @@
 package gov.va.sparkcql.service.executor;
 
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import gov.va.sparkcql.domain.RetrievalOperation;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.hl7.elm.r1.Retrieve;
@@ -13,13 +14,15 @@ import static org.apache.spark.sql.functions.collect_list;
 
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.repository.clinical.ClinicalRepositoryCollection;
+import gov.va.sparkcql.repository.clinical.ClinicalRepositorySchemaHelper;
 import gov.va.sparkcql.repository.clinical.SparkClinicalSchemaHelper;
 import gov.va.sparkcql.types.DataType;
+
+import scala.collection.JavaConverters;
 
 public class SparkBulkRetriever implements BulkRetriever {
 
     private ClinicalRepositoryCollection repositoryResolver;
-    private String CONTEXT_CORRELATION_ID = "contextCorrelationId";
 
     @Inject
     public SparkBulkRetriever(ClinicalRepositoryCollection repositoryResolver) {
@@ -49,7 +52,7 @@ public class SparkBulkRetriever implements BulkRetriever {
             }));
 
         // Determine the established context if we're calculating patient, practitioner, or unfiltered.
-        var contextColumn = resolveContextColumn(plan.getContextSpecifier());
+        var contextColumn = ClinicalRepositorySchemaHelper.resolveContextColumn(plan.getContextSpecifier());
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member. Add a hash of the retrieve operation
@@ -72,24 +75,32 @@ public class SparkBulkRetriever implements BulkRetriever {
         // IMPORTANT: For best performance, all source data should be bucketed by the 
         // [Patient]CorrelationID to ensure these expensive joins are all colocated.
         var combined = grouped.stream().reduce((left, right) -> {
+
+            var leftCols = Stream.of(left.columns())
+                .map(c -> left.col(c))
+                .toList();
+
+            var rightCols = Stream.of(right.columns())
+                .filter(c -> {
+                    return !c.equals("patientCorrelationId")
+                        && !List.of(left.columns()).contains(c);
+                })
+                .map(c -> right.col(c))
+                .toList();
+
+            var cols = Stream.concat(leftCols.stream(), rightCols.stream())
+                .collect(Collectors.toList());
+            var colSeq = JavaConverters.asScalaIteratorConverter(cols.iterator()).asScala().toSeq();
+
             var j = left
+                .as("left")
                 .join(right, left.col(contextColumn).equalTo(right.col(contextColumn)), "inner")
-                .drop(right.col(contextColumn))
-                .withColumnRenamed(contextColumn, CONTEXT_CORRELATION_ID);      // give a a generalized name
+                .select(colSeq);
+
             return j;
         }).get();
 
         return combined;
-    }
-
-    protected String resolveContextColumn(String contextSpecifier) {
-        if (contextSpecifier.equals("Patient")) {
-            return "patientCorrelationId";
-        } else if (contextSpecifier.equals("Practitioner")) {
-            return "practitionerCorrelationId";
-        } else {
-            throw new RuntimeException("Unsupported CQL context 'unfiltered'.");
-        }
     }
 
     protected Dataset<Row> applyFilters(Dataset<Row> ds, Retrieve retrieve) {

@@ -1,5 +1,7 @@
 package gov.va.sparkcql.types;
 
+import java.util.Objects;
+
 import javax.xml.namespace.QName;
 
 public class DataType {
@@ -62,5 +64,10 @@ public class DataType {
             return false;
         var dataType = (DataType)o;
         return this.namespaceUri.equals(dataType.namespaceUri) && this.name.equals(dataType.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.toString());
     }
 }

@@ -1,6 +1,8 @@
 package gov.va.sparkcql.domain;
 
 import java.util.Base64;
+import java.util.Objects;
+
 import org.hl7.elm.r1.Retrieve;
 
 public class RetrievalOperation {
@@ -26,4 +28,18 @@ public class RetrievalOperation {
         this.retrieve = retrieve;
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof RetrievalOperation) {
+            return this.getHashKey().equals(((RetrievalOperation)o).getHashKey());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getHashKey());
+    }    
 }

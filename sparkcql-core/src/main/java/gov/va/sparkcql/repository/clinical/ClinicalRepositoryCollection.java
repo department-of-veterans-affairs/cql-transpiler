@@ -17,10 +17,11 @@ public class ClinicalRepositoryCollection {
 
     @SuppressWarnings("unchecked")
     public <T> ClinicalRepository<T> forType(DataType dataType) {
-        var repo = repos.stream().filter(r -> r.getEntityDataType().equals(dataType));
-        if (repo.count() == 0) {
+        var repo = repos.stream().filter(r -> r.getEntityDataType().equals(dataType)).findFirst();
+        if (repo.isEmpty()) {
             throw new RuntimeException("Unable to find repository for data type " + dataType.toString());
+        } else {
+            return (ClinicalRepository<T>)repo.get();
         }
-        return (ClinicalRepository<T>)repo.findFirst().get();
     }
 }

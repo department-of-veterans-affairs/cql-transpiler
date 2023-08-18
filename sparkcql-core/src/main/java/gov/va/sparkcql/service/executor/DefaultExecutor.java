@@ -17,6 +17,7 @@ import gov.va.sparkcql.domain.ExecutionResult;
 import gov.va.sparkcql.domain.ExpressionReference;
 import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.domain.Plan;
+import gov.va.sparkcql.repository.clinical.ClinicalRepositorySchemaHelper;
 import gov.va.sparkcql.service.modeladapter.ModelAdapterCollection;
 import gov.va.sparkcql.types.DataType;
 import gov.va.sparkcql.types.DataTypedList;
@@ -41,7 +42,6 @@ public class DefaultExecutor implements Executor {
         // See Plan and LibraryCollection for examples.
 
         try {
-
             var results = clinicalDs.mapPartitions((MapPartitionsFunction<Row, ExecutionResult>) row -> {
 
                 // NOTE: Everything within mapPartitions is now running on the executor nodes.
@@ -73,7 +73,6 @@ public class DefaultExecutor implements Executor {
     private ExecutionResult processRow(Row row, LibraryCollection libraryCollection, Plan plan) {
         try {
             // Serialize clinical data into a key/value (Retrieve, Object) pair for lookup by the engine.
-            var contextCorrelationId = row.getString(row.fieldIndex("contextCorrelationId"));
             var clinicalData = plan.getRetrievalOperations().stream()
                 .collect(Collectors.toMap(
                     r -> r.getRetrieve(),
@@ -92,7 +91,8 @@ public class DefaultExecutor implements Executor {
             );
 
             // Execute this single context element using an injected CQL Engine.
-            var engineResult = engine.evaluate(contextCorrelationId, libraryCollection, clinicalData, null);
+            var contextColumn = ClinicalRepositorySchemaHelper.resolveContextColumn(plan.getContextSpecifier());
+            var engineResult = engine.evaluate(contextColumn, libraryCollection, clinicalData, null);
 
             // Deserialize the results from the engine back into object and then StructType form.
             // TODO: Optimize serde to use encoders to avoid unnecessary intermediate serialization.

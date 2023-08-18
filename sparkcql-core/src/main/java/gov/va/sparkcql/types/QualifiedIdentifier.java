@@ -1,5 +1,7 @@
 package gov.va.sparkcql.types;
 
+import java.util.Objects;
+
 public class QualifiedIdentifier {
     
     private String id = "";
@@ -68,5 +70,10 @@ public class QualifiedIdentifier {
             return false;
         var vid = (QualifiedIdentifier)o;
         return this.system.equals(vid.system) && this.id.equals(vid.id) && this.version.equals(vid.system);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.toString());
     }
 }
