@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/sparkcql-fhir/sparkcql.sparkcql-fhir.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/RetrievalOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/RetrievalOperation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/repository/clinical/ClinicalRepositoryCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/repository/clinical/ClinicalRepositoryCollection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/SparkBulkRetriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/SparkBulkRetriever.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/modeladapter/ModelAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/modeladapter/ModelAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/planner/DefaultPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/planner/DefaultPlanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/QualifiedIdentifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/QualifiedIdentifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/MeasureEvaluationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/MeasureEvaluationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/tables/Condition.json" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/tables/Condition.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="2UAf3vkx0lQxUs1ouOJgpkv2zCr" />
+  <component name="ProjectViewState">
+    <option name="flattenPackages" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "experimental/spark-cqf-interop"
+  }
+}]]></component>
+  <component name="RunManager" selected="Gradle.MeasureEvaluationTest.should_calc_simple_retrieve_test">
+    <configuration name="MeasureEvaluationTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":sparkcql-fhir:test" />
+            <option value="--tests" />
+            <option value="&quot;gov.va.sparkcql.MeasureEvaluationTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="MeasureEvaluationTest.should_calc_simple_retrieve_test" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":sparkcql-fhir:test" />
+            <option value="--tests" />
+            <option value="&quot;gov.va.sparkcql.MeasureEvaluationTest.should_calc_simple_retrieve_test&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.MeasureEvaluationTest.should_calc_simple_retrieve_test" />
+        <item itemvalue="Gradle.MeasureEvaluationTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="" />
+      <created>1692387111092</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1692387111092</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java</url>
+          <line>53</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java</url>
+          <line>99</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

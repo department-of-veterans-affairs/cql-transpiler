@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sparkcql.iml" filepath="$PROJECT_DIR$/.idea/modules/sparkcql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sparkcql-core/sparkcql.sparkcql-core.iml" filepath="$PROJECT_DIR$/.idea/modules/sparkcql-core/sparkcql.sparkcql-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sparkcql-cqf/sparkcql.sparkcql-cqf.iml" filepath="$PROJECT_DIR$/.idea/modules/sparkcql-cqf/sparkcql.sparkcql-cqf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sparkcql-fhir/sparkcql.sparkcql-fhir.iml" filepath="$PROJECT_DIR$/.idea/modules/sparkcql-fhir/sparkcql.sparkcql-fhir.iml" />
+    </modules>
+  </component>
+</project>
