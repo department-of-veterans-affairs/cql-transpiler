@@ -6,6 +6,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import gov.va.sparkcql.domain.LibraryCollection;
+import gov.va.sparkcql.domain.Plan;
+import gov.va.sparkcql.domain.RetrievalOperation;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -54,55 +58,46 @@ public class Pipeline {
         return execute(cqlSource, Map.of());
     }
     
-    public Map<String, Dataset<Row>> execute(List<Library> libraries) {
-        return executePipeline(libraries, null);
+    public Map<String, Dataset<Row>> execute(LibraryCollection libraryCollection) {
+        return executePipeline(libraryCollection, null);
     }
 
-    public Map<String, Dataset<Row>> execute(List<Library> libraries, Map<String, Object> parameters) {
-        return executePipeline(libraries, parameters);
+    public Map<String, Dataset<Row>> execute(LibraryCollection libraryCollection, Map<String, Object> parameters) {
+        return executePipeline(libraryCollection, parameters);
     }
 
-    public Map<String, Dataset<Row>> executePipeline(List<Library> libraries, Map<String, Object> parameters) {
+    public Map<String, Dataset<Row>> executePipeline(LibraryCollection libraryCollection, Map<String, Object> parameters) {
 
         // Execute any preprocessors first.
-        getPreprocessors().forEach(p -> p.apply(this));
+        getPreprocessors().forEach(Preprocessor::apply);
 
         // Produce an optimized execution plan using the compiled ELMs.
-        var planned = getPlanner().plan(libraries);
+        var planned = getPlanner().plan(libraryCollection);
         
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
-        var retrieved = planned.getRetrievalOperations().stream()
-            .collect(Collectors.toMap(r -> r, r -> {
-                var rdd = getRetriever().retrieve(r.getRetrieve(), getModelAdapterResolver());
-                return rdd;
-            }));
+        var retrieved = batchRetrieve(planned);
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member. Add a hash of the retrieve operation
         // so we can still look it up later.
         var combined = getCombiner().combine(retrieved, planned, getModelAdapterResolver());
-
-        // var translator = new Translator(spark, modelAdapters, libraryAdapters, dataAdapters);
-        //translator.translate(libraries);
-
-        // Generate retrieval plan from compiled libraries
-
-        // Map retrieval operations to their data
-
-        // Combine all operations into context aligned iterator (aka bundle)
-
-        // Range over context (patient, practitioner, etc) evaluating each one.
-        // iterator.map(...)
+        combined.collect().forEach(System.out::println);
 
         // Output results to client
 
         return null;
     }
+
+    private Map<RetrievalOperation, JavaRDD<Object>> batchRetrieve(Plan plan) {
+        return plan.getRetrievalOperations().stream()
+                .collect(Collectors.toMap(r -> r, r -> {
+                    return getRetriever().retrieve(r.getRetrieve(), getModelAdapterResolver());
+                }));
+    }
+
     private void applyPreprocessors() {
-        getPreprocessors().stream().forEach(p -> {
-            p.apply(this);
-        });
+        getPreprocessors().forEach(Preprocessor::apply);
     }
 
     @SuppressWarnings("unchecked")

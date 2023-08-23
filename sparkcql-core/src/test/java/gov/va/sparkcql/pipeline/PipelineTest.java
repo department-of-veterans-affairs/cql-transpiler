@@ -2,19 +2,26 @@ package gov.va.sparkcql.pipeline;
 
 import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.configuration.SystemConfiguration;
+import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.fixture.sample.SampleConfiguration;
+import gov.va.sparkcql.fixture.sample.SampleDataPreprocessor;
 import gov.va.sparkcql.fixture.sample.SampleEngine;
 import gov.va.sparkcql.fixture.sample.SampleModel;
+import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.combiner.DefaultCombiner;
 import gov.va.sparkcql.pipeline.modeladapter.ModelAdapter;
+import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
 import gov.va.sparkcql.pipeline.planner.DefaultPlanner;
 import gov.va.sparkcql.pipeline.retriever.SparkBoxEncodedDataRetriever;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 
+import org.cqframework.cql.elm.serializing.jackson.ElmJsonLibraryReader;
 import org.junit.jupiter.api.Test;
 
 import com.google.inject.multibindings.Multibinder;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +33,8 @@ public class PipelineTest extends AbstractTest {
         bind(SystemConfiguration.class).to(SampleConfiguration.class);
         bind(TableResolutionStrategy.class).to(TemplateResolutionStrategy.class);
         var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Component.class);
+        pipelineComponentBinder.addBinding().to(SampleDataPreprocessor.class);
+        pipelineComponentBinder.addBinding().to(ModelAdapterResolver.class);
         pipelineComponentBinder.addBinding().to(DefaultPlanner.class);
         pipelineComponentBinder.addBinding().to(DefaultCombiner.class);
         pipelineComponentBinder.addBinding().to(SparkBoxEncodedDataRetriever.class);
@@ -43,9 +52,13 @@ public class PipelineTest extends AbstractTest {
     }
 
     @Test
-    public void should_load_sample_data() {
+    public void should_execute_sample() throws IOException {
+        var libraryContents = Resources.read("sample/sample-library.json");
+        var reader = new ElmJsonLibraryReader();
+        var libraryCollection = new LibraryCollection();
+        libraryCollection.add(reader.read(libraryContents));
         var pipeline = getInjector().getInstance(Pipeline.class);
-        pipeline.execute("[\"SampleEntity\": \"Sample Valueset A\"] E");
+        pipeline.execute(libraryCollection);
 
         // var tableResolutionStrategy = new TemplateResolutionStrategy(new SampleConfiguration());
         // var dataLoader = new SampleDataLoaderPreprocessor(tableResolutionStrategy);

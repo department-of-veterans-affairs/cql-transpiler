@@ -1,6 +1,8 @@
 package gov.va.sparkcql.fixture.sample;
 
-public class SamplePatient {
+import java.io.Serializable;
+
+public class SamplePatient implements Serializable {
 
     private String id;
 

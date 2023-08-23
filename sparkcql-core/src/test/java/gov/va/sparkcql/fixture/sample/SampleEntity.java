@@ -1,6 +1,8 @@
 package gov.va.sparkcql.fixture.sample;
 
-public class SampleEntity {
+import java.io.Serializable;
+
+public class SampleEntity implements Serializable {
 
     private String patientId;
 

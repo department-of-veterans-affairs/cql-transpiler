@@ -9,6 +9,7 @@ import org.apache.spark.sql.types.StructType;
 import org.hl7.elm.r1.Retrieve;
 
 import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.flatten;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class SparkBoxEncodedDataRetriever implements Retriever {
         // Lookup the model adapter for the given data type and use it to decode the data.
         var modelAdapter = modelAdapterResolver.forType(dataType);
         var encoder = modelAdapter.getEncoder(dataType);
-        var encodedDs = boxedDs.select(col(ENCODED_DATA_COLUMN));
+        var encodedDs = boxedDs.select(col(ENCODED_DATA_COLUMN + ".*"));
         
         return encodedDs.as(encoder).javaRDD();
     }
@@ -65,14 +66,14 @@ public class SparkBoxEncodedDataRetriever implements Retriever {
 
     private Dataset<Row> applyCodeInFilter(Dataset<Row> ds, Retrieve retrieve) {
         var filter = retrieve.getCodeFilter();
-        if (filter.size() > 0)
+        if (!filter.isEmpty())
             throw new UnsupportedOperationException();
         return ds;
     }
 
     private Dataset<Row> applyDateFilter(Dataset<Row> ds, Retrieve retrieve) {
         var filter = retrieve.getDateFilter();
-        if (filter.size() > 0)
+        if (!filter.isEmpty())
             throw new UnsupportedOperationException();
         return ds;
     }
@@ -98,7 +99,7 @@ public class SparkBoxEncodedDataRetriever implements Retriever {
             if (schema.getFieldIndex(column).isEmpty())
                 missingColumns.add(column);
         }
-        if (missingColumns.size() > 0) {
+        if (!missingColumns.isEmpty()) {
             var missingColumnsMsg = String.join(", ", missingColumns);
             throw new RuntimeException("Table is missing the following container level attributes: " + missingColumnsMsg + ".");
         }
