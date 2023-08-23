@@ -1,17 +1,13 @@
-package gov.va.sparkcql.adapter;
+package gov.va.sparkcql.fixture.sample;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.SparkSession;
+import org.hl7.elm.r1.ContextDef;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gov.va.sparkcql.domain.SampleEntity;
-import gov.va.sparkcql.domain.SamplePatient;
 import gov.va.sparkcql.pipeline.modeladapter.ModelAdapter;
 import gov.va.sparkcql.types.DataType;
 
@@ -72,6 +68,18 @@ public class SampleModel implements ModelAdapter {
                 
             default:
                 throw new RuntimeException("Unexpected data type '" + dataType.toString() + "'.");
+        }
+    }
+
+    @Override
+    public String getContextId(Object instance, ContextDef contextDef) {
+        if (instance instanceof SamplePatient) {
+            return ((SamplePatient)instance).getId();
+        } else if (instance instanceof SampleEntity) {
+            return ((SampleEntity)instance).getPatientId();
+        } else {
+            throw new RuntimeException(
+                "Unable to resolve context ID for unknown type " + instance.getClass().getSimpleName());
         }
     }
 }

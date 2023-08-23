@@ -52,7 +52,7 @@ public class SparkBulkRetriever implements BulkRetriever {
             }));
 
         // Determine the established context if we're calculating patient, practitioner, or unfiltered.
-        var contextColumn = ClinicalRepositorySchemaHelper.resolveContextColumn(plan.getContextSpecifier());
+        var contextColumn = ClinicalRepositorySchemaHelper.resolveContextColumn(plan.getContextDef().getName());
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member. Add a hash of the retrieve operation

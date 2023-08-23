@@ -3,6 +3,7 @@ package gov.va.sparkcql.pipeline.retriever.resolution;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.inject.Inject;
 import org.hl7.elm.r1.VersionedIdentifier;
 
 import gov.va.sparkcql.configuration.SystemConfiguration;
@@ -14,6 +15,7 @@ public class TemplateResolutionStrategy implements TableResolutionStrategy {
 
     protected Map<String, String> tokens;
 
+    @Inject
     public TemplateResolutionStrategy(SystemConfiguration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
         this.tokens = new HashMap<String, String>();
@@ -54,6 +56,7 @@ public class TemplateResolutionStrategy implements TableResolutionStrategy {
 
     protected void addToken(String name, String value) {
         var qualifiedName = "${" + name + "}";
+        if (value == null) value = "";
         tokens.put(qualifiedName, value);
         tokens.put(qualifiedName.toLowerCase(), value.toLowerCase());
         tokens.put(qualifiedName.toUpperCase(), value.toUpperCase());

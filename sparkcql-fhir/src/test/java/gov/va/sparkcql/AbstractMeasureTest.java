@@ -8,10 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import gov.va.sparkcql.domain.ExecutionResult;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.catalyst.encoders.RowEncoder;
 import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;

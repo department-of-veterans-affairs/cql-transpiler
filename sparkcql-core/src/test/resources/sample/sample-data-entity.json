@@ -7,6 +7,7 @@
         "primaryEndDate": "12/31/2020",
         "dataType": "SampleEntity",
         "data": {
+            "patientId": "1",
             "name": "sample name 1",
             "description": "sample description"
         }
@@ -19,6 +20,7 @@
         "primaryEndDate": "5/31/2022",
         "dataType": "SampleEntity",
         "data": {
+            "patientId": "1",
             "name": "sample name 1b",
             "description": "sample description"
         }
@@ -31,6 +33,7 @@
         "primaryEndDate": "12/31/2020",
         "dataType": "SampleEntity",
         "data": {
+            "patientId": "2",
             "name": "sample name 2",
             "description": "sample description"
         }
@@ -43,6 +46,7 @@
         "primaryEndDate": "01/31/2021",
         "dataType": "SampleEntity",
         "data": {
+            "patientId": "3",
             "name": "sample name 3",
             "description": "sample description"
         }

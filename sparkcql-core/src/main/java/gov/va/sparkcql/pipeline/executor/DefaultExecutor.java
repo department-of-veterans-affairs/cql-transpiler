@@ -92,7 +92,7 @@ public class DefaultExecutor implements Executor {
             );
 
             // Execute this single context element using an injected CQL Engine.
-            var contextColumn = ClinicalRepositorySchemaHelper.resolveContextColumn(plan.getContextSpecifier());
+            var contextColumn = ClinicalRepositorySchemaHelper.resolveContextColumn(plan.getContextDef().getName());
             var engineResult = engine.evaluate(contextColumn, libraryCollection, clinicalData, null);
 
             // Deserialize the results from the engine back into object and then StructType form.

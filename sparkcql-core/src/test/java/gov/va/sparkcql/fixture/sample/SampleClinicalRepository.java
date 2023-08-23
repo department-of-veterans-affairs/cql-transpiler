@@ -1,4 +1,4 @@
-package gov.va.sparkcql.pipeline.repository.clinical;
+package gov.va.sparkcql.fixture.sample;
 
 import java.util.List;
 

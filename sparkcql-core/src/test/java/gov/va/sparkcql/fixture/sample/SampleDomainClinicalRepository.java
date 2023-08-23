@@ -1,9 +1,8 @@
-package gov.va.sparkcql.pipeline.repository.clinical;
+package gov.va.sparkcql.fixture.sample;
 
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.domain.SampleEntity;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 

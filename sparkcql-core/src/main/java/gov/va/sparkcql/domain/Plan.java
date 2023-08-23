@@ -7,10 +7,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonMapper;
+import org.hl7.elm.r1.ContextDef;
 
 public class Plan implements Serializable {
     
     private List<RetrievalOperation> retrievalOperations;
+
+    private ContextDef contextDef;
 
     public List<RetrievalOperation> getRetrievalOperations() {
         return retrievalOperations;
@@ -25,11 +28,12 @@ public class Plan implements Serializable {
         return this;
     }
 
-    public void setContextSpecifier(String contextSpecifier) {
+    public ContextDef getContextDef() {
+        return this.contextDef;
     }
 
-    public String getContextSpecifier() {
-        return "Patient";       // TODO
+    public void setContextDef(ContextDef contextDef) {
+        this.contextDef = contextDef;
     }
 
     // The ELM encounters serialization issues during Spark broadcasting so we implement serialization manually.

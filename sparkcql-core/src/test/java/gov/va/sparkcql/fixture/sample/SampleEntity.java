@@ -1,10 +1,20 @@
-package gov.va.sparkcql.domain;
+package gov.va.sparkcql.fixture.sample;
 
 public class SampleEntity {
+
+    private String patientId;
 
     private String name;
 
     private String description;
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
     
     public String getName() {
         return name;
