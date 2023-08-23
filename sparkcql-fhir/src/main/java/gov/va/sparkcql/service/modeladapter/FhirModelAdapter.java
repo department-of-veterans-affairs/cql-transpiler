@@ -24,6 +24,7 @@ import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Procedure;
 
 import ca.uhn.fhir.context.FhirContext;
+import gov.va.sparkcql.pipeline.modeladapter.ModelAdapter;
 import gov.va.sparkcql.types.DataType;
 
 public class FhirModelAdapter implements ModelAdapter {

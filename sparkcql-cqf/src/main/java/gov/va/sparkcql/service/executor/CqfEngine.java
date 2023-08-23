@@ -8,6 +8,7 @@ import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ValueSetDef;
 
 import gov.va.sparkcql.domain.EngineResult;
+import gov.va.sparkcql.pipeline.engine.Engine;
 
 public class CqfEngine implements Engine {
 

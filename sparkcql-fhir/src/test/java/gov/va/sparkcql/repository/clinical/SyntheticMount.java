@@ -8,7 +8,7 @@ import org.apache.spark.sql.SparkSession;
 
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.log.Log;
-import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
+import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 
 public final class SyntheticMount {
 

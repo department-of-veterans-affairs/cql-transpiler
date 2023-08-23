@@ -9,10 +9,10 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
 import gov.va.sparkcql.configuration.SystemConfiguration;
-import gov.va.sparkcql.service.compiler.Compiler;
-import gov.va.sparkcql.service.executor.BulkRetriever;
-import gov.va.sparkcql.service.executor.Executor;
-import gov.va.sparkcql.service.planner.Planner;
+import gov.va.sparkcql.pipeline.compiler.Compiler;
+import gov.va.sparkcql.pipeline.executor.BulkRetriever;
+import gov.va.sparkcql.pipeline.executor.Executor;
+import gov.va.sparkcql.pipeline.planner.Planner;
 
 public class SparkCqlSession {
 

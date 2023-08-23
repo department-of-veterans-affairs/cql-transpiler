@@ -7,7 +7,7 @@ public class SystemConfiguration {
 
     private String CQL_SOURCE_FILE_REPOSITORY_PATH = "sparkcql.cqlsourcefilerepository.path";
     private String CQL_SOURCE_FILE_REPOSITORY_EXT = "sparkcql.cqlsourcefilerepository.extension";
-    private String RESOLUTION_STRATEGY_FORMULA = "sparkcql.resolutionstrategy.formula";
+    private String RESOLUTION_STRATEGY_TEMPLATE = "sparkcql.resolutionstrategy.formula";
 
     private Map<String, String> runtimeConfig = new HashMap<String, String>();
     
@@ -64,16 +64,16 @@ public class SystemConfiguration {
         return this;
     }
 
-    public String getResolutionStrategyFormula() {
-        return read(RESOLUTION_STRATEGY_FORMULA, "${model}.${domain}");
+    public String getResolutionStrategyTemplate() {
+        return read(RESOLUTION_STRATEGY_TEMPLATE, "${model}.${domain}");
     }
 
     public void setResolutionStrategyFormula(String formula) {
-        write(RESOLUTION_STRATEGY_FORMULA, formula);
+        write(RESOLUTION_STRATEGY_TEMPLATE, formula);
     }
 
     public SystemConfiguration withResolutionStrategyFormula(String formula) {
-        write(RESOLUTION_STRATEGY_FORMULA, formula);
+        write(RESOLUTION_STRATEGY_TEMPLATE, formula);
         return this;
     }
 }

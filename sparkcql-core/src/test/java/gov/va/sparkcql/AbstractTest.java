@@ -1,5 +1,7 @@
 package gov.va.sparkcql;
 
+import org.apache.spark.sql.SparkSession;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -15,5 +17,9 @@ public class AbstractTest extends AbstractTestModule {
 
     protected Injector getInjector() {
         return Guice.createInjector(this);
+    }
+
+    SparkSession getSpark() {
+        return new LocalSparkFactory().create();
     }
 }

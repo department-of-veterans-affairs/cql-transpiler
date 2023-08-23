@@ -19,7 +19,9 @@ import org.cqframework.cql.cql2elm.ModelManager;
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.domain.CqlSource;
-import gov.va.sparkcql.repository.cql.CqlSourceRepository;
+import gov.va.sparkcql.pipeline.compiler.Compiler;
+import gov.va.sparkcql.pipeline.compiler.CqlParser;
+import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
 
 public class CqfCompiler implements Compiler {
 
@@ -43,7 +45,7 @@ public class CqfCompiler implements Compiler {
     }
 
     public List<Library> compile(List<VersionedIdentifier> cqlIdentifier) {
-        this.inScopeCqlSources = this.cqlSourceRepository.findMany(cqlIdentifier);
+        this.inScopeCqlSources = this.cqlSourceRepository.readById(cqlIdentifier);
         return compileIdentifiedLibraries();
     }
 
@@ -92,7 +94,7 @@ public class CqfCompiler implements Compiler {
         public InputStream getLibrarySource(VersionedIdentifier libraryIdentifier) {
             var lookup = inScopeCqlSources.stream().filter(cs -> cs.getIdentifier().equals(libraryIdentifier)).findFirst();
             if (lookup.isEmpty()) {
-                var cs = this.cqlSourceRepository.findOne(libraryIdentifier);
+                var cs = this.cqlSourceRepository.readById(libraryIdentifier);
                 this.inScopeCqlSources.add(cs);
                 lookup = Optional.of(cs);
             }

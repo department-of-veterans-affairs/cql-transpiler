@@ -5,7 +5,7 @@ import org.hl7.fhir.r4.model.Condition;
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
+import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 
 public class FhirConditionSparkRepository extends FhirSparkRepository<Condition> implements FhirConditionClinicalRepository {
 

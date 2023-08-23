@@ -1,16 +1,21 @@
 package gov.va.sparkcql.adapter;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.spark.sql.Encoder;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.SparkSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.va.sparkcql.domain.SampleEntity;
 import gov.va.sparkcql.domain.SamplePatient;
-import gov.va.sparkcql.service.modeladapter.ModelAdapter;
+import gov.va.sparkcql.pipeline.modeladapter.ModelAdapter;
 import gov.va.sparkcql.types.DataType;
 
-public class SampleModel implements ModelAdapter, Serializable {
+public class SampleModel implements ModelAdapter {
 
     @Override
     public String getNamespaceUri() {
@@ -46,12 +51,27 @@ public class SampleModel implements ModelAdapter, Serializable {
         }
     }
 
-
     @Override
-    public Map<DataType, Class<?>> getDataTypeToClassMapping() {
-        return Map.ofEntries(
-            Map.entry(new DataType(getNamespaceUri(), "Patient"), SamplePatient.class),
-            Map.entry(new DataType(getNamespaceUri(), "Entity"), SampleEntity.class)
+    public List<DataType> supportedDataTypes() {
+        return List.of(
+            new DataType(getNamespaceUri(), "SampleEntity"),
+            new DataType(getNamespaceUri(), "SamplePatient")
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> Encoder<T> getEncoder(DataType dataType) {
+        assertDataTypeIsSupported(dataType);
+        switch (dataType.toString()) {
+            case "{http://va.gov/sparkcql/sample}SampleEntity": 
+                return (Encoder<T>)Encoders.bean(SampleEntity.class);
+
+            case "{http://va.gov/sparkcql/sample}SamplePatient": 
+                return (Encoder<T>)Encoders.bean(SamplePatient.class);
+                
+            default:
+                throw new RuntimeException("Unexpected data type '" + dataType.toString() + "'.");
+        }
     }
 }

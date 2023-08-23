@@ -11,7 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.configuration.SystemConfiguration;
-import gov.va.sparkcql.repository.cql.CqlSourceFileRepository;
+import gov.va.sparkcql.pipeline.compiler.Compiler;
+import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepository;
 
 public class CqfCompilerTest {
 

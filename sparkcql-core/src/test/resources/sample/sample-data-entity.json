@@ -5,7 +5,7 @@
         "primaryCode": "ABC",
         "primaryStartDate": "1/1/2020",
         "primaryEndDate": "12/31/2020",
-        "dataType": "Entity",
+        "dataType": "SampleEntity",
         "data": {
             "name": "sample name 1",
             "description": "sample description"
@@ -17,7 +17,7 @@
         "primaryCode": "XYZ",
         "primaryStartDate": "6/1/2021",
         "primaryEndDate": "5/31/2022",
-        "dataType": "Entity",
+        "dataType": "SampleEntity",
         "data": {
             "name": "sample name 1b",
             "description": "sample description"
@@ -29,7 +29,7 @@
         "primaryCode": "ABC",
         "primaryStartDate": "1/1/2020",
         "primaryEndDate": "12/31/2020",
-        "dataType": "Entity",
+        "dataType": "SampleEntity",
         "data": {
             "name": "sample name 2",
             "description": "sample description"
@@ -41,7 +41,7 @@
         "primaryCode": "DEF",
         "primaryStartDate": "2/1/2020",
         "primaryEndDate": "01/31/2021",
-        "dataType": "Entity",
+        "dataType": "SampleEntity",
         "data": {
             "name": "sample name 3",
             "description": "sample description"

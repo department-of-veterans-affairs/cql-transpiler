@@ -9,7 +9,8 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.repository.resolution.TableResolutionStrategy;
+import gov.va.sparkcql.pipeline.repository.clinical.SparkClinicalRepository;
+import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 
 import au.csiro.pathling.encoders.EncoderConfig;
