@@ -1,6 +1,8 @@
 package gov.va.sparkcql.types;
 
-public class DataTypedValue<T> {
+import java.io.Serializable;
+
+public class DataTypedValue<T> implements Serializable {
     
     private DataType dataType;
 

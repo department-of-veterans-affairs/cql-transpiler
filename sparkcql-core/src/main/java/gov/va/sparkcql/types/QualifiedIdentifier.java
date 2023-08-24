@@ -1,8 +1,9 @@
 package gov.va.sparkcql.types;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class QualifiedIdentifier {
+public class QualifiedIdentifier implements Serializable {
     
     private String id = "";
 

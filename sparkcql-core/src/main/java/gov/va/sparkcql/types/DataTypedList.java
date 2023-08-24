@@ -1,8 +1,9 @@
 package gov.va.sparkcql.types;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DataTypedList<T> {
+public class DataTypedList<T> implements Serializable {
     
     private DataType dataType;
 

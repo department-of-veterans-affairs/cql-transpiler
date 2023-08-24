@@ -4,43 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="Draft pipeline">
-      <change afterPath="$PROJECT_DIR$/sparkcql-test/src/test/java/gov/va/sparkcql/AbstractTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/sparkcql-core/sparkcql.sparkcql-core.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/sparkcql-cqf/sparkcql.sparkcql-cqf.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/sparkcql-fhir/sparkcql.sparkcql-fhir.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/sparkcql.iml" beforeDir="false" />
+    <list default="true" id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="Retrieval class.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/Plan.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/Plan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/RetrievalOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/Retrieval.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/Combiner.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/Combiner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/executor/CacheStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/executor/CacheStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/executor/DefaultExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/executor/DefaultExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/executor/SparkBulkRetriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/executor/SparkBulkRetriever.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/planner/DefaultPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/planner/DefaultPlanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/planner/OptimizerRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/planner/OptimizerRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/planner/RetrieveCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/planner/RetrieveCollector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/Retriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/Retriever.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/SparkBoxEncodedDataRetriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/SparkBoxEncodedDataRetriever.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/AbstractTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/AbstractTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/configuration/AbstractTestModule.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/PipelineTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/PipelineTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/executor/ExecutorTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/planner/PlannerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/planner/PlannerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/repository/clinical/ClinicalRepositoryTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/retriever/SparkBoxEncodedDataRetrieverTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/retriever/SparkBoxEncodedDataRetrieverTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/service/compiler/CqfCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/service/compiler/CqfCompiler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/service/modeladapter/FhirModelAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/service/modeladapter/FhirModelAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataTypedList.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataTypedList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataTypedValue.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/DataTypedValue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/QualifiedIdentifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/types/QualifiedIdentifier.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -283,12 +253,21 @@
       <option name="project" value="LOCAL" />
       <updated>1692818875745</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Retrieval class.">
+      <option name="closed" value="true" />
+      <created>1692883786436</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1692883786436</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Draft pipeline" />
-    <option name="LAST_COMMIT_MESSAGE" value="Draft pipeline" />
+    <MESSAGE value="Retrieval class." />
+    <option name="LAST_COMMIT_MESSAGE" value="Retrieval class." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -315,18 +294,41 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java</url>
-          <line>41</line>
+          <line>56</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java</url>
-          <line>65</line>
+          <line>80</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java</url>
-          <line>67</line>
+          <line>82</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java</url>
+          <line>62</line>
+          <properties>
+            <option name="lambda-ordinal" value="1" />
+          </properties>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java</url>
+          <line>103</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

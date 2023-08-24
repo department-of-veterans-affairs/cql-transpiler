@@ -1,10 +1,11 @@
 package gov.va.sparkcql.types;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
-public class DataType {
+public class DataType implements Serializable {
     
     private String namespaceUri = "";
 
