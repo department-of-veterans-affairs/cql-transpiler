@@ -8,12 +8,11 @@ import java.util.stream.Collectors;
 
 import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.domain.RetrievalOperation;
+import gov.va.sparkcql.domain.Retrieval;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 
 import com.google.inject.Inject;
@@ -32,7 +31,7 @@ public class Pipeline {
 
     private final Set<Component> components;
     
-    private SparkSession spark;
+    private final SparkSession spark;
 
     @Inject
     public Pipeline(Set<Component> components, SparkFactory sparkFactory) {
@@ -76,23 +75,24 @@ public class Pipeline {
         
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
-        var retrieved = batchRetrieve(planned);
+        var retrieveMap = batchRetrieve(planned);
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member. Add a hash of the retrieve operation
         // so we can still look it up later.
-        var combined = getCombiner().combine(retrieved, planned, getModelAdapterResolver());
-        combined.collect().forEach(System.out::println);
+        var combined = getCombiner().combine(retrieveMap, planned, getModelAdapterResolver());
+        //combined.collect().forEach(System.out::println);
 
         // Output results to client
 
         return null;
     }
 
-    private Map<RetrievalOperation, JavaRDD<Object>> batchRetrieve(Plan plan) {
-        return plan.getRetrievalOperations().stream()
+    private Map<Retrieval, JavaRDD<Object>> batchRetrieve(Plan plan) {
+        return plan.getRetrieves().stream()
                 .collect(Collectors.toMap(r -> r, r -> {
-                    return getRetriever().retrieve(r.getRetrieve(), getModelAdapterResolver());
+                    var y = getRetriever().retrieve(r, getModelAdapterResolver());
+                    return getRetriever().retrieve(r, getModelAdapterResolver());
                 }));
     }
 
@@ -117,8 +117,8 @@ public class Pipeline {
     private <T extends Component> List<T> findComponents(Class<? extends Component> componentClass) {
         return (List<T>)components.stream()
             .filter(c -> componentClass.isAssignableFrom(c.getClass()))
-            .toList();
-    }    
+            .collect(Collectors.toList());
+    }
 
     public Set<Component> getComponents() {
         return components;

@@ -11,20 +11,20 @@ import org.hl7.elm.r1.ContextDef;
 
 public class Plan implements Serializable {
     
-    private List<RetrievalOperation> retrievalOperations;
+    private List<Retrieval> retrieves;
 
     private ContextDef contextDef;
 
-    public List<RetrievalOperation> getRetrievalOperations() {
-        return retrievalOperations;
+    public List<Retrieval> getRetrieves() {
+        return retrieves;
     }
 
-    public void setRetrievalOperations(List<RetrievalOperation> retrievalOperations) {
-        this.retrievalOperations = retrievalOperations;
+    public void setRetrieves(List<Retrieval> retrieves) {
+        this.retrieves = retrieves;
     }
 
-    public Plan withRetrievalOperations(List<RetrievalOperation> retrievalOperations) {
-        this.retrievalOperations = retrievalOperations;
+    public Plan withRetrieves(List<Retrieval> retrieves) {
+        this.retrieves = retrieves;
         return this;
     }
 
@@ -40,7 +40,7 @@ public class Plan implements Serializable {
 	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
         String json = (String)input.readObject();
         var plan = ElmJsonMapper.getMapper().readValue(json, Plan.class);
-        this.retrievalOperations = plan.retrievalOperations;
+        this.retrieves = plan.retrieves;
 	}
 
 	private void writeObject(ObjectOutputStream output) throws IOException {

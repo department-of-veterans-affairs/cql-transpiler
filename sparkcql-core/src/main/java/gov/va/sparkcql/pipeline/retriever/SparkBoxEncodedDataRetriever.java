@@ -1,15 +1,13 @@
 package gov.va.sparkcql.pipeline.retriever;
 
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapter;
+import gov.va.sparkcql.domain.Retrieval;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
-import org.hl7.elm.r1.Retrieve;
 
 import static org.apache.spark.sql.functions.col;
-import static org.apache.spark.sql.functions.flatten;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.List;
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.domain.RetrievalOperation;
 import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
@@ -35,11 +32,11 @@ public class SparkBoxEncodedDataRetriever implements Retriever {
     }
 
     @Override
-    public JavaRDD<Object> retrieve(Retrieve retrieve, ModelAdapterResolver modelAdapterResolver) {
+    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterResolver modelAdapterResolver) {
         
         // Acquire data for the retrieve operation with the assumption the data columns contains
         // the encoded data and additional promoted columns are provided to assist with filtering.
-        var dataType = new DataType(retrieve.getDataType());
+        var dataType = retrieval.getDataType();
         var boxedDs = spark.table(tableResolutionStrategy.resolveTableBinding(dataType));
 
         // Validate the source table conforms to the required "boxed" schematic.
@@ -48,7 +45,7 @@ public class SparkBoxEncodedDataRetriever implements Retriever {
 
         // Apply filters defined by the retrieve operation. These are calculated during the
         // generation of the ELM and subsequent optimization phase.
-        applyFilters(boxedDs, retrieve);
+        applyFilters(boxedDs, retrieval);
 
         // Lookup the model adapter for the given data type and use it to decode the data.
         var modelAdapter = modelAdapterResolver.forType(dataType);
@@ -58,23 +55,23 @@ public class SparkBoxEncodedDataRetriever implements Retriever {
         return encodedDs.as(encoder).javaRDD();
     }
 
-    private Dataset<Row> applyFilters(Dataset<Row> ds, Retrieve retrieve) {
-        ds = applyCodeInFilter(ds, retrieve);
-        ds = applyDateFilter(ds, retrieve);
+    private Dataset<Row> applyFilters(Dataset<Row> ds, Retrieval retrieval) {
+        ds = applyCodeInFilter(ds, retrieval);
+        ds = applyDateFilter(ds, retrieval);
         return ds;
     }
 
-    private Dataset<Row> applyCodeInFilter(Dataset<Row> ds, Retrieve retrieve) {
-        var filter = retrieve.getCodeFilter();
-        if (!filter.isEmpty())
-            throw new UnsupportedOperationException();
+    private Dataset<Row> applyCodeInFilter(Dataset<Row> ds, Retrieval retrieval) {
+//        var filter = retrieval.getCodeFilter();
+//        if (!filter.isEmpty())
+//            throw new UnsupportedOperationException();
         return ds;
     }
 
-    private Dataset<Row> applyDateFilter(Dataset<Row> ds, Retrieve retrieve) {
-        var filter = retrieve.getDateFilter();
-        if (!filter.isEmpty())
-            throw new UnsupportedOperationException();
+    private Dataset<Row> applyDateFilter(Dataset<Row> ds, Retrieval retrieval) {
+//        var filter = retrieval.getDateFilter();
+//        if (!filter.isEmpty())
+//            throw new UnsupportedOperationException();
         return ds;
     }
 

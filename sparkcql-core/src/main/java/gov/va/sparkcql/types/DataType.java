@@ -51,7 +51,7 @@ public class DataType {
 
     @Override
     public String toString() {
-        return this.namespaceUri.equals("") ? this.name : "{" + this.namespaceUri + "}" + this.name;
+        return this.namespaceUri.isEmpty() ? this.name : "{" + this.namespaceUri + "}" + this.name;
     }
 
     @Override

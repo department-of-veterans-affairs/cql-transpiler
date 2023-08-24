@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import gov.va.sparkcql.domain.LibraryCollection;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.hl7.elm.r1.Library;
@@ -33,7 +34,7 @@ public class CqfCompiler implements Compiler {
         this.cqlSourceRepository = cqlSourceRepository;
     }
 
-    public List<Library> compile(String... cqlText) {
+    public LibraryCollection compile(String... cqlText) {
         this.inScopeCqlSources = Stream.of(cqlText)
             .map(text -> {
                 return new CqlSource()
@@ -41,12 +42,12 @@ public class CqfCompiler implements Compiler {
                     .withSource(text);
             }).toList();
 
-        return compileIdentifiedLibraries();
+        return new LibraryCollection(compileIdentifiedLibraries());
     }
 
-    public List<Library> compile(List<VersionedIdentifier> cqlIdentifier) {
+    public LibraryCollection compile(List<VersionedIdentifier> cqlIdentifier) {
         this.inScopeCqlSources = this.cqlSourceRepository.readById(cqlIdentifier);
-        return compileIdentifiedLibraries();
+        return new LibraryCollection(compileIdentifiedLibraries());
     }
 
     private List<Library> compileIdentifiedLibraries() {

@@ -59,17 +59,5 @@ public class PipelineTest extends AbstractTest {
         libraryCollection.add(reader.read(libraryContents));
         var pipeline = getInjector().getInstance(Pipeline.class);
         pipeline.execute(libraryCollection);
-
-        // var tableResolutionStrategy = new TemplateResolutionStrategy(new SampleConfiguration());
-        // var dataLoader = new SampleDataLoaderPreprocessor(tableResolutionStrategy);
-        // dataLoader.apply(pipeline);
-        // var retriever = new SparkBoxEncodedDataRetriever(
-        //         new LocalSparkFactory(),
-        //         tableResolutionStrategy
-        //         );
-        // var retrievalOp = new RetrievalOperation()
-        //         .withRetrieve(new Retrieve()
-        //                 .withDataType(new QName("http://va.gov/sparkcql/sample", "SampleEntity")));
-        // var r = retriever.retrieve(retrievalOp, new ModelAdapterResolver(Set.of(new SampleModel())));
-    }    
+    }
 }

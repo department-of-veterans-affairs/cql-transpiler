@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import gov.va.sparkcql.domain.Retrieval;
 import org.hl7.elm.r1.Retrieve;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +31,8 @@ public class SparkBoxEncodedDataRetrieverTest extends AbstractTest {
 
         var r1 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/sample", "SamplePatient"));
         var r2 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/sample", "SampleEntity"));
-        var rdd1 = retriever.retrieve(r1, new ModelAdapterResolver(Set.of(new SampleModel())));
-        var rdd2 = retriever.retrieve(r2, new ModelAdapterResolver(Set.of(new SampleModel())));
+        var rdd1 = retriever.retrieve(Retrieval.of(r1), new ModelAdapterResolver(Set.of(new SampleModel())));
+        var rdd2 = retriever.retrieve(Retrieval.of(r2), new ModelAdapterResolver(Set.of(new SampleModel())));
         assertEquals(3, rdd1.count());
         assertEquals(4, rdd2.count());
     }

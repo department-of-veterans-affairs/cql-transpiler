@@ -3,8 +3,8 @@ subprojects {
     apply plugin: 'eclipse'
 
     compileJava {
-        sourceCompatibility = "${targetJavaVersion}"
-        targetCompatibility = "${targetJavaVersion}"
+        sourceCompatibility = 11
+        targetCompatibility = 11
     }
     
     repositories {

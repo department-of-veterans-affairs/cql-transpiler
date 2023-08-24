@@ -7,18 +7,16 @@ import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.elm.r1.Retrieve;
 
-import gov.va.sparkcql.domain.RetrievalOperation;
-
-public class RetrieveCollector extends ElmBaseLibraryVisitor<List<RetrievalOperation>, RetrievalOperation> {
+public class RetrieveCollector extends ElmBaseLibraryVisitor<List<Retrieve>, Retrieve> {
 
     @Override
-    protected List<RetrievalOperation> defaultResult(Trackable elm, RetrievalOperation context) {
+    protected List<Retrieve> defaultResult(Trackable elm, Retrieve context) {
         return List.of();
     }
 
     @Override
-    protected List<RetrievalOperation> aggregateResult(List<RetrievalOperation> aggregate, List<RetrievalOperation> nextResult) {
-        var combined = new ArrayList<RetrievalOperation>(aggregate);
+    protected List<Retrieve> aggregateResult(List<Retrieve> aggregate, List<Retrieve> nextResult) {
+        var combined = new ArrayList<Retrieve>(aggregate);
         if (nextResult != null) {
             combined.addAll(nextResult);
         }
@@ -26,7 +24,7 @@ public class RetrieveCollector extends ElmBaseLibraryVisitor<List<RetrievalOpera
     }
 
     @Override
-    public List<RetrievalOperation> visitRetrieve(Retrieve elm, RetrievalOperation context) {
-        return List.of(new RetrievalOperation().withRetrieve(elm));
+    public List<Retrieve> visitRetrieve(Retrieve elm, Retrieve context) {
+        return List.of(elm);
     }
 }
