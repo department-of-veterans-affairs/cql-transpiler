@@ -2,7 +2,9 @@ package gov.va.sparkcql.pipeline.retriever.resolution;
 
 import gov.va.sparkcql.types.DataType;
 
-public interface TableResolutionStrategy {
+import java.io.Serializable;
+
+public interface TableResolutionStrategy extends Serializable {
 
     public String resolveTableBinding(DataType dataType);
 }

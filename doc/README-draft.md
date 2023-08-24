@@ -3,7 +3,7 @@
 - CQL evaluation should provide similar performance with other languages
 - Keep external package dependencies to a minimum
 - Enforce strong typing wherever possible
-- Allow for greater interoperability between components written in SQL, Python, Scala, or CQL within the Spark ecosystem.
+- Allow for greater interoperability between stages written in SQL, Python, Scala, or CQL within the Spark ecosystem.
 - Consistency w/ Spark API style
 
 # Data Model

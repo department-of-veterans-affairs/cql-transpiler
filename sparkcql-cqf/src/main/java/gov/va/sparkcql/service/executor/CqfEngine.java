@@ -8,9 +8,9 @@ import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ValueSetDef;
 
 import gov.va.sparkcql.domain.EngineResult;
-import gov.va.sparkcql.pipeline.engine.Engine;
+import gov.va.sparkcql.pipeline.evaluator.Evaluator;
 
-public class CqfEngine implements Engine {
+public class CqfEngine implements Evaluator {
 
     @Override
     public EngineResult evaluate(String contextCorrelationId, List<Library> libraries,

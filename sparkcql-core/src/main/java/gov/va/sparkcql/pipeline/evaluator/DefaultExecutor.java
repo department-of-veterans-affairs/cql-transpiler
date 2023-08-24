@@ -39,7 +39,7 @@
 //
 //        // Spark distributes our processing code to each executor node, an operation requiring
 //        // serialization of all enclosed objects. The ELM does not implement the Serialization
-//        // interface. For those cases, wrap the unserializable object in a serializable one.
+//        // interface. For those cases, wrap the deserializable object in a serializable one
 //        // See Plan and LibraryCollection for examples.
 //
 //        try {

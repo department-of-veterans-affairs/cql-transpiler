@@ -5,7 +5,7 @@ import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.fixture.sample.SampleConfiguration;
 import gov.va.sparkcql.fixture.sample.SampleDataPreprocessor;
-import gov.va.sparkcql.fixture.sample.SampleEngine;
+import gov.va.sparkcql.fixture.sample.SampleEvaluator;
 import gov.va.sparkcql.fixture.sample.SampleModel;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.combiner.DefaultCombiner;
@@ -32,13 +32,13 @@ public class PipelineTest extends AbstractTest {
         super.configure();
         bind(SystemConfiguration.class).to(SampleConfiguration.class);
         bind(TableResolutionStrategy.class).to(TemplateResolutionStrategy.class);
-        var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Component.class);
+        var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Stage.class);
         pipelineComponentBinder.addBinding().to(SampleDataPreprocessor.class);
         pipelineComponentBinder.addBinding().to(ModelAdapterResolver.class);
         pipelineComponentBinder.addBinding().to(DefaultPlanner.class);
         pipelineComponentBinder.addBinding().to(DefaultCombiner.class);
         pipelineComponentBinder.addBinding().to(SparkBoxEncodedDataRetriever.class);
-        pipelineComponentBinder.addBinding().to(SampleEngine.class);
+        pipelineComponentBinder.addBinding().to(SampleEvaluator.class);
         var modelAdapterBinder = Multibinder.newSetBinder(binder(), ModelAdapter.class);
         modelAdapterBinder.addBinding().to(SampleModel.class);
     }

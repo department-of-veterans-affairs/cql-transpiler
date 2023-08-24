@@ -5,10 +5,10 @@ import java.util.Set;
 
 import com.google.inject.Inject;
 
-import gov.va.sparkcql.pipeline.Component;
+import gov.va.sparkcql.pipeline.Stage;
 import gov.va.sparkcql.types.DataType;
 
-public class ModelAdapterResolver implements Component, Serializable {
+public class ModelAdapterResolver implements Stage {
     
     Set<ModelAdapter> modelAdapters;
 

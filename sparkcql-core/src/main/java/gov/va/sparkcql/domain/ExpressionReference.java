@@ -1,6 +1,8 @@
 package gov.va.sparkcql.domain;
 
-public class ExpressionReference {
+import java.io.Serializable;
+
+public class ExpressionReference implements Serializable {
     
     private String libraryName;
 

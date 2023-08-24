@@ -1,4 +1,4 @@
-package gov.va.sparkcql.pipeline.executor;
+package gov.va.sparkcql.pipeline.retriever;
 
 import org.hl7.elm.r1.Retrieve;
 
