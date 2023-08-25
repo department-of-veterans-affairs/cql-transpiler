@@ -48,7 +48,7 @@ public class PipelineTest extends AbstractTest {
         var pipeline = getInjector().getInstance(Pipeline.class);
         assertFalse(pipeline.getComponents().isEmpty());
         assertNotNull(pipeline.getPlanner());
-        assertNotNull(pipeline.getEngine());
+        assertNotNull(pipeline.getEvaluator());
     }
 
     @Test
@@ -58,6 +58,7 @@ public class PipelineTest extends AbstractTest {
         var libraryCollection = new LibraryCollection();
         libraryCollection.add(reader.read(libraryContents));
         var pipeline = getInjector().getInstance(Pipeline.class);
-        pipeline.execute(libraryCollection);
+        var results = pipeline.execute(libraryCollection);
+        results.splitByContext().collect().forEach(System.out::println);
     }
 }

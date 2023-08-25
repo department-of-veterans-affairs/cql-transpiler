@@ -1,9 +1,10 @@
 package gov.va.sparkcql.configuration;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SystemConfiguration {
+public class SystemConfiguration implements Serializable {
 
     private String CQL_SOURCE_FILE_REPOSITORY_PATH = "sparkcql.cqlsourcefilerepository.path";
     private String CQL_SOURCE_FILE_REPOSITORY_EXT = "sparkcql.cqlsourcefilerepository.extension";

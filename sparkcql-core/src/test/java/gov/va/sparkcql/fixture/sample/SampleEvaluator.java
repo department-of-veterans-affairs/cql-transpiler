@@ -4,16 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.inject.Inject;
-import gov.va.sparkcql.domain.EvaluationResult;
-import org.hl7.elm.r1.Library;
-import org.hl7.elm.r1.Retrieve;
-import org.hl7.elm.r1.ValueSetDef;
+import gov.va.sparkcql.domain.EvaluatedContext;
+import gov.va.sparkcql.domain.LibraryCollection;
+import gov.va.sparkcql.domain.Retrieval;
 
 import gov.va.sparkcql.log.Log;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
 import gov.va.sparkcql.domain.ExpressionReference;
-import gov.va.sparkcql.types.DataType;
-import gov.va.sparkcql.types.DataTypedList;
+import scala.Tuple2;
 
 public class SampleEvaluator implements Evaluator {
 
@@ -22,31 +20,18 @@ public class SampleEvaluator implements Evaluator {
     }
 
     @Override
-    public EvaluationResult evaluate(String contextCorrelationId, List<Library> libraries, Map<Retrieve, List<Object>> clinicalData, Map<ValueSetDef, List<Object>> terminologyData) {
-        Log.info("Processing Context Correlation ID: " + contextCorrelationId);
+    public EvaluatedContext evaluate(String contextElementId, LibraryCollection libraryCollection, Map<Retrieval, List<Object>> clinicalData, Object terminologyData) {
+        Log.info("Evaluating Context Element: " + contextElementId);
 
-        // Echo back some data that was sent in.
-        var echo = clinicalData.entrySet().iterator().next();
-        var evaluatedResources = List.of(new DataTypedList<Object>()
-            .withDataType(new DataType()
-                .withNamespaceUri("http://va.gov/sparkcql/sample")
-                .withName("Entity"))
-            .withValues(List.of(echo.getValue().get(0)))
-        );
-        
-        Map<ExpressionReference,DataTypedList<Object>> expressionResults = Map.ofEntries(
-            Map.entry(
-                new ExpressionReference()
-                    .withLibraryName("SAMPLE_LIBRARY")
-                    .withName("Sample Definition A"),
-                new DataTypedList<Object>()
-                    .withDataType(new DataType(echo.getKey().getDataType()))
-                    .withValues(echo.getValue())
-            )
-        );
+        var evaluated = clinicalData.values().stream().flatMap(List::stream).toList();
+        var expressionReference = new ExpressionReference()
+                .withLibrary(libraryCollection.get(0))
+                .withExpressionDef(libraryCollection.get(0).getStatements().getDef().get(0));
 
-        return new EvaluationResult();
-//            .withEvaluatedResources(evaluatedResources)
-//            .withExpressionResults(expressionResults);
+        var expressionResults = List.of(Tuple2.apply(expressionReference, evaluated));
+        return new EvaluatedContext()
+                .withContextId(contextElementId)
+                .withEvaluated(evaluated)
+                .withExpressionResults(expressionResults);
     }
 }

@@ -29,10 +29,12 @@ public class LibraryCollection implements List<Library>, Serializable {
 	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
         // Read the length written during serialization.
         var size = input.readInt();
+        this.libraries = new ArrayList<>(size);
         // Use the ELM mapper to deserialize back into a list of Libraries.
         var mapper = ElmJsonMapper.getMapper();
         for (var i = 0; i < size; i++) {
-            mapper.readValue((String)input.readObject(), Library.class);
+            var library = mapper.readValue((String)input.readObject(), Library.class);
+            libraries.add(library);
         }
 	}
 

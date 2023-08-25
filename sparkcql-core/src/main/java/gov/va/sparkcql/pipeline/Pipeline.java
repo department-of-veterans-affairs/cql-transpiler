@@ -3,10 +3,7 @@ package gov.va.sparkcql.pipeline;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import gov.va.sparkcql.domain.EvaluationResult;
-import gov.va.sparkcql.domain.LibraryCollection;
-import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.*;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
@@ -45,7 +42,7 @@ public class Pipeline implements Serializable {
 
     private JavaPairRDD<String, Map<Retrieval, List<Object>>> combinedOutput;
 
-    private JavaPairRDD<String, EvaluationResult> evaluationOutput;
+    private JavaPairRDD<String, EvaluatedContext> evaluationOutput;
 
     @Inject
     public Pipeline(Set<Stage> stages, SparkFactory sparkFactory) {
@@ -53,38 +50,38 @@ public class Pipeline implements Serializable {
         this.spark = sparkFactory.create();
     }
 
-    public Map<String, Dataset<Row>> execute(String libraryName, String version, Map<String, Object> parameters) {
+    public EvaluationResultSet execute(String libraryName, String version, Map<String, Object> parameters) {
         this.compilationOutput = getCompiler().compile(List.of(new VersionedIdentifier().withId(libraryName).withVersion(version)));
         this.parameters = parameters;
         return runPipeline();
     }
 
-    public Map<String, Dataset<Row>> execute(String libraryName, String version) {
+    public EvaluationResultSet execute(String libraryName, String version) {
         return execute(libraryName, version, Map.of());
     }
 
-    public Map<String, Dataset<Row>> execute(String cqlSource, Map<String, Object> parameters) {
+    public EvaluationResultSet execute(String cqlSource, Map<String, Object> parameters) {
         compilationOutput = getCompiler().compile(cqlSource);
         this.parameters = parameters;
         return runPipeline();
     }
 
-    public Map<String, Dataset<Row>> execute(String cqlSource) {
+    public EvaluationResultSet execute(String cqlSource) {
         return execute(cqlSource, Map.of());
     }
 
-    public Map<String, Dataset<Row>> execute(LibraryCollection libraryCollection, Map<String, Object> parameters) {
+    public EvaluationResultSet execute(LibraryCollection libraryCollection, Map<String, Object> parameters) {
         this.compilationOutput = libraryCollection;
         this.parameters = parameters;
         return runPipeline();
     }
 
-    public Map<String, Dataset<Row>> execute(LibraryCollection libraryCollection) {
+    public EvaluationResultSet execute(LibraryCollection libraryCollection) {
         this.compilationOutput = libraryCollection;
         return runPipeline();
     }
 
-    public Map<String, Dataset<Row>> runPipeline() {
+    public EvaluationResultSet runPipeline() {
 
         // Run all preprocessors before anything else.
         runPreprocessStage();
@@ -96,18 +93,16 @@ public class Pipeline implements Serializable {
         // links back to retrieve definition which required it.
         retrievalOutput = runRetrievalStage();
 
-        // Group each dataset by the context and collect its interior clinical data as a
+        // Group each dataset by the context element and collect its interior clinical data as a
         // nested list so there's one outer row per member. Add a hash of the retrieve operation
         // so we can still look it up later.
         combinedOutput = runCombinerStage();
-        combinedOutput.collect().forEach(System.out::println);
 
         // Calculate each context across all measures via the provided engine
         var evaluationOutput = runEvaluatorStage();
 
         // Output results to client
-
-        return null;
+        return new EvaluationResultSet(evaluationOutput);
     }
 
     private void runPreprocessStage() {
@@ -130,14 +125,14 @@ public class Pipeline implements Serializable {
         return getCombiner().combine(retrievalOutput, plannedOutput, getModelAdapterResolver());
     }
 
-    private JavaRDD<EvaluationResult> runEvaluatorStage() {
-        return combinedOutput.mapPartitions((FlatMapFunction<Iterator<Tuple2<String, Map<Retrieval, List<Object>>>>, EvaluationResult>) row -> {
+    private JavaRDD<EvaluatedContext> runEvaluatorStage() {
+        return combinedOutput.mapPartitions((FlatMapFunction<Iterator<Tuple2<String, Map<Retrieval, List<Object>>>>, EvaluatedContext>) row -> {
 
             // NOTE: Everything within mapPartitions is running on the executor nodes.
             // Any one-time initialization per partition (aka across several rows) should
-            // be performed here rather than within Iterator<EvaluationResult> below.
+            // be performed here rather than within Iterator<EvaluatedContext> below.
 
-            return new Iterator<EvaluationResult>() {
+            return new Iterator<EvaluatedContext>() {
 
                 @Override
                 public boolean hasNext() {
@@ -145,13 +140,17 @@ public class Pipeline implements Serializable {
                 }
 
                 @Override
-                public EvaluationResult next() {
+                public EvaluatedContext next() {
                     // Iterate to the next context element for those defined within the partition.
                     var nextRow = row.next();
-                    return new EvaluationResult();
+                    return runEvaluatorContextElement(nextRow);
                 }
             };
-        }, false);
+        }, true);
+    }
+
+    EvaluatedContext runEvaluatorContextElement(Tuple2<String, Map<Retrieval, List<Object>>> row) {
+        return getEvaluator().evaluate(row._1, compilationOutput, row._2, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -202,7 +201,7 @@ public class Pipeline implements Serializable {
         return findComponent(Combiner.class);
     }
 
-    public Evaluator getEngine() {
+    public Evaluator getEvaluator() {
         return findComponent(Evaluator.class);
     }
 

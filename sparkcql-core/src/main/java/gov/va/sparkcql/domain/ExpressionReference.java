@@ -1,12 +1,15 @@
 package gov.va.sparkcql.domain;
 
+import org.hl7.elm.r1.ExpressionDef;
+import org.hl7.elm.r1.Library;
+
 import java.io.Serializable;
 
 public class ExpressionReference implements Serializable {
     
     private String libraryName;
 
-    private String name;
+    private String expressionDefName;
 
     public String getLibraryName() {
         return libraryName;
@@ -21,16 +24,26 @@ public class ExpressionReference implements Serializable {
         return this;
     }
 
-    public String getName() {
-        return name;
+    public ExpressionReference withLibrary(Library library) {
+        this.libraryName = library.getIdentifier().getId();
+        return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getExpressionDefName() {
+        return expressionDefName;
     }
 
-    public ExpressionReference withName(String name) {
-        this.name = name;
+    public void setExpressionDefName(String name) {
+        this.expressionDefName = name;
+    }
+
+    public ExpressionReference withExpressionDefName(String expressionDefName) {
+        this.expressionDefName = expressionDefName;
+        return this;
+    }
+
+    public ExpressionReference withExpressionDef(ExpressionDef expressionDef) {
+        this.expressionDefName = expressionDef.getName();
         return this;
     }
 }
