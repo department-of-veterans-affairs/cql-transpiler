@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import gov.va.sparkcql.domain.LibraryCollection;
@@ -40,7 +41,7 @@ public class CqfCompiler implements Compiler {
                 return new CqlSource()
                     .withIdentifier(new CqlParser().parseVersionedIdentifier(text))
                     .withSource(text);
-            }).toList();
+            }).collect(Collectors.toList());
 
         return new LibraryCollection(compileIdentifiedLibraries());
     }
@@ -51,7 +52,7 @@ public class CqfCompiler implements Compiler {
     }
 
     private List<Library> compileIdentifiedLibraries() {
-        return inScopeCqlSources.stream().map(cs -> execCompile(cs.getSource())).toList();
+        return inScopeCqlSources.stream().map(cs -> execCompile(cs.getSource())).collect(Collectors.toList());
     }
 
     private Library execCompile(String cqlText) {

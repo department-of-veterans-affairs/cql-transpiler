@@ -27,6 +27,7 @@ public class ModelAdapterResolver implements Component {
 
     public <T> ModelAdapter forType(DataType dataType) {
         var adapter = modelAdapters.stream().filter(a -> a.isDataTypeSupported(dataType));
-        return adapter.findFirst().get();
+        return adapter.findFirst()
+                .orElseThrow(() -> new RuntimeException("DataType " + dataType.toString() + " not found."));
     }
 }

@@ -21,7 +21,7 @@
 //import gov.va.sparkcql.configuration.LocalSparkFactory;
 //import gov.va.sparkcql.configuration.SparkFactory;
 //import gov.va.sparkcql.configuration.SystemConfiguration;
-//import gov.va.sparkcql.configuration.TestConfiguration;
+//import gov.va.sparkcql.fixture.TestConfiguration;
 //import gov.va.sparkcql.domain.LibraryCollection;
 //import gov.va.sparkcql.pipeline.compiler.Compiler;
 //import gov.va.sparkcql.pipeline.engine.Engine;

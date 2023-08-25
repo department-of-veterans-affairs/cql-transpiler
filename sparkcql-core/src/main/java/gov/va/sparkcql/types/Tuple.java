@@ -2,7 +2,7 @@ package gov.va.sparkcql.types;
 
 import java.io.Serializable;
 
-public abstract class Tuple<A, B> implements Serializable {
+public class Tuple<A, B> implements Serializable {
 
     private A a;
     private B b;
@@ -21,5 +21,12 @@ public abstract class Tuple<A, B> implements Serializable {
 
     public void setB(B b) {
         this.b = b;
+    }
+
+    public static <A, B> Tuple<A, B> of(A a, B b) {
+        var t = new Tuple<A, B>();
+        t.setA(a);
+        t.setB(b);
+        return t;
     }
 }

@@ -2,6 +2,7 @@ package gov.va.sparkcql.io;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +36,7 @@ public final class Directory {
             return Stream.of();
         }
         var fileAndFolderList = List.of(rootFiles);
-        var descendants = fileAndFolderList.stream().flatMap(f -> listFilesRecursively(f)).toList();
+        var descendants = fileAndFolderList.stream().flatMap(f -> listFilesRecursively(f)).collect(Collectors.toList());
         return Stream.concat(fileAndFolderList.stream(), descendants.stream());
     }
 }

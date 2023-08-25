@@ -1,6 +1,7 @@
 package gov.va.sparkcql.service.compiler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hl7.cql_annotations.r1.CqlToElmError;
 import org.hl7.elm.r1.Library;
@@ -14,7 +15,7 @@ public class CqlErrorChecker {
     public CqlErrorChecker(Library elm) {
         this.errors = elm.getAnnotation().stream()
                 .filter(a -> a instanceof CqlToElmError)
-                .map(a -> (CqlToElmError) a).toList();
+                .map(a -> (CqlToElmError) a).collect(Collectors.toList());
     }
 
     public String toPrettyString() {
@@ -27,7 +28,7 @@ public class CqlErrorChecker {
                     e.getLibraryVersion(),
                     e.getStartLine(),
                     e.getMessage());
-        }).toList();
+        }).collect(Collectors.toList());
 
         return String.join("\r\n", formattedErrorList);
     }
@@ -37,6 +38,6 @@ public class CqlErrorChecker {
     }
 
     public Boolean hasErrors() {
-        return this.errors.size() > 0;
+        return !this.errors.isEmpty();
     }
 }

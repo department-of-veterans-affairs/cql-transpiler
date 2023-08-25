@@ -1,6 +1,7 @@
 package gov.va.sparkcql.pipeline.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.io.Directory;
@@ -20,7 +21,7 @@ public abstract class AbstractFileRepository<T, ID> implements ReadableRepositor
                 .find(path, extension)
                 .map(Directory::readString)
                 .map(contents -> deserialize(contents))
-                .toList();
+                .collect(Collectors.toList());
         }
     }
 
@@ -35,7 +36,7 @@ public abstract class AbstractFileRepository<T, ID> implements ReadableRepositor
 
     @Override
     public List<T> readById(List<ID> ids) {
-        return entities.stream().filter(cs -> ids.contains(getEntityId(cs))).toList();
+        return entities.stream().filter(cs -> ids.contains(getEntityId(cs))).collect(Collectors.toList());
     }
 
     @Override

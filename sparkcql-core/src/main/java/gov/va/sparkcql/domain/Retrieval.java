@@ -75,6 +75,11 @@ public class Retrieval implements Serializable {
         this.dataType = dataType;
     }
 
+    public Retrieval withDataType(DataType dataType) {
+        this.dataType = dataType;
+        return this;
+    }
+
     public List<Object> getOperations() {
         return operations;
     }
