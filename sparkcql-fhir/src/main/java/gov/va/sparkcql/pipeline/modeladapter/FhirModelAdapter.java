@@ -3,15 +3,12 @@ package gov.va.sparkcql.pipeline.modeladapter;
 import ca.uhn.fhir.context.FhirContext;
 import gov.va.sparkcql.types.DataType;
 import org.apache.spark.sql.Encoder;
-import org.apache.spark.sql.Encoders;
 import org.hl7.elm.r1.ContextDef;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
 import scala.Tuple2;
 
- import au.csiro.pathling.encoders.EncoderConfig;
  import au.csiro.pathling.encoders.FhirEncoders;
- import au.csiro.pathling.encoders.SchemaConverter;
  import au.csiro.pathling.encoders.datatypes.R4DataTypeMappings;
 
 import java.util.List;
@@ -59,6 +56,7 @@ public class FhirModelAdapter implements ModelAdapter {
 
     @Override
     public List<Tuple2<DataType, Class<?>>> supportedDataTypes() {
+        // TODO: Add missing FHIR data types (e.g. MedicationAdministration)
         return List.of(
                 Tuple2.apply(new DataType(getNamespaceUri(), "AllergyIntolerance"), AllergyIntolerance.class),
                 Tuple2.apply(new DataType(getNamespaceUri(), "CarePlan"), CarePlan.class),
@@ -100,6 +98,8 @@ public class FhirModelAdapter implements ModelAdapter {
                 return null;
             }
 
+            // Resolve path based on type.
+            // TODO: Add missing FHIR data types (e.g. MedicationAdministration)
             switch (instance.getClass().getSimpleName()) {
                 case "AllergyIntolerance":
                     return ((AllergyIntolerance) instance).getPatient().getId();

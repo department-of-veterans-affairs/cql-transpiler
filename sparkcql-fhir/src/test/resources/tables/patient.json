@@ -204,10 +204,6 @@
                     }
                 }
             ]
-        },
-        "request": {
-            "method": "POST",
-            "url": "Patient"
         }
     }
 ]
