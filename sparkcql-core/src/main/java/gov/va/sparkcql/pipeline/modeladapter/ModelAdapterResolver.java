@@ -1,14 +1,13 @@
 package gov.va.sparkcql.pipeline.modeladapter;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import com.google.inject.Inject;
 
-import gov.va.sparkcql.pipeline.Stage;
+import gov.va.sparkcql.pipeline.Component;
 import gov.va.sparkcql.types.DataType;
 
-public class ModelAdapterResolver implements Stage {
+public class ModelAdapterResolver implements Component {
     
     Set<ModelAdapter> modelAdapters;
 

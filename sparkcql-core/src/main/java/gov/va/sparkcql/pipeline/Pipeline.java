@@ -7,8 +7,6 @@ import gov.va.sparkcql.domain.*;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.hl7.elm.r1.VersionedIdentifier;
 
@@ -30,7 +28,7 @@ public class Pipeline implements Serializable {
 
     private final SparkSession spark;
 
-    private final Set<Stage> stages;
+    private final Set<Component> components;
 
     private Map<String, Object> parameters;
 
@@ -45,8 +43,8 @@ public class Pipeline implements Serializable {
     private JavaPairRDD<String, EvaluatedContext> evaluationOutput;
 
     @Inject
-    public Pipeline(Set<Stage> stages, SparkFactory sparkFactory) {
-        this.stages = stages;
+    public Pipeline(Set<Component> components, SparkFactory sparkFactory) {
+        this.components = components;
         this.spark = sparkFactory.create();
     }
 
@@ -154,8 +152,8 @@ public class Pipeline implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Stage> T findComponent(Class<? extends Stage> componentClass) {
-        var found = (Optional<T>) stages.stream()
+    private <T extends Component> T findComponent(Class<? extends Component> componentClass) {
+        var found = (Optional<T>) components.stream()
             .filter(c -> componentClass.isAssignableFrom(c.getClass()))
             .findFirst();
 
@@ -167,14 +165,14 @@ public class Pipeline implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Stage> List<T> findComponents(Class<? extends Stage> componentClass) {
-        return (List<T>) stages.stream()
+    private <T extends Component> List<T> findComponents(Class<? extends Component> componentClass) {
+        return (List<T>) components.stream()
             .filter(c -> componentClass.isAssignableFrom(c.getClass()))
             .collect(Collectors.toList());
     }
 
-    public Set<Stage> getComponents() {
-        return stages;
+    public Set<Component> getComponents() {
+        return components;
     }
 
     public Compiler getCompiler() {

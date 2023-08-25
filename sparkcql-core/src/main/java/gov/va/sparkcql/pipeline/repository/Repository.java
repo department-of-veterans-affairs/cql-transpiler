@@ -1,6 +1,6 @@
 package gov.va.sparkcql.pipeline.repository;
 
-import gov.va.sparkcql.pipeline.Stage;
+import gov.va.sparkcql.pipeline.Component;
 
-public interface Repository extends Stage {
+public interface Repository extends Component {
 }

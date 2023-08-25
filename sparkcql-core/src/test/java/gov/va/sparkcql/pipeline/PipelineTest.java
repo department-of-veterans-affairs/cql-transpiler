@@ -32,7 +32,7 @@ public class PipelineTest extends AbstractTest {
         super.configure();
         bind(SystemConfiguration.class).to(SampleConfiguration.class);
         bind(TableResolutionStrategy.class).to(TemplateResolutionStrategy.class);
-        var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Stage.class);
+        var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Component.class);
         pipelineComponentBinder.addBinding().to(SampleDataPreprocessor.class);
         pipelineComponentBinder.addBinding().to(ModelAdapterResolver.class);
         pipelineComponentBinder.addBinding().to(DefaultPlanner.class);
