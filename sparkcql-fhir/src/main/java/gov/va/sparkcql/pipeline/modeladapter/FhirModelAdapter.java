@@ -56,7 +56,6 @@ public class FhirModelAdapter implements ModelAdapter {
 
     @Override
     public List<Tuple2<DataType, Class<?>>> supportedDataTypes() {
-        // TODO: Add missing FHIR data types (e.g. MedicationAdministration)
         return List.of(
                 Tuple2.apply(new DataType(getNamespaceUri(), "AllergyIntolerance"), AllergyIntolerance.class),
                 Tuple2.apply(new DataType(getNamespaceUri(), "CarePlan"), CarePlan.class),
@@ -71,6 +70,8 @@ public class FhirModelAdapter implements ModelAdapter {
                 Tuple2.apply(new DataType(getNamespaceUri(), "ImagingStudy"), ImagingStudy.class),
                 Tuple2.apply(new DataType(getNamespaceUri(), "Immunization"), Immunization.class),
                 Tuple2.apply(new DataType(getNamespaceUri(), "Location"), Location.class),
+                Tuple2.apply(new DataType(getNamespaceUri(), "Medication"), Medication.class),
+                Tuple2.apply(new DataType(getNamespaceUri(), "MedicationAdministration"), MedicationAdministration.class),
                 Tuple2.apply(new DataType(getNamespaceUri(), "MedicationRequest"), MedicationRequest.class),
                 Tuple2.apply(new DataType(getNamespaceUri(), "Observation"), Observation.class),
                 Tuple2.apply(new DataType(getNamespaceUri(), "Organization"), Organization.class),
@@ -99,7 +100,6 @@ public class FhirModelAdapter implements ModelAdapter {
             }
 
             // Resolve path based on type.
-            // TODO: Add missing FHIR data types (e.g. MedicationAdministration)
             switch (instance.getClass().getSimpleName()) {
                 case "AllergyIntolerance":
                     return ((AllergyIntolerance) instance).getPatient().getId();
@@ -125,6 +125,8 @@ public class FhirModelAdapter implements ModelAdapter {
                     return getPatientId(((ImagingStudy) instance).getSubject().getResource());
                 case "Immunization":
                     return ((Immunization) instance).getPatient().getId();
+                case "MedicationAdministration":
+                    return getPatientId(((MedicationAdministration) instance).getSubject().getResource());
                 case "MedicationRequest":
                     return getPatientId(((MedicationRequest) instance).getSubject().getResource());
                 case "Observation":
@@ -134,6 +136,7 @@ public class FhirModelAdapter implements ModelAdapter {
                 case "Procedure":
                     return getPatientId(((Procedure) instance).getSubject().getResource());
                 case "Location":
+                case "Medication":
                 case "Organization":
                 case "Practitioner":
                     return null;

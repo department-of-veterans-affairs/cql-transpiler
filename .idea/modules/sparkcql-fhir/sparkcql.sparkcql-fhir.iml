@@ -3,6 +3,7 @@
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$/../../../sparkcql-fhir" dumb="true">
       <excludeFolder url="file://$MODULE_DIR$/../../../sparkcql-fhir/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../sparkcql-fhir/spark-warehouse" />
     </content>
   </component>
 </module>

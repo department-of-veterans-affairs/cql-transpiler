@@ -1,15 +1,9 @@
 package gov.va.sparkcql.pipeline.modeladapter;
 
-import gov.va.sparkcql.configuration.LocalSparkFactory;
-import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.pipeline.retriever.BundleRetriever;
-import gov.va.sparkcql.types.DataType;
 import org.hl7.elm.r1.ContextDef;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.Test;
-
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

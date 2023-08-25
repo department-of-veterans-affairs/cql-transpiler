@@ -6,13 +6,11 @@ import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
-import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.hl7.fhir.r4.model.Bundle;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

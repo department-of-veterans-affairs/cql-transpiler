@@ -6,10 +6,6 @@ import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 import org.apache.spark.sql.Row;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SyntheticDataPreprocessorTest {
