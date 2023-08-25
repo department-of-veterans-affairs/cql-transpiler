@@ -4,18 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="Draft evaluation.">
-      <change afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/service/executor/CqfEvaluator.java" afterDir="false" />
+    <list default="true" id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="Echoing results from Evaluator in correct form. Introduced split outputs.">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/configuration/SystemConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/configuration/SystemConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/EvaluationResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/EvaluationResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/ExpressionReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/ExpressionReference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/evaluator/Evaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/evaluator/Evaluator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/fixture/sample/SampleEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/fixture/sample/SampleEvaluator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/PipelineTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/PipelineTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/service/executor/CqfEngine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +64,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -82,7 +76,6 @@
   <component name="ProjectViewState">
     <option name="flattenModules" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
@@ -94,7 +87,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.33854645",
-    "settings.editor.selected.configurable": "editor.preferences.completion"
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -288,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1692907447488</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Echoing results from Evaluator in correct form. Introduced split outputs.">
+      <option name="closed" value="true" />
+      <created>1692928199141</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1692928199141</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -296,52 +297,7 @@
     <MESSAGE value="Retrieval class." />
     <MESSAGE value="Fixed Map.Entry serialization issue." />
     <MESSAGE value="Draft evaluation." />
-    <option name="LAST_COMMIT_MESSAGE" value="Draft evaluation." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java</url>
-          <line>59</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/service/executor/DefaultExecutor.java</url>
-          <line>60</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java</url>
-          <line>92</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java</url>
-          <line>158</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java</url>
-          <line>140</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java</url>
-          <line>30</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java</url>
-          <line>35</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Echoing results from Evaluator in correct form. Introduced split outputs." />
+    <option name="LAST_COMMIT_MESSAGE" value="Echoing results from Evaluator in correct form. Introduced split outputs." />
   </component>
 </project>

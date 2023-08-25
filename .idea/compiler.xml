@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="17">
-      <module name="sparkcql.sparkcql-fhir.main" target="11" />
       <module name="sparkcql.sparkcql-provider-cqf.main" target="11" />
       <module name="sparkcql.sparkcql-provider-default.main" target="11" />
       <module name="sparkcql.sparkcql-synthetic.main" target="11" />

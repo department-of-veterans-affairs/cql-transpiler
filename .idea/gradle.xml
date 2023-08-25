@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/sparkcql-core" />
             <option value="$PROJECT_DIR$/sparkcql-cqf" />
+            <option value="$PROJECT_DIR$/sparkcql-fhir" />
             <option value="$PROJECT_DIR$/sparkcql-test" />
           </set>
         </option>

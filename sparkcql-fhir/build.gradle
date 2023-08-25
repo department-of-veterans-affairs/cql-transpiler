@@ -1,6 +1,5 @@
 dependencies {
     implementation project(':sparkcql-core')
-    implementation project(path: ':sparkcql-cqf', configuration: 'shadow')
 
     implementation "com.google.inject:guice:${guiceVersion}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
