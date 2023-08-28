@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonMapper;
 import org.hl7.elm.r1.Library;
+import org.hl7.elm.r1.VersionedIdentifier;
 
 public class LibraryCollection implements List<Library>, Serializable {
 
@@ -23,6 +20,12 @@ public class LibraryCollection implements List<Library>, Serializable {
 
     public LibraryCollection(List<Library> libraries) {
         this.libraries = new ArrayList<Library>(libraries);
+    }
+
+    public Optional<Library> getById(VersionedIdentifier versionedIdentifier) {
+        return libraries.stream()
+                .filter(l -> l.getIdentifier().equals(versionedIdentifier))
+                .findFirst();
     }
     
     // The ELM encounters serialization issues during Spark broadcasting so we implement serialization manually.

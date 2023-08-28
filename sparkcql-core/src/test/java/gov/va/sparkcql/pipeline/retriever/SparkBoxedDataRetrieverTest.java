@@ -13,7 +13,7 @@ import gov.va.sparkcql.configuration.LocalSparkFactory;
 import gov.va.sparkcql.fixture.SampleConfiguration;
 import gov.va.sparkcql.fixture.SampleDataPreprocessor;
 import gov.va.sparkcql.fixture.SampleModelAdapter;
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

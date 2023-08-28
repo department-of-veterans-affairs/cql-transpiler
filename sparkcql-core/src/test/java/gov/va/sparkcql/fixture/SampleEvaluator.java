@@ -11,6 +11,9 @@ import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.log.Log;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
 import gov.va.sparkcql.domain.ExpressionReference;
+import org.hl7.elm.r1.ExpressionDef;
+import org.hl7.elm.r1.Library;
+import org.hl7.elm.r1.VersionedIdentifier;
 import scala.Tuple2;
 
 public class SampleEvaluator implements Evaluator {
@@ -20,13 +23,13 @@ public class SampleEvaluator implements Evaluator {
     }
 
     @Override
-    public EvaluatedContext evaluate(String contextElementId, LibraryCollection libraryCollection, Map<Retrieval, List<Object>> clinicalData, Object terminologyData) {
+    public EvaluatedContext evaluate(String contextElementId, Map<Retrieval, List<Object>> clinicalData) {
         Log.info("Evaluating Context Element: " + contextElementId);
 
         var evaluated = clinicalData.values().stream().flatMap(List::stream).toList();
         var expressionReference = new ExpressionReference()
-                .withLibrary(libraryCollection.get(0))
-                .withExpressionDef(libraryCollection.get(0).getStatements().getDef().get(0));
+                .withLibrary(new Library().withIdentifier(new VersionedIdentifier().withId("SampleLibrary")))
+                .withExpressionDef(new ExpressionDef().withName("Foo"));
 
         var expressionResults = List.of(Tuple2.apply(expressionReference, evaluated));
         return new EvaluatedContext()

@@ -4,16 +4,65 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="FHIR Synthetic box loader.">
-      <change beforePath="$PROJECT_DIR$/.idea/modules/sparkcql-fhir/sparkcql.sparkcql-fhir.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/sparkcql-fhir/sparkcql.sparkcql-fhir.iml" afterDir="false" />
+    <list default="true" id="d3b454ff-7658-4c3d-8cc8-737c42546c1b" name="Changes" comment="Prototype integration for CQF Engine.">
+      <change afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/io/ElmWriter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/evaluator/EvaluatorFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/CqfHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/evaluator/CqfEvaluatorFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/evaluator/DataProviderAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/evaluator/LibraryCacheAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/evaluator/TerminologyProviderAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-cqf/src/test/java/gov/va/sparkcql/pipeline/evaluator/CqfEvaluatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Barbara209_Acevedo301_30db29cb-a1c0-272e-bfed-ce88ebc23b2d.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Carl856_Kunze215_d19face0-6272-fbfb-7882-7745c0a86eb5.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Darrell400_Pollich983_b84e121c-8ce7-a6e9-9c45-f6867bcb757d.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Eugenio846_Emard19_289f0cd9-e5d2-d575-b227-51874433bb33.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Kristen940_Gulgowski816_21dde8d5-5497-8bf3-aa32-b79e998e9024.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Lavonia8_Abernathy524_a7b903a5-5c6f-3f5e-4035-62d94b0b52b3.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Martin117_Raynor401_1fe3dce8-51b2-98ed-751e-dd8f64a48fb7.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Nelson403_Jast432_15d242fa-2a82-6921-b247-552b60cfcd4e.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Olen518_O'Reilly797_a7cfdf56-6a3f-ac5c-3a45-6f223312b36c.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Palma671_Mann644_f665d685-1e8b-dc83-a1e4-7ca3f26d5a8c.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Reynalda736_Metz686_70da0834-3ef3-7dfe-ad2a-8a00b5f87749.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Trisha327_Murray856_9a89902c-ba23-e035-51fc-1dd6285e6309.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Young120_Orn563_c0b0f482-c7b7-c9dd-9f8d-66f8dc6b4f4d.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/modeladapter/FhirModelAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/modeladapter/FhirModelAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/diagnostic/Stopwatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/diagnostic/Stopwatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/domain/LibraryCollection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/Pipeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/Combiner.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/Combiner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/combiner/DefaultCombiner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/evaluator/Evaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/evaluator/Evaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/modeladapter/ModelAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/model/ModelAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/modeladapter/ModelAdapterResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/model/ModelAdapterResolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/Retriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/Retriever.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/SparkBoxedDataRetriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/pipeline/retriever/SparkBoxedDataRetriever.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/fixture/SampleEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/fixture/SampleEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/fixture/SampleModelAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/fixture/SampleModelAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/PipelineTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/PipelineTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/retriever/SparkBoxedDataRetrieverTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-core/src/test/java/gov/va/sparkcql/pipeline/retriever/SparkBoxedDataRetrieverTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/service/compiler/CqfCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/compiler/CqfCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/service/compiler/CqlErrorChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/compiler/CqlErrorChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/service/executor/CqfEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/evaluator/CqfEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/main/resources/META-INF/services/gov.va.sparkcql.compiler.CompilerFactory" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/main/resources/META-INF/services/gov.va.sparkcql.executor.Executor" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-cqf/src/test/java/gov/va/sparkcql/service/compiler/CqfCompilerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-cqf/src/test/java/gov/va/sparkcql/pipeline/compiler/CqfCompilerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/modeladapter/FhirModelAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/model/FhirModelAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/retriever/BundleRetriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/retriever/BundleRetriever.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-test/src/test/java/gov/va/sparkcql/AbstractMeasureTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/IntegrationTestBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-test/src/test/java/gov/va/sparkcql/IntegrationTestBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/MeasureEvaluationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-test/src/test/java/gov/va/sparkcql/MeasureEvaluationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/modeladapter/FhirModelAdapterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/modeladapter/FhirModelAdapterTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/preprocessor/SyntheticDataPreprocessorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/preprocessor/SyntheticDataPreprocessorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/modeladapter/FhirModelAdapterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/model/FhirModelAdapterTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/retriever/BundleRetrieverTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sparkcql-fhir/src/test/java/gov/va/sparkcql/pipeline/retriever/BundleRetrieverTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Aaron697_Brekke496_2fa15bc7-8866-461a-9000-f739e425860a.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Ali918_Stokes453_f5aa3408-57b3-4c05-a1d3-e4511b4be50e.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Andreas188_Dare640_f7f63ca8-d282-4520-9a68-3177e2a5db6f.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Despina962_Collier206_c3127664-ea4c-482c-953a-92f24da84bba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Erline657_Casper496_f8329bff-a048-4054-8a6b-208f54a2a330.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Kent912_Ruecker817_f4b034c1-9e82-4e3a-8eda-96d1b938692f.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Leopoldo762_Reynolds644_ef29d12a-a4a6-4b49-b100-66efa3a01987.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Monserrate4_Carter549_aa465d13-1030-4fd4-a352-a1c615ea6df2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Sina65_Wolff180_582b89e2-30d8-44fb-bb96-03957b2ec7c2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sparkcql-fhir/src/test/resources/bundles/Truman805_Durgan499_277bea41-b704-4be3-972a-4feee4e2712b.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,33 +137,38 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "experimental/pipeline",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_directory_selection": "D:/Repo/sparkcql/sparkcql-test/src/test/java/gov/va/sparkcql",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.33854645",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;experimental/pipeline&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;D:/Repo/sparkcql/sparkcql-test/src/test/java/gov/va/sparkcql&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Repo/sparkcql/sparkcql-fhir/src/test/resources/bundles&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.33854645&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Repo\sparkcql\sparkcql-fhir\src\test\resources\bundles" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Repo\sparkcql\sparkcql-cqf\src\test\resources\elm" />
+      <recent name="D:\Repo\sparkcql\sparkcql-cqf\src\test\resources\cql" />
       <recent name="D:\Repo\sparkcql\sparkcql-test\src\test\java\gov\va\sparkcql" />
       <recent name="D:\Repo\sparkcql\sparkcql-core\src\main\java\gov\va\sparkcql" />
       <recent name="D:\Repo\sparkcql\sparkcql-core\src\main\java\gov\va\sparkcql\pipeline\modeladapter" />
-      <recent name="D:\Repo\sparkcql\sparkcql-core\src\main\java\gov\va\sparkcql\pipeline\engine" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="gov.va.sparkcql.pipeline" />
       <recent name="gov.va.sparkcql.pipeline.preprocessor" />
       <recent name="gov.va.sparkcql" />
       <recent name="gov.va.sparkcql.pipeline.modeladapter" />
       <recent name="gov.va.sparkcql.fixture" />
-      <recent name="gov.va.sparkcql.pipeline.retriever" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="gov.va.sparkcql.pipeline.modeladapter" />
@@ -123,7 +177,7 @@
       <recent name="gov.va.sparkcql" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.SyntheticDataPreprocessorTest.should_load_bundles_from_resources">
+  <component name="RunManager" selected="Gradle.CqfEvaluatorTest.should_evaluate_mock_fhir_measure">
     <configuration name="BundleRetrieverTest.should_resolve_context" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -148,7 +202,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="BundleRetrieverTest.should_retrieve_encounters_from_bundled_resources" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="CqfCompilerTest.should_allow_file_repository_loading" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -159,9 +213,57 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value=":sparkcql-fhir:test" />
+            <option value=":sparkcql-cqf:test" />
             <option value="--tests" />
-            <option value="&quot;gov.va.sparkcql.pipeline.retriever.BundleRetrieverTest.should_retrieve_encounters_from_bundled_resources&quot;" />
+            <option value="&quot;gov.va.sparkcql.pipeline.compiler.CqfCompilerTest.should_allow_file_repository_loading&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="CqfCompilerTest.should_support_multiple_dependent_modules" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":sparkcql-cqf:test" />
+            <option value="--tests" />
+            <option value="&quot;gov.va.sparkcql.pipeline.compiler.CqfCompilerTest.should_support_multiple_dependent_modules&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="CqfEvaluatorTest.should_evaluate_mock_fhir_measure" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":sparkcql-cqf:test" />
+            <option value="--tests" />
+            <option value="&quot;gov.va.sparkcql.pipeline.evaluator.CqfEvaluatorTest.should_evaluate_mock_fhir_measure&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -196,51 +298,13 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="sparkcql:sparkcql-fhir [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/sparkcql-fhir" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="BundleRetrieverTest.should_retrieve_encounters_from_bundled_resources" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="sparkcql.sparkcql-fhir.test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="gov.va.sparkcql.pipeline.retriever.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="gov.va.sparkcql.pipeline.retriever" />
-      <option name="MAIN_CLASS_NAME" value="gov.va.sparkcql.pipeline.retriever.BundleRetrieverTest" />
-      <option name="METHOD_NAME" value="should_retrieve_encounters_from_bundled_resources" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.CqfEvaluatorTest.should_evaluate_mock_fhir_measure" />
+        <item itemvalue="Gradle.CqfCompilerTest.should_allow_file_repository_loading" />
+        <item itemvalue="Gradle.CqfCompilerTest.should_support_multiple_dependent_modules" />
         <item itemvalue="Gradle.SyntheticDataPreprocessorTest.should_load_bundles_from_resources" />
         <item itemvalue="Gradle.BundleRetrieverTest.should_resolve_context" />
-        <item itemvalue="Gradle.BundleRetrieverTest.should_retrieve_encounters_from_bundled_resources" />
-        <item itemvalue="JUnit.BundleRetrieverTest.should_retrieve_encounters_from_bundled_resources" />
-        <item itemvalue="Gradle.sparkcql:sparkcql-fhir [build]" />
       </list>
     </recent_temporary>
   </component>
@@ -341,7 +405,15 @@
       <option name="project" value="LOCAL" />
       <updated>1692995687654</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added missing resource types.">
+      <option name="closed" value="true" />
+      <created>1692996524179</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1692996524179</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -355,17 +427,54 @@
     <MESSAGE value="Abstracted resource ref data." />
     <MESSAGE value="Bundle Loader Preprocessor." />
     <MESSAGE value="FHIR Synthetic box loader." />
-    <option name="LAST_COMMIT_MESSAGE" value="FHIR Synthetic box loader." />
+    <MESSAGE value="Added missing resource types." />
+    <MESSAGE value="Prototype integration for CQF Engine." />
+    <option name="LAST_COMMIT_MESSAGE" value="Prototype integration for CQF Engine." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/modeladapter/FhirModelAdapter.java</url>
-          <line>62</line>
+          <url>file://$PROJECT_DIR$/sparkcql-fhir/src/main/java/gov/va/sparkcql/pipeline/model/FhirModelAdapter.java</url>
+          <line>61</line>
           <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-cqf/src/test/java/gov/va/sparkcql/pipeline/compiler/CqfCompilerTest.java</url>
+          <line>84</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-cqf/src/main/java/gov/va/sparkcql/pipeline/evaluator/CqfEvaluator.java</url>
+          <line>44</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/io/ElmWriter.java</url>
+          <line>19</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/io/ElmWriter.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sparkcql-core/src/main/java/gov/va/sparkcql/diagnostic/Stopwatch.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="78" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="java.util.LinkedHashMap$Entry" memberName="value" />
+      </pinned-members>
+    </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="GradleRunConfiguration">
+        <watch expression="result" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

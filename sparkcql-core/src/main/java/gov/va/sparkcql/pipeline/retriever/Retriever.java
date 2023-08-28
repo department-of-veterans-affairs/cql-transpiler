@@ -4,7 +4,7 @@ import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.pipeline.Component;
 import org.apache.spark.api.java.JavaRDD;
 
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 
 public interface Retriever extends Component {
 

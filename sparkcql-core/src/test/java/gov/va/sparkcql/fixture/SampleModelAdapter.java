@@ -2,14 +2,13 @@ package gov.va.sparkcql.fixture;
 
 import java.util.List;
 
-import gov.va.sparkcql.types.Tuple;
 import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
 import org.hl7.elm.r1.ContextDef;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapter;
+import gov.va.sparkcql.pipeline.model.ModelAdapter;
 import gov.va.sparkcql.types.DataType;
 import scala.Tuple2;
 

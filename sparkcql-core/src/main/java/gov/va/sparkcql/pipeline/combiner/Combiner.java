@@ -9,7 +9,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 
 public interface Combiner extends Component {
 

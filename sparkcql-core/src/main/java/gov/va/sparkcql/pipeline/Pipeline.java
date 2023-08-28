@@ -16,7 +16,7 @@ import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.pipeline.combiner.Combiner;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import gov.va.sparkcql.pipeline.planner.Planner;
 import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
@@ -148,7 +148,7 @@ public class Pipeline implements Serializable {
     }
 
     EvaluatedContext runEvaluatorContextElement(Tuple2<String, Map<Retrieval, List<Object>>> row) {
-        return getEvaluator().evaluate(row._1, compilationOutput, row._2, null);
+        return getEvaluator().evaluate(row._1, row._2);
     }
 
     @SuppressWarnings("unchecked")

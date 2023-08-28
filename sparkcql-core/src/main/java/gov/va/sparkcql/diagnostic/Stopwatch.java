@@ -34,4 +34,8 @@ public class Stopwatch {
         } catch (InterruptedException e) {
         }
     }
+
+    public void print() {
+        System.out.println(toString());
+    }
 }

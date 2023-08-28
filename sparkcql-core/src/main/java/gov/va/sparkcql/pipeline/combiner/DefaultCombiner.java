@@ -9,9 +9,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
-import gov.va.sparkcql.types.DataType;
-import org.hl7.elm.r1.Retrieve;
+import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import scala.Tuple2;
 
 public class DefaultCombiner implements Combiner {

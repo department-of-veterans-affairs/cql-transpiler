@@ -2,8 +2,8 @@ package gov.va.sparkcql.pipeline.retriever;
 
 import gov.va.sparkcql.configuration.LocalSparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.pipeline.modeladapter.FhirModelAdapter;
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
+import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import gov.va.sparkcql.types.DataType;
 import org.junit.jupiter.api.Test;
 
@@ -15,9 +15,9 @@ public class BundleRetrieverTest {
 
     @Test
     public void should_retrieve_patients_from_bundled_resources() {
-        checkRetrieveForResourceType("Patient", 10);
-        checkRetrieveForResourceType("Encounter", 404);
-        checkRetrieveForResourceType("Condition", 94);
+        checkRetrieveForResourceType("Patient", 20);
+        checkRetrieveForResourceType("Encounter", 4006);
+        checkRetrieveForResourceType("Condition", 1844);
     }
 
     private void checkRetrieveForResourceType(String resourceType, int expectedCount) {

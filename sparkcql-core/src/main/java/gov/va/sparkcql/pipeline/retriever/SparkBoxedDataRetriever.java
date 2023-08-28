@@ -15,7 +15,7 @@ import java.util.List;
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.pipeline.modeladapter.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 
 public class SparkBoxedDataRetriever implements Retriever {

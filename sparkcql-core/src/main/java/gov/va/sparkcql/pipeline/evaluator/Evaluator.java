@@ -10,5 +10,5 @@ import gov.va.sparkcql.pipeline.Component;
 
 public interface Evaluator extends Component {
 
-    public EvaluatedContext evaluate(String contextElementId, LibraryCollection libraryCollection, Map<Retrieval, List<Object>> clinicalData, Object terminologyData);
+    public EvaluatedContext evaluate(String contextElementId, Map<Retrieval, List<Object>> clinicalData);
 }
