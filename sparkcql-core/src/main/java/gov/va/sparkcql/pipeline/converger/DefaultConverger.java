@@ -1,4 +1,4 @@
-package gov.va.sparkcql.pipeline.combiner;
+package gov.va.sparkcql.pipeline.converger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +12,7 @@ import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import scala.Tuple2;
 
-public class DefaultCombiner implements Combiner {
+public class DefaultConverger implements Converger {
 
     @Override
     public JavaPairRDD<String, Map<Retrieval, List<Object>>> combine(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterResolver modelAdapterResolver) {
@@ -30,7 +30,7 @@ public class DefaultCombiner implements Combiner {
             // represents the context ID of this instance.
             var modelAdapter = modelAdapterResolver.forType(currentRetrieval.getDataType());
             var contextualizedRdd = currentDs.mapToPair(i -> {
-                var contextId = modelAdapter.getContextId(i, plan.getContextDef());
+                var contextId = modelAdapter.getContextId(i, plan.resolveContextDef());
                 return Tuple2.apply(contextId, i);
             });
 

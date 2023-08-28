@@ -1,25 +1,21 @@
 package gov.va.sparkcql.pipeline.evaluator;
 
-import gov.va.sparkcql.domain.LibraryCollection;
+import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
-import org.cqframework.cql.cql2elm.model.CompiledLibrary;
-import org.hl7.elm.r1.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.execution.CqlEngine;
 import org.opencds.cqf.cql.engine.execution.Environment;
-
-import java.util.Map;
 
 public class CqfEvaluatorFactory implements EvaluatorFactory {
 
     @Override
-    public Evaluator create(LibraryCollection libraryCollection, ModelAdapterResolver modelAdapterResolver, Object terminologyData) {
+    public Evaluator create(Plan plan, ModelAdapterResolver modelAdapterResolver, Object terminologyData) {
 
         // Adapt the libraries provided to this implementation by the SparkCQL runtime
         // to the CompiledLibrary type required by CQF.
-        var libraryCacheAdapter = new LibraryCacheAdapter(libraryCollection);
+        var libraryCacheAdapter = new LibraryCacheAdapter(plan);
 
         // Configure CQF's LibraryManager which is required by the CQF engine to resolve
         // CQL script compilations. However, note that our CQL has already been compiled at

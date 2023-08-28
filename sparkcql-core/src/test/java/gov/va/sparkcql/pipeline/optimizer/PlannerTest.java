@@ -1,10 +1,9 @@
-package gov.va.sparkcql.pipeline.planner;
+package gov.va.sparkcql.pipeline.optimizer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.io.Resources;
-import gov.va.sparkcql.pipeline.planner.DefaultPlanner;
 import gov.va.sparkcql.domain.Plan;
 
 import java.io.IOException;
@@ -25,8 +24,8 @@ public class PlannerTest {
         var libraryContents = Resources.read("sample/sample-library.json");
         var reader = new ElmJsonLibraryReader();
         this.sampleLibrary = reader.read(libraryContents);
-        var planner = new DefaultPlanner();
-        this.plan = planner.plan(List.of(sampleLibrary));
+        var optimizer = new DefaultOptimizer();
+        this.plan = optimizer.optimize(new Plan().withLibrary(sampleLibrary));
     }
 
     @Test

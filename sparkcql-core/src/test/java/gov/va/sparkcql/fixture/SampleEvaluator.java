@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.google.inject.Inject;
 import gov.va.sparkcql.domain.EvaluatedContext;
-import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.domain.Retrieval;
 
 import gov.va.sparkcql.log.Log;

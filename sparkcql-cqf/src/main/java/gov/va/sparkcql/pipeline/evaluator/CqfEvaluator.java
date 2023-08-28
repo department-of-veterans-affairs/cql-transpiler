@@ -22,11 +22,11 @@ public class CqfEvaluator implements Evaluator {
 
     @Override
     public EvaluatedContext evaluate(String contextElementId, Map<Retrieval, List<Object>> clinicalData) {
-        if (this.libraryCacheAdapter.getLibraryCollection().size() > 1) {
+        if (this.libraryCacheAdapter.getPlan().getLibraries().size() > 1) {
             throw new UnsupportedOperationException();      // TODO: Change design to replace LibraryCollection with CompiledPlan, OptimizedPlan, etc and have it identify head nodes
         }
 
-        var primaryLibrary = this.libraryCacheAdapter.getLibraryCollection().get(0);
+        var primaryLibrary = this.libraryCacheAdapter.getPlan().getLibrary(0).orElseThrow();
         this.dataProviderAdapter.setClinicalData(clinicalData);
         var watch = new Stopwatch();
 

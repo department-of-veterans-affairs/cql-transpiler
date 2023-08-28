@@ -13,11 +13,11 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import com.google.inject.Inject;
 
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.pipeline.combiner.Combiner;
+import gov.va.sparkcql.pipeline.converger.Converger;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
 import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
-import gov.va.sparkcql.pipeline.planner.Planner;
+import gov.va.sparkcql.pipeline.optimizer.Optimizer;
 import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
 import gov.va.sparkcql.pipeline.retriever.Retriever;
@@ -32,7 +32,7 @@ public class Pipeline implements Serializable {
 
     private Map<String, Object> parameters;
 
-    private LibraryCollection compilationOutput;
+    private Plan compiledPlanOutput;
 
     private Plan plannedOutput;
 
@@ -49,7 +49,7 @@ public class Pipeline implements Serializable {
     }
 
     public EvaluationResultSet execute(String libraryName, String version, Map<String, Object> parameters) {
-        this.compilationOutput = getCompiler().compile(List.of(new VersionedIdentifier().withId(libraryName).withVersion(version)));
+        this.compiledPlanOutput = getCompiler().compile(List.of(new VersionedIdentifier().withId(libraryName).withVersion(version)));
         this.parameters = parameters;
         return runPipeline();
     }
@@ -59,7 +59,7 @@ public class Pipeline implements Serializable {
     }
 
     public EvaluationResultSet execute(String cqlSource, Map<String, Object> parameters) {
-        compilationOutput = getCompiler().compile(cqlSource);
+        compiledPlanOutput = getCompiler().compile(cqlSource);
         this.parameters = parameters;
         return runPipeline();
     }
@@ -68,14 +68,14 @@ public class Pipeline implements Serializable {
         return execute(cqlSource, Map.of());
     }
 
-    public EvaluationResultSet execute(LibraryCollection libraryCollection, Map<String, Object> parameters) {
-        this.compilationOutput = libraryCollection;
+    public EvaluationResultSet execute(Plan plan, Map<String, Object> parameters) {
+        this.compiledPlanOutput = plan;
         this.parameters = parameters;
         return runPipeline();
     }
 
-    public EvaluationResultSet execute(LibraryCollection libraryCollection) {
-        this.compilationOutput = libraryCollection;
+    public EvaluationResultSet execute(Plan plan) {
+        this.compiledPlanOutput = plan;
         return runPipeline();
     }
 
@@ -85,7 +85,7 @@ public class Pipeline implements Serializable {
         runPreprocessStage();
 
         // Produce an optimized execution plan using the compiled ELMs.
-        plannedOutput = runPlanningStage();
+        plannedOutput = runOptimizerStage();
 
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
@@ -107,8 +107,8 @@ public class Pipeline implements Serializable {
         getPreprocessors().forEach(Preprocessor::apply);
     }
 
-    private Plan runPlanningStage() {
-        return getPlanner().plan(compilationOutput);
+    private Plan runOptimizerStage() {
+        return getOptimizer().optimize(compiledPlanOutput);
     }
 
     private Map<Retrieval, JavaRDD<Object>> runRetrievalStage() {
@@ -183,8 +183,8 @@ public class Pipeline implements Serializable {
         return findComponent(ModelAdapterResolver.class);
     }
 
-    public Planner getPlanner() {
-        return findComponent(Planner.class);
+    public Optimizer getOptimizer() {
+        return findComponent(Optimizer.class);
     }
 
     public CqlSourceRepository getCqlSourceRepository() {
@@ -195,8 +195,8 @@ public class Pipeline implements Serializable {
         return findComponent(Retriever.class);
     }
 
-    public Combiner getCombiner() {
-        return findComponent(Combiner.class);
+    public Converger getCombiner() {
+        return findComponent(Converger.class);
     }
 
     public Evaluator getEvaluator() {

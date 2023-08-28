@@ -1,6 +1,11 @@
-package gov.va.sparkcql.pipeline.planner;
+package gov.va.sparkcql.pipeline.optimizer;
 
+import java.util.List;
+
+import gov.va.sparkcql.pipeline.Component;
 import org.hl7.elm.r1.Library;
+
+import gov.va.sparkcql.domain.Plan;
 
 /**
  * TODO: Implement rules based optimizer. Goal of the optimizer is establishing
@@ -8,11 +13,11 @@ import org.hl7.elm.r1.Library;
  * dependencies. For instance, if an Encounter is constrained to the measurement
  * period and those same dates are used in a medication lookup, propogate
  * constraints forward.
- * 
+ *
  * Rules should be based on typical patterns but won't cover all possible
  * optimization scenarios. Ideally the rules are composable such that an
  * inferred constraint from one rule might unlock an optimization for another.
- * 
+ *
  * Optimization Rule Ideas:
  * - Inner Join Constraint: Table A and Tabe B are INNER JOINED.
  * - Define Elimination: If a definition isn't used in any material
@@ -24,18 +29,14 @@ import org.hl7.elm.r1.Library;
  * to the argument e.g. period.end + 6 months.
  * - Scalar In Constraint: Table is filtered by an attribute with an IN clause.
  * - Code/VS Constraint: Filtered by a value set or code(s).
- * 
+ *
  * May need to document the general relationships between certain domains. For
- * instance, Encounter to MedicationAdministered is an Inner Join constraint 
+ * instance, Encounter to MedicationAdministered is an Inner Join constraint
  * whereas Encounter to MedicationDispense is not.
- * 
+ *
  * NOTE: Could query results be used to "train" these constraints?
  */
-public class PlanOptimizer {
-
-    public Library optimize(Library library) {
-        return library;
-    }
-
-    // TODO: Make All Options Configurable
+public interface Optimizer extends Component {
+        
+    public Plan optimize(Plan plan);
 }

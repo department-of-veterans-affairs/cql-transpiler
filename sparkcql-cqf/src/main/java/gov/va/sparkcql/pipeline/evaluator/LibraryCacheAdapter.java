@@ -1,6 +1,6 @@
 package gov.va.sparkcql.pipeline.evaluator;
 
-import gov.va.sparkcql.domain.LibraryCollection;
+import gov.va.sparkcql.domain.Plan;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.hl7.elm.r1.VersionedIdentifier;
 
@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 
 public class LibraryCacheAdapter {
 
-    private final LibraryCollection libraryCollection;
+    private final Plan plan;
 
-    public LibraryCacheAdapter(LibraryCollection libraryCollection) {
-        this.libraryCollection = libraryCollection;
+    public LibraryCacheAdapter(Plan plan) {
+        this.plan = plan;
     }
 
     public Map<VersionedIdentifier, CompiledLibrary> getVersionedIdentifierToCompiledLibraryMap() {
-        return libraryCollection.stream().map(l -> {
+        return plan.getLibraries().stream().map(l -> {
             var compiledLibrary = new CompiledLibrary();
             compiledLibrary.setIdentifier(l.getIdentifier());
             compiledLibrary.setLibrary(l);
@@ -24,7 +24,7 @@ public class LibraryCacheAdapter {
         }).collect(Collectors.toMap(CompiledLibrary::getIdentifier, v -> v));
     }
 
-    public LibraryCollection getLibraryCollection() {
-        return libraryCollection;
+    public Plan getPlan() {
+        return plan;
     }
 }

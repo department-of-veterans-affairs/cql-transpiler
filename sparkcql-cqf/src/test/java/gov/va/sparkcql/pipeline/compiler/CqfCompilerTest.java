@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.ElmWriter;
 import gov.va.sparkcql.pipeline.compiler.CqfCompiler;
 import org.hl7.cql_annotations.r1.CqlToElmError;
@@ -30,7 +31,11 @@ public class CqfCompilerTest {
 
     @Test
     public void should_compile_a_literal_cql() {
-        assertEquals("MyLibrary", compiler.compile("library MyLibrary version '1'").get(0).getIdentifier().getId());
+        assertEquals(
+                "MyLibrary",
+                compiler
+                        .compile("library MyLibrary version '1'")
+                        .getLibrary(0).orElseThrow().getIdentifier().getId());
     }
 
     @Test
@@ -72,14 +77,14 @@ public class CqfCompilerTest {
     public void should_allow_file_repository_loading() {
         // Compiling by ID will force use of the CqlSourceFileRepository.
         var output = compiler.compile(List.of(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
-        var json = output.get(0);
+        var json = output.getLibraries(). get(0);
         assertLibraries(1, output);
     }
 
-    private void assertLibraries(int expectedCount, List<Library> output) {
-        assertEquals(expectedCount, output.size());
-        output.forEach(l -> {
-            ElmWriter.write(output);
+    private void assertLibraries(int expectedCount, Plan plan) {
+        assertEquals(expectedCount, plan.getLibraries().size());
+        ElmWriter.write(plan.getLibraries());
+        plan.getLibraries().forEach(l -> {
             var checker = new CqlErrorChecker(l);
             if (checker.hasErrors()) {
                 throw new RuntimeException(checker.toPrettyString());

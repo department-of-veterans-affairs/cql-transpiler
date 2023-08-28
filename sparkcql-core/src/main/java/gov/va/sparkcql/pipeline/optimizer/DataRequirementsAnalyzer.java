@@ -1,4 +1,4 @@
-package gov.va.sparkcql.pipeline.planner;
+package gov.va.sparkcql.pipeline.optimizer;
 
 public class DataRequirementsAnalyzer {
     
