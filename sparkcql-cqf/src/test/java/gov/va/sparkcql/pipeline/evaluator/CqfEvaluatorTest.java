@@ -12,12 +12,11 @@ import java.util.Set;
 public class CqfEvaluatorTest {
 
     @Test
-    public void should_evaluate_mock_fhir_measure() throws IOException {
-        var libraryContents = Resources.read("elm/mock.json");
+    public void should_evaluate_mock_literal_measure() throws IOException {
+        var libraryContents = Resources.read("elm/mock-literal.json");
         var reader = new ElmJsonLibraryReader();
         var libraryCollection = new LibraryCollection();
         libraryCollection.add(reader.read(libraryContents));
-
 
         var evaluator = new CqfEvaluatorFactory().create(
                 libraryCollection,
@@ -25,6 +24,10 @@ public class CqfEvaluatorTest {
                 null);
 
         evaluator.evaluate("12345", null);
+    }
+
+    @Test
+    public void should_evaluate_mock_fhir_measure() {
     }
 
     @Test

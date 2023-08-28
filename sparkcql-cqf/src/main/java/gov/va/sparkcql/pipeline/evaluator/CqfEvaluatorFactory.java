@@ -31,9 +31,16 @@ public class CqfEvaluatorFactory implements EvaluatorFactory {
                 CqlCompilerOptions.defaultOptions(),
                 libraryCacheAdapter.getVersionedIdentifierToCompiledLibraryMap());
 
-        //
+        // The DataProvider adapter can only be partially initialized since data for each
+        // row is only available during row execution. However, DataProvider is a requirement
+        // for the CQF environment so we configure a mutable adapter which will be updated
+        // during row execution.
         var dataProviderAdapter = new DataProviderAdapter(modelAdapterResolver);
-        TerminologyProviderAdapter terminologyProviderAdapter = null;
+
+        // Terminology adapter for translating bulk terminology data to the CQF engine.
+        var terminologyProviderAdapter = new TerminologyProviderAdapter(terminologyData);
+
+        // Setup the environment and engine.
         var environment = new Environment(
                 libraryManager,
                 dataProviderAdapter.getModelUriToDataProviderMap(),

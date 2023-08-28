@@ -2,20 +2,9 @@ package gov.va.sparkcql.pipeline.evaluator;
 
 import gov.va.sparkcql.diagnostic.Stopwatch;
 import gov.va.sparkcql.domain.EvaluatedContext;
-import gov.va.sparkcql.domain.LibraryCollection;
 import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
-import org.cqframework.cql.cql2elm.CqlCompilerOptions;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
-import org.cqframework.cql.cql2elm.model.CompiledLibrary;
-import org.hl7.elm.r1.VersionedIdentifier;
-import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.execution.CqlEngine;
-import org.opencds.cqf.cql.engine.execution.Environment;
-import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 

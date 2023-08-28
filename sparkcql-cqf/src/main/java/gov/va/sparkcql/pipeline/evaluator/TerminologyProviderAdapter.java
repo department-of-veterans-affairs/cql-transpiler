@@ -7,6 +7,9 @@ import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
 public class TerminologyProviderAdapter implements TerminologyProvider {
 
+    public TerminologyProviderAdapter(Object terminologyData) {
+    }
+
     @Override
     public boolean in(Code code, ValueSetInfo valueSet) {
         return false;
