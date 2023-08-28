@@ -5,6 +5,7 @@
 **/.temp/
 *.hprof
 .settings/org.eclipse.buildship.core.prefs
+**/.idea
 
 # Scala & Java
 **/.bloop/
