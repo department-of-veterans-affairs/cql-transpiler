@@ -43,7 +43,7 @@ public class CqfEvaluatorFactory implements EvaluatorFactory {
         // Setup the environment and engine.
         var environment = new Environment(
                 libraryManager,
-                dataProviderAdapter.getModelUriToDataProviderMap(),
+                dataProviderAdapter.getDataProviderMap(),
                 terminologyProviderAdapter);
 
         var cqlEngine = new CqlEngine(environment);

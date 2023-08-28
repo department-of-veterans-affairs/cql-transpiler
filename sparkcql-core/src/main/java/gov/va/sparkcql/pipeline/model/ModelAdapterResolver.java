@@ -1,6 +1,8 @@
 package gov.va.sparkcql.pipeline.model;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 
@@ -14,6 +16,11 @@ public class ModelAdapterResolver implements Component {
     @Inject
     public ModelAdapterResolver(Set<ModelAdapter> modelAdapters) {
         this.modelAdapters = modelAdapters;
+    }
+
+    public List<String> getNamespaces() {
+        return modelAdapters.stream()
+                .map(ModelAdapter::getNamespaceUri).collect(Collectors.toList());
     }
 
     public <T> ModelAdapter forNamespace(String namespaceUri) {
