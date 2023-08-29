@@ -12,23 +12,23 @@ import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepository;
 
 public class CqlSourceFileRepositoryTest {
 
-    SystemConfiguration cfg;
-  
-    public CqlSourceFileRepositoryTest() {
-        this.cfg = new SystemConfiguration();
-        this.cfg.write("", "./src/test/resources/sample");
-        this.cfg.write("", "cql");
-    }
-
     @Test
     public void should_support_basic_read_ops() {
+        var cfg = new SystemConfiguration();
+        cfg.write("", "./src/test/resources/mock-model/cql");
+        cfg.write("", "cql");
+
         var repository = new CqlSourceFileRepository(cfg);
-        assertNotNull(repository.readById(new VersionedIdentifier().withId("SAMPLE_LIBRARY").withVersion("1.0")));
-        assertNull(repository.readById(new VersionedIdentifier().withId("SAMPLE_LIBRARY")));
+        assertNotNull(repository.readById(new VersionedIdentifier().withId("MOCK_LIBRARY").withVersion("1.0")));
+        assertNull(repository.readById(new VersionedIdentifier().withId("MOCK_LIBRARY")));
     }
 
     @Test
     public void should_gracefully_ignore_when_unconfigured() {
+        var cfg = new SystemConfiguration();
+        cfg.write("", "./src/test/resources/mock/cql");
+        cfg.write("", "cql");
+
         var repository = new CqlSourceFileRepository(cfg);
         assertNotNull(repository);
         assertFalse(repository.exists(new VersionedIdentifier()));

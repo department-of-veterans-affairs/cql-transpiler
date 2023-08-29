@@ -13,14 +13,6 @@ public final class Directory {
         return System.getProperty("user.dir");
     }
 
-    public static String readString(String path) {
-        try {
-            return Files.readString(Path.of(path));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
     public static Stream<String> find(String rootPath, String ext) {
         var fileList = listFilesRecursively(new File(rootPath)).filter(f -> !f.isDirectory());
         var extFilter = fileList;

@@ -2,6 +2,7 @@ package gov.va.sparkcql.pipeline.retriever;
 
 import gov.va.sparkcql.configuration.LocalSparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.io.Asset;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
 import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import gov.va.sparkcql.types.DataType;
@@ -15,9 +16,10 @@ public class BundleRetrieverTest {
 
     @Test
     public void should_retrieve_patients_from_bundled_resources() {
-        checkRetrieveForResourceType("Patient", 20);
-        checkRetrieveForResourceType("Encounter", 4006);
-        checkRetrieveForResourceType("Condition", 1844);
+        checkRetrieveForResourceType("Patient", 2);
+        checkRetrieveForResourceType("Encounter", 111);
+        checkRetrieveForResourceType("Condition", 79);
+        checkRetrieveForResourceType("MedicationAdministration", 6);
     }
 
     private void checkRetrieveForResourceType(String resourceType, int expectedCount) {
@@ -25,7 +27,7 @@ public class BundleRetrieverTest {
                 .withDataType(new DataType("http://hl7.org/fhir", resourceType));
         var modelAdapter = new FhirModelAdapter();
         var modelAdapterResolver = new ModelAdapterResolver(Set.of(modelAdapter));
-        var retriever = new BundleRetriever(new LocalSparkFactory(), "bundles");
+        var retriever = new BundleRetriever(new LocalSparkFactory(), Asset.of("classpath://bundles"));
         var bundles = retriever.retrieve(retrieval, modelAdapterResolver);
         assertEquals(expectedCount, bundles.count());
     }

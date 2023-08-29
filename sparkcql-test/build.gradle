@@ -1,16 +1,17 @@
 dependencies {
-    implementation project(':sparkcql-core')
+    testImplementation project(':sparkcql-core')
+    testImplementation project(path: ':sparkcql-cqf', configuration: 'shadow')
+    testImplementation project(':sparkcql-fhir')
 
-    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    testImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    testImplementation "com.google.inject:guice:${guiceVersion}"
 
-    implementation "com.google.inject:guice:${guiceVersion}"
+    testImplementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
+    testImplementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
 
-    implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
-    implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
-
-    implementation "info.cqframework:elm:${cqfVersion}"
-    implementation "info.cqframework:quick:${cqfVersion}"
-
-    implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${hapiVersion}"
-    implementation "au.csiro.pathling:encoders:${pathlingVersion}"
+    testImplementation "info.cqframework:elm:${cqfVersion}"
+    testImplementation "info.cqframework:elm-jackson:${cqfVersion}"
+    testImplementation "info.cqframework:quick:${cqfVersion}"
+    testImplementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${hapiVersion}"
+    testImplementation "au.csiro.pathling:encoders:${pathlingVersion}"
 }

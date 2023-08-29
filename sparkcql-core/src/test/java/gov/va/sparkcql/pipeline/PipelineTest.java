@@ -3,10 +3,10 @@ package gov.va.sparkcql.pipeline;
 import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.fixture.SampleConfiguration;
-import gov.va.sparkcql.fixture.SampleDataPreprocessor;
-import gov.va.sparkcql.fixture.SampleEvaluator;
-import gov.va.sparkcql.fixture.SampleModelAdapter;
+import gov.va.sparkcql.fixture.mock.MockDataPreprocessor;
+import gov.va.sparkcql.fixture.mock.MockEvaluator;
+import gov.va.sparkcql.fixture.mock.MockModelAdapter;
+import gov.va.sparkcql.fixture.sample.MockConfiguration;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.converger.DefaultConverger;
 import gov.va.sparkcql.pipeline.model.ModelAdapter;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import com.google.inject.multibindings.Multibinder;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,17 +30,17 @@ public class PipelineTest extends AbstractTest {
     @Override
     protected void configure() {
         super.configure();
-        bind(SystemConfiguration.class).to(SampleConfiguration.class);
+        bind(SystemConfiguration.class).to(MockConfiguration.class);
         bind(TableResolutionStrategy.class).to(TemplateResolutionStrategy.class);
         var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Component.class);
-        pipelineComponentBinder.addBinding().to(SampleDataPreprocessor.class);
+        pipelineComponentBinder.addBinding().to(MockDataPreprocessor.class);
         pipelineComponentBinder.addBinding().to(ModelAdapterResolver.class);
         pipelineComponentBinder.addBinding().to(DefaultOptimizer.class);
         pipelineComponentBinder.addBinding().to(DefaultConverger.class);
         pipelineComponentBinder.addBinding().to(SparkBoxedDataRetriever.class);
-        pipelineComponentBinder.addBinding().to(SampleEvaluator.class);
+        pipelineComponentBinder.addBinding().to(MockEvaluator.class);
         var modelAdapterBinder = Multibinder.newSetBinder(binder(), ModelAdapter.class);
-        modelAdapterBinder.addBinding().to(SampleModelAdapter.class);
+        modelAdapterBinder.addBinding().to(MockModelAdapter.class);
     }
 
     @Test
@@ -53,8 +52,8 @@ public class PipelineTest extends AbstractTest {
     }
 
     @Test
-    public void should_execute_sample() throws IOException {
-        var libraryContents = Resources.read("sample/sample-library.json");
+    public void should_execute_mock_model() throws IOException {
+        var libraryContents = Resources.read("mock-model/elm/mock-library.json");
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan()
                 .withLibrary(reader.read(libraryContents));

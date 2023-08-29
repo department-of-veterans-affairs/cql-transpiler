@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import com.google.inject.Inject;
 import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.io.Asset;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import org.apache.spark.api.java.JavaRDD;
@@ -22,9 +23,9 @@ public class BundleRetriever implements Retriever {
     private List<Bundle> bundles;
 
     @Inject
-    public BundleRetriever(SparkFactory sparkFactory, String path) {
+    public BundleRetriever(SparkFactory sparkFactory, Asset bundles) {
         this.spark = sparkFactory.create();
-        loadResourceBundles(path);
+        loadResourceBundles(bundles);
     }
 
     @Override
@@ -47,14 +48,14 @@ public class BundleRetriever implements Retriever {
         return sc.parallelize(entries.collect(Collectors.toList()));
     }
 
-    private void loadResourceBundles(String resourcePath) {
+    private void loadResourceBundles(Asset bundleAsset) {
         // Stream the bundles stored as resources files.
-        var contents = Resources.readAll(resourcePath);
+        var contents = bundleAsset.read();
 
         // For each one, load it into a HAPI bundle structure.
         var ctx = FhirContext.forR4();
         var parser = ctx.newJsonParser();
-        bundles = contents.map(content -> parser.parseResource(Bundle.class, content))
+        bundles = contents.stream().map(content -> parser.parseResource(Bundle.class, content))
                 .collect(Collectors.toList());
     }
 }

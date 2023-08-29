@@ -17,7 +17,7 @@ public final class ElmWriter {
 
     public static void write(List<Library> libraries, String targetPath) {
         libraries.forEach(library -> {
-            var name = java.util.UUID.randomUUID().toString();
+            var name = String.valueOf(library.toString().hashCode());
             if (library.getIdentifier().getId() != null) {
                 name = library.getIdentifier().getId();
             }

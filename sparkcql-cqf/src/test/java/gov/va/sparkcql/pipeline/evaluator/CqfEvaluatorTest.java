@@ -13,7 +13,7 @@ public class CqfEvaluatorTest {
 
     @Test
     public void should_evaluate_mock_literal_measure() throws IOException {
-        var libraryContents = Resources.read("elm/mock-literal.json");
+        var libraryContents = Resources.read("elm/complex-literal.json");
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan().withLibrary(reader.read(libraryContents));
 

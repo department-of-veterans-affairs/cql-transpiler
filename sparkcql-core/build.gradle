@@ -13,4 +13,6 @@ dependencies {
     */
     implementation "info.cqframework:elm:${cqfVersion}"
     implementation "info.cqframework:elm-jackson:${cqfVersion}"
+
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
 }

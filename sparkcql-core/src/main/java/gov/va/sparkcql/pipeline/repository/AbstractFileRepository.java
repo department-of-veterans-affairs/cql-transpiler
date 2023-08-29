@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import gov.va.sparkcql.configuration.SystemConfiguration;
 import gov.va.sparkcql.io.Directory;
+import gov.va.sparkcql.io.Files;
 
 public abstract class AbstractFileRepository<T, ID> implements ReadableRepository<T, ID> {
 
@@ -19,8 +20,8 @@ public abstract class AbstractFileRepository<T, ID> implements ReadableRepositor
         } else {
             this.entities = Directory
                 .find(path, extension)
-                .map(Directory::readString)
-                .map(contents -> deserialize(contents))
+                .map(Files::readFile)
+                .map(this::deserialize)
                 .collect(Collectors.toList());
         }
     }
