@@ -7,7 +7,7 @@ import javax.xml.namespace.QName;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.fixture.mock.MockDataPreprocessor;
 import gov.va.sparkcql.fixture.mock.MockModelAdapter;
-import gov.va.sparkcql.fixture.sample.MockConfiguration;
+import gov.va.sparkcql.fixture.mock.MockConfiguration;
 import org.hl7.elm.r1.Retrieve;
 import org.junit.jupiter.api.Test;
 

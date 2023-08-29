@@ -8,7 +8,7 @@
 //import org.apache.spark.sql.Dataset;
 //import org.apache.spark.sql.Row;
 //
-//import gov.va.sparkcql.configuration.SystemConfiguration;
+//import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 //import gov.va.sparkcql.pipeline.compiler.Compiler;
 //import gov.va.sparkcql.pipeline.executor.BulkRetriever;
 //import gov.va.sparkcql.pipeline.executor.Executor;
@@ -82,7 +82,7 @@
 //        private Builder() {
 //        }
 //
-//        SystemConfiguration cfg = new SystemConfiguration();
+//        EnvironmentConfiguration cfg = new EnvironmentConfiguration();
 //
 //        public Builder withConfig(String key, String value) {
 //            cfg.write(key, value);

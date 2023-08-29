@@ -3,7 +3,7 @@ package gov.va.sparkcql.pipeline.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import gov.va.sparkcql.configuration.SystemConfiguration;
+import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.io.Directory;
 import gov.va.sparkcql.io.Files;
 
@@ -11,10 +11,7 @@ public abstract class AbstractFileRepository<T, ID> implements ReadableRepositor
 
     protected List<T> entities;
 
-    public AbstractFileRepository(SystemConfiguration cfg) {
-        var path = cfg.getCqlSourceFileRepositoryPath();
-        var extension = cfg.getCqlSourceFileRepositoryExt();
-
+    public AbstractFileRepository(String path, String extension) {
         if (path == null || path.isEmpty()) {
             entities = List.of();
         } else {

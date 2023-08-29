@@ -13,7 +13,7 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.configuration.SystemConfiguration;
+import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepository;
 
@@ -23,8 +23,10 @@ public class CqfCompilerTest {
 
     @BeforeEach
     public void setup() {
-        var cfg = new SystemConfiguration();
-        cfg.setCqlSourceFileRepositoryPath("./src/test/resources/cql");
+        var cfg = new EnvironmentConfiguration();
+        cfg.writeSetting(
+                CqlSourceFileRepository.CQL_SOURCE_FILE_REPOSITORY_PATH,
+                "./src/test/resources/cql");
         compiler = new CqfCompiler(
                 new CqlSourceFileRepository(cfg));
     }

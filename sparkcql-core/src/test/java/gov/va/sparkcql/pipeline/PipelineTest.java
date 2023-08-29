@@ -1,12 +1,12 @@
 package gov.va.sparkcql.pipeline;
 
 import gov.va.sparkcql.AbstractTest;
-import gov.va.sparkcql.configuration.SystemConfiguration;
+import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.fixture.mock.MockDataPreprocessor;
 import gov.va.sparkcql.fixture.mock.MockEvaluator;
 import gov.va.sparkcql.fixture.mock.MockModelAdapter;
-import gov.va.sparkcql.fixture.sample.MockConfiguration;
+import gov.va.sparkcql.fixture.mock.MockConfiguration;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.converger.DefaultConverger;
 import gov.va.sparkcql.pipeline.model.ModelAdapter;
@@ -30,7 +30,7 @@ public class PipelineTest extends AbstractTest {
     @Override
     protected void configure() {
         super.configure();
-        bind(SystemConfiguration.class).to(MockConfiguration.class);
+        bind(EnvironmentConfiguration.class).to(MockConfiguration.class);
         bind(TableResolutionStrategy.class).to(TemplateResolutionStrategy.class);
         var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Component.class);
         pipelineComponentBinder.addBinding().to(MockDataPreprocessor.class);

@@ -2,22 +2,24 @@ package gov.va.sparkcql.pipeline.retriever.resolution;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.inject.Inject;
 import org.hl7.elm.r1.VersionedIdentifier;
 
-import gov.va.sparkcql.configuration.SystemConfiguration;
+import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.types.DataType;
 
 public class TemplateResolutionStrategy implements TableResolutionStrategy {
 
-    protected SystemConfiguration systemConfiguration;
+    public static final String TEMPLATE_RESOLUTION_STRATEGY = "sparkcql.resolutionstrategy.template";
+    protected EnvironmentConfiguration environmentConfiguration;
 
     protected Map<String, String> tokens;
 
     @Inject
-    public TemplateResolutionStrategy(SystemConfiguration systemConfiguration) {
-        this.systemConfiguration = systemConfiguration;
+    public TemplateResolutionStrategy(EnvironmentConfiguration environmentConfiguration) {
+        this.environmentConfiguration = environmentConfiguration;
         this.tokens = new HashMap<String, String>();
     }
 
@@ -34,16 +36,16 @@ public class TemplateResolutionStrategy implements TableResolutionStrategy {
         addToken("version", modelId.getVersion());
         addToken("domain", dataType.getName());
         
-        var formula = this.systemConfiguration.getResolutionStrategyTemplate();
+        var template = this.environmentConfiguration.readSetting(TEMPLATE_RESOLUTION_STRATEGY, "${model}.${domain}");
         for (var tokenEntry : tokens.entrySet()) {
-            formula = formula.replace(tokenEntry.getKey(), tokenEntry.getValue());
+            template = template.replace(tokenEntry.getKey(), tokenEntry.getValue());
         }
         
-        return formula;
+        return template;
     }
 
     public VersionedIdentifier getWellKnownModelIdentifier(DataType dataType) {
-        if (dataType.getNamespaceUri() == "http://hl7.org/fhir")
+        if (Objects.equals(dataType.getNamespaceUri(), "http://hl7.org/fhir"))
             return new VersionedIdentifier().withId("fhir");
         
         if (dataType.getNamespaceUri().startsWith("urn:healthit-gov:qdm:")) {
