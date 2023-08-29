@@ -12,7 +12,7 @@ import gov.va.sparkcql.pipeline.converger.DefaultConverger;
 import gov.va.sparkcql.pipeline.model.ModelAdapter;
 import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import gov.va.sparkcql.pipeline.optimizer.DefaultOptimizer;
-import gov.va.sparkcql.pipeline.retriever.SparkBoxedDataRetriever;
+import gov.va.sparkcql.pipeline.retriever.SparkIndexedDataRetriever;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 
@@ -37,7 +37,7 @@ public class PipelineTest extends AbstractTest {
         pipelineComponentBinder.addBinding().to(ModelAdapterResolver.class);
         pipelineComponentBinder.addBinding().to(DefaultOptimizer.class);
         pipelineComponentBinder.addBinding().to(DefaultConverger.class);
-        pipelineComponentBinder.addBinding().to(SparkBoxedDataRetriever.class);
+        pipelineComponentBinder.addBinding().to(SparkIndexedDataRetriever.class);
         pipelineComponentBinder.addBinding().to(MockEvaluator.class);
         var modelAdapterBinder = Multibinder.newSetBinder(binder(), ModelAdapter.class);
         modelAdapterBinder.addBinding().to(MockModelAdapter.class);

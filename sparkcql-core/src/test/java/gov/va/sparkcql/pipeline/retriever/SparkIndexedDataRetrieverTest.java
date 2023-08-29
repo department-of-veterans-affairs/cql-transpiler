@@ -18,7 +18,7 @@ import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SparkBoxedDataRetrieverTest extends AbstractTest {
+public class SparkIndexedDataRetrieverTest extends AbstractTest {
 
     @Test
     public void should_load_sample_data() {
@@ -27,7 +27,7 @@ public class SparkBoxedDataRetrieverTest extends AbstractTest {
         var dataLoader = new MockDataPreprocessor(sparkFactory, tableResolutionStrategy);
         dataLoader.apply();
 
-        var retriever = new SparkBoxedDataRetriever(sparkFactory, tableResolutionStrategy);
+        var retriever = new SparkIndexedDataRetriever(sparkFactory, tableResolutionStrategy);
 
         var r1 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockPatient"));
         var r2 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockEntity"));

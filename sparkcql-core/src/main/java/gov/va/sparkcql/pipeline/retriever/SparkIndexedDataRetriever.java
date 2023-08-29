@@ -18,14 +18,14 @@ import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 
-public class SparkBoxedDataRetriever implements Retriever {
+public class SparkIndexedDataRetriever implements Retriever {
 
     private final String ENCODED_DATA_COLUMN = "data";
     protected SparkSession spark;
     protected TableResolutionStrategy tableResolutionStrategy;
 
     @Inject
-    public SparkBoxedDataRetriever(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+    public SparkIndexedDataRetriever(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         this.spark = sparkFactory.create();
         this.tableResolutionStrategy = tableResolutionStrategy;
     }
