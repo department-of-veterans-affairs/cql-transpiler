@@ -14,8 +14,8 @@ public class FhirSyntheticDataPreprocessor extends AbstractBoxedDataPreprocessor
 
     @Override
     public void apply() {
-        fromResourceJson("tables/patient.json", new DataType("http://hl7.org/fhir", "Patient"));
-        fromResourceJson("tables/encounter.json", new DataType("http://hl7.org/fhir", "Encounter"));
-        fromResourceJson("tables/condition.json", new DataType("http://hl7.org/fhir", "Condition"));
+        fromResourceJson("table/patient.json", new DataType("http://hl7.org/fhir", "Patient"));
+        fromResourceJson("table/encounter.json", new DataType("http://hl7.org/fhir", "Encounter"));
+        fromResourceJson("table/condition.json", new DataType("http://hl7.org/fhir", "Condition"));
     }
 }

@@ -1,5 +1,7 @@
 package gov.va.sparkcql.io;
 
+import gov.va.sparkcql.log.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +21,7 @@ public class Resources {
         try (var data = resourceStream.openStream()) {
             return new String(data.readAllBytes(), StandardCharsets.UTF_8);
         } catch (Exception ex) {
-            return null;
+            throw new RuntimeException("No resources found at '" + path + "'.");
         }
     }
 
