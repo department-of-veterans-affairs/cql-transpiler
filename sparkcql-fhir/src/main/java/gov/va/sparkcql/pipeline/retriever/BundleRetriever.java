@@ -3,7 +3,7 @@ package gov.va.sparkcql.pipeline.retriever;
 import ca.uhn.fhir.context.FhirContext;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.io.Asset;
+import gov.va.sparkcql.io.AssetFolder;
 import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -20,7 +20,7 @@ public class BundleRetriever implements Retriever {
 
     private List<Bundle> bundles;
 
-    public BundleRetriever(SparkFactory sparkFactory, Asset bundles) {
+    public BundleRetriever(SparkFactory sparkFactory, AssetFolder bundles) {
         this.spark = sparkFactory.create();
         loadResourceBundles(bundles);
     }
@@ -45,7 +45,7 @@ public class BundleRetriever implements Retriever {
         return sc.parallelize(entries.collect(Collectors.toList()));
     }
 
-    private void loadResourceBundles(Asset bundleAsset) {
+    private void loadResourceBundles(AssetFolder bundleAsset) {
         // Stream the bundles stored as resources files.
         var contents = bundleAsset.read();
 

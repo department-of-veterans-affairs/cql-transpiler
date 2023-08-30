@@ -10,16 +10,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AssetTest extends ServiceModule {
+public class AssetFolderTest extends ServiceModule {
 
     @Test
     public void should_read_file_modality() {
-        checkResults(new Asset("file://src/test/resources/mock-model/valueset").read());
+        checkResults(new AssetFolder("file://src/test/resources/mock-model/valueset").read());
     }
 
     @Test
     public void should_read_classpath_modality() {
-        checkResults(new Asset("resource://mock-model/valueset").read());
+        checkResults(new AssetFolder("resource://mock-model/valueset").read());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class AssetTest extends ServiceModule {
         if (System.getenv("HADOOP_HOME") != null) {
             // In Spark mode, Asset will use any established spark connection.
             var spark = new LocalSparkFactory(getConfiguration()).create();
-            checkResults(new Asset("spark://mock-model/valueset").read());
+            checkResults(new AssetFolder("spark://mock-model/valueset").read());
         } else {
             Log.warn("Winutils, HADOOP_HOME, & hadoop.home.dir were not configured. Skipping Spark mode Asset test.");
         }

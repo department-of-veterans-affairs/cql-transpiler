@@ -8,6 +8,7 @@ import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.ElmWriter;
 import gov.va.sparkcql.pipeline.compiler.CqfCompiler;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepositoryFactory;
+import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.hl7.cql_annotations.r1.CqlToElmError;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
@@ -75,8 +76,8 @@ public class CqfCompilerTest {
     @Test
     public void should_allow_file_repository_loading() {
         // Compiling by ID will force use of the CqlSourceFileRepository.
-        var output = compiler.compile(List.of(new VersionedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
-        var json = output.getLibraries(). get(0);
+        var output = compiler.compile(List.of(new QualifiedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
+        var json = output.getLibraries().get(0);
         assertLibraries(1, output);
     }
 

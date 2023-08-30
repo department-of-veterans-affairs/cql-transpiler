@@ -31,14 +31,14 @@ public class CqfCompiler implements Compiler {
         this.inScopeCqlSources = Stream.of(cqlText)
             .map(text -> {
                 return new CqlSource()
-                    .withIdentifier(new QualifiedIdentifier(new CqlParser().parseVersionedIdentifier(text)))
+                    .withIdentifier(QualifiedIdentifier.from(new CqlParser().parseVersionedIdentifier(text)))
                     .withSource(text);
             }).collect(Collectors.toList());
 
         return new Plan().withLibraries(compileIdentifiedLibraries());
     }
 
-    public Plan compile(List<VersionedIdentifier> cqlIdentifier) {
+    public Plan compile(List<QualifiedIdentifier> cqlIdentifier) {
         this.inScopeCqlSources = this.cqlSourceRepository.readById(cqlIdentifier);
         return new Plan().withLibraries(compileIdentifiedLibraries());
     }
@@ -83,10 +83,10 @@ public class CqfCompiler implements Compiler {
     
         @Override
         public InputStream getLibrarySource(VersionedIdentifier libraryIdentifier) {
-            var lookup = inScopeCqlSources.stream().filter(cs -> cs.getIdentifier().equals(libraryIdentifier)).findFirst();
+            var qualifiedIdentifier = QualifiedIdentifier.from(libraryIdentifier);
+            var lookup = inScopeCqlSources.stream().filter(cs -> cs.getIdentifier().equals(qualifiedIdentifier)).findFirst();
             if (lookup.isEmpty()) {
-                var cs = this.cqlSourceRepository.readById(libraryIdentifier);
-                this.inScopeCqlSources.add(cs);
+                var cs = this.cqlSourceRepository.readById(qualifiedIdentifier);
                 lookup = Optional.ofNullable(cs);
             }
     

@@ -3,14 +3,12 @@ package gov.va.sparkcql.pipeline.repository.cql;
 import java.util.List;
 
 import gov.va.sparkcql.types.QualifiedIdentifier;
-import org.hl7.elm.r1.VersionedIdentifier;
 
-import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.domain.CqlSource;
 import gov.va.sparkcql.pipeline.compiler.CqlParser;
 import gov.va.sparkcql.pipeline.repository.AbstractFileRepository;
 
-public class CqlSourceFileRepository extends AbstractFileRepository<CqlSource, VersionedIdentifier> implements CqlSourceRepository {
+public class CqlSourceFileRepository extends AbstractFileRepository<CqlSource, QualifiedIdentifier> implements CqlSourceRepository {
 
     public CqlSourceFileRepository(String path) {
         super(path, "cql");
@@ -26,7 +24,7 @@ public class CqlSourceFileRepository extends AbstractFileRepository<CqlSource, V
     }
 
     @Override
-    protected VersionedIdentifier getEntityId(CqlSource entity) {
-        return entity.getIdentifier().toVersionedIdentifier();
+    protected QualifiedIdentifier getEntityId(CqlSource entity) {
+        return entity.getIdentifier();
     }
 }

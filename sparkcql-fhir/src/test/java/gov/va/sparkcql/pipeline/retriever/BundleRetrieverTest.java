@@ -1,9 +1,8 @@
 package gov.va.sparkcql.pipeline.retriever;
 
 import gov.va.sparkcql.configuration.ServiceModule;
-import gov.va.sparkcql.runtime.LocalSparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.io.Asset;
+import gov.va.sparkcql.io.AssetFolder;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
 import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import gov.va.sparkcql.types.DataType;
@@ -28,7 +27,7 @@ public class BundleRetrieverTest extends ServiceModule {
                 .withDataType(new DataType("http://hl7.org/fhir", resourceType));
         var modelAdapter = new FhirModelAdapter();
         var modelAdapterComposite = new ModelAdapterComposite(List.of(modelAdapter));
-        var retriever = new BundleRetriever(getSparkFactory(), Asset.of("resource://bundles"));
+        var retriever = new BundleRetriever(getSparkFactory(), AssetFolder.of("resource://bundles"));
         var bundles = retriever.retrieve(retrieval, modelAdapterComposite);
         assertEquals(expectedCount, bundles.count());
     }

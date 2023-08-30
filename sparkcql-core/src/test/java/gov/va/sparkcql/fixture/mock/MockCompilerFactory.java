@@ -5,6 +5,7 @@ import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
+import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.hl7.elm.r1.VersionedIdentifier;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class MockCompilerFactory extends CompilerFactory {
             }
 
             @Override
-            public Plan compile(List<VersionedIdentifier> cqlIdentifier) {
+            public Plan compile(List<QualifiedIdentifier> cqlIdentifier) {
                 return null;
             }
         };

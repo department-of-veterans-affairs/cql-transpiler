@@ -16,6 +16,7 @@ import gov.va.sparkcql.pipeline.optimizer.OptimizerFactory;
 import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepositoryFactory;
 import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
+import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
@@ -117,7 +118,7 @@ public class Pipeline implements Serializable {
     }
 
     public EvaluationResultSet execute(String libraryName, String version, Map<String, Object> parameters) {
-        this.compiledPlanOutput = getCompiler().compile(List.of(new VersionedIdentifier().withId(libraryName).withVersion(version)));
+        this.compiledPlanOutput = getCompiler().compile(List.of(new QualifiedIdentifier().withId(libraryName).withVersion(version)));
         this.parameters = parameters;
         return runPipeline();
     }
