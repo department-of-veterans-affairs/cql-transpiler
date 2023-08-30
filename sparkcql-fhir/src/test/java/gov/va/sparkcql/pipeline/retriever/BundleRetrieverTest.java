@@ -1,6 +1,7 @@
 package gov.va.sparkcql.pipeline.retriever;
 
-import gov.va.sparkcql.configuration.LocalSparkFactory;
+import gov.va.sparkcql.configuration.ServiceModule;
+import gov.va.sparkcql.runtime.LocalSparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.io.Asset;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BundleRetrieverTest {
+public class BundleRetrieverTest extends ServiceModule {
 
     @Test
     public void should_retrieve_patients_from_bundled_resources() {
@@ -27,7 +28,7 @@ public class BundleRetrieverTest {
                 .withDataType(new DataType("http://hl7.org/fhir", resourceType));
         var modelAdapter = new FhirModelAdapter();
         var modelAdapterComposite = new ModelAdapterComposite(List.of(modelAdapter));
-        var retriever = new BundleRetriever(new LocalSparkFactory(), Asset.of("classpath://bundles"));
+        var retriever = new BundleRetriever(getSparkFactory(), Asset.of("classpath://bundles"));
         var bundles = retriever.retrieve(retrieval, modelAdapterComposite);
         assertEquals(expectedCount, bundles.count());
     }

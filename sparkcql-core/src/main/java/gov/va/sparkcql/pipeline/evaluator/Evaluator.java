@@ -5,7 +5,7 @@ import java.util.Map;
 
 import gov.va.sparkcql.domain.EvaluatedContext;
 import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.pipeline.Component;
+import gov.va.sparkcql.configuration.Component;
 
 public interface Evaluator extends Component {
 

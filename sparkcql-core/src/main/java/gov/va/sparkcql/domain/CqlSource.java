@@ -2,7 +2,9 @@ package gov.va.sparkcql.domain;
 
 import org.hl7.elm.r1.VersionedIdentifier;
 
-public final class CqlSource {
+import java.io.Serializable;
+
+public final class CqlSource implements Serializable {
 
     private VersionedIdentifier identifier;
     private String source;

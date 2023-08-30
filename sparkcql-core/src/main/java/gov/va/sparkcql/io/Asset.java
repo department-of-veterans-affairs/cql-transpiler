@@ -1,6 +1,6 @@
 package gov.va.sparkcql.io;
 
-import gov.va.sparkcql.configuration.DefaultSparkFactory;
+import gov.va.sparkcql.runtime.DefaultSparkFactory;
 import org.apache.spark.sql.SparkSession;
 
 import java.io.Serializable;
@@ -38,6 +38,10 @@ public class Asset implements Serializable {
     }
 
     public List<String> read() {
+        return read(null);
+    }
+
+    public List<String> read(SparkSession spark) {
         switch (this.assetModality) {
             case FILE:
                 return Files.readFiles(rawPath, "*");
@@ -46,16 +50,15 @@ public class Asset implements Serializable {
                 return Resources.readAll(rawPath).collect(Collectors.toList());
 
             case SPARK:
-                var rows = getSpark().read().text(rawPath);
+                if (spark == null)
+                    throw new RuntimeException("Attempted to read Spark resource without specifying a SparkSession.");
+
+                var rows = spark.read().text(rawPath);
                 return rows.collectAsList().stream()
                         .map(r -> r.getString(0)).collect(Collectors.toList());
         }
 
         return List.of();
-    }
-
-    private SparkSession getSpark() {
-        return new DefaultSparkFactory().create();
     }
 
     public enum AssetModality {

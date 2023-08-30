@@ -1,9 +1,6 @@
 package gov.va.sparkcql.pipeline.optimizer;
 
-import java.util.List;
-
-import gov.va.sparkcql.pipeline.Component;
-import org.hl7.elm.r1.Library;
+import gov.va.sparkcql.configuration.Component;
 
 import gov.va.sparkcql.domain.Plan;
 

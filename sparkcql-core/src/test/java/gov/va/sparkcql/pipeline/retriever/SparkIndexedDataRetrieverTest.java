@@ -1,7 +1,6 @@
 package gov.va.sparkcql.pipeline.retriever;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -13,26 +12,24 @@ import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategyF
 import org.hl7.elm.r1.Retrieve;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.AbstractTest;
-import gov.va.sparkcql.configuration.LocalSparkFactory;
+import gov.va.sparkcql.configuration.ServiceModule;
 import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SparkIndexedDataRetrieverTest extends AbstractTest {
+public class SparkIndexedDataRetrieverTest extends ServiceModule {
 
     @Test
     public void should_load_sample_data() {
         var configuration = new MockConfiguration();
-        var sparkFactory = new LocalSparkFactory();
         var tableResolutionStrategy = new TemplateResolutionStrategy(
                 configuration.readSetting(TemplateResolutionStrategyFactory.TEMPLATE_RESOLUTION_STRATEGY)
                         .orElseThrow());
-        var dataLoader = new MockDataPreprocessor(sparkFactory, tableResolutionStrategy);
+        var dataLoader = new MockDataPreprocessor(getSparkFactory(), tableResolutionStrategy);
         dataLoader.apply();
 
-        var retriever = new SparkIndexedDataRetriever(sparkFactory, tableResolutionStrategy);
+        var retriever = new SparkIndexedDataRetriever(getSparkFactory(), tableResolutionStrategy);
 
         var r1 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockPatient"));
         var r2 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockEntity"));

@@ -1,5 +1,6 @@
 package gov.va.sparkcql;
 
+import gov.va.sparkcql.configuration.ServiceModule;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.hl7.fhir.r4.model.Condition;
 import org.hl7.fhir.r4.model.Encounter;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SparkCapabilityTest extends AbstractTest {
+public class SparkCapabilityTest extends ServiceModule {
 
     @Test
     public void should_serde_fhir_dom_across_cluster() {

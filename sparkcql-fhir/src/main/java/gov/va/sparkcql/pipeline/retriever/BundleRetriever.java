@@ -1,7 +1,7 @@
 package gov.va.sparkcql.pipeline.retriever;
 
 import ca.uhn.fhir.context.FhirContext;
-import gov.va.sparkcql.configuration.SparkFactory;
+import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.io.Asset;
 import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;

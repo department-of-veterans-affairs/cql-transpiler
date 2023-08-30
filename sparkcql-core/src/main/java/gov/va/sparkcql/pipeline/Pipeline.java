@@ -10,7 +10,6 @@ import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.converger.ConvergerFactory;
 import gov.va.sparkcql.pipeline.converger.DefaultConvergerFactory;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
-import gov.va.sparkcql.pipeline.model.ModelAdapter;
 import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
 import gov.va.sparkcql.pipeline.optimizer.DefaultOptimizerFactory;
 import gov.va.sparkcql.pipeline.optimizer.OptimizerFactory;
@@ -23,7 +22,7 @@ import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.sql.SparkSession;
 import org.hl7.elm.r1.VersionedIdentifier;
 
-import gov.va.sparkcql.configuration.SparkFactory;
+import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.converger.Converger;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
@@ -44,6 +43,8 @@ public class Pipeline implements Serializable {
     private final SparkSession spark;
 
     // Pipeline Components
+    private List<Preprocessor> preprocessors;
+
     private final Compiler compiler;
 
     private final Optimizer optimizer;
@@ -56,9 +57,11 @@ public class Pipeline implements Serializable {
 
     private Evaluator evaluator;
 
-    private List<Preprocessor> preprocessors;
+    private EvaluatorFactory evaluatorFactory;
 
     private final CqlSourceRepository cqlSourceRepository;
+
+    private Object terminologyRepository;
 
     // Invocation
     private Map<String, Object> parameters;
@@ -77,18 +80,40 @@ public class Pipeline implements Serializable {
     public Pipeline(Configuration configuration) {
         this.configuration = configuration;
         var injector = new Injector(configuration);
+
+        // Construction Spark
         this.sparkFactory = injector.getInstance(SparkFactory.class);
         this.spark = sparkFactory.create();
-        this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(sparkFactory);
-        this.compiler = injector.getInstance(CompilerFactory.class).create(cqlSourceRepository);
-        this.optimizer = injector.getInstance(OptimizerFactory.class, DefaultOptimizerFactory.class).create();
-        this.retriever = injector.getInstance(RetrieverFactory.class).create(sparkFactory);
-        List<ModelAdapter> modelAdapters = injector.getInstances(ModelAdapterFactory.class)
-                .stream().map(f -> f.create()).collect(Collectors.toList());
-        this.modelAdapterComposite = new ModelAdapterComposite(modelAdapters);
-        this.converger = injector.getInstance(ConvergerFactory.class, DefaultConvergerFactory.class).create();
+
+        // Construct preprocessors which initialize the pipeline ahead of other stages.
         this.preprocessors = injector.getInstances(PreprocessorFactory.class)
                 .stream().map(f -> f.create(sparkFactory)).collect(Collectors.toList());
+
+        // Construct Model Adapters used to adapt model semantics to runtime.
+        var modelAdapters = injector.getInstances(ModelAdapterFactory.class)
+                .stream().map(f -> f.create()).collect(Collectors.toList());
+        this.modelAdapterComposite = new ModelAdapterComposite(modelAdapters);
+
+        // Construct Compiler and CQL Source Repository used to fetch CQL scripts by the Compiler.
+        this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(sparkFactory);
+        this.compiler = injector.getInstance(CompilerFactory.class).create(cqlSourceRepository);
+
+        // Construct Optimizer used to optimize the retrievals to satisfy data requirements.
+        this.optimizer = injector.getInstance(OptimizerFactory.class, DefaultOptimizerFactory.class).create();
+
+        // Construct Converger used to bring join all retrieved feeds into a single "bundle".
+        this.converger = injector.getInstance(ConvergerFactory.class, DefaultConvergerFactory.class).create();
+
+        // Construct Retrievers which provide clinical data to the engine.
+        this.retriever = injector.getInstance(RetrieverFactory.class).create(sparkFactory);
+
+        // Construct Evaluator used as the CQL engine. Note that the Evaluator constructor
+        // requires a Plan which is created during pipeline execution. so defer its creation
+        // until later by just creating the factory but not the Evaluator just yet.
+        this.evaluatorFactory = injector.getInstance(EvaluatorFactory.class);
+
+        // Construct Terminology Repository which provide terminology data to the engine.
+        // TODO
     }
 
     public EvaluationResultSet execute(String libraryName, String version, Map<String, Object> parameters) {
@@ -157,7 +182,6 @@ public class Pipeline implements Serializable {
     private Map<Retrieval, JavaRDD<Object>> runRetrievalStage() {
         return plannedOutput.getRetrieves().stream()
                 .collect(Collectors.toMap(r -> r, r -> {
-                    var y = getRetriever().retrieve(r, getModelAdapterComposite());
                     return getRetriever().retrieve(r, getModelAdapterComposite());
                 }));
     }
@@ -167,8 +191,7 @@ public class Pipeline implements Serializable {
     }
 
     private JavaRDD<EvaluatedContext> runEvaluatorStage() {
-        var factory = new Injector(configuration).getInstance(EvaluatorFactory.class);
-        this.evaluator = factory.create(plannedOutput, modelAdapterComposite, null);
+        this.evaluator = evaluatorFactory.create(plannedOutput, modelAdapterComposite, terminologyRepository);
 
         return combinedOutput.mapPartitions((FlatMapFunction<Iterator<Tuple2<String, Map<Retrieval, List<Object>>>>, EvaluatedContext>) row -> {
 

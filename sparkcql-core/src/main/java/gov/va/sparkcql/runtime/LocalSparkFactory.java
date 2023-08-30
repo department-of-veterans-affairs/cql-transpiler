@@ -1,11 +1,16 @@
-package gov.va.sparkcql.configuration;
+package gov.va.sparkcql.runtime;
 
+import gov.va.sparkcql.configuration.Configuration;
 import org.apache.spark.sql.SparkSession;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-public class LocalSparkFactory implements SparkFactory {
+public class LocalSparkFactory extends SparkFactory {
+
+    public LocalSparkFactory(Configuration configuration) {
+        super(configuration);
+    }
 
     @Override
     public SparkSession create() {

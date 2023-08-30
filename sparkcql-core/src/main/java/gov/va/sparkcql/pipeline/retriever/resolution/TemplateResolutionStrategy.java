@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import org.hl7.elm.r1.VersionedIdentifier;
 
-import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.types.DataType;
 
 public class TemplateResolutionStrategy implements TableResolutionStrategy {
@@ -27,16 +26,17 @@ public class TemplateResolutionStrategy implements TableResolutionStrategy {
      */
     @Override
     public String resolveTableBinding(DataType dataType) {
+        var tableName = template;
         var modelId = getWellKnownModelIdentifier(dataType);
         addToken("model", modelId.getId());
         addToken("version", modelId.getVersion());
         addToken("domain", dataType.getName());
         
         for (var tokenEntry : tokens.entrySet()) {
-            template = template.replace(tokenEntry.getKey(), tokenEntry.getValue());
+            tableName = tableName.replace(tokenEntry.getKey(), tokenEntry.getValue());
         }
         
-        return template;
+        return tableName;
     }
 
     public VersionedIdentifier getWellKnownModelIdentifier(DataType dataType) {

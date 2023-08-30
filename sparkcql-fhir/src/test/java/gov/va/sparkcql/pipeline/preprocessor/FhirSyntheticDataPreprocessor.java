@@ -1,6 +1,6 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
-import gov.va.sparkcql.configuration.SparkFactory;
+import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 

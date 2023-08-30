@@ -1,10 +1,10 @@
 package gov.va.sparkcql.pipeline;
 
-import gov.va.sparkcql.AbstractTest;
+import gov.va.sparkcql.configuration.ServiceModule;
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.configuration.Injector;
-import gov.va.sparkcql.configuration.LocalSparkFactory;
-import gov.va.sparkcql.configuration.SparkFactory;
+import gov.va.sparkcql.runtime.LocalSparkFactory;
+import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.fixture.mock.*;
 import gov.va.sparkcql.io.Resources;
@@ -30,9 +30,10 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PipelineTest extends AbstractTest {
+public class PipelineTest extends ServiceModule {
 
-    private Configuration configure() {
+    @Override
+    protected Configuration configure() {
         var cfg = new MockConfiguration();
         cfg.writeBinding(SparkFactory.class, LocalSparkFactory.class);
         cfg.writeBinding(CqlSourceRepositoryFactory.class, CqlSourceFileRepositoryFactory.class);
@@ -55,7 +56,7 @@ public class PipelineTest extends AbstractTest {
     public void should_initialize_default_components() {
         var pipeline = new Pipeline(configure());
         assertNotNull(pipeline.getOptimizer());
-        assertNotNull(pipeline.getEvaluator());
+        assertNotNull(pipeline.getCompiler());
     }
 
     @Test

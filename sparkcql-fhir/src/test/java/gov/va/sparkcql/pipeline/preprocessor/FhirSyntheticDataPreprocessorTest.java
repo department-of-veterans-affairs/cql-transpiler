@@ -1,25 +1,22 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
-import gov.va.sparkcql.configuration.LocalSparkFactory;
-import gov.va.sparkcql.configuration.EnvironmentConfiguration;
+import gov.va.sparkcql.configuration.ServiceModule;
+import gov.va.sparkcql.runtime.LocalSparkFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FhirSyntheticDataPreprocessorTest {
+public class FhirSyntheticDataPreprocessorTest extends ServiceModule {
 
     @Test
     public void should_mount_synthetic_data() {
-        var sparkFactory = new LocalSparkFactory();
         var preprocessor = new FhirSyntheticDataPreprocessor(
-                sparkFactory,
+                getSparkFactory(),
                 new TemplateResolutionStrategy("${domain}"));
         preprocessor.apply();
 
-        var spark = sparkFactory.create();
-        var tables = spark.sqlContext().tableNames();
-        var conditionDs = spark.sql("select * from condition");
+        var conditionDs = getSpark().sql("select * from condition");
         assertEquals(2, conditionDs.collectAsList().size());
     }
 }

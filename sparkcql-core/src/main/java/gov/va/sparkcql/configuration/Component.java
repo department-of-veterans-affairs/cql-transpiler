@@ -1,4 +1,4 @@
-package gov.va.sparkcql.pipeline;
+package gov.va.sparkcql.configuration;
 
 import java.io.Serializable;
 

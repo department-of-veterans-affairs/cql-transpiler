@@ -3,7 +3,7 @@ package gov.va.sparkcql.pipeline.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import gov.va.sparkcql.pipeline.Component;
+import gov.va.sparkcql.configuration.Component;
 import gov.va.sparkcql.types.DataType;
 
 public class ModelAdapterComposite implements Component {

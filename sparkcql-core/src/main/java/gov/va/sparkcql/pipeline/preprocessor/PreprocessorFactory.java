@@ -1,8 +1,8 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
 import gov.va.sparkcql.configuration.Configuration;
-import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.pipeline.ComponentFactory;
+import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.configuration.ComponentFactory;
 
 public abstract class PreprocessorFactory extends ComponentFactory {
 

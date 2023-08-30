@@ -1,7 +1,7 @@
 package gov.va.sparkcql.pipeline.retriever.resolution;
 
 import gov.va.sparkcql.configuration.Configuration;
-import gov.va.sparkcql.pipeline.ComponentFactory;
+import gov.va.sparkcql.configuration.ComponentFactory;
 
 public abstract class TableResolutionStrategyFactory extends ComponentFactory {
 
