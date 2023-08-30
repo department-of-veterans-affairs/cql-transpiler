@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.inject.Inject;
 import org.hl7.elm.r1.VersionedIdentifier;
 
 import gov.va.sparkcql.configuration.EnvironmentConfiguration;
@@ -12,14 +11,11 @@ import gov.va.sparkcql.types.DataType;
 
 public class TemplateResolutionStrategy implements TableResolutionStrategy {
 
-    public static final String TEMPLATE_RESOLUTION_STRATEGY = "sparkcql.resolutionstrategy.template";
-    protected EnvironmentConfiguration environmentConfiguration;
-
+    private String template;
     protected Map<String, String> tokens;
 
-    @Inject
-    public TemplateResolutionStrategy(EnvironmentConfiguration environmentConfiguration) {
-        this.environmentConfiguration = environmentConfiguration;
+    public TemplateResolutionStrategy(String template) {
+        this.template = template;
         this.tokens = new HashMap<String, String>();
     }
 
@@ -36,7 +32,6 @@ public class TemplateResolutionStrategy implements TableResolutionStrategy {
         addToken("version", modelId.getVersion());
         addToken("domain", dataType.getName());
         
-        var template = this.environmentConfiguration.readSetting(TEMPLATE_RESOLUTION_STRATEGY, "${model}.${domain}");
         for (var tokenEntry : tokens.entrySet()) {
             template = template.replace(tokenEntry.getKey(), tokenEntry.getValue());
         }

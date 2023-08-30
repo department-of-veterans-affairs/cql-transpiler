@@ -12,9 +12,7 @@ dependencies {
         exclude group: 'org.apache.spark', module: 'spark-sql_2.12'
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    
-    implementation "com.google.inject:guice:${guiceVersion}"
-    
+
     implementation "info.cqframework:cql:${cqfVersion}"
     implementation "info.cqframework:cql-to-elm:${cqfVersion}"
     implementation "info.cqframework:elm:${cqfVersion}"

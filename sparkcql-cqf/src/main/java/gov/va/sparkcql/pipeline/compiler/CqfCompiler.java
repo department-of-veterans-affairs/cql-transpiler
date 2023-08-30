@@ -14,8 +14,6 @@ import org.fhir.ucum.UcumException;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 
-import com.google.inject.Inject;
-
 import gov.va.sparkcql.domain.CqlSource;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
 
@@ -24,7 +22,6 @@ public class CqfCompiler implements Compiler {
     protected List<CqlSource> inScopeCqlSources;
     protected CqlSourceRepository cqlSourceRepository;
 
-    @Inject
     public CqfCompiler(CqlSourceRepository cqlSourceRepository) {
         this.cqlSourceRepository = cqlSourceRepository;
     }
@@ -89,7 +86,7 @@ public class CqfCompiler implements Compiler {
             if (lookup.isEmpty()) {
                 var cs = this.cqlSourceRepository.readById(libraryIdentifier);
                 this.inScopeCqlSources.add(cs);
-                lookup = Optional.of(cs);
+                lookup = Optional.ofNullable(cs);
             }
     
             return new ByteArrayInputStream(lookup.get().getSource().getBytes());

@@ -1,25 +1,27 @@
 package gov.va.sparkcql.pipeline;
 
 import gov.va.sparkcql.AbstractTest;
-import gov.va.sparkcql.configuration.EnvironmentConfiguration;
+import gov.va.sparkcql.configuration.Configuration;
+import gov.va.sparkcql.configuration.Injector;
+import gov.va.sparkcql.configuration.LocalSparkFactory;
+import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.fixture.mock.MockDataPreprocessor;
-import gov.va.sparkcql.fixture.mock.MockEvaluator;
-import gov.va.sparkcql.fixture.mock.MockModelAdapter;
-import gov.va.sparkcql.fixture.mock.MockConfiguration;
+import gov.va.sparkcql.fixture.mock.*;
 import gov.va.sparkcql.io.Resources;
-import gov.va.sparkcql.pipeline.converger.DefaultConverger;
-import gov.va.sparkcql.pipeline.model.ModelAdapter;
-import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
-import gov.va.sparkcql.pipeline.optimizer.DefaultOptimizer;
-import gov.va.sparkcql.pipeline.retriever.SparkIndexedDataRetriever;
-import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
-import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
+import gov.va.sparkcql.pipeline.converger.ConvergerFactory;
+import gov.va.sparkcql.pipeline.converger.DefaultConvergerFactory;
+import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
+import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
+import gov.va.sparkcql.pipeline.optimizer.DefaultOptimizerFactory;
+import gov.va.sparkcql.pipeline.optimizer.OptimizerFactory;
+import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
+import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
+import gov.va.sparkcql.pipeline.retriever.SparkIndexedDataRetrieverFactory;
+import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
 
+import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategyFactory;
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonLibraryReader;
 import org.junit.jupiter.api.Test;
-
-import com.google.inject.multibindings.Multibinder;
 
 import java.io.IOException;
 
@@ -27,26 +29,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PipelineTest extends AbstractTest {
 
-    @Override
-    protected void configure() {
-        super.configure();
-        bind(EnvironmentConfiguration.class).to(MockConfiguration.class);
-        bind(TableResolutionStrategy.class).to(TemplateResolutionStrategy.class);
-        var pipelineComponentBinder = Multibinder.newSetBinder(binder(), Component.class);
-        pipelineComponentBinder.addBinding().to(MockDataPreprocessor.class);
-        pipelineComponentBinder.addBinding().to(ModelAdapterResolver.class);
-        pipelineComponentBinder.addBinding().to(DefaultOptimizer.class);
-        pipelineComponentBinder.addBinding().to(DefaultConverger.class);
-        pipelineComponentBinder.addBinding().to(SparkIndexedDataRetriever.class);
-        pipelineComponentBinder.addBinding().to(MockEvaluator.class);
-        var modelAdapterBinder = Multibinder.newSetBinder(binder(), ModelAdapter.class);
-        modelAdapterBinder.addBinding().to(MockModelAdapter.class);
+    private Configuration configure() {
+        var cfg = new MockConfiguration();
+        cfg.writeBinding(SparkFactory.class, LocalSparkFactory.class);
+        cfg.writeBinding(TableResolutionStrategyFactory.class, TemplateResolutionStrategyFactory.class);
+        cfg.writeBinding(OptimizerFactory.class, DefaultOptimizerFactory.class);
+        cfg.writeBinding(RetrieverFactory.class, SparkIndexedDataRetrieverFactory.class);
+        cfg.writeBinding(ConvergerFactory.class, DefaultConvergerFactory.class);
+        cfg.writeBinding(EvaluatorFactory.class, MockEvaluatorFactory.class);
+        cfg.writeBinding(ModelAdapterFactory.class, MockModelAdapterFactory.class);
+        cfg.writeBinding(PreprocessorFactory.class, MockDataPreprocessorFactory.class);
+        return cfg;
+    }
+
+    private Injector getInjector() {
+        return new Injector(configure());
     }
 
     @Test
     public void should_initialize_default_components() {
-        var pipeline = getInjector().getInstance(Pipeline.class);
-        assertFalse(pipeline.getComponents().isEmpty());
+        var pipeline = new Pipeline(configure());
         assertNotNull(pipeline.getOptimizer());
         assertNotNull(pipeline.getEvaluator());
     }
@@ -57,7 +59,7 @@ public class PipelineTest extends AbstractTest {
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan()
                 .withLibrary(reader.read(libraryContents));
-        var pipeline = getInjector().getInstance(Pipeline.class);
+        var pipeline = new Pipeline(configure());
         var results = pipeline.execute(plan);
         results.splitByContext().collect().forEach(System.out::println);
     }

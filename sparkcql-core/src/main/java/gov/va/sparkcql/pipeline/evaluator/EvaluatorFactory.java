@@ -1,9 +1,15 @@
 package gov.va.sparkcql.pipeline.evaluator;
 
+import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.ComponentFactory;
+import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 
-public interface EvaluatorFactory {
+public abstract class EvaluatorFactory extends ComponentFactory {
 
-    public Evaluator create(Plan plan, ModelAdapterResolver modelAdapterResolver, Object terminologyData);
+    public EvaluatorFactory(Configuration configuration) {
+        super(configuration);
+    }
+
+    public abstract Evaluator create(Plan plan, ModelAdapterComposite modelAdapterComposite, Object terminologyData);
 }

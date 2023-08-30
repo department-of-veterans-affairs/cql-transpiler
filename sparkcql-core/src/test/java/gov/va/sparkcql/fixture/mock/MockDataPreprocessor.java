@@ -1,6 +1,5 @@
 package gov.va.sparkcql.fixture.mock;
 
-import com.google.inject.Inject;
 import gov.va.sparkcql.pipeline.preprocessor.AbstractBoxedDataPreprocessor;
 
 import gov.va.sparkcql.configuration.SparkFactory;
@@ -9,7 +8,6 @@ import gov.va.sparkcql.types.DataType;
 
 public class MockDataPreprocessor extends AbstractBoxedDataPreprocessor {
 
-    @Inject
     public MockDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         super(sparkFactory, tableResolutionStrategy);
     }

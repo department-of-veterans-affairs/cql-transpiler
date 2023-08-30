@@ -14,31 +14,8 @@ public class CqlSourceFileRepositoryTest {
 
     @Test
     public void should_support_basic_read_ops() {
-        var cfg = new EnvironmentConfiguration();
-        cfg.writeSetting(
-                CqlSourceFileRepository.CQL_SOURCE_FILE_REPOSITORY_PATH,
-                "./src/test/resources/mock-model/cql");
-        cfg.writeSetting(
-                CqlSourceFileRepository.CQL_SOURCE_FILE_REPOSITORY_EXT,
-                "cql");
-
-        var repository = new CqlSourceFileRepository(cfg);
+        var repository = new CqlSourceFileRepository("./src/test/resources/mock-model/cql");
         assertNotNull(repository.readById(new VersionedIdentifier().withId("MOCK_LIBRARY").withVersion("1.0")));
         assertNull(repository.readById(new VersionedIdentifier().withId("MOCK_LIBRARY")));
-    }
-
-    @Test
-    public void should_gracefully_ignore_when_unconfigured() {
-        var cfg = new EnvironmentConfiguration();
-        cfg.writeSetting(
-                CqlSourceFileRepository.CQL_SOURCE_FILE_REPOSITORY_PATH,
-                "./src/test/resources/mock/cql");
-        cfg.writeSetting(
-                CqlSourceFileRepository.CQL_SOURCE_FILE_REPOSITORY_EXT,
-                "cql");
-
-        var repository = new CqlSourceFileRepository(cfg);
-        assertNotNull(repository);
-        assertFalse(repository.exists(new VersionedIdentifier()));
     }
 }

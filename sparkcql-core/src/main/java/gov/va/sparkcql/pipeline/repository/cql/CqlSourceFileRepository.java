@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.hl7.elm.r1.VersionedIdentifier;
 
-import com.google.inject.Inject;
-
 import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.domain.CqlSource;
 import gov.va.sparkcql.pipeline.compiler.CqlParser;
@@ -13,14 +11,8 @@ import gov.va.sparkcql.pipeline.repository.AbstractFileRepository;
 
 public class CqlSourceFileRepository extends AbstractFileRepository<CqlSource, VersionedIdentifier> implements CqlSourceRepository {
 
-    public static final String CQL_SOURCE_FILE_REPOSITORY_PATH = "sparkcql.cqlsourcefilerepository.path";
-    public static final String CQL_SOURCE_FILE_REPOSITORY_EXT = "sparkcql.cqlsourcefilerepository.extension";
-
-    @Inject
-    public CqlSourceFileRepository(EnvironmentConfiguration cfg) {
-        super(
-                cfg.readSetting(CQL_SOURCE_FILE_REPOSITORY_PATH, "./"),
-                cfg.readSetting(CQL_SOURCE_FILE_REPOSITORY_EXT, "cql"));
+    public CqlSourceFileRepository(String path) {
+        super(path, "cql");
     }
 
     protected List<CqlSource> cqlSources;

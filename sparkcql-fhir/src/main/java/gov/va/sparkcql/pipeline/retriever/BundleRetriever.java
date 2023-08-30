@@ -1,12 +1,10 @@
 package gov.va.sparkcql.pipeline.retriever;
 
 import ca.uhn.fhir.context.FhirContext;
-import com.google.inject.Inject;
 import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.io.Asset;
-import gov.va.sparkcql.io.Resources;
-import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
@@ -22,15 +20,14 @@ public class BundleRetriever implements Retriever {
 
     private List<Bundle> bundles;
 
-    @Inject
     public BundleRetriever(SparkFactory sparkFactory, Asset bundles) {
         this.spark = sparkFactory.create();
         loadResourceBundles(bundles);
     }
 
     @Override
-    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterResolver modelAdapterResolver) {
-        var modelAdapter = modelAdapterResolver.forType(retrieval.getDataType());
+    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterComposite modelAdapterComposite) {
+        var modelAdapter = modelAdapterComposite.forType(retrieval.getDataType());
         var typeMap = modelAdapter.resolveTypeMap(retrieval.getDataType());
 
         var entries = bundles.stream().flatMap(b -> {

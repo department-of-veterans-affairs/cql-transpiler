@@ -1,5 +1,4 @@
 dependencies {
-    implementation "com.google.inject:guice:${guiceVersion}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"

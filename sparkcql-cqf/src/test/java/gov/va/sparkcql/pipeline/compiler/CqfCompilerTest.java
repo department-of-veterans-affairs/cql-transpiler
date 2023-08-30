@@ -7,6 +7,7 @@ import java.util.List;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.ElmWriter;
 import gov.va.sparkcql.pipeline.compiler.CqfCompiler;
+import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepositoryFactory;
 import org.hl7.cql_annotations.r1.CqlToElmError;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
@@ -23,12 +24,8 @@ public class CqfCompilerTest {
 
     @BeforeEach
     public void setup() {
-        var cfg = new EnvironmentConfiguration();
-        cfg.writeSetting(
-                CqlSourceFileRepository.CQL_SOURCE_FILE_REPOSITORY_PATH,
-                "./src/test/resources/cql");
         compiler = new CqfCompiler(
-                new CqlSourceFileRepository(cfg));
+                new CqlSourceFileRepository("./src/test/resources/cql"));
     }
 
     @Test

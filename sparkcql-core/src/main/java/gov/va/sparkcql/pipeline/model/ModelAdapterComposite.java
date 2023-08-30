@@ -1,20 +1,16 @@
 package gov.va.sparkcql.pipeline.model;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.google.inject.Inject;
 
 import gov.va.sparkcql.pipeline.Component;
 import gov.va.sparkcql.types.DataType;
 
-public class ModelAdapterResolver implements Component {
-    
-    Set<ModelAdapter> modelAdapters;
+public class ModelAdapterComposite implements Component {
 
-    @Inject
-    public ModelAdapterResolver(Set<ModelAdapter> modelAdapters) {
+    List<ModelAdapter> modelAdapters;
+
+    public ModelAdapterComposite(List<ModelAdapter> modelAdapters) {
         this.modelAdapters = modelAdapters;
     }
 

@@ -1,13 +1,11 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
-import com.google.inject.Inject;
 import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 
 public class FhirSyntheticDataPreprocessor extends AbstractBoxedDataPreprocessor {
 
-    @Inject
     public FhirSyntheticDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         super(sparkFactory, tableResolutionStrategy);
     }

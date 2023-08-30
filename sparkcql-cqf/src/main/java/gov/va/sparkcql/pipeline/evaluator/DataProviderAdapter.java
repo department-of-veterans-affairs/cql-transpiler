@@ -2,7 +2,7 @@ package gov.va.sparkcql.pipeline.evaluator;
 
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.pipeline.model.ModelAdapter;
-import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Interval;
@@ -15,12 +15,12 @@ public class DataProviderAdapter {
 
     private final Map<String, DataProvider> dataProviders;
 
-    public DataProviderAdapter(ModelAdapterResolver modelAdapterResolver) {
-        dataProviders = modelAdapterResolver.getNamespaces().stream()
+    public DataProviderAdapter(ModelAdapterComposite modelAdapterComposite) {
+        dataProviders = modelAdapterComposite.getNamespaces().stream()
                 .collect(Collectors.toMap(
                         k -> k,
                         v -> {
-                            var modelAdapter = modelAdapterResolver.forNamespace(v);
+                            var modelAdapter = modelAdapterComposite.forNamespace(v);
                             return new InternalDataProvider(modelAdapter);
                         }));
     }

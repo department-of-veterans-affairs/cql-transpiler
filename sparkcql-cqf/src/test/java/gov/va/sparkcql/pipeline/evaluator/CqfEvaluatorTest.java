@@ -1,12 +1,14 @@
 package gov.va.sparkcql.pipeline.evaluator;
 
+import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.Resources;
-import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonLibraryReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class CqfEvaluatorTest {
@@ -17,9 +19,9 @@ public class CqfEvaluatorTest {
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan().withLibrary(reader.read(libraryContents));
 
-        var evaluator = new CqfEvaluatorFactory().create(
+        var evaluator = new CqfEvaluatorFactory(new EnvironmentConfiguration()).create(
                 plan,
-                new ModelAdapterResolver(Set.of()),
+                new ModelAdapterComposite(List.of()),
                 null);
 
         evaluator.evaluate("12345", null);

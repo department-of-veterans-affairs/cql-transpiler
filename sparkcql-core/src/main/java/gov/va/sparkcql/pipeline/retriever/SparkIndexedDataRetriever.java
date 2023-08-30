@@ -12,10 +12,8 @@ import static org.apache.spark.sql.functions.col;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import gov.va.sparkcql.configuration.SparkFactory;
-import gov.va.sparkcql.pipeline.model.ModelAdapterResolver;
+import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 
 public class SparkIndexedDataRetriever implements Retriever {
@@ -24,14 +22,13 @@ public class SparkIndexedDataRetriever implements Retriever {
     protected SparkSession spark;
     protected TableResolutionStrategy tableResolutionStrategy;
 
-    @Inject
     public SparkIndexedDataRetriever(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         this.spark = sparkFactory.create();
         this.tableResolutionStrategy = tableResolutionStrategy;
     }
 
     @Override
-    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterResolver modelAdapterResolver) {
+    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterComposite modelAdapterComposite) {
         
         // Acquire data for the retrieve operation with the assumption the data columns contains
         // the encoded data and additional promoted columns are provided to assist with filtering.
@@ -47,7 +44,7 @@ public class SparkIndexedDataRetriever implements Retriever {
         applyFilters(boxedDs, retrieval);
 
         // Lookup the model adapter for the given data type and use it to decode the data.
-        var modelAdapter = modelAdapterResolver.forType(dataType);
+        var modelAdapter = modelAdapterComposite.forType(dataType);
         var encoder = modelAdapter.getEncoder(dataType);
         var encodedDs = boxedDs.select(col(ENCODED_DATA_COLUMN + ".*"));
         

@@ -3,7 +3,6 @@ package gov.va.sparkcql.fixture.mock;
 import java.util.List;
 import java.util.Map;
 
-import com.google.inject.Inject;
 import gov.va.sparkcql.domain.EvaluatedContext;
 import gov.va.sparkcql.domain.Retrieval;
 
@@ -17,7 +16,6 @@ import scala.Tuple2;
 
 public class MockEvaluator implements Evaluator {
 
-    @Inject
     public MockEvaluator() {
     }
 

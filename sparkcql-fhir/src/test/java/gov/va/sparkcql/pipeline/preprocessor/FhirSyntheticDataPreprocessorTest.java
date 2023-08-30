@@ -14,7 +14,7 @@ public class FhirSyntheticDataPreprocessorTest {
         var sparkFactory = new LocalSparkFactory();
         var preprocessor = new FhirSyntheticDataPreprocessor(
                 sparkFactory,
-                new TemplateResolutionStrategy(new EnvironmentConfiguration()));
+                new TemplateResolutionStrategy("${domain}"));
         preprocessor.apply();
 
         var spark = sparkFactory.create();
