@@ -14,7 +14,7 @@ public class InjectorTest {
             var injector = new Injector(new EnvironmentConfiguration());
             injector.getInstance(Optimizer.class);
         } catch (Exception e) {
-            assertEquals("gov.va.sparkcql.pipeline.optimizer.Optimizer is not instantiable.", e.getMessage());
+            assertEquals("Unable to locate binding for interface gov.va.sparkcql.pipeline.optimizer.Optimizer", e.getMessage());
         }
     }
 

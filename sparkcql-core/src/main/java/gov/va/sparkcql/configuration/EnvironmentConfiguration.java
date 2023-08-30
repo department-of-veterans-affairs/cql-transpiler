@@ -42,33 +42,41 @@ public class EnvironmentConfiguration implements Configuration {
         runtimeSettings.put(key, value);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <I> List<Class<I>> readBinding(Class<I> interfaceClass) {
-        var bindingSetting = readSetting(
-                interfaceClass.getCanonicalName())
-                .orElseThrow(() -> new RuntimeException("Unable to locate binding for interface " + interfaceClass.getCanonicalName()));
+        return internalReadBinding(interfaceClass, interfaceClass, false);
+    }
 
-        return Arrays.stream(bindingSetting.split(","))
-                .map(b -> {
-                    try {
-                        return (Class<I>)Class.forName(b);
-                    } catch (ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }).collect(Collectors.toList());
+    @Override
+    public <I> List<Class<I>> readBinding(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass) {
+        return internalReadBinding(interfaceClass, defaultImplementationClass, true);
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public <I> List<Class<I>> readBinding(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass) {
-        var bindingSetting = readSetting(
-                interfaceClass.getCanonicalName(),
-                defaultImplementationClass.getCanonicalName());
+    public <I> List<Class<I>> internalReadBinding(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass, boolean hasDefault) {
+        // In the special case where the interface being requested is a Configuration
+        // (aka ourselves), then return ourselves.
+        if (interfaceClass == Configuration.class || interfaceClass == EnvironmentConfiguration.class)
+            return List.of((Class<I>)this.getClass());
 
+        // Otherwise, get it from settings.
+        String bindingSetting = "";
+        if (hasDefault) {
+            bindingSetting = readSetting(
+                    interfaceClass.getCanonicalName(),
+                    defaultImplementationClass.getCanonicalName());
+        } else {
+            bindingSetting = readSetting(
+                    interfaceClass.getCanonicalName())
+                    .orElseThrow(() -> new RuntimeException("Unable to locate binding for interface " + interfaceClass.getCanonicalName()));
+        }
+
+        // Since multi-bindings are defined as comma delimited lists, split and
+        // process assuming that's the case.
         return Arrays.stream(bindingSetting.split(","))
                 .map(b -> {
                     try {
+                        // For the classname string, produce a Class type.
                         return (Class<I>)Class.forName(b);
                     } catch (ClassNotFoundException ex) {
                         throw new RuntimeException(ex);

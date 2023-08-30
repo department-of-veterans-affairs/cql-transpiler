@@ -8,6 +8,7 @@ import gov.va.sparkcql.configuration.SparkFactory;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.fixture.mock.*;
 import gov.va.sparkcql.io.Resources;
+import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.converger.ConvergerFactory;
 import gov.va.sparkcql.pipeline.converger.DefaultConvergerFactory;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
@@ -15,6 +16,8 @@ import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
 import gov.va.sparkcql.pipeline.optimizer.DefaultOptimizerFactory;
 import gov.va.sparkcql.pipeline.optimizer.OptimizerFactory;
 import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
+import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepositoryFactory;
+import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepositoryFactory;
 import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.SparkIndexedDataRetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
@@ -32,6 +35,8 @@ public class PipelineTest extends AbstractTest {
     private Configuration configure() {
         var cfg = new MockConfiguration();
         cfg.writeBinding(SparkFactory.class, LocalSparkFactory.class);
+        cfg.writeBinding(CqlSourceRepositoryFactory.class, CqlSourceFileRepositoryFactory.class);
+        cfg.writeBinding(CompilerFactory.class, MockCompilerFactory.class);
         cfg.writeBinding(TableResolutionStrategyFactory.class, TemplateResolutionStrategyFactory.class);
         cfg.writeBinding(OptimizerFactory.class, DefaultOptimizerFactory.class);
         cfg.writeBinding(RetrieverFactory.class, SparkIndexedDataRetrieverFactory.class);
