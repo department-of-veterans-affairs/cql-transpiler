@@ -19,7 +19,7 @@ public class AssetTest extends ServiceModule {
 
     @Test
     public void should_read_classpath_modality() {
-        checkResults(new Asset("classpath://mock-model/valueset").read());
+        checkResults(new Asset("resource://mock-model/valueset").read());
     }
 
     @Test

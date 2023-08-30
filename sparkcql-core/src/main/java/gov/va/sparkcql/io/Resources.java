@@ -2,10 +2,7 @@ package gov.va.sparkcql.io;
 
 import gov.va.sparkcql.log.Log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -15,22 +12,22 @@ import java.util.stream.Stream;
 
 public class Resources {
 
-    public static String read(String path) {
+    public static String read(String filePath) {
         var classLoader = Resources.class.getClassLoader();
-        var resourceStream = classLoader.getResource(path);
+        var resourceStream = classLoader.getResource(filePath);
         try (var data = resourceStream.openStream()) {
             return new String(data.readAllBytes(), StandardCharsets.UTF_8);
         } catch (Exception ex) {
-            throw new RuntimeException("No resources found at '" + path + "'.");
+            throw new RuntimeException("No resources found at '" + filePath + "'.");
         }
     }
 
-    public static Stream<String> readAll(String path) {
+    public static Stream<String> readAll(String folderPath) {
         try {
-            var filePaths = getResourceFiles(path);
+            var filePaths = getResourceFiles(folderPath);
             return filePaths.stream().map(Resources::read);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to read resources at location '" + path + "'.", e);
+            throw new RuntimeException("Unable to read resources at location '" + folderPath + "'.", e);
         }
     }
 

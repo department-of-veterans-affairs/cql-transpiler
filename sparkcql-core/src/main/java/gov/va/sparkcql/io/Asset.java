@@ -46,7 +46,7 @@ public class Asset implements Serializable {
             case FILE:
                 return Files.readFiles(rawPath, "*");
 
-            case CLASSPATH:
+            case RESOURCE:
                 return Resources.readAll(rawPath).collect(Collectors.toList());
 
             case SPARK:
@@ -62,7 +62,7 @@ public class Asset implements Serializable {
     }
 
     public enum AssetModality {
-        CLASSPATH,
+        RESOURCE,
         FILE,
         SPARK;
     }

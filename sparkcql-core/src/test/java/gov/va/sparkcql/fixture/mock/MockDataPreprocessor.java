@@ -1,5 +1,6 @@
 package gov.va.sparkcql.fixture.mock;
 
+import gov.va.sparkcql.io.Asset;
 import gov.va.sparkcql.pipeline.preprocessor.AbstractIndexedDataPreprocessor;
 
 import gov.va.sparkcql.runtime.SparkFactory;
