@@ -1,23 +1,23 @@
 package gov.va.sparkcql.domain;
 
-import org.hl7.elm.r1.VersionedIdentifier;
+import gov.va.sparkcql.types.QualifiedIdentifier;
 
 import java.io.Serializable;
 
 public final class CqlSource implements Serializable {
 
-    private VersionedIdentifier identifier;
+    private QualifiedIdentifier identifier;
     private String source;
 
-    public VersionedIdentifier getIdentifier() {
+    public QualifiedIdentifier getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(VersionedIdentifier identifier) {
+    public void setIdentifier(QualifiedIdentifier identifier) {
         this.identifier = identifier;
     }
 
-    public CqlSource withIdentifier(VersionedIdentifier identifier) {
+    public CqlSource withIdentifier(QualifiedIdentifier identifier) {
         this.identifier = identifier;
         return this;
     }

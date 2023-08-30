@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import gov.va.sparkcql.domain.Plan;
+import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.cqframework.cql.cql2elm.*;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
@@ -30,7 +31,7 @@ public class CqfCompiler implements Compiler {
         this.inScopeCqlSources = Stream.of(cqlText)
             .map(text -> {
                 return new CqlSource()
-                    .withIdentifier(new CqlParser().parseVersionedIdentifier(text))
+                    .withIdentifier(new QualifiedIdentifier(new CqlParser().parseVersionedIdentifier(text)))
                     .withSource(text);
             }).collect(Collectors.toList());
 

@@ -1,5 +1,7 @@
 package gov.va.sparkcql.types;
 
+import org.hl7.elm.r1.VersionedIdentifier;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -54,6 +56,17 @@ public class QualifiedIdentifier implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public VersionedIdentifier toVersionedIdentifier() {
+        return new VersionedIdentifier()
+                .withSystem(getSystem())
+                .withId(getId())
+                .withVersion(getVersion());
+    }
+
+    public QualifiedIdentifier fromVersionedIdentifier(VersionedIdentifier versionedIdentifier) {
+        return new QualifiedIdentifier(versionedIdentifier);
     }
 
     @Override
