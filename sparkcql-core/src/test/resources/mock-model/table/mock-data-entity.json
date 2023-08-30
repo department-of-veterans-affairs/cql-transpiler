@@ -1,0 +1,54 @@
+[
+    {
+        "patientCorrelationId": "1",
+        "practictionerCorrelationId": "100",
+        "primaryCode": "ABC",
+        "primaryStartDate": "1/1/2020",
+        "primaryEndDate": "12/31/2020",
+        "dataType": "MockEntity",
+        "data": {
+            "patientId": "1",
+            "name": "mock name 1",
+            "description": "mock description"
+        }
+    },
+    {
+        "patientCorrelationId": "1",
+        "practictionerCorrelationId": "100",
+        "primaryCode": "XYZ",
+        "primaryStartDate": "6/1/2021",
+        "primaryEndDate": "5/31/2022",
+        "dataType": "MockEntity",
+        "data": {
+            "patientId": "1",
+            "name": "mock name 1b",
+            "description": "mock description"
+        }
+    },    
+    {
+        "patientCorrelationId": "2",
+        "practictionerCorrelationId": "100",
+        "primaryCode": "ABC",
+        "primaryStartDate": "1/1/2020",
+        "primaryEndDate": "12/31/2020",
+        "dataType": "MockEntity",
+        "data": {
+            "patientId": "2",
+            "name": "mock name 2",
+            "description": "mock description"
+        }
+    },
+    {
+        "patientCorrelationId": "3",
+        "practictionerCorrelationId": "101",
+        "primaryCode": "DEF",
+        "primaryStartDate": "2/1/2020",
+        "primaryEndDate": "01/31/2021",
+        "dataType": "MockEntity",
+        "data": {
+            "patientId": "3",
+            "name": "mock name 3",
+            "description": "mock description"
+        }
+    }    
+]

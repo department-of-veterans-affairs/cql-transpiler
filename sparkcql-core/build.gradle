@@ -1,0 +1,17 @@
+dependencies {
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
+    implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+    
+    /*
+    The only reference to Clinical Quality Framework (CQF) should be ELM because:
+    1. CQF and Spark both use ANTLR but ANTLR versions (e.g. 4.8 vs 4.10.1).
+    2. SparkCQL abstracts the interfaces required by a CQL implementation and 
+       sparkcql-cqf provides that implementation.
+    */
+    implementation "info.cqframework:elm:${cqfVersion}"
+    implementation "info.cqframework:elm-jackson:${cqfVersion}"
+
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+}

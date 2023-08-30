@@ -1,0 +1,54 @@
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'eclipse'
+
+    compileJava {
+        sourceCompatibility = 11
+        targetCompatibility = 11
+    }
+    
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+    }
+
+    test {
+        useJUnitPlatform()
+        maxParallelForks = Runtime.runtime.availableProcessors()
+        
+        testLogging {
+            events "PASSED", "FAILED", "STANDARD_ERROR", "STANDARD_OUT"
+            showExceptions true
+            exceptionFormat "FULL"
+            showCauses true
+            showStackTraces true
+        }
+
+        jvmArgs = [
+            '-Xmx6g',
+            // https://stackoverflow.com/questions/73465937/apache-spark-3-3-0-breaks-on-java-17-with-cannot-access-class-sun-nio-ch-direct
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.invoke=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens=java.base/java.io=ALL-UNNAMED',
+            '--add-opens=java.base/java.net=ALL-UNNAMED',
+            '--add-opens=java.base/java.nio=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED',
+            '--add-opens=java.base/sun.nio.ch=ALL-UNNAMED',
+            '--add-opens=java.base/sun.nio.cs=ALL-UNNAMED',
+            '--add-opens=java.base/sun.security.action=ALL-UNNAMED',
+            '--add-opens=java.base/sun.util.calendar=ALL-UNNAMED'      
+        ]
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'com.fasterxml.jackson.core:jackson-databind:2.14.3'      // resolves conflict w/ Pathling & HAPI 
+        }
+    }
+}

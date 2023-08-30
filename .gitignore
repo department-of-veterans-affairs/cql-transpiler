@@ -1,0 +1,32 @@
+# General
+.env
+**/.bin/
+**/bin/
+**/.temp/
+*.hprof
+.settings/org.eclipse.buildship.core.prefs
+**/.idea
+
+# Scala & Java
+**/.bloop/
+target
+dependency-reduced-pom.xml
+**/.metals/
+
+# Gradle
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache
+.project
+.classpath
+
+# Spark
+**/spark-warehouse/
+
+# Python
+**/__pycache__
+**/.mypy_cache

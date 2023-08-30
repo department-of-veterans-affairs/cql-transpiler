@@ -1,0 +1,47 @@
+/*
+sparkcql-cqf must shade CQF's ANTLR version from spark which uses an incompatible version.
+The shadow plugin supports "configuration: 'shadow'" to correctly reference the shaded jar.
+*/
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
+}
+
+dependencies {
+    implementation(project(':sparkcql-core')) {
+        exclude group: 'org.apache.spark', module: 'spark-core_2.12'
+        exclude group: 'org.apache.spark', module: 'spark-sql_2.12'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+
+    implementation "info.cqframework:cql:${cqfVersion}"
+    implementation "info.cqframework:cql-to-elm:${cqfVersion}"
+    implementation "info.cqframework:elm:${cqfVersion}"
+    implementation "info.cqframework:elm-jackson:${cqfVersion}"
+    implementation "info.cqframework:model-jackson:${cqfVersion}"
+    implementation "org.fhir:ucum:${ucumVersion}"
+    implementation "info.cqframework:engine:${cqfVersion}"
+}
+
+shadowJar {
+    relocate 'org.antlr.v4', 'shadow.org.antlr.v4'
+    relocate 'org.antlr.runtime', 'shadow.org.antlr.runtime'
+    archiveBaseName.set(null)
+    archiveClassifier = null
+    dependencies {
+        exclude(dependency("com.google.*:"))
+        exclude(dependency("com.ibm.*:"))
+        exclude(dependency("com.ctc.*:"))
+        exclude(dependency("com.univocity.*:"))
+        exclude(dependency("com.isotericsoftware.*:"))
+        exclude(dependency("com.twitter.*:"))
+        exclude(dependency("org.apache.*:"))
+        exclude(dependency("org.glassfish.*:"))
+        exclude(dependency("org.json4s.*:"))
+        exclude(dependency("org.xerial.*:"))
+        exclude(dependency("scala.*:"))
+        exclude(dependency("scala*:"))
+        exclude(dependency("scala.collection.*:"))
+        exclude(dependency("linux.*:"))
+        exclude(dependency("io.*:"))
+    }
+}
