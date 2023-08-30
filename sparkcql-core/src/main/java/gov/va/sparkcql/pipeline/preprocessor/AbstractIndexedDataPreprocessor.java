@@ -1,24 +1,22 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
-import gov.va.sparkcql.log.Log;
 import gov.va.sparkcql.runtime.SparkCatalog;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
-import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
 
 import java.util.List;
 
-public abstract class AbstractBoxedDataPreprocessor implements Preprocessor {
+public abstract class AbstractIndexedDataPreprocessor implements Preprocessor {
 
     private final SparkSession spark;
     private final TableResolutionStrategy tableResolutionStrategy;
 
-    public AbstractBoxedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         this.spark = sparkFactory.create();
         this.tableResolutionStrategy = tableResolutionStrategy;
     }

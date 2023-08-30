@@ -4,7 +4,7 @@ import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 
-public class FhirSyntheticDataPreprocessor extends AbstractBoxedDataPreprocessor {
+public class FhirSyntheticDataPreprocessor extends AbstractIndexedDataPreprocessor {
 
     public FhirSyntheticDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         super(sparkFactory, tableResolutionStrategy);

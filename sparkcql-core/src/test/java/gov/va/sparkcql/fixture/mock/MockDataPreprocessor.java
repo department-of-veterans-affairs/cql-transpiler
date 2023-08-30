@@ -1,12 +1,12 @@
 package gov.va.sparkcql.fixture.mock;
 
-import gov.va.sparkcql.pipeline.preprocessor.AbstractBoxedDataPreprocessor;
+import gov.va.sparkcql.pipeline.preprocessor.AbstractIndexedDataPreprocessor;
 
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 
-public class MockDataPreprocessor extends AbstractBoxedDataPreprocessor {
+public class MockDataPreprocessor extends AbstractIndexedDataPreprocessor {
 
     public MockDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
         super(sparkFactory, tableResolutionStrategy);
