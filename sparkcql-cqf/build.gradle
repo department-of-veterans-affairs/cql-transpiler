@@ -18,8 +18,10 @@ dependencies {
     implementation "info.cqframework:elm:${cqfVersion}"
     implementation "info.cqframework:elm-jackson:${cqfVersion}"
     implementation "info.cqframework:model-jackson:${cqfVersion}"
+    implementation "info.cqframework:quick:${cqfVersion}"
     implementation "org.fhir:ucum:${ucumVersion}"
     implementation "info.cqframework:engine:${cqfVersion}"
+    implementation "info.cqframework:engine-fhir:${cqfVersion}"
 }
 
 shadowJar {

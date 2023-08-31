@@ -2,14 +2,24 @@ package gov.va.sparkcql.pipeline.evaluator;
 
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.domain.Plan;
+import gov.va.sparkcql.pipeline.model.ModelAdapter;
 import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
+import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.execution.CqlEngine;
 import org.opencds.cqf.cql.engine.execution.Environment;
+import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CqfEvaluatorFactory extends EvaluatorFactory {
+
+    private List<MutableCompositeDataProvider> dataProviders;
 
     public CqfEvaluatorFactory(Configuration configuration) {
         super(configuration);
@@ -36,7 +46,7 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
         // row is only available during row execution. However, DataProvider is a requirement
         // for the CQF environment so we configure a mutable adapter which will be updated
         // during row execution.
-        var dataProviderAdapter = new DataProviderAdapter(modelAdapterCollection);
+        var dataProviderMap = buildDataProviders(modelAdapterCollection);
 
         // Terminology adapter for translating bulk terminology data to the CQF engine.
         var terminologyProviderAdapter = new TerminologyProviderAdapter(terminologyData);
@@ -44,11 +54,36 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
         // Setup the environment and engine.
         var environment = new Environment(
                 libraryManager,
-                dataProviderAdapter.getDataProviderMap(),
+                dataProviderMap,
                 terminologyProviderAdapter);
 
         var cqlEngine = new CqlEngine(environment);
 
-        return new CqfEvaluator(cqlEngine, dataProviderAdapter, libraryCacheAdapter);
+        return new CqfEvaluator(cqlEngine, dataProviders, libraryCacheAdapter);
+    }
+
+    private Map<String, DataProvider> buildDataProviders(ModelAdapterCollection modelAdapterCollection) {
+        return modelAdapterCollection.getNamespaces().stream()
+                .collect(Collectors.toMap(
+                        k -> k,
+                        v -> {
+                            var modelAdapter = modelAdapterCollection.forNamespace(v);
+                            var modelResolver = resolveModelResolver(modelAdapter);
+                            var dataProviderAdapter = new MutableCompositeDataProvider(
+                                    modelResolver,
+                                    null);     // only resolvable during context execution
+                            this.dataProviders.add(dataProviderAdapter);
+                            return dataProviderAdapter;
+                        }));
+    }
+
+    private ModelResolver resolveModelResolver(ModelAdapter modelAdapter) {
+        // CQF already provides an implementation for the FHIR ModelResolver so
+        // use that instead of implementing and maintaining our own.
+        if (modelAdapter.getNamespaceUri().equals("http://hl7.org/fhir")) {
+            return new R4FhirModelResolver();
+        } else {
+            return new ModelResolverAdapter(modelAdapter);
+        }
     }
 }
