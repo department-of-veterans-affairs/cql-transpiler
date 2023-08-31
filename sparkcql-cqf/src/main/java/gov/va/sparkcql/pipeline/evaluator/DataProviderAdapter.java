@@ -2,7 +2,7 @@ package gov.va.sparkcql.pipeline.evaluator;
 
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.pipeline.model.ModelAdapter;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Interval;
@@ -15,12 +15,12 @@ public class DataProviderAdapter {
 
     private final Map<String, DataProvider> dataProviders;
 
-    public DataProviderAdapter(ModelAdapterComposite modelAdapterComposite) {
-        dataProviders = modelAdapterComposite.getNamespaces().stream()
+    public DataProviderAdapter(ModelAdapterCollection modelAdapterCollection) {
+        dataProviders = modelAdapterCollection.getNamespaces().stream()
                 .collect(Collectors.toMap(
                         k -> k,
                         v -> {
-                            var modelAdapter = modelAdapterComposite.forNamespace(v);
+                            var modelAdapter = modelAdapterCollection.forNamespace(v);
                             return new InternalDataProvider(modelAdapter);
                         }));
     }
@@ -47,7 +47,6 @@ public class DataProviderAdapter {
 
         @Override
         public void setPackageName(String packageName) {
-
         }
 
         @Override
@@ -87,7 +86,6 @@ public class DataProviderAdapter {
 
         @Override
         public void setValue(Object target, String path, Object value) {
-
         }
 
         @Override

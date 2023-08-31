@@ -9,9 +9,9 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
 
 public interface Converger extends Component {
 
-    public JavaPairRDD<String, Map<Retrieval, List<Object>>> converge(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterComposite modelAdapterComposite);
+    public JavaPairRDD<String, Map<Retrieval, List<Object>>> converge(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterCollection modelAdapterCollection);
 }

@@ -2,7 +2,7 @@ package gov.va.sparkcql.pipeline.evaluator;
 
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
@@ -16,7 +16,7 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
     }
 
     @Override
-    public Evaluator create(Plan plan, ModelAdapterComposite modelAdapterComposite, Object terminologyData) {
+    public Evaluator create(Plan plan, ModelAdapterCollection modelAdapterCollection, Object terminologyData) {
 
         // Adapt the libraries provided to this implementation by the SparkCQL runtime
         // to the CompiledLibrary type required by CQF.
@@ -36,7 +36,7 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
         // row is only available during row execution. However, DataProvider is a requirement
         // for the CQF environment so we configure a mutable adapter which will be updated
         // during row execution.
-        var dataProviderAdapter = new DataProviderAdapter(modelAdapterComposite);
+        var dataProviderAdapter = new DataProviderAdapter(modelAdapterCollection);
 
         // Terminology adapter for translating bulk terminology data to the CQF engine.
         var terminologyProviderAdapter = new TerminologyProviderAdapter(terminologyData);

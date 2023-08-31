@@ -2,8 +2,7 @@ package gov.va.sparkcql.pipeline.preprocessor;
 
 import gov.va.sparkcql.configuration.ServiceModule;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
-import gov.va.sparkcql.runtime.LocalSparkFactory;
+import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +17,7 @@ public class FhirSyntheticDataPreprocessorTest extends ServiceModule {
         var preprocessor = new FhirSyntheticDataPreprocessor(
                 getSparkFactory(),
                 new TemplateResolutionStrategy("${domain}"),
-                new ModelAdapterComposite(List.of(new FhirModelAdapter())));
+                new ModelAdapterCollection(List.of(new FhirModelAdapter())));
         preprocessor.apply();
 
         var conditionDs = getSpark().sql("select * from condition");

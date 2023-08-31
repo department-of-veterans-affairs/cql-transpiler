@@ -27,7 +27,7 @@ import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.converger.Converger;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
 import gov.va.sparkcql.pipeline.optimizer.Optimizer;
 import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
@@ -52,7 +52,7 @@ public class Pipeline implements Serializable {
 
     private final Retriever retriever;
 
-    private final ModelAdapterComposite modelAdapterComposite;
+    private final ModelAdapterCollection modelAdapterCollection;
 
     private final Converger converger;
 
@@ -87,11 +87,11 @@ public class Pipeline implements Serializable {
         // Construct Model Adapters used to adapt model semantics to runtime.
         var modelAdapters = injector.getInstances(ModelAdapterFactory.class)
                 .stream().map(f -> f.create()).collect(Collectors.toList());
-        this.modelAdapterComposite = new ModelAdapterComposite(modelAdapters);
+        this.modelAdapterCollection = new ModelAdapterCollection(modelAdapters);
 
         // Construct preprocessors which initialize the pipeline ahead of other stages.
         this.preprocessors = injector.getInstances(PreprocessorFactory.class)
-                .stream().map(f -> f.create(sparkFactory, modelAdapterComposite)).collect(Collectors.toList());
+                .stream().map(f -> f.create(sparkFactory, modelAdapterCollection)).collect(Collectors.toList());
 
         // Construct Compiler and CQL Source Repository used to fetch CQL scripts by the Compiler.
         this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(sparkFactory);
@@ -181,7 +181,7 @@ public class Pipeline implements Serializable {
     private Map<Retrieval, JavaRDD<Object>> runRetrievalStage() {
         return optimizedPlanOutput.getRetrieves().stream()
                 .collect(Collectors.toMap(r -> r, r -> {
-                    return getRetriever().retrieve(r, getModelAdapterComposite());
+                    return getRetriever().retrieve(r, getModelAdapterCollection());
                 }));
     }
 
@@ -196,7 +196,7 @@ public class Pipeline implements Serializable {
             return sc.parallelizePairs(emptyList);
         }
 
-        return getConverger().converge(retrievalOutput, optimizedPlanOutput, getModelAdapterComposite());
+        return getConverger().converge(retrievalOutput, optimizedPlanOutput, getModelAdapterCollection());
     }
 
     private JavaRDD<EvaluatedContext> runEvaluatorStage() {
@@ -212,7 +212,7 @@ public class Pipeline implements Serializable {
             // instantiate this call on the driver. It must be created on each executor.
             var evaluator = evaluatorFactory.create(
                     optimizedPlanOutput,
-                    modelAdapterComposite,
+                    modelAdapterCollection,
                     terminologyRepository);
 
             return new Iterator<EvaluatedContext>() {
@@ -240,8 +240,8 @@ public class Pipeline implements Serializable {
         return this.compiler;
     }
 
-    public ModelAdapterComposite getModelAdapterComposite() {
-        return modelAdapterComposite;
+    public ModelAdapterCollection getModelAdapterCollection() {
+        return modelAdapterCollection;
     }
 
     public Optimizer getOptimizer() {

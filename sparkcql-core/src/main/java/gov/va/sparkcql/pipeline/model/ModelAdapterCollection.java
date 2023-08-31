@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 import gov.va.sparkcql.configuration.Component;
 import gov.va.sparkcql.types.DataType;
 
-public class ModelAdapterComposite implements Component {
+public class ModelAdapterCollection implements Component {
 
     List<ModelAdapter> modelAdapters;
 
-    public ModelAdapterComposite(List<ModelAdapter> modelAdapters) {
+    public ModelAdapterCollection(List<ModelAdapter> modelAdapters) {
         this.modelAdapters = modelAdapters;
     }
 

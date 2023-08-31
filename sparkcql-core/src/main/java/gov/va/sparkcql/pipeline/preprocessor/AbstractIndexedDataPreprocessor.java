@@ -1,6 +1,6 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
 import gov.va.sparkcql.runtime.SparkCatalog;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.io.Resources;
@@ -8,7 +8,6 @@ import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.StructType;
 
 import java.util.List;
 
@@ -16,19 +15,19 @@ public abstract class AbstractIndexedDataPreprocessor implements Preprocessor {
 
     private final SparkSession spark;
     private final TableResolutionStrategy tableResolutionStrategy;
-    private final ModelAdapterComposite modelAdapterComposite;
+    private final ModelAdapterCollection modelAdapterCollection;
 
-    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterComposite modelAdapterComposite) {
+    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterCollection modelAdapterCollection) {
         this.spark = sparkFactory.create();
         this.tableResolutionStrategy = tableResolutionStrategy;
-        this.modelAdapterComposite = modelAdapterComposite;
+        this.modelAdapterCollection = modelAdapterCollection;
     }
 
     protected void fromResourceJson(String resourceJsonPath, DataType dataType) {
         // The json schema is assumed to conform to the Indexed Table schematic where
         // key attributes from the resource are extracted and promoted as top-level
         // attributes. See indexed-data-table.ddl for more information.
-        var dataTypeSchema = modelAdapterComposite.forType(dataType).getSchema(dataType);
+        var dataTypeSchema = modelAdapterCollection.forType(dataType).getSchema(dataType);
         var indexedDataSchema = Resources.read("indexed-data-table.ddl");
         var fullSchema = indexedDataSchema.replace("${dataTypeSchema}", dataTypeSchema.toDDL());
 
