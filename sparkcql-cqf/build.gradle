@@ -3,7 +3,7 @@ sparkcql-cqf must shade CQF's ANTLR version from spark which uses an incompatibl
 The shadow plugin supports "configuration: 'shadow'" to correctly reference the shaded jar.
 */
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.1'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 dependencies {
