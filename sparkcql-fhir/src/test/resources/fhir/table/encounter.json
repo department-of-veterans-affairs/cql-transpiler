@@ -1,6 +1,6 @@
 [
     {
-        "patientCorrelationId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
         "dataType": "{http://hl7.org/fhir}Encounter",
         "data": {
             "resourceType": "Encounter",
@@ -45,7 +45,7 @@
         }
     },
     {
-        "patientCorrelationId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
         "dataType": "{http://hl7.org/fhir}Encounter",
         "data": {
             "resourceType": "Encounter",
@@ -90,7 +90,7 @@
         }
     },
     {
-        "patientCorrelationId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
         "dataType": "{http://hl7.org/fhir}Encounter",
         "data": {
             "resourceType": "Encounter",
@@ -135,7 +135,7 @@
         }
     },
     {
-        "patientCorrelationId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
         "dataType": "{http://hl7.org/fhir}Encounter",
         "data": {
             "resourceType": "Encounter",
@@ -180,7 +180,7 @@
         }
     },
     {
-        "patientCorrelationId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
         "dataType": "{http://hl7.org/fhir}Encounter",
         "data": {
             "resourceType": "Encounter",
@@ -225,7 +225,7 @@
         }
     },
     {
-        "patientCorrelationId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
         "dataType": "{http://hl7.org/fhir}Encounter",
         "data": {
             "resourceType": "Encounter",
@@ -281,7 +281,7 @@
         }
     },
     {
-        "patientCorrelationId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
         "dataType": "{http://hl7.org/fhir}Encounter",
         "data": {
             "resourceType": "Encounter",

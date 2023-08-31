@@ -1,5 +1,6 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
+import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import gov.va.sparkcql.runtime.SparkCatalog;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.io.Resources;
@@ -15,28 +16,35 @@ public abstract class AbstractIndexedDataPreprocessor implements Preprocessor {
 
     private final SparkSession spark;
     private final TableResolutionStrategy tableResolutionStrategy;
+    private final ModelAdapterComposite modelAdapterComposite;
 
-    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterComposite modelAdapterComposite) {
         this.spark = sparkFactory.create();
         this.tableResolutionStrategy = tableResolutionStrategy;
+        this.modelAdapterComposite = modelAdapterComposite;
     }
 
     protected void fromResourceJson(String resourceJsonPath, DataType dataType) {
-        // Load json from resources using schema inference. The json format is assumed to
-        // conform to the box encoded schematic.
+        // The json schema is assumed to conform to the Indexed Table schematic where
+        // key attributes from the resource are extracted and promoted as top-level
+        // attributes. See indexed-data-table.ddl for more information.
+        var dataTypeSchema = modelAdapterComposite.forType(dataType).getSchema(dataType);
+        var indexedDataSchema = Resources.read("indexed-data-table.ddl");
+        var fullSchema = indexedDataSchema.replace("${dataTypeSchema}", dataTypeSchema.toDDL());
+
+        // Using the "indexed" schema with the data type schematic expanded inline,
+        // read the JSON. First load the JSON as a list of STRING types then
+        // create a Dataset from that applying the full schema. We don't load from
+        // disk here b/c it requires a local spark installation & winutils.
         var json = List.of(Resources.read(resourceJsonPath));
         var jsonDs = spark.createDataset(json, Encoders.STRING());
-        var rawDs = spark.read().json(jsonDs);
-
-        // However, some fields won't get inferred correctly so tweak those.
-        var ddl = rawDs.schema().toDDL();
-        ddl = ddl.replace("primaryStartDate STRING", "primaryStartDate TIMESTAMP");
-        ddl = ddl.replace("primaryEndDate STRING", "primaryEndDate TIMESTAMP");
-        var schema = StructType.fromDDL(ddl);
+        var multiLineDs = spark.read().json(jsonDs);      // ensures multiple lines are processed correctly
+        var ds = spark.read()
+                .schema(fullSchema)
+                .json(multiLineDs.toJSON());
 
         // Mount the data
         var mountTableName = tableResolutionStrategy.resolveTableBinding(dataType);
-        var ds = spark.read().schema(schema).json(rawDs.toJSON());
         SparkCatalog.safeCreateView(ds, mountTableName);
     }
 }

@@ -24,7 +24,7 @@ public final class Injector {
     }
 
     public <I> I getInstance(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass) {
-        var instances = internalGetInstances(interfaceClass, interfaceClass, true);
+        var instances = internalGetInstances(interfaceClass, defaultImplementationClass, true);
         if (instances.size() > 1)
             Log.warn("Injector found multiple implementations for interface " + interfaceClass.getCanonicalName());
         return instances.get(0);

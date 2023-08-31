@@ -11,5 +11,6 @@ public class SparkCqlSessionTest {
 
     @Test
     public void should_X() {
+
     }
 }

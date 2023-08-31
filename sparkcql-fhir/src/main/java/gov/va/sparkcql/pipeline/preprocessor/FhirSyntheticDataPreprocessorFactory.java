@@ -1,16 +1,14 @@
-package gov.va.sparkcql.fixture.mock;
+package gov.va.sparkcql.pipeline.preprocessor;
 
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.configuration.Injector;
 import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 import gov.va.sparkcql.runtime.SparkFactory;
-import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
-import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
 
-public class MockDataPreprocessorFactory extends PreprocessorFactory {
+public class FhirSyntheticDataPreprocessorFactory extends PreprocessorFactory {
 
-    public MockDataPreprocessorFactory(Configuration configuration) {
+    public FhirSyntheticDataPreprocessorFactory(Configuration configuration) {
         super(configuration);
     }
 
@@ -19,6 +17,6 @@ public class MockDataPreprocessorFactory extends PreprocessorFactory {
         var tableResolutionStrategy = new Injector(getConfiguration())
                 .getInstance(TableResolutionStrategyFactory.class)
                 .create();
-        return new MockDataPreprocessor(sparkFactory, tableResolutionStrategy, modelAdapterComposite);
+        return new FhirSyntheticDataPreprocessor(sparkFactory, tableResolutionStrategy, modelAdapterComposite);
     }
 }

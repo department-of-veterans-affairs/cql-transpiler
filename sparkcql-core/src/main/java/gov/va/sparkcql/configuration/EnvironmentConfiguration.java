@@ -38,8 +38,9 @@ public class EnvironmentConfiguration implements Configuration {
     }
 
     @Override
-    public void writeSetting(String key, String value) {
+    public Configuration writeSetting(String key, String value) {
         runtimeSettings.put(key, value);
+        return this;
     }
 
     @Override
@@ -85,15 +86,17 @@ public class EnvironmentConfiguration implements Configuration {
     }
 
     @Override
-    public <I> void writeBinding(Class<I> interfaceClass, Class<? extends I> implementationClass) {
+    public <I> Configuration writeBinding(Class<I> interfaceClass, Class<? extends I> implementationClass) {
         this.writeSetting(interfaceClass.getCanonicalName(), implementationClass.getCanonicalName());
+        return this;
     }
 
     @Override
-    public <I> void writeBinding(Class<I> interfaceClass, List<Class<? extends I>> implementationClasses) {
+    public <I> Configuration writeBinding(Class<I> interfaceClass, List<Class<? extends I>> implementationClasses) {
         var canonicalNames = implementationClasses.stream()
                 .map(Class::getCanonicalName);
         var concat = String.join(",", canonicalNames.collect(Collectors.toList()));
         this.writeSetting(interfaceClass.getCanonicalName(), concat);
+        return this;
     }
 }

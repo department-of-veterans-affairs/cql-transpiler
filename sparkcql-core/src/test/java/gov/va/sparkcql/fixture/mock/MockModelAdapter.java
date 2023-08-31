@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.types.StructType;
 import org.hl7.elm.r1.ContextDef;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,6 +63,11 @@ public class MockModelAdapter implements ModelAdapter {
             default:
                 throw new RuntimeException("Unexpected data type '" + dataType.toString() + "'.");
         }
+    }
+
+    @Override
+    public StructType getSchema(DataType dataType) {
+        return getEncoder(dataType).schema();
     }
 
     @Override

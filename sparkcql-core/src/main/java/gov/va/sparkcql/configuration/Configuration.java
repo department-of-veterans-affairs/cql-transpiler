@@ -13,13 +13,13 @@ public interface Configuration extends Serializable {
 
     public Map<String, String> readAllSettings();
 
-    public void writeSetting(String key, String value);
+    public Configuration writeSetting(String key, String value);
 
     public <I> List<Class<I>> readBinding(Class<I> interfaceClass);
 
     public <I> List<Class<I>> readBinding(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass);
 
-    public <I> void writeBinding(Class<I> interfaceClass, Class<? extends I> implementationClass);
+    public <I> Configuration writeBinding(Class<I> interfaceClass, Class<? extends I> implementationClass);
 
-    public <I> void writeBinding(Class<I> interfaceClass, List<Class<? extends I>> implementationClasses);
+    public <I> Configuration writeBinding(Class<I> interfaceClass, List<Class<? extends I>> implementationClasses);
 }

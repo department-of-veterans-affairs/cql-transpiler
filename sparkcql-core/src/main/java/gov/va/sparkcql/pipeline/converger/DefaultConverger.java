@@ -10,12 +10,13 @@ import org.apache.spark.api.java.JavaRDD;
 
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
 
 public class DefaultConverger implements Converger {
 
     @Override
-    public JavaPairRDD<String, Map<Retrieval, List<Object>>> combine(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterComposite modelAdapterComposite) {
+    public JavaPairRDD<String, Map<Retrieval, List<Object>>> converge(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterComposite modelAdapterComposite) {
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member.

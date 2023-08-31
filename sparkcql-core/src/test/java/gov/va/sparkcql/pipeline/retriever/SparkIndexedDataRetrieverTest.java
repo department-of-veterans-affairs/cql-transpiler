@@ -23,18 +23,20 @@ public class SparkIndexedDataRetrieverTest extends ServiceModule {
     @Test
     public void should_load_sample_data() {
         var configuration = new MockConfiguration();
+        var modelAdapterComposite = new ModelAdapterComposite(List.of(new MockModelAdapter()));
+
         var tableResolutionStrategy = new TemplateResolutionStrategy(
                 configuration.readSetting(TemplateResolutionStrategyFactory.TEMPLATE_RESOLUTION_STRATEGY)
                         .orElseThrow());
-        var dataLoader = new MockDataPreprocessor(getSparkFactory(), tableResolutionStrategy);
+        var dataLoader = new MockDataPreprocessor(getSparkFactory(), tableResolutionStrategy, modelAdapterComposite);
         dataLoader.apply();
 
         var retriever = new SparkIndexedDataRetriever(getSparkFactory(), tableResolutionStrategy);
 
         var r1 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockPatient"));
         var r2 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockEntity"));
-        var rdd1 = retriever.retrieve(Retrieval.of(r1), new ModelAdapterComposite(List.of(new MockModelAdapter())));
-        var rdd2 = retriever.retrieve(Retrieval.of(r2), new ModelAdapterComposite(List.of(new MockModelAdapter())));
+        var rdd1 = retriever.retrieve(Retrieval.of(r1), modelAdapterComposite);
+        var rdd2 = retriever.retrieve(Retrieval.of(r2), modelAdapterComposite);
         assertEquals(3, rdd1.count());
         assertEquals(4, rdd2.count());
     }

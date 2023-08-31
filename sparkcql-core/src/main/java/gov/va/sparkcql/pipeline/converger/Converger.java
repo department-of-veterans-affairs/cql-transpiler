@@ -13,5 +13,5 @@ import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
 
 public interface Converger extends Component {
 
-    public JavaPairRDD<String, Map<Retrieval, List<Object>>> combine(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterComposite modelAdapterComposite);
+    public JavaPairRDD<String, Map<Retrieval, List<Object>>> converge(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterComposite modelAdapterComposite);
 }

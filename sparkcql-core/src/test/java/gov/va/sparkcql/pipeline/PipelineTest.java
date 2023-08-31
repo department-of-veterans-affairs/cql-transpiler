@@ -34,18 +34,17 @@ public class PipelineTest extends ServiceModule {
 
     @Override
     protected Configuration configure() {
-        var cfg = new MockConfiguration();
-        cfg.writeBinding(SparkFactory.class, LocalSparkFactory.class);
-        cfg.writeBinding(CqlSourceRepositoryFactory.class, CqlSourceFileRepositoryFactory.class);
-        cfg.writeBinding(CompilerFactory.class, MockCompilerFactory.class);
-        cfg.writeBinding(TableResolutionStrategyFactory.class, TemplateResolutionStrategyFactory.class);
-        cfg.writeBinding(OptimizerFactory.class, DefaultOptimizerFactory.class);
-        cfg.writeBinding(RetrieverFactory.class, SparkIndexedDataRetrieverFactory.class);
-        cfg.writeBinding(ConvergerFactory.class, DefaultConvergerFactory.class);
-        cfg.writeBinding(EvaluatorFactory.class, MockEvaluatorFactory.class);
-        cfg.writeBinding(ModelAdapterFactory.class, MockModelAdapterFactory.class);
-        cfg.writeBinding(PreprocessorFactory.class, MockDataPreprocessorFactory.class);
-        return cfg;
+        return new MockConfiguration()
+            .writeBinding(SparkFactory.class, LocalSparkFactory.class)
+            .writeBinding(CqlSourceRepositoryFactory.class, CqlSourceFileRepositoryFactory.class)
+            .writeBinding(CompilerFactory.class, MockCompilerFactory.class)
+            .writeBinding(TableResolutionStrategyFactory.class, TemplateResolutionStrategyFactory.class)
+            .writeBinding(OptimizerFactory.class, DefaultOptimizerFactory.class)
+            .writeBinding(RetrieverFactory.class, SparkIndexedDataRetrieverFactory.class)
+            .writeBinding(ConvergerFactory.class, DefaultConvergerFactory.class)
+            .writeBinding(EvaluatorFactory.class, MockEvaluatorFactory.class)
+            .writeBinding(ModelAdapterFactory.class, MockModelAdapterFactory.class)
+            .writeBinding(PreprocessorFactory.class, MockDataPreprocessorFactory.class);
     }
 
     private Injector getInjector() {

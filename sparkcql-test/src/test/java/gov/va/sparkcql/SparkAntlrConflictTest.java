@@ -9,7 +9,7 @@ public class SparkAntlrConflictTest extends ServiceModule {
 
     @Test
     public void should_not_break_spark() {
-        // Confirms the proper Spark ANTLR version is loaded instead of CQF's higher version.
+        // Confirms the proper Spark ANTLR version is loaded instead of CQFs higher version.
         getSpark().sql("select 12345 foo");
     }
 }
