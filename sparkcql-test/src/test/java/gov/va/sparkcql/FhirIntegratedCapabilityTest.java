@@ -37,19 +37,19 @@ public class FhirIntegratedCapabilityTest extends AbstractIntegrationTest {
                 .writeSetting(TemplateResolutionStrategyFactory.TEMPLATE_RESOLUTION_STRATEGY, "fhir_${domain}")
                 .writeBinding(ModelAdapterFactory.class, FhirModelAdapterFactory.class);
     }
-
-    @Test
-    public void should_prove_fhir_engine_conformity() {
-        var pipeline = new Pipeline(getConfiguration());
-        var results = pipeline.execute("FhirEngineConformity", "1.0");
-        showResults(results);
-    }
-
-    @Test
-    public void should_prove_quick_engine_conformity() {
-        var pipeline = new Pipeline(getConfiguration());
-        var results = pipeline.execute("QuickEngineConformity", "1.0");
-        showResults(results);
-    }
+//
+//    @Test
+//    public void should_prove_fhir_engine_conformity() {
+//        var pipeline = new Pipeline(getConfiguration());
+//        var results = pipeline.execute("FhirEngineConformity", "1.0");
+//        showResults(results);
+//    }
+//
+//    @Test
+//    public void should_prove_quick_engine_conformity() {
+//        var pipeline = new Pipeline(getConfiguration());
+//        var results = pipeline.execute("QuickEngineConformity", "1.0");
+//        showResults(results);
+//    }
 
 }

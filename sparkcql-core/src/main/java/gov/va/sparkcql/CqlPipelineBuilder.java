@@ -2,8 +2,11 @@ package gov.va.sparkcql;
 
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.configuration.EnvironmentConfiguration;
+import gov.va.sparkcql.domain.EvaluatedContext;
+import gov.va.sparkcql.domain.ExpressionReference;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.log.Log;
+import gov.va.sparkcql.pipeline.Pipeline;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
 import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
@@ -12,6 +15,7 @@ import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.types.QualifiedIdentifier;
+import org.apache.spark.api.java.JavaRDD;
 
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -25,15 +29,6 @@ public class CqlPipelineBuilder {
     private Configuration configuration;
     private Plan explicitPlan;
     private Map<String, Object> parameters;
-
-    private enum Action { EVALUATE, EXTRACT, PLAN }
-    private Action action;
-
-    private enum Orientation { BY_CONTEXT, BY_EXPRESSION_DEF, BY_DATA_TYPE }
-    private Orientation orientation;
-
-    private enum Form { EXPANDED, COMPACTED }
-    private Form form;
 
     public CqlPipelineBuilder() {
         additionalLibrarySources = new ArrayList<>();
@@ -117,37 +112,31 @@ public class CqlPipelineBuilder {
         return this;
     }
 
-    public EvaluateOrientationBuilder evaluate(QualifiedIdentifier libraryIdentifier) {
+    public EvaluateBuilder evaluate(QualifiedIdentifier libraryIdentifier) {
         this.targetLibraries.add(libraryIdentifier);
-        this.action = Action.EVALUATE;
-        return new EvaluateOrientationBuilder(this);
+        return new EvaluateBuilder(this);
     }
 
-    public EvaluateOrientationBuilder evaluate(List<QualifiedIdentifier> libraryIdentifiers) {
+    public EvaluateBuilder evaluate(List<QualifiedIdentifier> libraryIdentifiers) {
         this.targetLibraries.addAll(libraryIdentifiers);
-        this.action = Action.EVALUATE;
-        return new EvaluateOrientationBuilder(this);
+        return new EvaluateBuilder(this);
     }
 
-    public ExtractOrientationBuilder extractRequiredData(QualifiedIdentifier libraryIdentifier) {
-        this.action = Action.EXTRACT;
-        return new ExtractOrientationBuilder(this);
+    public RetrieveBuilder retrieve(QualifiedIdentifier libraryIdentifier) {
+        return new RetrieveBuilder(this);
     }
 
-    public ExtractOrientationBuilder extractRequiredData(List<QualifiedIdentifier> libraryIdentifiers) {
-        this.action = Action.EXTRACT;
-        return new ExtractOrientationBuilder(this);
+    public RetrieveBuilder retrieve(List<QualifiedIdentifier> libraryIdentifiers) {
+        return new RetrieveBuilder(this);
     }
 
     public PlanRunBuilder plan(QualifiedIdentifier libraryIdentifier) {
         this.targetLibraries.add(libraryIdentifier);
-        this.action = Action.PLAN;
         return new PlanRunBuilder(this);
     }
 
     public PlanRunBuilder plan(List<QualifiedIdentifier> libraryIdentifiers) {
         this.targetLibraries.addAll(libraryIdentifiers);
-        this.action = Action.PLAN;
         return new PlanRunBuilder(this);
     }
 
@@ -155,102 +144,118 @@ public class CqlPipelineBuilder {
         // TODO: Ensure all parameters are properly set w/o conflict
     }
 
-    static public final class EvaluateOrientationBuilder {
+    static public final class EvaluateBuilder {
 
-        private final CqlPipelineBuilder parentBuilder;
+        private final CqlPipelineBuilder parent;
 
-        private EvaluateOrientationBuilder(CqlPipelineBuilder parentBuilder) {
-            this.parentBuilder = parentBuilder;
+        private EvaluateBuilder(CqlPipelineBuilder parent) {
+            this.parent = parent;
         }
 
-        public EvaluateFormBuilder byContext() {
-            this.parentBuilder.orientation = Orientation.BY_CONTEXT;
-            return new EvaluateFormBuilder(parentBuilder);
+        public EvaluateByContextRunner byContext() {
+            return new EvaluateByContextRunner(this);
         }
 
-        public EvaluateFormBuilder byExpressionDef() {
-            this.parentBuilder.orientation = Orientation.BY_EXPRESSION_DEF;
-            return new EvaluateFormBuilder(parentBuilder);
-        }
-    }
-
-    static public final class EvaluateFormBuilder {
-
-        private final CqlPipelineBuilder parentBuilder;
-
-        private EvaluateFormBuilder(CqlPipelineBuilder parentBuilder) {
-            this.parentBuilder = parentBuilder;
+        public EvaluateByExprDefRunner byExpressionDef() {
+            return new EvaluateByExprDefRunner(this);
         }
 
-        public EvaluateRunBuilder expanded() {
-            this.parentBuilder.form = Form.EXPANDED;
-            return new EvaluateRunBuilder(parentBuilder);
+        static public final class EvaluateByContextRunner {
+
+            private final EvaluateBuilder parent;
+
+            private EvaluateByContextRunner(EvaluateBuilder parent) {
+                this.parent = parent;
+            }
+
+            public JavaRDD<EvaluatedContext> run() {
+                var root = this.parent.parent;
+                root.validate();
+                var pipeline = new Pipeline(root.configuration);
+                var plan = pipeline.plan(root.targetLibraries, root.additionalLibrarySources);
+                var results = pipeline.execute(plan);
+                return results.splitByContext();
+            }
         }
 
-        public EvaluateRunBuilder compacted() {
-            this.parentBuilder.form = Form.COMPACTED;
-            return new EvaluateRunBuilder(parentBuilder);
-        }
-    }
+        static public final class EvaluateByExprDefRunner {
 
-    static public final class EvaluateRunBuilder {
+            private final EvaluateBuilder parent;
 
-        private final CqlPipelineBuilder parentBuilder;
+            private EvaluateByExprDefRunner(EvaluateBuilder parent) {
+                this.parent = parent;
+            }
 
-        private EvaluateRunBuilder(CqlPipelineBuilder parentBuilder) {
-            this.parentBuilder = parentBuilder;
-        }
-
-        public Object run() {
-            this.parentBuilder.validate();
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    static public final class ExtractOrientationBuilder {
-
-        private final CqlPipelineBuilder parentBuilder;
-
-        private ExtractOrientationBuilder(CqlPipelineBuilder parentBuilder) {
-            this.parentBuilder = parentBuilder;
-        }
-
-        public ExtractRunBuilder byContext() {
-            this.parentBuilder.orientation = Orientation.BY_CONTEXT;
-            return new ExtractRunBuilder(parentBuilder);
-        }
-
-        public ExtractRunBuilder byDataType() {
-            this.parentBuilder.orientation = Orientation.BY_DATA_TYPE;
-            return new ExtractRunBuilder(parentBuilder);
+            public Map<ExpressionReference, JavaRDD<Object>> run() {
+                var root = this.parent.parent;
+                root.validate();
+                var pipeline = new Pipeline(root.configuration);
+                var plan = pipeline.plan(root.targetLibraries, root.additionalLibrarySources);
+                var results = pipeline.execute(plan);
+                return results.splitByExprDef();
+            }
         }
     }
 
-    static public final class ExtractRunBuilder {
+    static public final class RetrieveBuilder {
 
-        private final CqlPipelineBuilder parentBuilder;
+        private final CqlPipelineBuilder parent;
 
-        private ExtractRunBuilder(CqlPipelineBuilder parentBuilder) {
-            this.parentBuilder = parentBuilder;
+        private RetrieveBuilder(CqlPipelineBuilder parent) {
+            this.parent = parent;
         }
 
-        public Object run() {
-            this.parentBuilder.validate();
-            throw new UnsupportedOperationException();
+        public RetrieveByContextRunner byContext() {
+            return new RetrieveByContextRunner(this);
+        }
+
+        public RetrieveByDataTypeRunner byDataType() {
+            return new RetrieveByDataTypeRunner(this);
+        }
+
+        static public final class RetrieveByContextRunner {
+
+            private final RetrieveBuilder parent;
+
+            private RetrieveByContextRunner(RetrieveBuilder parent) {
+                this.parent = parent;
+            }
+
+            public Object run() {
+                var root = this.parent.parent;
+                root.validate();
+                throw new UnsupportedOperationException();
+            }
+        }
+
+        static public final class RetrieveByDataTypeRunner {
+
+            private final RetrieveBuilder parent;
+
+            private RetrieveByDataTypeRunner(RetrieveBuilder parent) {
+                this.parent = parent;
+            }
+
+            public Object run() {
+                var root = this.parent.parent;
+                root.validate();
+                throw new UnsupportedOperationException();
+            }
         }
     }
 
     static public final class PlanRunBuilder {
 
-        private final CqlPipelineBuilder parentBuilder;
+        private final CqlPipelineBuilder parent;
 
-        private PlanRunBuilder(CqlPipelineBuilder parentBuilder) {
-            this.parentBuilder = parentBuilder;
+        private PlanRunBuilder(CqlPipelineBuilder parent) {
+            this.parent = parent;
         }
 
         public Plan run() {
-            this.parentBuilder.validate();
-            throw new UnsupportedOperationException();
+            this.parent.validate();
+            var pipeline = new Pipeline(this.parent.configuration);
+            return pipeline.plan(this.parent.targetLibraries, this.parent.additionalLibrarySources);
         }
     }
 }

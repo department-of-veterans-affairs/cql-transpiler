@@ -31,19 +31,36 @@ public class CqfCompiler implements Compiler {
         this.cqlSourceRepository = cqlSourceRepository;
     }
 
-    public Plan compile(String... cqlText) {
-        this.callScopedCqlSources = Stream.of(cqlText)
-            .map(text -> {
-                return new CqlSource()
-                    .withIdentifier(QualifiedIdentifier.from(new CqlParser().parseVersionedIdentifier(text)))
-                    .withSource(text);
-            }).collect(Collectors.toList());
+    @Override
+    public Plan compile(String... anonymousCql) {
+        this.callScopedCqlSources = Stream.of(anonymousCql)
+                .map(text -> {
+                    return new CqlSource()
+                            .withIdentifier(QualifiedIdentifier.from(new CqlParser().parseVersionedIdentifier(text)))
+                            .withSource(text);
+                }).collect(Collectors.toList());
 
         return new Plan().withLibraries(compileIdentifiedLibraries());
     }
 
-    public Plan compile(List<QualifiedIdentifier> cqlIdentifier) {
-        this.callScopedCqlSources = this.cqlSourceRepository.readById(cqlIdentifier);
+    public Plan compile(List<QualifiedIdentifier> identifiedCql) {
+        this.callScopedCqlSources = this.cqlSourceRepository.readById(identifiedCql);
+        return new Plan().withLibraries(compileIdentifiedLibraries());
+    }
+
+    @Override
+    public Plan compile(List<QualifiedIdentifier> identifiedCql, String... anonymousCql) {
+        var compiledIdentifiedCql = this.cqlSourceRepository.readById(identifiedCql);
+        this.callScopedCqlSources = new ArrayList<>(compiledIdentifiedCql);
+
+        var compiledAnonymousCql = Stream.of(anonymousCql)
+                .map(text -> {
+                    return new CqlSource()
+                            .withIdentifier(QualifiedIdentifier.from(new CqlParser().parseVersionedIdentifier(text)))
+                            .withSource(text);
+                }).collect(Collectors.toList());
+        this.callScopedCqlSources.addAll(compiledAnonymousCql);
+
         return new Plan().withLibraries(compileIdentifiedLibraries());
     }
 
@@ -82,7 +99,8 @@ public class CqfCompiler implements Compiler {
 
         // the CQF evaluator uses binary searches which requires a sorted ExpressionDef
         // list. Perform that sort here so it's generally available.
-        elm.getStatements().getDef().sort(Comparator.comparing(ExpressionDef::getName));
+        if (elm.getStatements() != null && !elm.getStatements().getDef().isEmpty())
+            elm.getStatements().getDef().sort(Comparator.comparing(ExpressionDef::getName));
 
         return elm;
     }

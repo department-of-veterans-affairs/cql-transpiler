@@ -1,11 +1,11 @@
 package gov.va.sparkcql;
 
 import gov.va.sparkcql.configuration.ServiceModule;
-import gov.va.sparkcql.domain.EvaluationResultSet;
+import gov.va.sparkcql.pipeline.EvaluationOutput;
 
 public abstract class AbstractIntegrationTest extends ServiceModule {
 
-    protected void showResults(EvaluationResultSet results) {
+    protected void showResults(EvaluationOutput results) {
         results.splitByContext().collect().forEach(System.out::println);
     }
 }

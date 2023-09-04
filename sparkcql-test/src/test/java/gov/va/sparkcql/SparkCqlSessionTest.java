@@ -22,7 +22,6 @@ public class SparkCqlSessionTest {
                 .withPlan(null)
                 .evaluate(new QualifiedIdentifier().withId("MyLibrary"))
                 .byContext()
-                .compacted()
                 .run();
     }
 
@@ -32,7 +31,7 @@ public class SparkCqlSessionTest {
         var r = new CqlPipelineBuilder()
                 .withSetting("", "")
                 .withCql("MyLibrary")
-                .extractRequiredData(new QualifiedIdentifier().withId("MyLibrary"))
+                .retrieve(new QualifiedIdentifier().withId("MyLibrary"))
                 .byDataType()
                 .run();
     }

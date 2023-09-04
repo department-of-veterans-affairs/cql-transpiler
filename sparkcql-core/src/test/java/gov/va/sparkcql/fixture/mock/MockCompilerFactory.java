@@ -28,6 +28,11 @@ public class MockCompilerFactory extends CompilerFactory {
             public Plan compile(List<QualifiedIdentifier> cqlIdentifier) {
                 return null;
             }
+
+            @Override
+            public Plan compile(List<QualifiedIdentifier> identifiedCql, String... anonymousCql) {
+                return null;
+            }
         };
     }
 }

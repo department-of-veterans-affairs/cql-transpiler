@@ -8,7 +8,9 @@ import gov.va.sparkcql.types.QualifiedIdentifier;
 
 public interface Compiler extends Component {
 
-    public Plan compile(String... cqlText);
+    public Plan compile(String... anonymousCql);
 
-    public Plan compile(List<QualifiedIdentifier> cqlIdentifier);
+    public Plan compile(List<QualifiedIdentifier> identifiedCql);
+
+    public Plan compile(List<QualifiedIdentifier> identifiedCql, String... anonymousCql);
 }

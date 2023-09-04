@@ -38,42 +38,27 @@ import scala.Tuple2;
 public class Pipeline implements Serializable {
 
     private final Configuration configuration;
-
     private final SparkFactory sparkFactory;
-
     private final SparkSession spark;
 
     // Pipeline Components
     private List<Preprocessor> preprocessors;
-
     private final Compiler compiler;
-
     private final Optimizer optimizer;
-
     private final Retriever retriever;
-
     private final ModelAdapterSet modelAdapterSet;
-
     private final Converger converger;
-
     private EvaluatorFactory evaluatorFactory;
-
     private final CqlSourceRepository cqlSourceRepository;
-
     private Object terminologyRepository;
 
     // Invocation
     private Map<String, Object> parameters;
+    private Plan plan;
 
     // Stage Output
-    private Plan compiledPlanOutput;
-
-    private Plan optimizedPlanOutput;
-
     private Map<Retrieval, JavaRDD<Object>> retrievalOutput;
-
     private JavaPairRDD<String, Map<Retrieval, List<Object>>> combinedOutput;
-
     private JavaPairRDD<String, EvaluatedContext> evaluationOutput;
 
     public Pipeline(Configuration configuration) {
@@ -115,44 +100,29 @@ public class Pipeline implements Serializable {
         // TODO
     }
 
-    public EvaluationResultSet execute(String libraryName, String version, Map<String, Object> parameters) {
-        this.compiledPlanOutput = getCompiler().compile(List.of(new QualifiedIdentifier().withId(libraryName).withVersion(version)));
-        this.parameters = parameters;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet execute(String libraryName, String version) {
-        return execute(libraryName, version, Map.of());
-    }
-
-    public EvaluationResultSet execute(String cqlSource, Map<String, Object> parameters) {
-        compiledPlanOutput = getCompiler().compile(cqlSource);
-        this.parameters = parameters;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet execute(String cqlSource) {
-        return execute(cqlSource, Map.of());
-    }
-
-    public EvaluationResultSet execute(Plan plan, Map<String, Object> parameters) {
-        this.compiledPlanOutput = plan;
-        this.parameters = parameters;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet execute(Plan plan) {
-        this.compiledPlanOutput = plan;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet runPipeline() {
+    public Plan plan(List<QualifiedIdentifier> targetIdentifiedLibraries, List<String> targetAnonymousLibraries) {
 
         // Run all preprocessors before anything else.
         runPreprocessStage();
 
+        // Compile all target CQL sources (identified or anonymous) into an ELM list.
+        var anonymousLibraries = targetAnonymousLibraries.toArray(new String[0]);
+        var unoptimizedPlan = getCompiler().compile(targetIdentifiedLibraries, anonymousLibraries);
+
         // Produce an optimized execution plan using the compiled ELMs.
-        optimizedPlanOutput = runOptimizerStage();
+        return getOptimizer().optimize(unoptimizedPlan);
+    }
+
+    public EvaluationOutput execute(Plan plan) {
+        return execute(plan, null);
+    }
+
+    public EvaluationOutput execute(Plan plan, Map<String, Object> parameters) {
+
+        this.plan = plan;
+
+        // Run all preprocessors before anything else.
+        runPreprocessStage();
 
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
@@ -167,19 +137,15 @@ public class Pipeline implements Serializable {
         var evaluationOutput = runEvaluatorStage();
 
         // Output results to client
-        return new EvaluationResultSet(evaluationOutput);
+        return new EvaluationOutput(evaluationOutput);
     }
 
     private void runPreprocessStage() {
         getPreprocessors().forEach(Preprocessor::apply);
     }
 
-    private Plan runOptimizerStage() {
-        return getOptimizer().optimize(compiledPlanOutput);
-    }
-
     private Map<Retrieval, JavaRDD<Object>> runRetrievalStage() {
-        return optimizedPlanOutput.getRetrieves().stream()
+        return plan.getRetrieves().stream()
                 .collect(Collectors.toMap(r -> r, r -> {
                     return getRetriever().retrieve(r, getModelAdapterCollection());
                 }));
@@ -196,7 +162,7 @@ public class Pipeline implements Serializable {
             return sc.parallelizePairs(emptyList);
         }
 
-        return getConverger().converge(retrievalOutput, optimizedPlanOutput, getModelAdapterCollection());
+        return getConverger().converge(retrievalOutput, plan, getModelAdapterCollection());
     }
 
     private JavaRDD<EvaluatedContext> runEvaluatorStage() {
@@ -211,7 +177,7 @@ public class Pipeline implements Serializable {
             // whether the engine or its dependencies implements Serializable, we cannot
             // instantiate this call on the driver. It must be created on each executor.
             var evaluator = evaluatorFactory.create(
-                    optimizedPlanOutput,
+                    plan,
                     modelAdapterSet,
                     terminologyRepository);
 
