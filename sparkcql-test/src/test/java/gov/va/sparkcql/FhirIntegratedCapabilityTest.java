@@ -38,17 +38,18 @@ public class FhirIntegratedCapabilityTest extends AbstractIntegrationTest {
                 .writeBinding(ModelAdapterFactory.class, FhirModelAdapterFactory.class);
     }
 
-//    @Test
-//    public void should_compute_literal_definition() {
-//        var pipeline = new Pipeline(getConfiguration());
-//        var results = pipeline.execute("Fhir_Literal_Test", "1");
-//        results.splitByContext().collect().forEach(System.out::println);
-//    }
-
     @Test
-    public void should_compute_basic_retrieve() {
+    public void should_prove_fhir_engine_conformity() {
         var pipeline = new Pipeline(getConfiguration());
-        var results = pipeline.execute("BasicRetrieve", "1.0");
+        var results = pipeline.execute("FhirEngineConformity", "1.0");
         showResults(results);
     }
+
+    @Test
+    public void should_prove_quick_engine_conformity() {
+        var pipeline = new Pipeline(getConfiguration());
+        var results = pipeline.execute("QuickEngineConformity", "1.0");
+        showResults(results);
+    }
+
 }

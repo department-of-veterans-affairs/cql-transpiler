@@ -23,15 +23,16 @@ public class CqfEvaluator implements Evaluator {
     @Override
     public EvaluatedContext evaluate(String contextElementId, Map<Retrieval, List<Object>> clinicalData) {
 
+        // TODO: Rebuild engine for each iteration, which will impact the Mutable designs.
+
         // Identify the primary library which is the library that includes all other libraries. The
         // CQF engine only accepts a single library for execution. Instead of iterating each library
         // we need to calculate and duplicating the calculation of some shared libraries, we ensure
         // all libraries are covered in one iteration.
         var primaryLibrary = this.libraryCacheAdapter.getPlan().getLibrary(0).orElseThrow();
-        if (this.libraryCacheAdapter.getPlan().getLibraries().size() > 1) {
-            // TODO: Change design to have plan identify head node or create a outermost CQL container
-            throw new UnsupportedOperationException();
-        }
+
+        // TODO: Change design to have plan identify head node or create a outermost CQL container
+        // ABOVE CODE ASSUMES POSITION 0 IS HEAD NODE
 
         // We're provided clinical data for each context execution. Update the DataProvider
         // interfaces we gave to the CQF engine with the data for this iteration.

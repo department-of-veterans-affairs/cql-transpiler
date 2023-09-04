@@ -13,8 +13,10 @@ import org.opencds.cqf.cql.engine.execution.Environment;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CqfEvaluatorFactory extends EvaluatorFactory {
@@ -57,12 +59,13 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
                 dataProviderMap,
                 terminologyProviderAdapter);
 
-        var cqlEngine = new CqlEngine(environment);
+        var cqlEngine = new CqlEngine(environment, Set.of(CqlEngine.Options.EnableValidation));
 
         return new CqfEvaluator(cqlEngine, dataProviders, libraryCacheAdapter);
     }
 
     private Map<String, DataProvider> buildDataProviders(ModelAdapterCollection modelAdapterCollection) {
+        this.dataProviders = new ArrayList<>();
         return modelAdapterCollection.getNamespaces().stream()
                 .collect(Collectors.toMap(
                         k -> k,

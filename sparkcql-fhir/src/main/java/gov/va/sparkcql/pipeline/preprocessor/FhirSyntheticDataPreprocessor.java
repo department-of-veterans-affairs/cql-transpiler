@@ -17,5 +17,6 @@ public class FhirSyntheticDataPreprocessor extends AbstractIndexedDataPreprocess
         fromResourceJson("fhir/table/patient.json", new DataType("http://hl7.org/fhir", "Patient"));
         fromResourceJson("fhir/table/encounter.json", new DataType("http://hl7.org/fhir", "Encounter"));
         fromResourceJson("fhir/table/condition.json", new DataType("http://hl7.org/fhir", "Condition"));
+        fromResourceJson("fhir/table/medication-administration.json", new DataType("http://hl7.org/fhir", "MedicationAdministration"));
     }
 }

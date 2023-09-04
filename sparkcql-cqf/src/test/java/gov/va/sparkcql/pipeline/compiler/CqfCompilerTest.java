@@ -74,6 +74,14 @@ public class CqfCompilerTest {
     }
 
     @Test
+    public void should_generate_elms() {
+        // Utility method to create ELMs for testing elsewhere
+        var output = compiler.compile(List.of(new QualifiedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
+        var json = output.getLibraries().get(0);
+        assertLibraries(1, output);
+    }
+
+    @Test
     public void should_allow_file_repository_loading() {
         // Compiling by ID will force use of the CqlSourceFileRepository.
         var output = compiler.compile(List.of(new QualifiedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
