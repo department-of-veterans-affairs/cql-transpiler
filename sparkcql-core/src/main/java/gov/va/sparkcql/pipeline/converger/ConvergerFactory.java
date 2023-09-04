@@ -1,7 +1,7 @@
 package gov.va.sparkcql.pipeline.converger;
 
 import gov.va.sparkcql.configuration.Configuration;
-import gov.va.sparkcql.configuration.ComponentFactory;
+import gov.va.sparkcql.pipeline.ComponentFactory;
 
 public abstract class ConvergerFactory extends ComponentFactory {
 

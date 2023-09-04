@@ -11,7 +11,6 @@ public class DefaultSparkFactory extends SparkFactory {
 
     @Override
     public SparkSession create() {
-        var spark = SparkSession.builder().getOrCreate();
-        return spark;
+        return SparkSession.builder().getOrCreate();
     }
 }

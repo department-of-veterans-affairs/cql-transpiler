@@ -1,6 +1,6 @@
 package gov.va.sparkcql.runtime;
 
-import gov.va.sparkcql.configuration.ComponentFactory;
+import gov.va.sparkcql.pipeline.ComponentFactory;
 import gov.va.sparkcql.configuration.Configuration;
 import org.apache.spark.sql.SparkSession;
 

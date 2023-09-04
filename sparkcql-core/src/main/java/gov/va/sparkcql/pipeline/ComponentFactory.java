@@ -1,4 +1,4 @@
-package gov.va.sparkcql.configuration;
+package gov.va.sparkcql.pipeline;
 
 import gov.va.sparkcql.configuration.Configuration;
 

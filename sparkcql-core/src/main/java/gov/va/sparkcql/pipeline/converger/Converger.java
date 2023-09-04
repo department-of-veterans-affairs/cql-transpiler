@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.configuration.Component;
+import gov.va.sparkcql.pipeline.Component;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
