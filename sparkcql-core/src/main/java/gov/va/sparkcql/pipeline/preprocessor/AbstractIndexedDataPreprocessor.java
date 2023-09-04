@@ -1,6 +1,6 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.runtime.SparkCatalog;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.io.Resources;
@@ -15,19 +15,19 @@ public abstract class AbstractIndexedDataPreprocessor implements Preprocessor {
 
     private final SparkSession spark;
     private final TableResolutionStrategy tableResolutionStrategy;
-    private final ModelAdapterCollection modelAdapterCollection;
+    private final ModelAdapterSet modelAdapterSet;
 
-    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterCollection modelAdapterCollection) {
+    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterSet modelAdapterSet) {
         this.spark = sparkFactory.create();
         this.tableResolutionStrategy = tableResolutionStrategy;
-        this.modelAdapterCollection = modelAdapterCollection;
+        this.modelAdapterSet = modelAdapterSet;
     }
 
     protected void fromResourceJson(String resourceJsonPath, DataType dataType) {
         // The json schema is assumed to conform to the Indexed Table schematic where
         // key attributes from the resource are extracted and promoted as top-level
         // attributes. See indexed-data-table.ddl for more information.
-        var dataTypeSchema = modelAdapterCollection.forType(dataType).getSchema(dataType);
+        var dataTypeSchema = modelAdapterSet.forType(dataType).getSchema(dataType);
         var indexedDataSchema = Resources.read("indexed-data-table.ddl");
         var fullSchema = indexedDataSchema.replace("${dataTypeSchema}", dataTypeSchema.toDDL());
 

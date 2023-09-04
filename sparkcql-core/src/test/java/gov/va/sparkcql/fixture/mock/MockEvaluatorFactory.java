@@ -4,7 +4,7 @@ import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 
 public class MockEvaluatorFactory extends EvaluatorFactory {
 
@@ -13,7 +13,7 @@ public class MockEvaluatorFactory extends EvaluatorFactory {
     }
 
     @Override
-    public Evaluator create(Plan plan, ModelAdapterCollection modelAdapterCollection, Object terminologyData) {
+    public Evaluator create(Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData) {
         return new MockEvaluator();
     }
 }

@@ -6,17 +6,10 @@ import java.util.List;
 
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.ElmWriter;
-import gov.va.sparkcql.pipeline.compiler.CqfCompiler;
-import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepositoryFactory;
 import gov.va.sparkcql.types.QualifiedIdentifier;
-import org.hl7.cql_annotations.r1.CqlToElmError;
-import org.hl7.elm.r1.Library;
-import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.configuration.EnvironmentConfiguration;
-import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepository;
 
 public class CqfCompilerTest {

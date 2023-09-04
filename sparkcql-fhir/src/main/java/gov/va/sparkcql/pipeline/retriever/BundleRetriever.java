@@ -4,7 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.io.AssetFolder;
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
@@ -26,8 +26,8 @@ public class BundleRetriever implements Retriever {
     }
 
     @Override
-    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterCollection modelAdapterCollection) {
-        var modelAdapter = modelAdapterCollection.forType(retrieval.getDataType());
+    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterSet modelAdapterSet) {
+        var modelAdapter = modelAdapterSet.forType(retrieval.getDataType());
         var typeMap = modelAdapter.resolveTypeMap(retrieval.getDataType());
 
         var entries = bundles.stream().flatMap(b -> {

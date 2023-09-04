@@ -9,13 +9,13 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import scala.Tuple2;
 
 public class DefaultConverger implements Converger {
 
     @Override
-    public JavaPairRDD<String, Map<Retrieval, List<Object>>> converge(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterCollection modelAdapterCollection) {
+    public JavaPairRDD<String, Map<Retrieval, List<Object>>> converge(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterSet modelAdapterSet) {
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member.
@@ -28,7 +28,7 @@ public class DefaultConverger implements Converger {
 
             // Convert JavaRDD to a JavaPairRDD where the first element
             // represents the context ID of this instance.
-            var modelAdapter = modelAdapterCollection.forType(currentRetrieval.getDataType());
+            var modelAdapter = modelAdapterSet.forType(currentRetrieval.getDataType());
             var contextualizedRdd = currentDs.mapToPair(i -> {
                 var contextId = modelAdapter.getContextId(i, plan.resolveContextDef());
                 return Tuple2.apply(contextId, i);

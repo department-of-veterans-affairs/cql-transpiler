@@ -3,7 +3,7 @@ package gov.va.sparkcql.pipeline.evaluator;
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.model.ModelAdapter;
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
@@ -28,7 +28,7 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
     }
 
     @Override
-    public Evaluator create(Plan plan, ModelAdapterCollection modelAdapterCollection, Object terminologyData) {
+    public Evaluator create(Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData) {
 
         // Adapt the libraries provided to this implementation by the SparkCQL runtime
         // to the CompiledLibrary type required by CQF.
@@ -48,7 +48,7 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
         // row is only available during row execution. However, DataProvider is a requirement
         // for the CQF environment so we configure a mutable adapter which will be updated
         // during row execution.
-        var dataProviderMap = buildDataProviders(modelAdapterCollection);
+        var dataProviderMap = buildDataProviders(modelAdapterSet);
 
         // Terminology adapter for translating bulk terminology data to the CQF engine.
         var terminologyProviderAdapter = new TerminologyProviderAdapter(terminologyData);
@@ -64,13 +64,13 @@ public class CqfEvaluatorFactory extends EvaluatorFactory {
         return new CqfEvaluator(cqlEngine, dataProviders, libraryCacheAdapter);
     }
 
-    private Map<String, DataProvider> buildDataProviders(ModelAdapterCollection modelAdapterCollection) {
+    private Map<String, DataProvider> buildDataProviders(ModelAdapterSet modelAdapterSet) {
         this.dataProviders = new ArrayList<>();
-        return modelAdapterCollection.getNamespaces().stream()
+        return modelAdapterSet.getNamespaces().stream()
                 .collect(Collectors.toMap(
                         k -> k,
                         v -> {
-                            var modelAdapter = modelAdapterCollection.forNamespace(v);
+                            var modelAdapter = modelAdapterSet.forNamespace(v);
                             var modelResolver = resolveModelResolver(modelAdapter);
                             var dataProviderAdapter = new MutableCompositeDataProvider(
                                     modelResolver,

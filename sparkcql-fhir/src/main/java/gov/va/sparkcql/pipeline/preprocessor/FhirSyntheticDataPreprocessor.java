@@ -1,14 +1,14 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.types.DataType;
 
 public class FhirSyntheticDataPreprocessor extends AbstractIndexedDataPreprocessor {
 
-    public FhirSyntheticDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterCollection modelAdapterCollection) {
-        super(sparkFactory, tableResolutionStrategy, modelAdapterCollection);
+    public FhirSyntheticDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterSet modelAdapterSet) {
+        super(sparkFactory, tableResolutionStrategy, modelAdapterSet);
     }
 
     @Override

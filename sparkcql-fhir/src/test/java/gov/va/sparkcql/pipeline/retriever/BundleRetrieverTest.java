@@ -4,7 +4,7 @@ import gov.va.sparkcql.configuration.ServiceModule;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.io.AssetFolder;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.types.DataType;
 import org.junit.jupiter.api.Test;
 
@@ -26,9 +26,9 @@ public class BundleRetrieverTest extends ServiceModule {
         var retrieval = new Retrieval()
                 .withDataType(new DataType("http://hl7.org/fhir", resourceType));
         var modelAdapter = new FhirModelAdapter();
-        var modelAdapterCollection = new ModelAdapterCollection(List.of(modelAdapter));
+        var modelAdapterSet = new ModelAdapterSet(List.of(modelAdapter));
         var retriever = new BundleRetriever(getSparkFactory(), AssetFolder.of("resource://fhir/bundles"));
-        var bundles = retriever.retrieve(retrieval, modelAdapterCollection);
+        var bundles = retriever.retrieve(retrieval, modelAdapterSet);
         assertEquals(expectedCount, bundles.count());
     }
 }

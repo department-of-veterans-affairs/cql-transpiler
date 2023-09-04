@@ -13,7 +13,7 @@ import static org.apache.spark.sql.functions.col;
 import java.util.List;
 
 import gov.va.sparkcql.runtime.SparkFactory;
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 
 public class SparkIndexedDataRetriever implements Retriever {
@@ -28,7 +28,7 @@ public class SparkIndexedDataRetriever implements Retriever {
     }
 
     @Override
-    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterCollection modelAdapterCollection) {
+    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterSet modelAdapterSet) {
         
         // Acquire data for the retrieve operation with the assumption the data columns contains
         // the encoded data and additional promoted columns are provided to assist with filtering.
@@ -44,7 +44,7 @@ public class SparkIndexedDataRetriever implements Retriever {
         applyFilters(indexedDs, retrieval);
 
         // Lookup the model adapter for the given data type and use it to decode the data.
-        var modelAdapter = modelAdapterCollection.forType(dataType);
+        var modelAdapter = modelAdapterSet.forType(dataType);
         var encoder = modelAdapter.getEncoder(dataType);
         var encodedDs = indexedDs.select(col(ENCODED_DATA_COLUMN + ".*"));
 

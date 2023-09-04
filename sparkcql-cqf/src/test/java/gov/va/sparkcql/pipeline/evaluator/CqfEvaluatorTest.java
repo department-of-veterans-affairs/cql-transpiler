@@ -3,7 +3,7 @@ package gov.va.sparkcql.pipeline.evaluator;
 import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.Resources;
-import gov.va.sparkcql.pipeline.model.ModelAdapterCollection;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonLibraryReader;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ public class CqfEvaluatorTest {
 
         var evaluator = new CqfEvaluatorFactory(new EnvironmentConfiguration()).create(
                 plan,
-                new ModelAdapterCollection(List.of()),
+                new ModelAdapterSet(List.of()),
                 null);
 
         evaluator.evaluate("12345", null);
