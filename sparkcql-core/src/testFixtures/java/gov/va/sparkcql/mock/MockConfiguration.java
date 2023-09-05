@@ -1,4 +1,4 @@
-package gov.va.sparkcql.fixture.mock;
+package gov.va.sparkcql.mock;
 
 import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategy;

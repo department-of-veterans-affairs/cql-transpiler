@@ -6,8 +6,8 @@ import javax.xml.namespace.QName;
 
 import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.fixture.mock.MockDataPreprocessor;
-import gov.va.sparkcql.fixture.mock.MockModelAdapter;
+import gov.va.sparkcql.mock.MockDataPreprocessor;
+import gov.va.sparkcql.mock.MockModelAdapter;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategyFactory;
 import org.hl7.elm.r1.Retrieve;
 import org.junit.jupiter.api.Test;

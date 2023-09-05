@@ -1,4 +1,4 @@
-package gov.va.sparkcql.fixture.mock;
+package gov.va.sparkcql.mock;
 
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.domain.Plan;
@@ -6,7 +6,6 @@ import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
 import gov.va.sparkcql.types.QualifiedIdentifier;
-import org.hl7.elm.r1.VersionedIdentifier;
 
 import java.util.List;
 

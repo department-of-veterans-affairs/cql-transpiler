@@ -2,10 +2,13 @@ package gov.va.sparkcql.pipeline;
 
 import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.configuration.Injector;
+import gov.va.sparkcql.mock.MockCompilerFactory;
+import gov.va.sparkcql.mock.MockDataPreprocessorFactory;
+import gov.va.sparkcql.mock.MockEvaluatorFactory;
+import gov.va.sparkcql.mock.MockModelAdapterFactory;
 import gov.va.sparkcql.runtime.LocalSparkFactory;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.fixture.mock.*;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.converger.ConvergerFactory;

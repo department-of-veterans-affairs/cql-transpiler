@@ -1,4 +1,4 @@
-package gov.va.sparkcql.fixture.mock;
+package gov.va.sparkcql.mock;
 
 import java.io.Serializable;
 
