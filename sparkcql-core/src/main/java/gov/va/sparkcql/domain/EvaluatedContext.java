@@ -11,8 +11,6 @@ public class EvaluatedContext implements Serializable {
 
     private List<Tuple2<ExpressionReference, List<Object>>> expressionResults;
 
-    private List<Object> evaluated;
-
     public String getContextId() {
         return contextId;
     }
@@ -39,25 +37,11 @@ public class EvaluatedContext implements Serializable {
         return this;
     }
 
-    public List<Object> getEvaluated() {
-        return evaluated;
-    }
-
-    public void setEvaluated(List<Object> evaluated) {
-        this.evaluated = evaluated;
-    }
-
-    public EvaluatedContext withEvaluated(List<Object> evaluated) {
-        this.evaluated = evaluated;
-        return this;
-    }
-
     @Override
     public String toString() {
         return "EvaluatedContext{" +
                 "contextId='" + contextId + '\'' +
-                ", expressionResults=" + expressionResults +
-                ", evaluated=" + evaluated +
+                ", resultCount=" + expressionResults.size() +
                 '}';
     }
 }

@@ -130,9 +130,7 @@ public class Pipeline implements Serializable {
         runPreprocessStage();
 
         // Optimize the specified plan if not already.
-        if (!plan.isOptimized()) {
-            this.plan = getOptimizer().optimize(plan);
-        }
+        this.plan = plan.isOptimized() ? plan : getOptimizer().optimize(plan);
 
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.

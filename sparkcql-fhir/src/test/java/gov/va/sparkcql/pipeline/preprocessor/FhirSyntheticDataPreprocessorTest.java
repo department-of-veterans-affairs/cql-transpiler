@@ -17,7 +17,7 @@ public class FhirSyntheticDataPreprocessorTest extends AbstractTest {
         var preprocessor = new FhirSyntheticDataPreprocessor(
                 configuration,
                 sparkFactory,
-                new TemplateResolutionStrategy("${domain}"),
+                new TemplateResolutionStrategy("${model}_${domain}"),
                 new ModelAdapterSet(List.of(new FhirModelAdapter())));
         preprocessor.apply();
 

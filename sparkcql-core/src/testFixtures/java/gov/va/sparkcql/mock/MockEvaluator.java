@@ -31,7 +31,6 @@ public class MockEvaluator implements Evaluator {
         var expressionResults = List.of(Tuple2.apply(expressionReference, evaluated));
         return new EvaluatedContext()
                 .withContextId(contextElementId)
-                .withEvaluated(evaluated)
                 .withExpressionResults(expressionResults);
     }
 }

@@ -73,8 +73,6 @@ public class CqlPipelineBuilder {
             } else {
                 this.configuration.writeBinding(interfaceClass, new ArrayList<>(serviceTypes));
             }
-        } else {
-            Log.info(interfaceClass.getSimpleName() + " already bound.");
         }
     }
 

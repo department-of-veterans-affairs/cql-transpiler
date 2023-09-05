@@ -13,6 +13,8 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
+    implementation "org.scala-lang:scala-library:${scalaVersion}"
+
     implementation "info.cqframework:cql:${cqfVersion}"
     implementation "info.cqframework:cql-to-elm:${cqfVersion}"
     implementation "info.cqframework:elm:${cqfVersion}"
