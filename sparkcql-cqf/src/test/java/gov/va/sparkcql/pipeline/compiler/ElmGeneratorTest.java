@@ -21,10 +21,11 @@ public class ElmGeneratorTest {
                 new CqlSourceFileRepository("./src/test/resources/cql"));
     }
 
-    @Test
-    public void should_generate_elms() {
-        // Utility method to create ELMs for testing elsewhere
-        var output = compiler.compile(List.of(new QualifiedIdentifier().withId("DeduplicateRetrieves")));
-        ElmWriter.write(output.getLibraries());
-    }
+//    @Test
+//    public void should_generate_elms() {
+//        // Utility method to create ELMs for testing elsewhere
+//        // TODO: Replace this with something less hacky.
+//        var output = compiler.compile(List.of(new QualifiedIdentifier().withId("DeduplicateRetrieves")));
+//        ElmWriter.write(output.getLibraries());
+//    }
 }

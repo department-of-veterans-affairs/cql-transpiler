@@ -9,6 +9,7 @@ import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.log.Log;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
 import gov.va.sparkcql.domain.ExpressionReference;
+import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
@@ -25,7 +26,7 @@ public class MockEvaluator implements Evaluator {
 
         var evaluated = clinicalData.values().stream().flatMap(List::stream).toList();
         var expressionReference = new ExpressionReference()
-                .withLibrary(new Library().withIdentifier(new VersionedIdentifier().withId("MockLibrary")))
+                .withLibraryIdentifier(new QualifiedIdentifier().withId("MockLibrary"))
                 .withExpressionDef(new ExpressionDef().withName("Foo"));
 
         var expressionResults = List.of(Tuple2.apply(expressionReference, evaluated));

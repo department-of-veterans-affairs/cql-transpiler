@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class CqfEvaluatorTest {
 
     @Test
@@ -24,7 +26,10 @@ public class CqfEvaluatorTest {
                 new ModelAdapterSet(List.of()),
                 null);
 
-        evaluator.evaluate("12345", null);
+        var r = evaluator.evaluate("12345", null);
+        assertEquals(3, r.getExpressionResults().size());
+        assertEquals("12345", r.getContextId());
+        assertEquals("ComplexLiteral", r.getExpressionResults().get(0)._1.getLibraryIdentifier().getId());
     }
 
     @Test
