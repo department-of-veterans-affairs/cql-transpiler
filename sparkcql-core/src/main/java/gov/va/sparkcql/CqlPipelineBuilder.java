@@ -38,6 +38,10 @@ public class CqlPipelineBuilder {
         this.parameters = new HashMap<>();
 
         this.configuration = new EnvironmentConfiguration();
+    }
+
+    private Configuration getEffectiveConfiguration() {
+        // Apply default configuration for those settings which were not set explicitly.
         defaultBindings(SparkFactory.class, true);
         defaultBindings(PreprocessorFactory.class, false);
         defaultBindings(CompilerFactory.class, true);
@@ -47,6 +51,8 @@ public class CqlPipelineBuilder {
         defaultBindings(ModelAdapterFactory.class, false);
         defaultBindings(ConvergerFactory.class, true);
         defaultBindings(EvaluatorFactory.class, true);
+
+        return this.configuration;
     }
 
     @SuppressWarnings("unchecked")
@@ -72,12 +78,20 @@ public class CqlPipelineBuilder {
         }
     }
 
-    public CqlPipelineBuilder withSetting(String key, String value) {
+    public CqlPipelineBuilder withConfig(String key, String value) {
         configuration.writeSetting(key, value);
         return this;
     }
 
-    public <I> CqlPipelineBuilder withBinding(Class<I> interfaceClass, Class<? extends I> implementationClass) {
+    public CqlPipelineBuilder withConfig(Configuration configuration) {
+        // Apply the new configuration to current state.
+        configuration.readAllSettings().forEach((key, value) -> {
+            this.configuration.writeSetting(key, value);
+        });
+        return this;
+    }
+
+    public <I> CqlPipelineBuilder withConfig(Class<I> interfaceClass, Class<? extends I> implementationClass) {
         configuration.writeBinding(interfaceClass, implementationClass);
         return this;
     }
@@ -176,7 +190,7 @@ public class CqlPipelineBuilder {
             public JavaRDD<EvaluatedContext> run() {
                 var root = this.parent.parent;
                 root.validate();
-                var pipeline = new Pipeline(root.configuration);
+                var pipeline = new Pipeline(root.getEffectiveConfiguration());
                 var plan = pipeline.plan(root.targetLibraries, root.additionalLibrarySources);
                 var results = pipeline.execute(plan);
                 return results.splitByContext();
@@ -194,7 +208,7 @@ public class CqlPipelineBuilder {
             public Map<ExpressionReference, JavaRDD<Object>> run() {
                 var root = this.parent.parent;
                 root.validate();
-                var pipeline = new Pipeline(root.configuration);
+                var pipeline = new Pipeline(root.getEffectiveConfiguration());
                 var plan = pipeline.plan(root.targetLibraries, root.additionalLibrarySources);
                 var results = pipeline.execute(plan);
                 return results.splitByExprDef();
@@ -259,7 +273,7 @@ public class CqlPipelineBuilder {
 
         public Plan run() {
             this.parent.validate();
-            var pipeline = new Pipeline(this.parent.configuration);
+            var pipeline = new Pipeline(this.parent.getEffectiveConfiguration());
             return pipeline.plan(this.parent.targetLibraries, this.parent.additionalLibrarySources);
         }
     }

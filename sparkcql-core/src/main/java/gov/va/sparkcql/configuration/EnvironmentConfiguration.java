@@ -30,6 +30,12 @@ public class EnvironmentConfiguration implements Configuration {
     }
 
     @Override
+    public boolean hasSetting(String key) {
+        var setting = this.readSetting(key, null);
+        return setting != null && !setting.isEmpty();
+    }
+
+    @Override
     public Map<String, String> readAllSettings() {
         var allSettings = new HashMap<String, String>();
         allSettings.putAll(System.getenv());

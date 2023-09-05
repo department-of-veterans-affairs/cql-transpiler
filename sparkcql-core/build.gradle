@@ -3,7 +3,7 @@ dependencies {
 
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
     implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
-    
+
     /*
     The only reference to Clinical Quality Framework (CQF) should be ELM because:
     1. CQF and Spark both use ANTLR but ANTLR versions (e.g. 4.8 vs 4.10.1).

@@ -1,7 +1,6 @@
 package gov.va.sparkcql.pipeline;
 
-import gov.va.sparkcql.configuration.ServiceModule;
-import gov.va.sparkcql.configuration.Configuration;
+import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.configuration.Injector;
 import gov.va.sparkcql.runtime.LocalSparkFactory;
 import gov.va.sparkcql.runtime.SparkFactory;
@@ -30,11 +29,10 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PipelineTest extends ServiceModule {
+public class PipelineTest extends AbstractTest {
 
-    @Override
-    protected Configuration configure() {
-        return new MockConfiguration()
+    public PipelineTest() {
+        this.configuration
             .writeBinding(SparkFactory.class, LocalSparkFactory.class)
             .writeBinding(CqlSourceRepositoryFactory.class, CqlSourceFileRepositoryFactory.class)
             .writeBinding(CompilerFactory.class, MockCompilerFactory.class)
@@ -48,12 +46,12 @@ public class PipelineTest extends ServiceModule {
     }
 
     private Injector getInjector() {
-        return new Injector(configure());
+        return new Injector(this.configuration);
     }
 
     @Test
     public void should_initialize_default_components() {
-        var pipeline = new Pipeline(configure());
+        var pipeline = new Pipeline(this.configuration);
         assertNotNull(pipeline.getOptimizer());
         assertNotNull(pipeline.getCompiler());
     }
@@ -64,7 +62,7 @@ public class PipelineTest extends ServiceModule {
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan()
                 .withLibrary(reader.read(libraryContents));
-        var pipeline = new Pipeline(configure());
+        var pipeline = new Pipeline(this.configuration);
         var results = pipeline.execute(plan);
         results.splitByContext().collect().forEach(System.out::println);
     }

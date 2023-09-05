@@ -11,6 +11,8 @@ public interface Configuration extends Serializable {
 
     public String readSetting(String key, String defaultValue);
 
+    public boolean hasSetting(String key);
+
     public Map<String, String> readAllSettings();
 
     public Configuration writeSetting(String key, String value);

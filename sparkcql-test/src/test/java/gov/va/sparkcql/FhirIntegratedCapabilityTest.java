@@ -1,29 +1,9 @@
 package gov.va.sparkcql;
 
-import gov.va.sparkcql.configuration.Configuration;
-import gov.va.sparkcql.configuration.EnvironmentConfiguration;
-import gov.va.sparkcql.pipeline.Pipeline;
-import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
-import gov.va.sparkcql.pipeline.compiler.CqfCompilerFactory;
-import gov.va.sparkcql.pipeline.evaluator.CqfEvaluatorFactory;
-import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
-import gov.va.sparkcql.pipeline.model.FhirModelAdapterFactory;
-import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
-import gov.va.sparkcql.pipeline.preprocessor.FhirSyntheticDataPreprocessorFactory;
-import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
-import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepositoryFactory;
-import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepositoryFactory;
-import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
-import gov.va.sparkcql.pipeline.retriever.SparkIndexedDataRetrieverFactory;
-import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
-import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategyFactory;
-import gov.va.sparkcql.runtime.LocalSparkFactory;
-import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.types.QualifiedIdentifier;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class FhirIntegratedCapabilityTest extends AbstractIntegrationTest {
+public class FhirIntegratedCapabilityTest extends AbstractTest {
 
 //        return new EnvironmentConfiguration()
 //                .writeBinding(SparkFactory.class, LocalSparkFactory.class)
@@ -41,6 +21,7 @@ public class FhirIntegratedCapabilityTest extends AbstractIntegrationTest {
     public void should_prove_fhir_engine_conformity() {
 
         var r = new CqlPipelineBuilder()
+                .withConfig(configuration)
                 .evaluate(new QualifiedIdentifier().withId("FhirEngineConformity").withId("1.0"))
                 .byContext()
                 .run();
