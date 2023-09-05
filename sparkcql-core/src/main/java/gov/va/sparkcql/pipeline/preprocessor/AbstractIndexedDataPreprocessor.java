@@ -1,5 +1,6 @@
 package gov.va.sparkcql.pipeline.preprocessor;
 
+import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.runtime.SparkCatalog;
 import gov.va.sparkcql.runtime.SparkFactory;
@@ -17,8 +18,8 @@ public abstract class AbstractIndexedDataPreprocessor implements Preprocessor {
     private final TableResolutionStrategy tableResolutionStrategy;
     private final ModelAdapterSet modelAdapterSet;
 
-    public AbstractIndexedDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterSet modelAdapterSet) {
-        this.spark = sparkFactory.create();
+    public AbstractIndexedDataPreprocessor(Configuration configuration, SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterSet modelAdapterSet) {
+        this.spark = sparkFactory.create(configuration);
         this.tableResolutionStrategy = tableResolutionStrategy;
         this.modelAdapterSet = modelAdapterSet;
     }

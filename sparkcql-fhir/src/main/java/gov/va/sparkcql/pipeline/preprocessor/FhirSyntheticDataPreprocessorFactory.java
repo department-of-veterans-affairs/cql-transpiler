@@ -6,17 +6,14 @@ import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
 
-public class FhirSyntheticDataPreprocessorFactory extends PreprocessorFactory {
-
-    public FhirSyntheticDataPreprocessorFactory(Configuration configuration) {
-        super(configuration);
-    }
+public class FhirSyntheticDataPreprocessorFactory implements PreprocessorFactory {
 
     @Override
-    public Preprocessor create(SparkFactory sparkFactory, ModelAdapterSet modelAdapterSet) {
-        var tableResolutionStrategy = new Injector(getConfiguration())
+    public Preprocessor create(Configuration configuration, SparkFactory sparkFactory, ModelAdapterSet modelAdapterSet) {
+        var tableResolutionStrategy = new Injector(configuration)
                 .getInstance(TableResolutionStrategyFactory.class)
-                .create();
-        return new FhirSyntheticDataPreprocessor(sparkFactory, tableResolutionStrategy, modelAdapterSet);
+                .create(configuration);
+
+        return new FhirSyntheticDataPreprocessor(configuration, sparkFactory, tableResolutionStrategy, modelAdapterSet);
     }
 }

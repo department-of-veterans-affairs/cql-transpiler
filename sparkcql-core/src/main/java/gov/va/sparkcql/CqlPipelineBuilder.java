@@ -8,8 +8,10 @@ import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.log.Log;
 import gov.va.sparkcql.pipeline.Pipeline;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
+import gov.va.sparkcql.pipeline.converger.Converger;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
 import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
+import gov.va.sparkcql.pipeline.optimizer.Optimizer;
 import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
@@ -37,24 +39,27 @@ public class CqlPipelineBuilder {
 
         this.configuration = new EnvironmentConfiguration();
         defaultBindings(SparkFactory.class, true);
-        defaultBindings(TableResolutionStrategyFactory.class, true);
-        defaultBindings(RetrieverFactory.class, true);
-        defaultBindings(CompilerFactory.class, true);
-        defaultBindings(EvaluatorFactory.class, true);
         defaultBindings(PreprocessorFactory.class, false);
+        defaultBindings(CompilerFactory.class, true);
+        defaultBindings(Optimizer.class, true);
+        defaultBindings(RetrieverFactory.class, true);
+        defaultBindings(TableResolutionStrategyFactory.class, true);
         defaultBindings(ModelAdapterFactory.class, false);
+        defaultBindings(Converger.class, true);
+        defaultBindings(EvaluatorFactory.class, true);
     }
 
     @SuppressWarnings("unchecked")
     private <I> void defaultBindings(Class<I> interfaceClass, boolean isExclusive) {
-        // Determine if the client has explicitly set this binding.
-        var clientBinding = this.configuration.readBinding(interfaceClass);
-        if (clientBinding.isEmpty()) {
-            // No explicit binding so implicitly load via ServiceLoader but only if it's
-            // inclusive, meaning multiple implementations can co-exist.
+        // If the client hasn't already set this binding explicitly.
+        if (!this.configuration.hasBinding(interfaceClass)) {
+            // Implicitly load via ServiceLoader but only if it's inclusive,
+            // meaning multiple implementations can co-exist.
+            var x = ServiceLoader.load(interfaceClass).stream().collect(Collectors.toList());
             var serviceTypes = ServiceLoader.load(interfaceClass).stream()
                     .map(p -> (Class<? extends I>)p.get().getClass())
                     .collect(Collectors.toList());
+
             if (isExclusive && serviceTypes.size() > 1) {
                 Log.warn("Multiple implementations exist for " + interfaceClass.getCanonicalName() + " but only one can be selected. Explicitly bind one of the following:");
                 serviceTypes.forEach(t -> Log.warn("\t" + t.getCanonicalName()));

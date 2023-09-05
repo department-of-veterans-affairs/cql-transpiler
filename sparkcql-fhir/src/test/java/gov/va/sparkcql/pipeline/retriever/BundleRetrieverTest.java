@@ -27,7 +27,10 @@ public class BundleRetrieverTest extends ServiceModule {
                 .withDataType(new DataType("http://hl7.org/fhir", resourceType));
         var modelAdapter = new FhirModelAdapter();
         var modelAdapterSet = new ModelAdapterSet(List.of(modelAdapter));
-        var retriever = new BundleRetriever(getSparkFactory(), AssetFolder.of("resource://fhir/bundles"));
+        var retriever = new BundleRetriever(
+                getConfiguration(),
+                getSparkFactory(),
+                AssetFolder.of("resource://fhir/bundles"));
         var bundles = retriever.retrieve(retrieval, modelAdapterSet);
         assertEquals(expectedCount, bundles.count());
     }

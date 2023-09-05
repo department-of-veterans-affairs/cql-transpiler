@@ -18,7 +18,8 @@ public class CqfEvaluatorTest {
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan().withLibrary(reader.read(libraryContents));
 
-        var evaluator = new CqfEvaluatorFactory(new EnvironmentConfiguration()).create(
+        var evaluator = new CqfEvaluatorFactory().create(
+                new EnvironmentConfiguration(),
                 plan,
                 new ModelAdapterSet(List.of()),
                 null);

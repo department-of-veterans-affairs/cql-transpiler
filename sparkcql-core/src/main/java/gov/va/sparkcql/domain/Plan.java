@@ -76,6 +76,10 @@ public class Plan implements Serializable {
         return this.libraries.get(0).getContexts().getDef().get(0);
     }
 
+    public boolean isOptimized() {
+        return this.retrieves != null;
+    }
+
     // The ELM encounters serialization issues during Spark broadcasting so we implement serialization manually.
 	private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
         String json = (String)input.readObject();

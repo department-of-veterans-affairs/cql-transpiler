@@ -5,11 +5,7 @@ import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.ComponentFactory;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 
-public abstract class EvaluatorFactory extends ComponentFactory {
+public interface EvaluatorFactory extends ComponentFactory {
 
-    public EvaluatorFactory(Configuration configuration) {
-        super(configuration);
-    }
-
-    public abstract Evaluator create(Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData);
+    public abstract Evaluator create(Configuration configuration, Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData);
 }

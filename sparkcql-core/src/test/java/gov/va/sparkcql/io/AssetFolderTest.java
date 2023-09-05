@@ -27,10 +27,10 @@ public class AssetFolderTest extends ServiceModule {
         // Can only run this test if winutils is configured to run spark storage locally.
         if (System.getenv("HADOOP_HOME") != null) {
             // In Spark mode, Asset will use any established spark connection.
-            var spark = new LocalSparkFactory(getConfiguration()).create();
+            var spark = new LocalSparkFactory().create(getConfiguration());
             checkResults(new AssetFolder("spark://mock-model/valueset").read());
         } else {
-            Log.warn("Winutils, HADOOP_HOME, & hadoop.home.dir were not configured. Skipping Spark mode Asset test.");
+            Log.warn("Winutils, HADOOP_HOME, & hadoop.home.dir were not configured. Skipping Asset test with Spark mode.");
         }
     }
 

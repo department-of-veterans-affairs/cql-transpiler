@@ -1,6 +1,7 @@
 package gov.va.sparkcql.pipeline.retriever;
 
 import ca.uhn.fhir.context.FhirContext;
+import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.io.AssetFolder;
@@ -16,12 +17,12 @@ import java.util.stream.Collectors;
 
 public class BundleRetriever implements Retriever {
 
-    private SparkSession spark;
+    private final SparkSession spark;
 
     private List<Bundle> bundles;
 
-    public BundleRetriever(SparkFactory sparkFactory, AssetFolder bundles) {
-        this.spark = sparkFactory.create();
+    public BundleRetriever(Configuration configuration, SparkFactory sparkFactory, AssetFolder bundles) {
+        this.spark = sparkFactory.create(configuration);
         loadResourceBundles(bundles);
     }
 

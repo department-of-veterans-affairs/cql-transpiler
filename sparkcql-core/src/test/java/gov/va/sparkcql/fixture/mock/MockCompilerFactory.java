@@ -10,14 +10,10 @@ import org.hl7.elm.r1.VersionedIdentifier;
 
 import java.util.List;
 
-public class MockCompilerFactory extends CompilerFactory {
-
-    public MockCompilerFactory(Configuration configuration) {
-        super(configuration);
-    }
+public class MockCompilerFactory implements CompilerFactory {
 
     @Override
-    public Compiler create(CqlSourceRepository cqlSourceRepository) {
+    public Compiler create(Configuration configuration, CqlSourceRepository cqlSourceRepository) {
         return new Compiler() {
             @Override
             public Plan compile(String... cqlText) {

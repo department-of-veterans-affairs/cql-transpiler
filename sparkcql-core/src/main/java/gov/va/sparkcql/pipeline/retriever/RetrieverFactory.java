@@ -6,12 +6,7 @@ import gov.va.sparkcql.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.ComponentFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
 
-public abstract class RetrieverFactory extends ComponentFactory {
+public interface RetrieverFactory extends ComponentFactory {
 
-    public RetrieverFactory(Configuration configuration) {
-        super(configuration);
-        var tableResolutionStrategy = new Injector(configuration).getInstance(TableResolutionStrategyFactory.class);
-    }
-
-    public abstract Retriever create(SparkFactory sparkFactory);
+    public abstract Retriever create(Configuration configuration, SparkFactory sparkFactory);
 }

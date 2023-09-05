@@ -1,5 +1,6 @@
 package gov.va.sparkcql.pipeline.optimizer;
 
+import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.pipeline.Component;
 
 import gov.va.sparkcql.domain.Plan;

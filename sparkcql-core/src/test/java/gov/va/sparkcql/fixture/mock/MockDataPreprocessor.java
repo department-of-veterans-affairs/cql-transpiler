@@ -1,5 +1,6 @@
 package gov.va.sparkcql.fixture.mock;
 
+import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.pipeline.preprocessor.AbstractIndexedDataPreprocessor;
 
@@ -9,8 +10,8 @@ import gov.va.sparkcql.types.DataType;
 
 public class MockDataPreprocessor extends AbstractIndexedDataPreprocessor {
 
-    public MockDataPreprocessor(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterSet modelAdapterSet) {
-        super(sparkFactory, tableResolutionStrategy, modelAdapterSet);
+    public MockDataPreprocessor(Configuration configuration, SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy, ModelAdapterSet modelAdapterSet) {
+        super(configuration, sparkFactory, tableResolutionStrategy, modelAdapterSet);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package gov.va.sparkcql.pipeline.optimizer;
 
+import gov.va.sparkcql.domain.Plan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

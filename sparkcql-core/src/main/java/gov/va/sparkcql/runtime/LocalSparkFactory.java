@@ -6,14 +6,10 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-public class LocalSparkFactory extends SparkFactory {
-
-    public LocalSparkFactory(Configuration configuration) {
-        super(configuration);
-    }
+public class LocalSparkFactory implements SparkFactory {
 
     @Override
-    public SparkSession create() {
+    public SparkSession create(Configuration configuration) {
         // Overriding the root logger is seems to be the only way to prevent Spark INFO
         // logging. A bad practice for production but for local development it's fine.
         var rootLogger = Logger.getRootLogger();

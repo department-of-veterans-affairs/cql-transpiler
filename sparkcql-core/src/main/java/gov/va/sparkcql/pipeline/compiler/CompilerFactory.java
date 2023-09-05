@@ -4,11 +4,7 @@ import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.pipeline.ComponentFactory;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
 
-public abstract class CompilerFactory extends ComponentFactory {
-
-    public CompilerFactory(Configuration configuration) {
-        super(configuration);
-    }
-
-    public abstract Compiler create(CqlSourceRepository cqlSourceRepository);
+public interface CompilerFactory extends ComponentFactory {
+    
+    public Compiler create(Configuration configuration, CqlSourceRepository cqlSourceRepository);
 }

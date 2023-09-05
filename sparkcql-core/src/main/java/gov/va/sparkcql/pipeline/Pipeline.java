@@ -42,13 +42,13 @@ public class Pipeline implements Serializable {
     private final SparkSession spark;
 
     // Pipeline Components
-    private List<Preprocessor> preprocessors;
+    private final List<Preprocessor> preprocessors;
     private final Compiler compiler;
     private final Optimizer optimizer;
     private final Retriever retriever;
     private final ModelAdapterSet modelAdapterSet;
     private final Converger converger;
-    private EvaluatorFactory evaluatorFactory;
+    private final EvaluatorFactory evaluatorFactory;
     private final CqlSourceRepository cqlSourceRepository;
     private Object terminologyRepository;
 
@@ -67,33 +67,32 @@ public class Pipeline implements Serializable {
 
         // Construction Spark
         this.sparkFactory = injector.getInstance(SparkFactory.class);
-        this.spark = sparkFactory.create();
+        this.spark = sparkFactory.create(configuration);
 
         // Construct Model Adapters used to adapt model semantics to runtime.
         var modelAdapters = injector.getInstances(ModelAdapterFactory.class)
-                .stream().map(f -> f.create()).collect(Collectors.toList());
+                .stream().map(f -> f.create(configuration)).collect(Collectors.toList());
         this.modelAdapterSet = new ModelAdapterSet(modelAdapters);
 
         // Construct preprocessors which initialize the pipeline ahead of other stages.
         this.preprocessors = injector.getInstances(PreprocessorFactory.class)
-                .stream().map(f -> f.create(sparkFactory, modelAdapterSet)).collect(Collectors.toList());
+                .stream().map(f -> f.create(configuration, sparkFactory, modelAdapterSet)).collect(Collectors.toList());
 
         // Construct Compiler and CQL Source Repository used to fetch CQL scripts by the Compiler.
-        this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(sparkFactory);
-        this.compiler = injector.getInstance(CompilerFactory.class).create(cqlSourceRepository);
+        this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(configuration, sparkFactory);
+        this.compiler = injector.getInstance(CompilerFactory.class).create(configuration, cqlSourceRepository);
 
         // Construct Optimizer used to optimize the retrievals to satisfy data requirements.
-        this.optimizer = injector.getInstance(OptimizerFactory.class, DefaultOptimizerFactory.class).create();
+        this.optimizer = injector.getInstance(OptimizerFactory.class, DefaultOptimizerFactory.class).create(configuration);
 
         // Construct Converger used to bring join all retrieved feeds into a single "bundle".
-        this.converger = injector.getInstance(ConvergerFactory.class, DefaultConvergerFactory.class).create();
+        this.converger = injector.getInstance(ConvergerFactory.class, DefaultConvergerFactory.class).create(configuration);
 
         // Construct Retrievers which provide clinical data to the engine.
-        this.retriever = injector.getInstance(RetrieverFactory.class).create(sparkFactory);
+        this.retriever = injector.getInstance(RetrieverFactory.class).create(configuration, sparkFactory);
 
         // Construct Evaluator used as the CQL engine. Note that the Evaluator constructor
-        // requires a Plan which is created during pipeline execution. so defer its creation
-        // until later by just creating the factory but not the Evaluator just yet.
+        // requires a Plan which is created late during pipeline execution.
         this.evaluatorFactory = injector.getInstance(EvaluatorFactory.class);
 
         // Construct Terminology Repository which provide terminology data to the engine.
@@ -119,10 +118,13 @@ public class Pipeline implements Serializable {
 
     public EvaluationOutput execute(Plan plan, Map<String, Object> parameters) {
 
-        this.plan = plan;
-
         // Run all preprocessors before anything else.
         runPreprocessStage();
+
+        // Optimize the specified plan if not already.
+        if (!plan.isOptimized()) {
+            this.plan = getOptimizer().optimize(plan);
+        }
 
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
@@ -177,6 +179,7 @@ public class Pipeline implements Serializable {
             // whether the engine or its dependencies implements Serializable, we cannot
             // instantiate this call on the driver. It must be created on each executor.
             var evaluator = evaluatorFactory.create(
+                    this.configuration,
                     plan,
                     modelAdapterSet,
                     terminologyRepository);

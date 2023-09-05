@@ -19,16 +19,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CqfEvaluatorFactory extends EvaluatorFactory {
+public class CqfEvaluatorFactory implements EvaluatorFactory {
 
     private List<MutableCompositeDataProvider> dataProviders;
 
-    public CqfEvaluatorFactory(Configuration configuration) {
-        super(configuration);
-    }
-
     @Override
-    public Evaluator create(Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData) {
+    public Evaluator create(Configuration configuration, Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData) {
 
         // Adapt the libraries provided to this implementation by the SparkCQL runtime
         // to the CompiledLibrary type required by CQF.

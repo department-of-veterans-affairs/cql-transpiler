@@ -22,4 +22,6 @@ public interface Configuration extends Serializable {
     public <I> Configuration writeBinding(Class<I> interfaceClass, Class<? extends I> implementationClass);
 
     public <I> Configuration writeBinding(Class<I> interfaceClass, List<Class<? extends I>> implementationClasses);
+
+    public <I> boolean hasBinding(Class<I> interfaceClass);
 }

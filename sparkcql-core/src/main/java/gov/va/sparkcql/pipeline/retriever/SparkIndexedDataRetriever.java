@@ -1,5 +1,6 @@
 package gov.va.sparkcql.pipeline.retriever;
 
+import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.domain.Retrieval;
 import gov.va.sparkcql.log.Log;
 import org.apache.spark.api.java.JavaRDD;
@@ -22,8 +23,8 @@ public class SparkIndexedDataRetriever implements Retriever {
     protected SparkSession spark;
     protected TableResolutionStrategy tableResolutionStrategy;
 
-    public SparkIndexedDataRetriever(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
-        this.spark = sparkFactory.create();
+    public SparkIndexedDataRetriever(Configuration configuration, SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+        this.spark = sparkFactory.create(configuration);
         this.tableResolutionStrategy = tableResolutionStrategy;
     }
 

@@ -8,17 +8,13 @@ import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
 
-public class MockDataPreprocessorFactory extends PreprocessorFactory {
-
-    public MockDataPreprocessorFactory(Configuration configuration) {
-        super(configuration);
-    }
+public class MockDataPreprocessorFactory implements PreprocessorFactory {
 
     @Override
-    public Preprocessor create(SparkFactory sparkFactory, ModelAdapterSet modelAdapterSet) {
-        var tableResolutionStrategy = new Injector(getConfiguration())
+    public Preprocessor create(Configuration configuration, SparkFactory sparkFactory, ModelAdapterSet modelAdapterSet) {
+        var tableResolutionStrategy = new Injector(configuration)
                 .getInstance(TableResolutionStrategyFactory.class)
-                .create();
-        return new MockDataPreprocessor(sparkFactory, tableResolutionStrategy, modelAdapterSet);
+                .create(configuration);
+        return new MockDataPreprocessor(configuration, sparkFactory, tableResolutionStrategy, modelAdapterSet);
     }
 }

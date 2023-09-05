@@ -28,10 +28,10 @@ public class SparkIndexedDataRetrieverTest extends ServiceModule {
         var tableResolutionStrategy = new TemplateResolutionStrategy(
                 configuration.readSetting(TemplateResolutionStrategyFactory.TEMPLATE_RESOLUTION_STRATEGY)
                         .orElseThrow());
-        var dataLoader = new MockDataPreprocessor(getSparkFactory(), tableResolutionStrategy, modelAdapterSet);
+        var dataLoader = new MockDataPreprocessor(configuration, getSparkFactory(), tableResolutionStrategy, modelAdapterSet);
         dataLoader.apply();
 
-        var retriever = new SparkIndexedDataRetriever(getSparkFactory(), tableResolutionStrategy);
+        var retriever = new SparkIndexedDataRetriever(configuration, getSparkFactory(), tableResolutionStrategy);
 
         var r1 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockPatient"));
         var r2 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockEntity"));

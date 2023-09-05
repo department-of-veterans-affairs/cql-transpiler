@@ -12,8 +12,8 @@ public abstract class ServiceModule {
 
     public ServiceModule() {
         configuration = configure();
-        sparkFactory = new LocalSparkFactory(configuration);
-        spark = sparkFactory.create();
+        sparkFactory = new LocalSparkFactory();
+        spark = sparkFactory.create(configuration);
     }
 
     protected Configuration configure() {

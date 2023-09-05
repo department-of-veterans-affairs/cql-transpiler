@@ -99,4 +99,9 @@ public class EnvironmentConfiguration implements Configuration {
         this.writeSetting(interfaceClass.getCanonicalName(), concat);
         return this;
     }
+
+    @Override
+    public <I> boolean hasBinding(Class<I> interfaceClass) {
+        return this.readSetting(interfaceClass.getCanonicalName(), null) != null;
+    }
 }

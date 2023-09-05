@@ -15,6 +15,7 @@ public class FhirSyntheticDataPreprocessorTest extends ServiceModule {
     @Test
     public void should_mount_synthetic_data() {
         var preprocessor = new FhirSyntheticDataPreprocessor(
+                getConfiguration(),
                 getSparkFactory(),
                 new TemplateResolutionStrategy("${domain}"),
                 new ModelAdapterSet(List.of(new FhirModelAdapter())));

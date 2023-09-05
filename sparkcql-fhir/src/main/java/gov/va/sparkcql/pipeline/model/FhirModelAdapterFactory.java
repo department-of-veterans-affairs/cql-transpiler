@@ -2,14 +2,10 @@ package gov.va.sparkcql.pipeline.model;
 
 import gov.va.sparkcql.configuration.Configuration;
 
-public class FhirModelAdapterFactory extends ModelAdapterFactory {
-
-    public FhirModelAdapterFactory(Configuration configuration) {
-        super(configuration);
-    }
+public class FhirModelAdapterFactory implements ModelAdapterFactory {
 
     @Override
-    public ModelAdapter create() {
+    public ModelAdapter create(Configuration configuration) {
         return new FhirModelAdapter();
     }
 }
