@@ -75,11 +75,19 @@ public class Pipeline implements Serializable {
         this.modelAdapterSet = new ModelAdapterSet(modelAdapters);
 
         // Construct preprocessors which initialize the pipeline ahead of other stages.
-        this.preprocessors = injector.getInstances(PreprocessorFactory.class)
-                .stream().map(f -> f.create(configuration, sparkFactory, modelAdapterSet)).collect(Collectors.toList());
+        if (configuration.hasBinding(PreprocessorFactory.class)) {
+            this.preprocessors = injector.getInstances(PreprocessorFactory.class)
+                    .stream().map(f -> f.create(configuration, sparkFactory, modelAdapterSet)).collect(Collectors.toList());
+        } else {
+            this.preprocessors = List.of();
+        }
 
         // Construct Compiler and CQL Source Repository used to fetch CQL scripts by the Compiler.
-        this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(configuration, sparkFactory);
+        if (configuration.hasBinding(CqlSourceRepositoryFactory.class)) {
+            this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(configuration, sparkFactory);
+        } else {
+            this.cqlSourceRepository = null;
+        }
         this.compiler = injector.getInstance(CompilerFactory.class).create(configuration, cqlSourceRepository);
 
         // Construct Optimizer used to optimize the retrievals to satisfy data requirements.

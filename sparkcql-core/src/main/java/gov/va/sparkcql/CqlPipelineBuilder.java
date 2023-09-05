@@ -8,10 +8,10 @@ import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.log.Log;
 import gov.va.sparkcql.pipeline.Pipeline;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
-import gov.va.sparkcql.pipeline.converger.Converger;
+import gov.va.sparkcql.pipeline.converger.ConvergerFactory;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
 import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
-import gov.va.sparkcql.pipeline.optimizer.Optimizer;
+import gov.va.sparkcql.pipeline.optimizer.OptimizerFactory;
 import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
@@ -41,11 +41,11 @@ public class CqlPipelineBuilder {
         defaultBindings(SparkFactory.class, true);
         defaultBindings(PreprocessorFactory.class, false);
         defaultBindings(CompilerFactory.class, true);
-        defaultBindings(Optimizer.class, true);
+        defaultBindings(OptimizerFactory.class, true);
         defaultBindings(RetrieverFactory.class, true);
         defaultBindings(TableResolutionStrategyFactory.class, true);
         defaultBindings(ModelAdapterFactory.class, false);
-        defaultBindings(Converger.class, true);
+        defaultBindings(ConvergerFactory.class, true);
         defaultBindings(EvaluatorFactory.class, true);
     }
 
@@ -77,7 +77,7 @@ public class CqlPipelineBuilder {
         return this;
     }
 
-    public <I> CqlPipelineBuilder withBinding(Class<I> interfaceClass, Class<I> implementationClass) {
+    public <I> CqlPipelineBuilder withBinding(Class<I> interfaceClass, Class<? extends I> implementationClass) {
         configuration.writeBinding(interfaceClass, implementationClass);
         return this;
     }

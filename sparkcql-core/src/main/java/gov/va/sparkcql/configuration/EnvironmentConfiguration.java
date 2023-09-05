@@ -69,7 +69,11 @@ public class EnvironmentConfiguration implements Configuration {
         } else {
             bindingSetting = readSetting(
                     interfaceClass.getCanonicalName())
-                    .orElseThrow(() -> new RuntimeException("Unable to locate binding for interface " + interfaceClass.getCanonicalName()));
+                    .orElse("");
+
+            if (bindingSetting.isEmpty()) {
+                throw new RuntimeException("Unable to locate binding for interface " + interfaceClass.getCanonicalName());
+            }
         }
 
         // Since multi-bindings are defined as comma delimited lists, split and
@@ -102,6 +106,7 @@ public class EnvironmentConfiguration implements Configuration {
 
     @Override
     public <I> boolean hasBinding(Class<I> interfaceClass) {
-        return this.readSetting(interfaceClass.getCanonicalName(), null) != null;
+        var setting = this.readSetting(interfaceClass.getCanonicalName(), null);
+        return setting != null && !setting.isEmpty();
     }
 }
