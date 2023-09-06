@@ -190,8 +190,7 @@ public class CqlPipelineBuilder {
                 root.validate();
                 var pipeline = new Pipeline(root.getEffectiveConfiguration());
                 var plan = pipeline.plan(root.targetLibraries, root.additionalLibrarySources);
-                var results = pipeline.execute(plan);
-                return results.splitByContext();
+                return pipeline.execute(plan);
             }
         }
 
@@ -209,7 +208,7 @@ public class CqlPipelineBuilder {
                 var pipeline = new Pipeline(root.getEffectiveConfiguration());
                 var plan = pipeline.plan(root.targetLibraries, root.additionalLibrarySources);
                 var results = pipeline.execute(plan);
-                return results.splitByExprDef();
+                return null;
             }
         }
     }

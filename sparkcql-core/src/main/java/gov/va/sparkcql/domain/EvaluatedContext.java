@@ -1,7 +1,11 @@
 package gov.va.sparkcql.domain;
 
+import gov.va.sparkcql.io.Kryos;
 import scala.Tuple2;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 
@@ -43,5 +47,17 @@ public class EvaluatedContext implements Serializable {
                 "contextId='" + contextId + '\'' +
                 ", resultCount=" + expressionResults.size() +
                 '}';
+    }
+
+    private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+        // Kryo deserialization of nested objects which may not support Serializable.
+        var o = Kryos.read(input, EvaluatedContext.class);
+        this.contextId = o.contextId;
+        this.expressionResults = o.expressionResults;
+    }
+
+    private void writeObject(ObjectOutputStream output) throws IOException {
+        // Kryo serialization of nested objects which may not support Serializable.
+        Kryos.write(output, this);
     }
 }

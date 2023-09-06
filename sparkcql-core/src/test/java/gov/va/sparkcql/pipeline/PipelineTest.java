@@ -67,6 +67,6 @@ public class PipelineTest extends AbstractTest {
                 .withLibrary(reader.read(libraryContents));
         var pipeline = new Pipeline(this.configuration);
         var results = pipeline.execute(plan);
-        results.splitByContext().collect().forEach(System.out::println);
+        results.collect().forEach(System.out::println);
     }
 }

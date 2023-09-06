@@ -28,9 +28,10 @@ public class FhirIntegratedCapabilityTest extends AbstractTest {
                 .withConfig(configuration)
                 .evaluate(new QualifiedIdentifier().withId("FhirEngineConformity").withVersion("1.0"))
                 .byContext()
-                .run();
+                .run()
+                .collect();
 
-        r.collect().forEach(System.out::println);
+        r.forEach(System.out::println);
     }
 //
 //    @Test

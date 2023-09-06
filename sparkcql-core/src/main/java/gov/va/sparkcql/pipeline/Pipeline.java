@@ -21,6 +21,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
 
 import gov.va.sparkcql.runtime.SparkFactory;
@@ -33,6 +34,7 @@ import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
 import gov.va.sparkcql.pipeline.retriever.Retriever;
 import scala.Serializable;
+import scala.Tuple10;
 import scala.Tuple2;
 
 public class Pipeline implements Serializable {
@@ -120,11 +122,11 @@ public class Pipeline implements Serializable {
         return getOptimizer().optimize(unoptimizedPlan);
     }
 
-    public EvaluationOutput execute(Plan plan) {
+    public JavaRDD<EvaluatedContext> execute(Plan plan) {
         return execute(plan, null);
     }
 
-    public EvaluationOutput execute(Plan plan, Map<String, Object> parameters) {
+    public JavaRDD<EvaluatedContext> execute(Plan plan, Map<String, Object> parameters) {
 
         // Run all preprocessors before anything else.
         runPreprocessStage();
@@ -141,11 +143,17 @@ public class Pipeline implements Serializable {
         // so we can still look it up later.
         combinedOutput = runCombinerStage();
 
-        // Calculate each context across all measures via the provided engine
-        var evaluationOutput = runEvaluatorStage();
+        // Calculate each context across all measures via the provided engine and
+        // output results to client.
+        var evaluatedContextRdd = runEvaluatorStage();
 
-        // Output results to client
-        return new EvaluationOutput(evaluationOutput);
+        // TEST CODE
+        var x = evaluatedContextRdd.collect();
+        var r = spark.createDataFrame(evaluatedContextRdd, EvaluatedContext.class);
+        r.show();
+        // END
+
+        return evaluatedContextRdd;
     }
 
     private void runPreprocessStage() {

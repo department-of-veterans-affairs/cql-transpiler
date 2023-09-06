@@ -9,22 +9,17 @@ import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
-import org.hl7.elm.r1.Library;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.execution.CqlEngine;
 import org.opencds.cqf.cql.engine.execution.Environment;
-import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
+import org.opencds.cqf.cql.engine.runtime.Tuple;
 import scala.Tuple2;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CqfEvaluator implements Evaluator {
 
@@ -82,13 +77,68 @@ public class CqfEvaluator implements Evaluator {
                 var exprRef = new ExpressionReference()
                         .withLibraryIdentifier(library)
                         .withExpressionDefName(entry.getKey());
-                return Tuple2.apply(exprRef, List.of(entry.getValue().value()));
+
+                return Tuple2.apply(
+                        exprRef,
+                        convertResultValue(entry.getValue().value()));
             });
         }).collect(Collectors.toList());
 
         return new EvaluatedContext()
                 .withContextId(contextElementId)
                 .withExpressionResults(exprResults);
+    }
+
+    private List<Object> convertResultValue(Object value) {
+        // At the root level, a value from the Engine is typically a list of
+        // objects, each representing a row in the result set.
+
+        // If an iterable, collect it as an array to simplify logic. Since the evaluation design
+        // buffers all relevant data per context at the executor node there's no performance
+        // benefit to keeping it iterable.
+        if (value instanceof Iterable) {
+            var iterator = ((Iterable<?>)value).iterator();
+            var newList = new ArrayList<Object>();
+            while (iterator.hasNext())
+                newList.add(iterator.next());
+            value = newList;
+        }
+
+        if (value instanceof ArrayList) {
+            // For each array element, translate the type to remove any CQF dependencies
+            // and ensure any type used supports Serializable to allow spark broadcasting.
+            var a = (ArrayList<?>)value;
+            var r = a.stream().map(element -> {
+                // A CQL/CQF Tuple is really a name/value pair map. CQF adds a State object so
+                // convert to a native Java Map and drop any supplementary state.
+                if (element instanceof Tuple) {
+                    // If the tuple value contains nested expressions like Tuples or Lists,
+                    // process them recursively. Otherwise, its flat and use the value as-is.
+                    var tuple = (Tuple)element;
+                    return tuple.getElements().entrySet().stream().map(tupleElement -> {
+                        if (tupleElement instanceof ArrayList || tupleElement instanceof Tuple)
+                            return new AbstractMap.SimpleEntry<>(
+                                    tupleElement.getKey(),
+                                    (Object)convertResultValue(tupleElement.getValue()));
+                         else
+                            return tupleElement;
+                    }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                } else {
+                    // Return as-is with the assumption the value is expected.
+                    // TODO: Check type against a pre-generated whitelist of expected types using model adapters.
+                    return element;
+                }
+            }).collect(Collectors.toList());
+
+            return Collections.singletonList(r);
+        }
+
+        if (value == null)
+            return List.of();
+
+        // TODO: Check type against a pre-generated whitelist of expected types using model adapters.
+        return List.of(value);
+        // throw new RuntimeException("Unexpected result type '" + value.getClass().getSimpleName() + "' from CQF Engine");
     }
 
     private Map<String, DataProvider> buildDataProviders(ModelAdapterSet modelAdapterSet, Map<Retrieval, List<Object>> clinicalData) {

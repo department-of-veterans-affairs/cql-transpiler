@@ -4,6 +4,9 @@ dependencies {
     implementation "org.apache.spark:spark-core_2.12:${sparkVersion}"
     implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
 
+    implementation "com.esotericsoftware:kryo-shaded:${kryoVersion}"
+    implementation "com.twitter:chill-java:${chillVersion}"
+
     testImplementation(testFixtures(project(":sparkcql-core")))
     testFixturesImplementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
     testFixturesImplementation "info.cqframework:elm:${cqfVersion}"

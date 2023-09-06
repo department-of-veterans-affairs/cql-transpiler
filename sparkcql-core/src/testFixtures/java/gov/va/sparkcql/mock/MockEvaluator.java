@@ -11,8 +11,6 @@ import gov.va.sparkcql.pipeline.evaluator.Evaluator;
 import gov.va.sparkcql.domain.ExpressionReference;
 import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.hl7.elm.r1.ExpressionDef;
-import org.hl7.elm.r1.Library;
-import org.hl7.elm.r1.VersionedIdentifier;
 import scala.Tuple2;
 
 public class MockEvaluator implements Evaluator {
