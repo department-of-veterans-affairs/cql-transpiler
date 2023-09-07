@@ -1,15 +1,35 @@
 package gov.va.sparkcql.domain;
 
+import gov.va.sparkcql.types.QualifiedIdentifier;
+import gov.va.sparkcql.types.Tuple;
 import scala.Tuple2;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EvaluatedContext implements Serializable {
 
     private String contextId;
 
     private List<Tuple2<ExpressionReference, List<Object>>> expressionResults;
+
+    private List<QualifiedIdentifier> myData;
+
+    public List<QualifiedIdentifier> getMyData() {
+        return myData;
+    }
+
+    public void setMyData(List<QualifiedIdentifier> myData) {
+        this.myData = myData;
+    }
+
+    public EvaluatedContext withMyData(List<QualifiedIdentifier> myData) {
+        this.myData = myData;
+        return this;
+    }
 
     public String getContextId() {
         return contextId;
@@ -48,16 +68,4 @@ public class EvaluatedContext implements Serializable {
                 ", resultCount=" + size +
                 '}';
     }
-
-//    private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
-//        // Kryo deserialization of nested objects which may not support Serializable.
-//        var o = Kryos.read(input, EvaluatedContext.class);
-//        this.contextId = o.contextId;
-//        this.expressionResults = o.expressionResults;
-//    }
-//
-//    private void writeObject(ObjectOutputStream output) throws IOException {
-//        // Kryo serialization of nested objects which may not support Serializable.
-//        Kryos.write(output, this);
-//    }
 }

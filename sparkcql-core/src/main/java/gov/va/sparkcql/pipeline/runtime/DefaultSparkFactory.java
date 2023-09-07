@@ -9,8 +9,6 @@ public class DefaultSparkFactory implements SparkFactory {
     public SparkSession create(Configuration configuration) {
         return SparkSession
                 .builder()
-                .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-                .config("spark.kryo.registrator", "gov.va.sparkcql.pipeline.model.DefaultKryoRegistrator")
                 .getOrCreate();
     }
 }

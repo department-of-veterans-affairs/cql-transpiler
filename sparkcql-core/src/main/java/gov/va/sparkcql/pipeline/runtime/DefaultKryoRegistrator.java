@@ -19,7 +19,7 @@ public class DefaultKryoRegistrator implements KryoRegistrator {
     @Override
     public void registerClasses(Kryo kryo) {
         // Injection requires configuration but since Spark is calling us we
-        // can't control the context so we must use a default configuration.
+        // can't control the context, so we must use a default configuration.
         Configuration configuration = new EnvironmentConfiguration();
 
         // Apply External Registrars
@@ -28,7 +28,7 @@ public class DefaultKryoRegistrator implements KryoRegistrator {
 
         // Register native classes defined in Core.
         kryo.register(Plan.class);
-        kryo.register(EvaluatedContext.class);
+        kryo.register(EvaluatedContext.class, new JavaSerializer());
 
         // Register provided classes.
         var injector = new Injector(configuration);
