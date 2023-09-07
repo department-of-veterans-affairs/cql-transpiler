@@ -1,4 +1,4 @@
-package gov.va.sparkcql.runtime;
+package gov.va.sparkcql.pipeline.runtime;
 
 import gov.va.sparkcql.log.Log;
 import org.apache.spark.sql.AnalysisException;

@@ -7,5 +7,5 @@ import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 
 public interface EvaluatorFactory extends ComponentFactory {
 
-    public abstract Evaluator create(Configuration configuration, Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData);
+    public Evaluator create(Configuration configuration, Plan plan, ModelAdapterSet modelAdapterSet, Object terminologyData);
 }

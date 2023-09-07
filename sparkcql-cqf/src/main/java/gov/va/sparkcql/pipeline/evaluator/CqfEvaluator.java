@@ -128,9 +128,9 @@ public class CqfEvaluator implements Evaluator {
                     // TODO: Check type against a pre-generated whitelist of expected types using model adapters.
                     return element;
                 }
-            }).collect(Collectors.toList());
+            });
 
-            return Collections.singletonList(r);
+            return new ArrayList<Object>(Collections.singletonList(r));
         }
 
         if (value == null)

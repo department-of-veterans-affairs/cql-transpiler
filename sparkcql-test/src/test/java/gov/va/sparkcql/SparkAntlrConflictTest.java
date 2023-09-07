@@ -1,9 +1,9 @@
 package gov.va.sparkcql;
 
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.runtime.LocalSparkFactory;
+import gov.va.sparkcql.pipeline.runtime.LocalSparkFactory;
 
 public class SparkAntlrConflictTest extends AbstractTest {
 

@@ -13,6 +13,7 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
+    implementation "com.esotericsoftware:kryo-shaded:${kryoVersion}"
     implementation "org.scala-lang:scala-library:${scalaVersion}"
 
     implementation "info.cqframework:cql:${cqfVersion}"

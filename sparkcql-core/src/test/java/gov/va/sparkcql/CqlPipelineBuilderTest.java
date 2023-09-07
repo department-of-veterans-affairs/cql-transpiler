@@ -4,7 +4,7 @@ import gov.va.sparkcql.pipeline.converger.ConvergerFactory;
 import gov.va.sparkcql.pipeline.optimizer.OptimizerFactory;
 import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.ServiceLoader;

@@ -42,7 +42,7 @@ public final class Injector {
     public <I> List<? extends I> internalGetInstances(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass, boolean hasDefault) {
         // In the special case where the interface being requested is a Configuration
         // then return the configuration we already have. This is important b/c it's this
-        // configuration which contains vital binding definitions configured earlier in the stack.
+        // configuration which contains vital context configured earlier in the stack.
         if (interfaceClass == Configuration.class || interfaceClass == EnvironmentConfiguration.class)
             return List.of((I)this.configuration);
 

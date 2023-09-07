@@ -3,7 +3,7 @@ package gov.va.sparkcql.mock;
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.configuration.Injector;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;

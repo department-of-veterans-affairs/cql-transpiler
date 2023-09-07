@@ -13,7 +13,7 @@ import static org.apache.spark.sql.functions.col;
 
 import java.util.List;
 
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 

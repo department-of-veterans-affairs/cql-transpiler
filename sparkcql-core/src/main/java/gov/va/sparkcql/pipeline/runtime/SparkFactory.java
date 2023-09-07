@@ -1,4 +1,4 @@
-package gov.va.sparkcql.runtime;
+package gov.va.sparkcql.pipeline.runtime;
 
 import gov.va.sparkcql.pipeline.ComponentFactory;
 import gov.va.sparkcql.configuration.Configuration;

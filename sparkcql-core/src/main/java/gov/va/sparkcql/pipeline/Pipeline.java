@@ -21,10 +21,9 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
 
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.converger.Converger;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
@@ -34,7 +33,6 @@ import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
 import gov.va.sparkcql.pipeline.retriever.Retriever;
 import scala.Serializable;
-import scala.Tuple10;
 import scala.Tuple2;
 
 public class Pipeline implements Serializable {
@@ -64,6 +62,7 @@ public class Pipeline implements Serializable {
     private JavaPairRDD<String, EvaluatedContext> evaluationOutput;
 
     public Pipeline(Configuration configuration) {
+        // TODO: These dependencies should be passed in and not resolve hence the purpose of the builder
         this.configuration = configuration;
         var injector = new Injector(configuration);
 
@@ -73,7 +72,9 @@ public class Pipeline implements Serializable {
 
         // Construct Model Adapters used to adapt model semantics to runtime.
         var modelAdapters = injector.getInstances(ModelAdapterFactory.class)
-                .stream().map(f -> f.create(configuration)).collect(Collectors.toList());
+                .stream().map(f -> f.create(configuration))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         this.modelAdapterSet = new ModelAdapterSet(modelAdapters);
 
         // Construct preprocessors which initialize the pipeline ahead of other stages.

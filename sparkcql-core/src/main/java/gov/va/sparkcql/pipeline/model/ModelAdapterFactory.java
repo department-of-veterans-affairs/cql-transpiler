@@ -5,5 +5,5 @@ import gov.va.sparkcql.pipeline.ComponentFactory;
 
 public interface ModelAdapterFactory extends ComponentFactory {
 
-    public abstract ModelAdapter create(Configuration configuration);
+    public ModelAdapter create(Configuration configuration);
 }

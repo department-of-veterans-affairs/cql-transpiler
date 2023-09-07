@@ -2,8 +2,8 @@ package gov.va.sparkcql.pipeline.preprocessor;
 
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
-import gov.va.sparkcql.runtime.SparkCatalog;
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkCatalog;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 import gov.va.sparkcql.types.DataType;

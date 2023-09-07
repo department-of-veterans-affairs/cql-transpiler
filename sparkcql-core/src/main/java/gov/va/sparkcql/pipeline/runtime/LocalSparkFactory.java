@@ -1,4 +1,4 @@
-package gov.va.sparkcql.runtime;
+package gov.va.sparkcql.pipeline.runtime;
 
 import gov.va.sparkcql.configuration.Configuration;
 import org.apache.spark.sql.SparkSession;
@@ -10,7 +10,7 @@ public class LocalSparkFactory implements SparkFactory {
 
     @Override
     public SparkSession create(Configuration configuration) {
-        // Overriding the root logger is seems to be the only way to prevent Spark INFO
+        // Overriding the root logger seems to be the only way to prevent Spark INFO
         // logging. A bad practice for production but for local development it's fine.
         var rootLogger = Logger.getRootLogger();
         rootLogger.setLevel(Level.FATAL);
@@ -23,6 +23,8 @@ public class LocalSparkFactory implements SparkFactory {
         // Build a spark session.
         var spark = SparkSession.builder()
                 .master("local[2]")
+                .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+                .config("spark.kryo.registrator", "gov.va.sparkcql.pipeline.runtime.DefaultKryoRegistrator")
                 .getOrCreate();
 
         // Set the preferred log level again but at the newly created context level.

@@ -15,7 +15,7 @@ import gov.va.sparkcql.pipeline.optimizer.OptimizerFactory;
 import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategyFactory;
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.apache.spark.api.java.JavaRDD;
 

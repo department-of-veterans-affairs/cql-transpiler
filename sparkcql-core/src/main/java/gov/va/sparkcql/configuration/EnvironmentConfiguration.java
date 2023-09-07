@@ -1,5 +1,7 @@
 package gov.va.sparkcql.configuration;
 
+import gov.va.sparkcql.log.Log;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,7 +80,8 @@ public class EnvironmentConfiguration implements Configuration {
                     .orElse("");
 
             if (bindingSetting.isEmpty()) {
-                throw new RuntimeException("Unable to locate binding for interface " + interfaceClass.getCanonicalName());
+                Log.warn("Unable to locate binding for interface " + interfaceClass.getCanonicalName());
+                return List.of();
             }
         }
 

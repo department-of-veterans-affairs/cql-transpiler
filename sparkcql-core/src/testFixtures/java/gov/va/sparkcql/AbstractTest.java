@@ -11,8 +11,8 @@ import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepositoryFactory;
 import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.SparkIndexedDataRetrieverFactory;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategyFactory;
-import gov.va.sparkcql.runtime.LocalSparkFactory;
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.LocalSparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import org.apache.spark.sql.SparkSession;
 
 import static gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepositoryFactory.CQL_SOURCE_FILE_REPOSITORY_PATH;
