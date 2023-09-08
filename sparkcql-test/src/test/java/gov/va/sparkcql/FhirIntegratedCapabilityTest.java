@@ -4,7 +4,6 @@ import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.compiler.CqfCompilerFactory;
 import gov.va.sparkcql.pipeline.evaluator.CqfEvaluatorFactory;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
-import gov.va.sparkcql.pipeline.model.CqfKryoRegistrar;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapterFactory;
 import gov.va.sparkcql.pipeline.model.ModelAdapterFactory;
 import gov.va.sparkcql.pipeline.preprocessor.FhirSyntheticDataPreprocessorFactory;
