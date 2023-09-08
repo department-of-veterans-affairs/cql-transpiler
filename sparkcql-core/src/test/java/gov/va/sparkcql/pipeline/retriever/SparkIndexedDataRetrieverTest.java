@@ -5,7 +5,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import gov.va.sparkcql.AbstractTest;
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import gov.va.sparkcql.mock.MockDataPreprocessor;
 import gov.va.sparkcql.mock.MockModelAdapter;
 import gov.va.sparkcql.pipeline.retriever.resolution.TemplateResolutionStrategyFactory;
@@ -33,8 +33,8 @@ public class SparkIndexedDataRetrieverTest extends AbstractTest {
 
         var r1 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockPatient"));
         var r2 = new Retrieve().withDataType(new QName("http://va.gov/sparkcql/mock", "MockEntity"));
-        var rdd1 = retriever.retrieve(Retrieval.of(r1), modelAdapterSet);
-        var rdd2 = retriever.retrieve(Retrieval.of(r2), modelAdapterSet);
+        var rdd1 = retriever.retrieve(RetrieveDefinition.of(r1), modelAdapterSet);
+        var rdd2 = retriever.retrieve(RetrieveDefinition.of(r2), modelAdapterSet);
         assertEquals(3, rdd1.count());
         assertEquals(4, rdd2.count());
     }

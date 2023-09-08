@@ -1,6 +1,6 @@
 package gov.va.sparkcql.pipeline.evaluator;
 
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import org.opencds.cqf.cql.engine.retrieve.RetrieveProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Interval;
@@ -8,14 +8,13 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class RetrieveProviderAdapter implements RetrieveProvider {
 
-    Map<Retrieval, List<Object>> clinicalData;
+    Map<RetrieveDefinition, List<Object>> clinicalData;
 
-    public RetrieveProviderAdapter(Map<Retrieval, List<Object>> clinicalData) {
+    public RetrieveProviderAdapter(Map<RetrieveDefinition, List<Object>> clinicalData) {
         this.clinicalData = clinicalData;
     }
 
@@ -35,7 +34,7 @@ public class RetrieveProviderAdapter implements RetrieveProvider {
                         return true;
                     } else {
                         var conditionsMet = r.getFilters().stream().filter(f -> {
-                            if (f.getComparator() == Retrieval.Comparator.IN) {
+                            if (f.getComparator() == RetrieveDefinition.Comparator.IN) {
                                 return f.getProperty().equals(codePath) && f.getValue().equals(valueSet);
                             }
                             return false;

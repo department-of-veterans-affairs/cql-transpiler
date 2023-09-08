@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.va.sparkcql.domain.EvaluatedContext;
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 
 import gov.va.sparkcql.log.Log;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
@@ -19,7 +19,7 @@ public class MockEvaluator implements Evaluator {
     }
 
     @Override
-    public EvaluatedContext evaluate(String contextElementId, Map<Retrieval, List<Object>> clinicalData) {
+    public EvaluatedContext evaluate(String contextElementId, Map<RetrieveDefinition, List<Object>> clinicalData) {
         Log.info("Evaluating Context Element: " + contextElementId);
 
         var evaluated = clinicalData.values().stream().flatMap(List::stream).toList();

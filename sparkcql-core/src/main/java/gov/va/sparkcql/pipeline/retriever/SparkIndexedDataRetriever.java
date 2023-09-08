@@ -1,7 +1,7 @@
 package gov.va.sparkcql.pipeline.retriever;
 
 import gov.va.sparkcql.configuration.Configuration;
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import gov.va.sparkcql.log.Log;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
@@ -29,11 +29,11 @@ public class SparkIndexedDataRetriever implements Retriever {
     }
 
     @Override
-    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterSet modelAdapterSet) {
+    public JavaRDD<Object> retrieve(RetrieveDefinition retrieveDefinition, ModelAdapterSet modelAdapterSet) {
         
         // Acquire data for the retrieve operation with the assumption the data columns contains
         // the encoded data and additional promoted columns are provided to assist with filtering.
-        var dataType = retrieval.getDataType();
+        var dataType = retrieveDefinition.getDataType();
         var indexedDs = spark.table(tableResolutionStrategy.resolveTableBinding(dataType));
 
         // Validate the source table conforms to the required "indexed" schematic.
@@ -42,7 +42,7 @@ public class SparkIndexedDataRetriever implements Retriever {
 
         // Apply filters defined by the retrieve operation. These are calculated during the
         // generation of the ELM and subsequent optimization phase.
-        applyFilters(indexedDs, retrieval);
+        applyFilters(indexedDs, retrieveDefinition);
 
         // Lookup the model adapter for the given data type and use it to decode the data.
         var modelAdapter = modelAdapterSet.forType(dataType);
@@ -52,20 +52,20 @@ public class SparkIndexedDataRetriever implements Retriever {
         return encodedDs.as(encoder).javaRDD();
     }
 
-    private Dataset<Row> applyFilters(Dataset<Row> ds, Retrieval retrieval) {
-        ds = applyCodeInFilter(ds, retrieval);
-        ds = applyDateFilter(ds, retrieval);
+    private Dataset<Row> applyFilters(Dataset<Row> ds, RetrieveDefinition retrieveDefinition) {
+        ds = applyCodeInFilter(ds, retrieveDefinition);
+        ds = applyDateFilter(ds, retrieveDefinition);
         return ds;
     }
 
-    private Dataset<Row> applyCodeInFilter(Dataset<Row> ds, Retrieval retrieval) {
+    private Dataset<Row> applyCodeInFilter(Dataset<Row> ds, RetrieveDefinition retrieveDefinition) {
 //        var filter = retrieval.getCodeFilter();
 //        if (!filter.isEmpty())
 //            throw new UnsupportedOperationException();
         return ds;
     }
 
-    private Dataset<Row> applyDateFilter(Dataset<Row> ds, Retrieval retrieval) {
+    private Dataset<Row> applyDateFilter(Dataset<Row> ds, RetrieveDefinition retrieveDefinition) {
 //        var filter = retrieval.getDateFilter();
 //        if (!filter.isEmpty())
 //            throw new UnsupportedOperationException();

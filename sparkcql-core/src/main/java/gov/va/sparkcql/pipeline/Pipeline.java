@@ -57,8 +57,8 @@ public class Pipeline implements Serializable {
     private Plan plan;
 
     // Stage Output
-    private Map<Retrieval, JavaRDD<Object>> retrievalOutput;
-    private JavaPairRDD<String, Map<Retrieval, List<Object>>> combinedOutput;
+    private Map<RetrieveDefinition, JavaRDD<Object>> retrievalOutput;
+    private JavaPairRDD<String, Map<RetrieveDefinition, List<Object>>> combinedOutput;
     private JavaPairRDD<String, EvaluatedContext> evaluationOutput;
 
     public Pipeline(Configuration configuration) {
@@ -161,21 +161,21 @@ public class Pipeline implements Serializable {
         getPreprocessors().forEach(Preprocessor::apply);
     }
 
-    private Map<Retrieval, JavaRDD<Object>> runRetrievalStage() {
+    private Map<RetrieveDefinition, JavaRDD<Object>> runRetrievalStage() {
         return plan.getRetrieves().stream()
                 .collect(Collectors.toMap(r -> r, r -> {
                     return getRetriever().retrieve(r, getModelAdapterCollection());
                 }));
     }
 
-    private JavaPairRDD<String, Map<Retrieval, List<Object>>> runCombinerStage() {
+    private JavaPairRDD<String, Map<RetrieveDefinition, List<Object>>> runCombinerStage() {
         // No retrievals found is an indicator of a CQL which only contain literal
         // definitions, mostly for testing scenarios. While there's little real-world
         // value for these kinds of definitions, we shouldn't error and should at least
         // return a zero-record dataset.
         if (retrievalOutput.isEmpty()) {
             var sc = JavaSparkContext.fromSparkContext(spark.sparkContext());
-            List<Tuple2<String, Map<Retrieval, List<Object>>>> emptyList = List.of();
+            List<Tuple2<String, Map<RetrieveDefinition, List<Object>>>> emptyList = List.of();
             return sc.parallelizePairs(emptyList);
         }
 
@@ -184,7 +184,7 @@ public class Pipeline implements Serializable {
 
     private JavaRDD<EvaluatedContext> runEvaluatorStage() {
 
-        return combinedOutput.mapPartitions((FlatMapFunction<Iterator<Tuple2<String, Map<Retrieval, List<Object>>>>, EvaluatedContext>) row -> {
+        return combinedOutput.mapPartitions((FlatMapFunction<Iterator<Tuple2<String, Map<RetrieveDefinition, List<Object>>>>, EvaluatedContext>) row -> {
 
             // NOTE: Everything within mapPartitions is running on the executor nodes.
             // Any one-time initialization per partition (aka across several rows) should
@@ -216,7 +216,7 @@ public class Pipeline implements Serializable {
         }, true);
     }
 
-    EvaluatedContext runEvaluatorContextElement(Evaluator evaluator, Tuple2<String, Map<Retrieval, List<Object>>> row) {
+    EvaluatedContext runEvaluatorContextElement(Evaluator evaluator, Tuple2<String, Map<RetrieveDefinition, List<Object>>> row) {
         return evaluator.evaluate(row._1, row._2);
     }
 

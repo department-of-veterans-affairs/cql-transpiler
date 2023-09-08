@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
@@ -15,7 +15,7 @@ import scala.Tuple2;
 public class DefaultConverger implements Converger {
 
     @Override
-    public JavaPairRDD<String, Map<Retrieval, List<Object>>> converge(Map<Retrieval, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterSet modelAdapterSet) {
+    public JavaPairRDD<String, Map<RetrieveDefinition, List<Object>>> converge(Map<RetrieveDefinition, JavaRDD<Object>> retrieveMap, Plan plan, ModelAdapterSet modelAdapterSet) {
 
         // Group each dataset by the context and collect its interior clinical data as a
         // nested list so there's one outer row per member.
@@ -65,7 +65,7 @@ public class DefaultConverger implements Converger {
             return left
                 .join(right)
                 .mapToPair(i -> {
-                    var m = new HashMap<Retrieval, List<Object>>();
+                    var m = new HashMap<RetrieveDefinition, List<Object>>();
                     m.putAll(i._2._1);
                     m.putAll(i._2._2);
                     return Tuple2.apply(i._1, Collections.unmodifiableMap(m));

@@ -1,7 +1,7 @@
 package gov.va.sparkcql.pipeline.retriever;
 
 import gov.va.sparkcql.AbstractTest;
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import gov.va.sparkcql.io.AssetFolder;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
@@ -23,7 +23,7 @@ public class BundleRetrieverTest extends AbstractTest {
     }
 
     private void checkRetrieveForResourceType(String resourceType, int expectedCount) {
-        var retrieval = new Retrieval()
+        var retrieval = new RetrieveDefinition()
                 .withDataType(new DataType("http://hl7.org/fhir", resourceType));
         var modelAdapter = new FhirModelAdapter();
         var modelAdapterSet = new ModelAdapterSet(List.of(modelAdapter));

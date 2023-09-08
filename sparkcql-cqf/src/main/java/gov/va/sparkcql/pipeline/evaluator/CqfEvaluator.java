@@ -3,7 +3,7 @@ package gov.va.sparkcql.pipeline.evaluator;
 import gov.va.sparkcql.domain.EvaluatedContext;
 import gov.va.sparkcql.domain.ExpressionReference;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import gov.va.sparkcql.pipeline.model.ModelAdapter;
 import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
@@ -53,7 +53,7 @@ public class CqfEvaluator implements Evaluator {
     }
 
     @Override
-    public EvaluatedContext evaluate(String contextElementId, Map<Retrieval, List<Object>> clinicalData) {
+    public EvaluatedContext evaluate(String contextElementId, Map<RetrieveDefinition, List<Object>> clinicalData) {
 
         // The DataProvider adapter combines Model and Retriever, and is a dependent of
         // Environment, so it must be recreated each row execution.
@@ -141,7 +141,7 @@ public class CqfEvaluator implements Evaluator {
         // throw new RuntimeException("Unexpected result type '" + value.getClass().getSimpleName() + "' from CQF Engine");
     }
 
-    private Map<String, DataProvider> buildDataProviders(ModelAdapterSet modelAdapterSet, Map<Retrieval, List<Object>> clinicalData) {
+    private Map<String, DataProvider> buildDataProviders(ModelAdapterSet modelAdapterSet, Map<RetrieveDefinition, List<Object>> clinicalData) {
         return modelAdapterSet.getNamespaces().stream()
                 .collect(Collectors.toMap(
                         k -> k,
