@@ -6,17 +6,10 @@ import java.util.List;
 
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.ElmWriter;
-import gov.va.sparkcql.pipeline.compiler.CqfCompiler;
-import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepositoryFactory;
 import gov.va.sparkcql.types.QualifiedIdentifier;
-import org.hl7.cql_annotations.r1.CqlToElmError;
-import org.hl7.elm.r1.Library;
-import org.hl7.elm.r1.VersionedIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.configuration.EnvironmentConfiguration;
-import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceFileRepository;
 
 public class CqfCompilerTest {
@@ -33,8 +26,7 @@ public class CqfCompilerTest {
     public void should_compile_a_literal_cql() {
         assertEquals(
                 "MyLibrary",
-                compiler
-                        .compile("library MyLibrary version '1'")
+                compiler.compile("library MyLibrary version '1'")
                         .getLibrary(0).orElseThrow().getIdentifier().getId());
     }
 
@@ -74,11 +66,26 @@ public class CqfCompilerTest {
     }
 
     @Test
+    public void should_generate_elms() {
+        // Utility method to create ELMs for testing elsewhere
+        var output = compiler.compile(List.of(new QualifiedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
+        assertLibraries(1, output);
+    }
+
+    @Test
     public void should_allow_file_repository_loading() {
         // Compiling by ID will force use of the CqlSourceFileRepository.
         var output = compiler.compile(List.of(new QualifiedIdentifier().withId("ComplexLiteral").withVersion("2.1")));
-        var json = output.getLibraries().get(0);
         assertLibraries(1, output);
+    }
+
+    @Test
+    public void should_combine_identified_and_anonymous_modules() {
+        var output = compiler.compile(
+                List.of(new QualifiedIdentifier().withId("ComplexLiteral").withVersion("2.1")),
+                "define myconst: 123"
+        );
+        assertLibraries(2, output);
     }
 
     private void assertLibraries(int expectedCount, Plan plan) {

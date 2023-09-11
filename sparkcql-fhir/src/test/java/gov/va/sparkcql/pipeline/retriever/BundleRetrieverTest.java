@@ -1,10 +1,10 @@
 package gov.va.sparkcql.pipeline.retriever;
 
-import gov.va.sparkcql.configuration.ServiceModule;
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.AbstractTest;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import gov.va.sparkcql.io.AssetFolder;
 import gov.va.sparkcql.pipeline.model.FhirModelAdapter;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.types.DataType;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BundleRetrieverTest extends ServiceModule {
+public class BundleRetrieverTest extends AbstractTest {
 
     @Test
     public void should_retrieve_patients_from_bundled_resources() {
@@ -23,12 +23,15 @@ public class BundleRetrieverTest extends ServiceModule {
     }
 
     private void checkRetrieveForResourceType(String resourceType, int expectedCount) {
-        var retrieval = new Retrieval()
+        var retrieval = new RetrieveDefinition()
                 .withDataType(new DataType("http://hl7.org/fhir", resourceType));
         var modelAdapter = new FhirModelAdapter();
-        var modelAdapterComposite = new ModelAdapterComposite(List.of(modelAdapter));
-        var retriever = new BundleRetriever(getSparkFactory(), AssetFolder.of("resource://bundles"));
-        var bundles = retriever.retrieve(retrieval, modelAdapterComposite);
+        var modelAdapterSet = new ModelAdapterSet(List.of(modelAdapter));
+        var retriever = new BundleRetriever(
+                configuration,
+                sparkFactory,
+                AssetFolder.of("resource://fhir/bundles"));
+        var bundles = retriever.retrieve(retrieval, modelAdapterSet);
         assertEquals(expectedCount, bundles.count());
     }
 }

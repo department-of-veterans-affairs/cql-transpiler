@@ -19,15 +19,15 @@ import gov.va.sparkcql.pipeline.retriever.RetrieverFactory;
 import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.sql.SparkSession;
-import org.hl7.elm.r1.VersionedIdentifier;
 
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import gov.va.sparkcql.pipeline.converger.Converger;
 import gov.va.sparkcql.pipeline.compiler.Compiler;
 import gov.va.sparkcql.pipeline.evaluator.Evaluator;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.pipeline.optimizer.Optimizer;
 import gov.va.sparkcql.pipeline.preprocessor.Preprocessor;
 import gov.va.sparkcql.pipeline.repository.cql.CqlSourceRepository;
@@ -38,123 +38,102 @@ import scala.Tuple2;
 public class Pipeline implements Serializable {
 
     private final Configuration configuration;
-
     private final SparkFactory sparkFactory;
-
     private final SparkSession spark;
 
     // Pipeline Components
-    private List<Preprocessor> preprocessors;
-
+    private final List<Preprocessor> preprocessors;
     private final Compiler compiler;
-
     private final Optimizer optimizer;
-
     private final Retriever retriever;
-
-    private final ModelAdapterComposite modelAdapterComposite;
-
+    private final ModelAdapterSet modelAdapterSet;
     private final Converger converger;
-
-    private Evaluator evaluator;
-
-    private EvaluatorFactory evaluatorFactory;
-
+    private final EvaluatorFactory evaluatorFactory;
     private final CqlSourceRepository cqlSourceRepository;
-
     private Object terminologyRepository;
 
     // Invocation
     private Map<String, Object> parameters;
+    private Plan plan;
 
     // Stage Output
-    private Plan compiledPlanOutput;
-
-    private Plan plannedOutput;
-
-    private Map<Retrieval, JavaRDD<Object>> retrievalOutput;
-
-    private JavaPairRDD<String, Map<Retrieval, List<Object>>> combinedOutput;
-
+    private Map<RetrieveDefinition, JavaRDD<Object>> retrievalOutput;
+    private JavaPairRDD<String, Map<RetrieveDefinition, List<Object>>> combinedOutput;
     private JavaPairRDD<String, EvaluatedContext> evaluationOutput;
 
     public Pipeline(Configuration configuration) {
+        // TODO: These dependencies should be passed in and not resolve hence the purpose of the builder
         this.configuration = configuration;
         var injector = new Injector(configuration);
 
         // Construction Spark
         this.sparkFactory = injector.getInstance(SparkFactory.class);
-        this.spark = sparkFactory.create();
-
-        // Construct preprocessors which initialize the pipeline ahead of other stages.
-        this.preprocessors = injector.getInstances(PreprocessorFactory.class)
-                .stream().map(f -> f.create(sparkFactory)).collect(Collectors.toList());
+        this.spark = sparkFactory.create(configuration);
 
         // Construct Model Adapters used to adapt model semantics to runtime.
         var modelAdapters = injector.getInstances(ModelAdapterFactory.class)
-                .stream().map(f -> f.create()).collect(Collectors.toList());
-        this.modelAdapterComposite = new ModelAdapterComposite(modelAdapters);
+                .stream().map(f -> f.create(configuration))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        this.modelAdapterSet = new ModelAdapterSet(modelAdapters);
+
+        // Construct preprocessors which initialize the pipeline ahead of other stages.
+        if (configuration.hasBinding(PreprocessorFactory.class)) {
+            this.preprocessors = injector.getInstances(PreprocessorFactory.class)
+                    .stream().map(f -> f.create(configuration, sparkFactory, modelAdapterSet)).collect(Collectors.toList());
+        } else {
+            this.preprocessors = List.of();
+        }
 
         // Construct Compiler and CQL Source Repository used to fetch CQL scripts by the Compiler.
-        this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(sparkFactory);
-        this.compiler = injector.getInstance(CompilerFactory.class).create(cqlSourceRepository);
+        if (configuration.hasBinding(CqlSourceRepositoryFactory.class)) {
+            this.cqlSourceRepository = injector.getInstance(CqlSourceRepositoryFactory.class).create(configuration, sparkFactory);
+        } else {
+            this.cqlSourceRepository = null;
+        }
+        this.compiler = injector.getInstance(CompilerFactory.class).create(configuration, cqlSourceRepository);
 
         // Construct Optimizer used to optimize the retrievals to satisfy data requirements.
-        this.optimizer = injector.getInstance(OptimizerFactory.class, DefaultOptimizerFactory.class).create();
+        this.optimizer = injector.getInstance(OptimizerFactory.class, DefaultOptimizerFactory.class).create(configuration);
 
         // Construct Converger used to bring join all retrieved feeds into a single "bundle".
-        this.converger = injector.getInstance(ConvergerFactory.class, DefaultConvergerFactory.class).create();
+        this.converger = injector.getInstance(ConvergerFactory.class, DefaultConvergerFactory.class).create(configuration);
 
         // Construct Retrievers which provide clinical data to the engine.
-        this.retriever = injector.getInstance(RetrieverFactory.class).create(sparkFactory);
+        this.retriever = injector.getInstance(RetrieverFactory.class).create(configuration, sparkFactory);
 
         // Construct Evaluator used as the CQL engine. Note that the Evaluator constructor
-        // requires a Plan which is created during pipeline execution. so defer its creation
-        // until later by just creating the factory but not the Evaluator just yet.
+        // requires a Plan which is created late during pipeline execution.
         this.evaluatorFactory = injector.getInstance(EvaluatorFactory.class);
 
         // Construct Terminology Repository which provide terminology data to the engine.
         // TODO
     }
 
-    public EvaluationResultSet execute(String libraryName, String version, Map<String, Object> parameters) {
-        this.compiledPlanOutput = getCompiler().compile(List.of(new QualifiedIdentifier().withId(libraryName).withVersion(version)));
-        this.parameters = parameters;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet execute(String libraryName, String version) {
-        return execute(libraryName, version, Map.of());
-    }
-
-    public EvaluationResultSet execute(String cqlSource, Map<String, Object> parameters) {
-        compiledPlanOutput = getCompiler().compile(cqlSource);
-        this.parameters = parameters;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet execute(String cqlSource) {
-        return execute(cqlSource, Map.of());
-    }
-
-    public EvaluationResultSet execute(Plan plan, Map<String, Object> parameters) {
-        this.compiledPlanOutput = plan;
-        this.parameters = parameters;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet execute(Plan plan) {
-        this.compiledPlanOutput = plan;
-        return runPipeline();
-    }
-
-    public EvaluationResultSet runPipeline() {
+    public Plan plan(List<QualifiedIdentifier> targetIdentifiedLibraries, List<String> targetAnonymousLibraries) {
 
         // Run all preprocessors before anything else.
         runPreprocessStage();
 
+        // Compile all target CQL sources (identified or anonymous) into an ELM list.
+        var anonymousLibraries = targetAnonymousLibraries.toArray(new String[0]);
+        var unoptimizedPlan = getCompiler().compile(targetIdentifiedLibraries, anonymousLibraries);
+
         // Produce an optimized execution plan using the compiled ELMs.
-        plannedOutput = runOptimizerStage();
+        return getOptimizer().optimize(unoptimizedPlan);
+    }
+
+    public JavaRDD<EvaluatedContext> execute(Plan plan) {
+        return execute(plan, null);
+    }
+
+    public JavaRDD<EvaluatedContext> execute(Plan plan, Map<String, Object> parameters) {
+
+        // Run all preprocessors before anything else.
+        runPreprocessStage();
+
+        // Optimize the specified plan if not already.
+        this.plan = plan.isOptimized() ? plan : getOptimizer().optimize(plan);
 
         // Acquire data for every retrieve operation as a series of datasets with
         // links back to retrieve definition which required it.
@@ -165,40 +144,60 @@ public class Pipeline implements Serializable {
         // so we can still look it up later.
         combinedOutput = runCombinerStage();
 
-        // Calculate each context across all measures via the provided engine
-        var evaluationOutput = runEvaluatorStage();
+        // Calculate each context across all measures via the provided engine and
+        // output results to client.
+        var evaluatedContextRdd = runEvaluatorStage();
 
-        // Output results to client
-        return new EvaluationResultSet(evaluationOutput);
+        // TEST CODE
+        var x = evaluatedContextRdd.collect();
+        var r = spark.createDataFrame(evaluatedContextRdd, EvaluatedContext.class);
+        r.show();
+        // END
+
+        return evaluatedContextRdd;
     }
 
     private void runPreprocessStage() {
         getPreprocessors().forEach(Preprocessor::apply);
     }
 
-    private Plan runOptimizerStage() {
-        return getOptimizer().optimize(compiledPlanOutput);
-    }
-
-    private Map<Retrieval, JavaRDD<Object>> runRetrievalStage() {
-        return plannedOutput.getRetrieves().stream()
+    private Map<RetrieveDefinition, JavaRDD<Object>> runRetrievalStage() {
+        return plan.getRetrieves().stream()
                 .collect(Collectors.toMap(r -> r, r -> {
-                    return getRetriever().retrieve(r, getModelAdapterComposite());
+                    return getRetriever().retrieve(r, getModelAdapterCollection());
                 }));
     }
 
-    private JavaPairRDD<String, Map<Retrieval, List<Object>>> runCombinerStage() {
-        return getConverger().combine(retrievalOutput, plannedOutput, getModelAdapterComposite());
+    private JavaPairRDD<String, Map<RetrieveDefinition, List<Object>>> runCombinerStage() {
+        // No retrievals found is an indicator of a CQL which only contain literal
+        // definitions, mostly for testing scenarios. While there's little real-world
+        // value for these kinds of definitions, we shouldn't error and should at least
+        // return a zero-record dataset.
+        if (retrievalOutput.isEmpty()) {
+            var sc = JavaSparkContext.fromSparkContext(spark.sparkContext());
+            List<Tuple2<String, Map<RetrieveDefinition, List<Object>>>> emptyList = List.of();
+            return sc.parallelizePairs(emptyList);
+        }
+
+        return getConverger().converge(retrievalOutput, plan, getModelAdapterCollection());
     }
 
     private JavaRDD<EvaluatedContext> runEvaluatorStage() {
-        this.evaluator = evaluatorFactory.create(plannedOutput, modelAdapterComposite, terminologyRepository);
 
-        return combinedOutput.mapPartitions((FlatMapFunction<Iterator<Tuple2<String, Map<Retrieval, List<Object>>>>, EvaluatedContext>) row -> {
+        return combinedOutput.mapPartitions((FlatMapFunction<Iterator<Tuple2<String, Map<RetrieveDefinition, List<Object>>>>, EvaluatedContext>) row -> {
 
             // NOTE: Everything within mapPartitions is running on the executor nodes.
             // Any one-time initialization per partition (aka across several rows) should
             // be performed here rather than within Iterator<EvaluatedContext> below.
+
+            // Construct the Evaluator used as the CQL engine. Since we cannot control
+            // whether the engine or its dependencies implements Serializable, we cannot
+            // instantiate this call on the driver. It must be created on each executor.
+            var evaluator = evaluatorFactory.create(
+                    this.configuration,
+                    plan,
+                    modelAdapterSet,
+                    terminologyRepository);
 
             return new Iterator<EvaluatedContext>() {
 
@@ -211,22 +210,22 @@ public class Pipeline implements Serializable {
                 public EvaluatedContext next() {
                     // Iterate to the next context element for those defined within the partition.
                     var nextRow = row.next();
-                    return runEvaluatorContextElement(nextRow);
+                    return runEvaluatorContextElement(evaluator, nextRow);
                 }
             };
         }, true);
     }
 
-    EvaluatedContext runEvaluatorContextElement(Tuple2<String, Map<Retrieval, List<Object>>> row) {
-        return getEvaluator().evaluate(row._1, row._2);
+    EvaluatedContext runEvaluatorContextElement(Evaluator evaluator, Tuple2<String, Map<RetrieveDefinition, List<Object>>> row) {
+        return evaluator.evaluate(row._1, row._2);
     }
 
     public Compiler getCompiler() {
         return this.compiler;
     }
 
-    public ModelAdapterComposite getModelAdapterComposite() {
-        return modelAdapterComposite;
+    public ModelAdapterSet getModelAdapterCollection() {
+        return modelAdapterSet;
     }
 
     public Optimizer getOptimizer() {
@@ -245,8 +244,8 @@ public class Pipeline implements Serializable {
         return converger;
     }
 
-    public Evaluator getEvaluator() {
-        return evaluator;
+    public EvaluatorFactory getEvaluatorFactory() {
+        return evaluatorFactory;
     }
 
     public List<Preprocessor> getPreprocessors() {

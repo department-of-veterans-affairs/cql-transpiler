@@ -12,8 +12,8 @@ public class ConfigurationTest {
 
     @Test
     public void should_support_reading_a_scalar_setting() {
-        var cfg = new EnvironmentConfiguration();
-        cfg.writeSetting("foo", "bar");
+        var cfg = new EnvironmentConfiguration()
+            .writeSetting("foo", "bar");
         assertEquals("bar", cfg.readSetting("foo").get());
     }
 
@@ -25,17 +25,17 @@ public class ConfigurationTest {
 
     @Test
     public void should_support_single_binding() {
-        var cfg = new EnvironmentConfiguration();
-        cfg.writeBinding(Optimizer.class, DefaultOptimizer.class);
+        var cfg = new EnvironmentConfiguration()
+            .writeBinding(Optimizer.class, DefaultOptimizer.class);
         var bindings = cfg.readBinding(Optimizer.class);
         assertEquals(1, bindings.size());
     }
 
     @Test
     public void should_overwrite_single_binding() {
-        var cfg = new EnvironmentConfiguration();
-        cfg.writeBinding(Optimizer.class, Optimizer.class);
-        cfg.writeBinding(Optimizer.class, DefaultOptimizer.class);
+        var cfg = new EnvironmentConfiguration()
+            .writeBinding(Optimizer.class, Optimizer.class)
+            .writeBinding(Optimizer.class, DefaultOptimizer.class);
         var bindings = cfg.readBinding(Optimizer.class);
         assertEquals(1, bindings.size());
     }

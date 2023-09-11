@@ -1,12 +1,14 @@
 package gov.va.sparkcql.pipeline;
 
-import gov.va.sparkcql.configuration.ServiceModule;
-import gov.va.sparkcql.configuration.Configuration;
+import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.configuration.Injector;
-import gov.va.sparkcql.runtime.LocalSparkFactory;
-import gov.va.sparkcql.runtime.SparkFactory;
+import gov.va.sparkcql.mock.MockCompilerFactory;
+import gov.va.sparkcql.mock.MockDataPreprocessorFactory;
+import gov.va.sparkcql.mock.MockEvaluatorFactory;
+import gov.va.sparkcql.mock.MockModelAdapterFactory;
+import gov.va.sparkcql.pipeline.runtime.LocalSparkFactory;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import gov.va.sparkcql.domain.Plan;
-import gov.va.sparkcql.fixture.mock.*;
 import gov.va.sparkcql.io.Resources;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.converger.ConvergerFactory;
@@ -30,31 +32,29 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PipelineTest extends ServiceModule {
+public class PipelineTest extends AbstractTest {
 
-    @Override
-    protected Configuration configure() {
-        var cfg = new MockConfiguration();
-        cfg.writeBinding(SparkFactory.class, LocalSparkFactory.class);
-        cfg.writeBinding(CqlSourceRepositoryFactory.class, CqlSourceFileRepositoryFactory.class);
-        cfg.writeBinding(CompilerFactory.class, MockCompilerFactory.class);
-        cfg.writeBinding(TableResolutionStrategyFactory.class, TemplateResolutionStrategyFactory.class);
-        cfg.writeBinding(OptimizerFactory.class, DefaultOptimizerFactory.class);
-        cfg.writeBinding(RetrieverFactory.class, SparkIndexedDataRetrieverFactory.class);
-        cfg.writeBinding(ConvergerFactory.class, DefaultConvergerFactory.class);
-        cfg.writeBinding(EvaluatorFactory.class, MockEvaluatorFactory.class);
-        cfg.writeBinding(ModelAdapterFactory.class, MockModelAdapterFactory.class);
-        cfg.writeBinding(PreprocessorFactory.class, MockDataPreprocessorFactory.class);
-        return cfg;
+    public PipelineTest() {
+        this.configuration
+            .writeBinding(SparkFactory.class, LocalSparkFactory.class)
+            .writeBinding(CqlSourceRepositoryFactory.class, CqlSourceFileRepositoryFactory.class)
+            .writeBinding(CompilerFactory.class, MockCompilerFactory.class)
+            .writeBinding(TableResolutionStrategyFactory.class, TemplateResolutionStrategyFactory.class)
+            .writeBinding(OptimizerFactory.class, DefaultOptimizerFactory.class)
+            .writeBinding(RetrieverFactory.class, SparkIndexedDataRetrieverFactory.class)
+            .writeBinding(ConvergerFactory.class, DefaultConvergerFactory.class)
+            .writeBinding(EvaluatorFactory.class, MockEvaluatorFactory.class)
+            .writeBinding(ModelAdapterFactory.class, MockModelAdapterFactory.class)
+            .writeBinding(PreprocessorFactory.class, MockDataPreprocessorFactory.class);
     }
 
     private Injector getInjector() {
-        return new Injector(configure());
+        return new Injector(this.configuration);
     }
 
     @Test
     public void should_initialize_default_components() {
-        var pipeline = new Pipeline(configure());
+        var pipeline = new Pipeline(this.configuration);
         assertNotNull(pipeline.getOptimizer());
         assertNotNull(pipeline.getCompiler());
     }
@@ -65,8 +65,8 @@ public class PipelineTest extends ServiceModule {
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan()
                 .withLibrary(reader.read(libraryContents));
-        var pipeline = new Pipeline(configure());
+        var pipeline = new Pipeline(this.configuration);
         var results = pipeline.execute(plan);
-        results.splitByContext().collect().forEach(System.out::println);
+        results.collect().forEach(System.out::println);
     }
 }

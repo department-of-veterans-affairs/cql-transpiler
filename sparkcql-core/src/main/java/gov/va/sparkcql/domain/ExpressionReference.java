@@ -1,5 +1,6 @@
 package gov.va.sparkcql.domain;
 
+import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.Library;
 
@@ -7,25 +8,25 @@ import java.io.Serializable;
 
 public class ExpressionReference implements Serializable {
     
-    private String libraryName;
+    private QualifiedIdentifier libraryIdentifier;
 
     private String expressionDefName;
 
-    public String getLibraryName() {
-        return libraryName;
+    public QualifiedIdentifier getLibraryIdentifier() {
+        return libraryIdentifier;
     }
 
-    public void setLibraryName(String libraryName) {
-        this.libraryName = libraryName;
+    public void setLibraryIdentifier(QualifiedIdentifier libraryIdentifier) {
+        this.libraryIdentifier = libraryIdentifier;
     }
 
-    public ExpressionReference withLibraryName(String libraryName) {
-        this.libraryName = libraryName;
+    public ExpressionReference withLibraryIdentifier(QualifiedIdentifier libraryIdentifier) {
+        this.libraryIdentifier = libraryIdentifier;
         return this;
     }
 
-    public ExpressionReference withLibrary(Library library) {
-        this.libraryName = library.getIdentifier().getId();
+    public ExpressionReference withLibraryIdentifier(Library library) {
+        this.libraryIdentifier = QualifiedIdentifier.from(library.getIdentifier());
         return this;
     }
 

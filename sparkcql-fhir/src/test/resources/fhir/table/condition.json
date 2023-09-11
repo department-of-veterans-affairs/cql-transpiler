@@ -1,0 +1,90 @@
+[
+    {
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "dataType": "{http://hl7.org/fhir}Condition",
+        "data": {
+            "resourceType": "Condition",
+            "id": "4e3be31c-bb2c-479c-b855-23e3103e42d5",
+            "clinicalStatus": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                        "code": "active"
+                    }
+                ]
+            },
+            "verificationStatus": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                        "code": "confirmed"
+                    }
+                ]
+            },
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "410429000",
+                        "display": "Cardiac Arrest"
+                    }
+                ],
+                "text": "Cardiac Arrest"
+            },
+            "subject": {
+                "reference": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184"
+            },
+            "encounter": {
+                "reference": "urn:uuid:f78d73fc-9f9b-46d5-93aa-f5db86ba914c"
+            },
+            "onsetDateTime": "1965-11-15T06:22:41-05:00",
+            "recordedDate": "1965-11-15T06:22:41-05:00"
+        }
+    },
+    {
+        "patientId": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184",
+        "dataType": "{http://hl7.org/fhir}Condition",
+        "data": {
+            "resourceType": "Condition",
+            "id": "5dcd2d71-207e-46e9-b948-f5c9121580dd",
+            "clinicalStatus": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                        "code": "active"
+                    }
+                ]
+            },
+            "verificationStatus": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                        "code": "confirmed"
+                    }
+                ]
+            },
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "162864005",
+                        "display": "Body mass index 30+ - obesity (finding)"
+                    }
+                ],
+                "text": "Body mass index 30+ - obesity (finding)"
+            },
+            "subject": {
+                "reference": "urn:uuid:5cbc121b-cd71-4428-b8b7-31e53eba8184"
+            },
+            "encounter": {
+                "reference": "urn:uuid:83803f0a-38cf-4a0f-bdf4-b1c7cd857ffd"
+            },
+            "onsetDateTime": "1977-02-21T06:22:41-05:00",
+            "recordedDate": "1977-02-21T06:22:41-05:00"
+        },
+        "request": {
+            "method": "POST",
+            "url": "Condition"
+        }
+    }
+]

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.domain.RetrieveDefinition;
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 
@@ -18,12 +18,12 @@ public class DefaultOptimizer implements Optimizer {
 
         var retrieves = plan.getLibraries().stream().flatMap(library -> {
             return collector.visitLibrary(library, null).stream();
-        }).distinct();
+        });
 
-        var serDeRetrieves = retrieves.map(Retrieval::of).collect(Collectors.toList());
+        var retrievals = retrieves.map(RetrieveDefinition::of).distinct().collect(Collectors.toList());
 
         return new Plan(plan)
-                .withRetrieves(serDeRetrieves);
+                .withRetrieves(retrievals);
     }
 
     static class RetrieveCollector extends ElmBaseLibraryVisitor<List<Retrieve>, Retrieve> {

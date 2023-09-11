@@ -6,13 +6,9 @@ public class TemplateResolutionStrategyFactory extends TableResolutionStrategyFa
 
     public static final String TEMPLATE_RESOLUTION_STRATEGY = "sparkcql.resolutionstrategy.template";
 
-    public TemplateResolutionStrategyFactory(Configuration configuration) {
-        super(configuration);
-    }
-
     @Override
-    public TableResolutionStrategy create() {
-        var template = getConfiguration().readSetting(TEMPLATE_RESOLUTION_STRATEGY, "${model}.${domain}");
+    public TableResolutionStrategy create(Configuration configuration) {
+        var template = configuration.readSetting(TEMPLATE_RESOLUTION_STRATEGY, "${model}.${domain}");
         return new TemplateResolutionStrategy(template);
     }
 }

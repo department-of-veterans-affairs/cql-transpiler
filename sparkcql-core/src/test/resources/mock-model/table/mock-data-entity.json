@@ -1,11 +1,9 @@
 [
     {
-        "patientCorrelationId": "1",
-        "practictionerCorrelationId": "100",
+        "patientId": "1",
         "primaryCode": "ABC",
         "primaryStartDate": "1/1/2020",
         "primaryEndDate": "12/31/2020",
-        "dataType": "MockEntity",
         "data": {
             "patientId": "1",
             "name": "mock name 1",
@@ -13,12 +11,10 @@
         }
     },
     {
-        "patientCorrelationId": "1",
-        "practictionerCorrelationId": "100",
+        "patientId": "1",
         "primaryCode": "XYZ",
         "primaryStartDate": "6/1/2021",
         "primaryEndDate": "5/31/2022",
-        "dataType": "MockEntity",
         "data": {
             "patientId": "1",
             "name": "mock name 1b",
@@ -26,12 +22,10 @@
         }
     },    
     {
-        "patientCorrelationId": "2",
-        "practictionerCorrelationId": "100",
+        "patientId": "2",
         "primaryCode": "ABC",
         "primaryStartDate": "1/1/2020",
         "primaryEndDate": "12/31/2020",
-        "dataType": "MockEntity",
         "data": {
             "patientId": "2",
             "name": "mock name 2",
@@ -39,12 +33,10 @@
         }
     },
     {
-        "patientCorrelationId": "3",
-        "practictionerCorrelationId": "101",
+        "patientId": "3",
         "primaryCode": "DEF",
         "primaryStartDate": "2/1/2020",
         "primaryEndDate": "01/31/2021",
-        "dataType": "MockEntity",
         "data": {
             "patientId": "3",
             "name": "mock name 3",

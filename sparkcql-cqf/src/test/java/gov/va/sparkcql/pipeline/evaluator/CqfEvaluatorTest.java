@@ -3,13 +3,14 @@ package gov.va.sparkcql.pipeline.evaluator;
 import gov.va.sparkcql.configuration.EnvironmentConfiguration;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.io.Resources;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonLibraryReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CqfEvaluatorTest {
 
@@ -19,12 +20,16 @@ public class CqfEvaluatorTest {
         var reader = new ElmJsonLibraryReader();
         var plan = new Plan().withLibrary(reader.read(libraryContents));
 
-        var evaluator = new CqfEvaluatorFactory(new EnvironmentConfiguration()).create(
+        var evaluator = new CqfEvaluatorFactory().create(
+                new EnvironmentConfiguration(),
                 plan,
-                new ModelAdapterComposite(List.of()),
+                new ModelAdapterSet(List.of()),
                 null);
 
-        evaluator.evaluate("12345", null);
+        var r = evaluator.evaluate("12345", null);
+        assertEquals(3, r.getExpressionResults().size());
+        assertEquals("12345", r.getContextId());
+        assertEquals("ComplexLiteral", r.getExpressionResults().get(0)._1.getLibraryIdentifier().getId());
     }
 
     @Test

@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import gov.va.sparkcql.domain.EvaluatedContext;
-import gov.va.sparkcql.domain.Retrieval;
-import gov.va.sparkcql.configuration.Component;
+import gov.va.sparkcql.domain.RetrieveDefinition;
+import gov.va.sparkcql.pipeline.Component;
 
 public interface Evaluator extends Component {
 
-    public EvaluatedContext evaluate(String contextElementId, Map<Retrieval, List<Object>> clinicalData);
+    public EvaluatedContext evaluate(String contextElementId, Map<RetrieveDefinition, List<Object>> clinicalData);
 }

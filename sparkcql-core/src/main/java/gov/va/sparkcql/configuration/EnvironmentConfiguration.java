@@ -1,5 +1,7 @@
 package gov.va.sparkcql.configuration;
 
+import gov.va.sparkcql.log.Log;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,12 @@ public class EnvironmentConfiguration implements Configuration {
     }
 
     @Override
+    public boolean hasSetting(String key) {
+        var setting = this.readSetting(key, null);
+        return setting != null && !setting.isEmpty();
+    }
+
+    @Override
     public Map<String, String> readAllSettings() {
         var allSettings = new HashMap<String, String>();
         allSettings.putAll(System.getenv());
@@ -38,8 +46,9 @@ public class EnvironmentConfiguration implements Configuration {
     }
 
     @Override
-    public void writeSetting(String key, String value) {
+    public Configuration writeSetting(String key, String value) {
         runtimeSettings.put(key, value);
+        return this;
     }
 
     @Override
@@ -68,7 +77,12 @@ public class EnvironmentConfiguration implements Configuration {
         } else {
             bindingSetting = readSetting(
                     interfaceClass.getCanonicalName())
-                    .orElseThrow(() -> new RuntimeException("Unable to locate binding for interface " + interfaceClass.getCanonicalName()));
+                    .orElse("");
+
+            if (bindingSetting.isEmpty()) {
+                Log.warn("Unable to locate binding for interface " + interfaceClass.getCanonicalName());
+                return List.of();
+            }
         }
 
         // Since multi-bindings are defined as comma delimited lists, split and
@@ -85,15 +99,23 @@ public class EnvironmentConfiguration implements Configuration {
     }
 
     @Override
-    public <I> void writeBinding(Class<I> interfaceClass, Class<? extends I> implementationClass) {
+    public <I> Configuration writeBinding(Class<I> interfaceClass, Class<? extends I> implementationClass) {
         this.writeSetting(interfaceClass.getCanonicalName(), implementationClass.getCanonicalName());
+        return this;
     }
 
     @Override
-    public <I> void writeBinding(Class<I> interfaceClass, List<Class<? extends I>> implementationClasses) {
+    public <I> Configuration writeBinding(Class<I> interfaceClass, List<Class<? extends I>> implementationClasses) {
         var canonicalNames = implementationClasses.stream()
                 .map(Class::getCanonicalName);
         var concat = String.join(",", canonicalNames.collect(Collectors.toList()));
         this.writeSetting(interfaceClass.getCanonicalName(), concat);
+        return this;
+    }
+
+    @Override
+    public <I> boolean hasBinding(Class<I> interfaceClass) {
+        var setting = this.readSetting(interfaceClass.getCanonicalName(), null);
+        return setting != null && !setting.isEmpty();
     }
 }

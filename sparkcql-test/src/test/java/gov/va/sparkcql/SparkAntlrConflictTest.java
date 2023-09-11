@@ -1,15 +1,17 @@
 package gov.va.sparkcql;
 
-import gov.va.sparkcql.configuration.ServiceModule;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
 import org.junit.jupiter.api.Test;
 
-import gov.va.sparkcql.runtime.LocalSparkFactory;
+import gov.va.sparkcql.pipeline.runtime.LocalSparkFactory;
 
-public class SparkAntlrConflictTest extends ServiceModule {
+public class SparkAntlrConflictTest extends AbstractTest {
+
+    private final SparkFactory sparkFactory = new LocalSparkFactory();
 
     @Test
     public void should_not_break_spark() {
-        // Confirms the proper Spark ANTLR version is loaded instead of CQF's higher version.
-        getSpark().sql("select 12345 foo");
+        // Confirms the proper Spark ANTLR version is loaded instead of CQFs higher version.
+        spark.sql("select 12345 foo");
     }
 }

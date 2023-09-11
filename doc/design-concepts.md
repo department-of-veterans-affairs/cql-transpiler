@@ -7,7 +7,7 @@
     - Optimize plans
 - Bulk Retrieve
     - Acquire data
-	- Apply retrieval filters
+	- Apply retrieveDefinition filters
 	- Group by Context (ContextID, List of RetrieveOps: List )
 	- Join by Context
 - MapPartitions 

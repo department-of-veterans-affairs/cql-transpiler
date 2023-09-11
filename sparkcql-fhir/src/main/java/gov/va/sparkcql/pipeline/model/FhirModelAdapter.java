@@ -1,15 +1,18 @@
 package gov.va.sparkcql.pipeline.model;
 
+import au.csiro.pathling.encoders.EncoderConfig;
 import ca.uhn.fhir.context.FhirContext;
 import gov.va.sparkcql.types.DataType;
 import org.apache.spark.sql.Encoder;
+import org.apache.spark.sql.types.StructType;
 import org.hl7.elm.r1.ContextDef;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
 import scala.Tuple2;
 
- import au.csiro.pathling.encoders.FhirEncoders;
- import au.csiro.pathling.encoders.datatypes.R4DataTypeMappings;
+import au.csiro.pathling.encoders.FhirEncoders;
+import au.csiro.pathling.encoders.datatypes.R4DataTypeMappings;
+import au.csiro.pathling.encoders.SchemaConverter;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ public class FhirModelAdapter implements ModelAdapter {
     private static final int maxNestingLevel = 5;
     private static final FhirEncoders fhirEncoders = FhirEncoders.forR4()
          .withExtensionsEnabled(false)
+         .withMaxNestingLevel(maxNestingLevel)
          .getOrCreate();
 
     @Override
@@ -88,6 +92,15 @@ public class FhirModelAdapter implements ModelAdapter {
         var clazz = asBaseResourceClass(typeMap._2);
         var expressionEncoder = fhirEncoders.of(clazz);
         return (Encoder<T>)expressionEncoder;
+    }
+
+    @Override
+    public StructType getSchema(DataType dataType) {
+        assertDataTypeIsSupported(dataType);
+        var typeMap = resolveTypeMap(dataType);
+        var clazz = asBaseResourceClass(typeMap._2);
+        var schemaConverter = new SchemaConverter(fhirContext, dataTypeMappings, EncoderConfig.apply(maxNestingLevel, null, false));
+        return schemaConverter.resourceSchema(clazz);
     }
 
     @Override

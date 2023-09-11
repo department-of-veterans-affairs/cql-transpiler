@@ -1,5 +1,6 @@
 dependencies {
     testImplementation project(':sparkcql-core')
+    testImplementation(testFixtures(project(":sparkcql-core")))
     testImplementation project(path: ':sparkcql-cqf', configuration: 'shadow')
     testImplementation project(':sparkcql-fhir')
 
@@ -11,6 +12,8 @@ dependencies {
     testImplementation "info.cqframework:elm:${cqfVersion}"
     testImplementation "info.cqframework:elm-jackson:${cqfVersion}"
     testImplementation "info.cqframework:quick:${cqfVersion}"
+    testImplementation "info.cqframework:qdm:${cqfVersion}"
     testImplementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${hapiVersion}"
     testImplementation "au.csiro.pathling:encoders:${pathlingVersion}"
+
 }

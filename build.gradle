@@ -1,6 +1,7 @@
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'eclipse'
+    apply plugin: 'java-test-fixtures'
 
     compileJava {
         sourceCompatibility = 11

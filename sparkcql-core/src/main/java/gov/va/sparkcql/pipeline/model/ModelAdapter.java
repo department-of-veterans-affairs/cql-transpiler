@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.spark.sql.Encoder;
+import org.apache.spark.sql.types.StructType;
 import org.hl7.elm.r1.ContextDef;
 
 import gov.va.sparkcql.types.DataType;
@@ -47,6 +48,8 @@ public interface ModelAdapter extends Serializable {
     }
 
     public <T> Encoder<T> getEncoder(DataType dataType);
+
+    public StructType getSchema(DataType dataType);
 
     public String getContextId(Object instance, ContextDef contextDef);
 }

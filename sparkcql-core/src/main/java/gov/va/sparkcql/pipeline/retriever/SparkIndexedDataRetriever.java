@@ -1,6 +1,8 @@
 package gov.va.sparkcql.pipeline.retriever;
 
-import gov.va.sparkcql.domain.Retrieval;
+import gov.va.sparkcql.configuration.Configuration;
+import gov.va.sparkcql.domain.RetrieveDefinition;
+import gov.va.sparkcql.log.Log;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -9,11 +11,10 @@ import org.apache.spark.sql.types.StructType;
 
 import static org.apache.spark.sql.functions.col;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import gov.va.sparkcql.runtime.SparkFactory;
-import gov.va.sparkcql.pipeline.model.ModelAdapterComposite;
+import gov.va.sparkcql.pipeline.runtime.SparkFactory;
+import gov.va.sparkcql.pipeline.model.ModelAdapterSet;
 import gov.va.sparkcql.pipeline.retriever.resolution.TableResolutionStrategy;
 
 public class SparkIndexedDataRetriever implements Retriever {
@@ -22,49 +23,49 @@ public class SparkIndexedDataRetriever implements Retriever {
     protected SparkSession spark;
     protected TableResolutionStrategy tableResolutionStrategy;
 
-    public SparkIndexedDataRetriever(SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
-        this.spark = sparkFactory.create();
+    public SparkIndexedDataRetriever(Configuration configuration, SparkFactory sparkFactory, TableResolutionStrategy tableResolutionStrategy) {
+        this.spark = sparkFactory.create(configuration);
         this.tableResolutionStrategy = tableResolutionStrategy;
     }
 
     @Override
-    public JavaRDD<Object> retrieve(Retrieval retrieval, ModelAdapterComposite modelAdapterComposite) {
+    public JavaRDD<Object> retrieve(RetrieveDefinition retrieveDefinition, ModelAdapterSet modelAdapterSet) {
         
         // Acquire data for the retrieve operation with the assumption the data columns contains
         // the encoded data and additional promoted columns are provided to assist with filtering.
-        var dataType = retrieval.getDataType();
-        var boxedDs = spark.table(tableResolutionStrategy.resolveTableBinding(dataType));
+        var dataType = retrieveDefinition.getDataType();
+        var indexedDs = spark.table(tableResolutionStrategy.resolveTableBinding(dataType));
 
-        // Validate the source table conforms to the required "boxed" schematic.
-        var boxedSchema = boxedDs.schema();
-        validateSchema(boxedSchema);
+        // Validate the source table conforms to the required "indexed" schematic.
+        var indexedSchema = indexedDs.schema();
+        validateSchema(indexedSchema);
 
         // Apply filters defined by the retrieve operation. These are calculated during the
         // generation of the ELM and subsequent optimization phase.
-        applyFilters(boxedDs, retrieval);
+        applyFilters(indexedDs, retrieveDefinition);
 
         // Lookup the model adapter for the given data type and use it to decode the data.
-        var modelAdapter = modelAdapterComposite.forType(dataType);
+        var modelAdapter = modelAdapterSet.forType(dataType);
         var encoder = modelAdapter.getEncoder(dataType);
-        var encodedDs = boxedDs.select(col(ENCODED_DATA_COLUMN + ".*"));
-        
+        var encodedDs = indexedDs.select(col(ENCODED_DATA_COLUMN + ".*"));
+
         return encodedDs.as(encoder).javaRDD();
     }
 
-    private Dataset<Row> applyFilters(Dataset<Row> ds, Retrieval retrieval) {
-        ds = applyCodeInFilter(ds, retrieval);
-        ds = applyDateFilter(ds, retrieval);
+    private Dataset<Row> applyFilters(Dataset<Row> ds, RetrieveDefinition retrieveDefinition) {
+        ds = applyCodeInFilter(ds, retrieveDefinition);
+        ds = applyDateFilter(ds, retrieveDefinition);
         return ds;
     }
 
-    private Dataset<Row> applyCodeInFilter(Dataset<Row> ds, Retrieval retrieval) {
+    private Dataset<Row> applyCodeInFilter(Dataset<Row> ds, RetrieveDefinition retrieveDefinition) {
 //        var filter = retrieval.getCodeFilter();
 //        if (!filter.isEmpty())
 //            throw new UnsupportedOperationException();
         return ds;
     }
 
-    private Dataset<Row> applyDateFilter(Dataset<Row> ds, Retrieval retrieval) {
+    private Dataset<Row> applyDateFilter(Dataset<Row> ds, RetrieveDefinition retrieveDefinition) {
 //        var filter = retrieval.getDateFilter();
 //        if (!filter.isEmpty())
 //            throw new UnsupportedOperationException();
@@ -86,15 +87,21 @@ public class SparkIndexedDataRetriever implements Retriever {
 
     public static void validateSchema(StructType schema) {
         // Ensure critical container level columns are present.
-        var missingColumns = new ArrayList<String>();
-        var requiredColumns = List.of("patientCorrelationId", "practictionerCorrelationId", "primaryCode", "primaryStartDate", "primaryEndDate", "dataType", "data");
-        for (var column: requiredColumns) {
-            if (schema.getFieldIndex(column).isEmpty())
-                missingColumns.add(column);
-        }
-        if (!missingColumns.isEmpty()) {
-            var missingColumnsMsg = String.join(", ", missingColumns);
-            throw new RuntimeException("Table is missing the following container level attributes: " + missingColumnsMsg + ".");
-        }
+        var requiredColumns = List.of("patientId", "data");
+        var recommendedColumns = List.of("primaryCode", "primaryStartDate", "primaryEndDate");
+
+        var missingRequired = requiredColumns.stream()
+                .filter(c -> schema.getFieldIndex(c).isEmpty())
+                .reduce((a, b) -> a + ", " + b);
+
+        var missingRecommended = recommendedColumns.stream()
+                .filter(c -> schema.getFieldIndex(c).isEmpty())
+                .reduce((a, b) -> a + ", " + b);
+
+        if (missingRequired.isPresent())
+            throw new RuntimeException("Table missing required fields: " + missingRequired.get() + ".");
+
+        if (missingRecommended.isPresent())
+            Log.warn("Table missing recommended fields: " + missingRecommended.get() + ".");
     }    
 }

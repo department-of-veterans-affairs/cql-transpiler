@@ -24,7 +24,7 @@ public final class Injector {
     }
 
     public <I> I getInstance(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass) {
-        var instances = internalGetInstances(interfaceClass, interfaceClass, true);
+        var instances = internalGetInstances(interfaceClass, defaultImplementationClass, true);
         if (instances.size() > 1)
             Log.warn("Injector found multiple implementations for interface " + interfaceClass.getCanonicalName());
         return instances.get(0);
@@ -42,7 +42,7 @@ public final class Injector {
     public <I> List<? extends I> internalGetInstances(Class<I> interfaceClass, Class<? extends I> defaultImplementationClass, boolean hasDefault) {
         // In the special case where the interface being requested is a Configuration
         // then return the configuration we already have. This is important b/c it's this
-        // configuration which contains vital binding definitions configured earlier in the stack.
+        // configuration which contains vital context configured earlier in the stack.
         if (interfaceClass == Configuration.class || interfaceClass == EnvironmentConfiguration.class)
             return List.of((I)this.configuration);
 

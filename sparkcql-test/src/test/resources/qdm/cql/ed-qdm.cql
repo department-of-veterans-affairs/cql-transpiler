@@ -1,4 +1,4 @@
-library ED-QDM version '1.0'
+library ED_QDM version '1.0'
 
 using QDM version '5.6'
 

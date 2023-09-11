@@ -1,6 +1,5 @@
 package gov.va.sparkcql;
 
-import gov.va.sparkcql.configuration.ServiceModule;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.hl7.fhir.r4.model.Condition;
 import org.hl7.fhir.r4.model.Encounter;
@@ -13,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SparkCapabilityTest extends ServiceModule {
+public class SparkCapabilityTest extends AbstractTest {
 
     @Test
     public void should_serde_fhir_dom_across_cluster() {
@@ -21,7 +20,7 @@ public class SparkCapabilityTest extends ServiceModule {
                 Tuple2.apply("context 1", new Encounter().setId("context 1 encounter")),
                 Tuple2.apply("context 2", new Encounter().setId("context 2 encounter")));
 
-        var sc = JavaSparkContext.fromSparkContext(getSpark().sparkContext());
+        var sc = JavaSparkContext.fromSparkContext(spark.sparkContext());
         var rdd = sc.parallelizePairs(domList);
         var r = rdd.mapPartitions(i -> i).collect();
         assertEquals("context 1 encounter", r.get(0)._2.getId());
@@ -38,7 +37,7 @@ public class SparkCapabilityTest extends ServiceModule {
                 Tuple2.apply("context 1", new Condition().setId("context 1 condition")),
                 Tuple2.apply("context 2", new Condition().setId("context 2 condition")));
 
-        var sc = JavaSparkContext.fromSparkContext(getSpark().sparkContext());
+        var sc = JavaSparkContext.fromSparkContext(spark.sparkContext());
         var rdd1 = sc.parallelizePairs(feed1);
         var rdd2 = sc.parallelizePairs(feed2);
         var r = rdd1.join(rdd2).collect();
@@ -68,7 +67,7 @@ public class SparkCapabilityTest extends ServiceModule {
                     new Condition().setId("context 2 condition")
                 )));
 
-        var sc = JavaSparkContext.fromSparkContext(getSpark().sparkContext());
+        var sc = JavaSparkContext.fromSparkContext(spark.sparkContext());
         var rdd1 = sc.parallelizePairs(feed1);
         var rdd2 = sc.parallelizePairs(feed2);
         var r = rdd1.join(rdd2).map(v1 -> {

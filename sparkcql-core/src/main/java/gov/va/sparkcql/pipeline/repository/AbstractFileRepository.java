@@ -11,7 +11,10 @@ public abstract class AbstractFileRepository<T, ID> implements ReadableRepositor
 
     protected List<T> entities;
 
+    private String path;
+
     public AbstractFileRepository(String path, String extension) {
+        this.path = path;
         if (path == null || path.isEmpty()) {
             entities = List.of();
         } else {
@@ -29,12 +32,25 @@ public abstract class AbstractFileRepository<T, ID> implements ReadableRepositor
 
     @Override
     public T readById(ID id) {
-        return entities.stream().filter(cs -> id.equals(getEntityId(cs))).findFirst().orElse(null);
+        validate();
+        return entities.stream()
+                .filter(cs -> id.equals(getEntityId(cs)))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Unable to find " + id.toString() + " in repository."));
     }
 
     @Override
     public List<T> readById(List<ID> ids) {
-        return entities.stream().filter(cs -> ids.contains(getEntityId(cs))).collect(Collectors.toList());
+        validate();
+        return ids.stream()
+                .map(this::readById)
+                .collect(Collectors.toList());
+    }
+
+    private void validate() {
+        if (this.entities.isEmpty()) {
+            throw new RuntimeException("Attempted to read from an empty repository. Check location '" + path + "'.");
+        }
     }
 
     @Override

@@ -109,6 +109,7 @@ public class QualifiedIdentifier implements Serializable {
         if (getClass() == o.getClass() || o.getClass() == VersionedIdentifier.class) {
             var c = o.getClass() == VersionedIdentifier.class ?
                     QualifiedIdentifier.from((VersionedIdentifier) o) : (QualifiedIdentifier) o;
+            var x = this.system.equals(c.system) && this.id.equals(c.id) && this.version.equals(c.version);
             return this.system.equals(c.system) && this.id.equals(c.id) && this.version.equals(c.version);
         }
 

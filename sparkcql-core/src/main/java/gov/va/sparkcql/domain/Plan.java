@@ -16,7 +16,7 @@ public class Plan implements Serializable {
 
     private List<Library> libraries;
 
-    private List<Retrieval> retrieves;
+    private List<RetrieveDefinition> retrieves;
 
     public Plan() {
     }
@@ -54,15 +54,15 @@ public class Plan implements Serializable {
         return this;
     }
 
-    public List<Retrieval> getRetrieves() {
+    public List<RetrieveDefinition> getRetrieves() {
         return retrieves;
     }
 
-    public void setRetrieves(List<Retrieval> retrieves) {
+    public void setRetrieves(List<RetrieveDefinition> retrieves) {
         this.retrieves = retrieves;
     }
 
-    public Plan withRetrieves(List<Retrieval> retrieves) {
+    public Plan withRetrieves(List<RetrieveDefinition> retrieves) {
         this.retrieves = retrieves;
         return this;
     }
@@ -74,6 +74,10 @@ public class Plan implements Serializable {
             throw new RuntimeException("Unable to determine plan context. Multiple context definitions not supported.");
 
         return this.libraries.get(0).getContexts().getDef().get(0);
+    }
+
+    public boolean isOptimized() {
+        return this.retrieves != null;
     }
 
     // The ELM encounters serialization issues during Spark broadcasting so we implement serialization manually.
