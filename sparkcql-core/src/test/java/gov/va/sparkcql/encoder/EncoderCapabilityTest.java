@@ -1,5 +1,6 @@
-package gov.va.sparkcql;
+package gov.va.sparkcql.encoder;
 
+import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.mock.MockComplexEntity;
 import gov.va.sparkcql.mock.MockEntity;
 import gov.va.sparkcql.types.DataType;
@@ -19,11 +20,13 @@ import scala.collection.Seq;
 import scala.reflect.ClassTag;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class EncoderTest extends AbstractTest {
+public class EncoderCapabilityTest extends AbstractTest {
 
     private List<MockEntity> makeSimpleTestData() {
         var entities = new ArrayList<MockEntity>();
@@ -62,6 +65,7 @@ public class EncoderTest extends AbstractTest {
     public void should_allow_ds_encoding_with_java_serialization() {
         var encoder = Encoders.javaSerialization(MockComplexEntity.class);
         var ds = spark.createDataset(makeComplexTestData(), encoder);
+        var row = ds.toDF().first();
         var r = ds.first();
         assertNotEquals(r.getHeterogeneousList().get(0).getClass(), Object.class);
     }

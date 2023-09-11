@@ -11,7 +11,7 @@ import java.util.ServiceLoader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CqlPipelineBuilderTest {
+public class PipelineBuilderTest {
 
     @Test
     public void should_register_loadable_services() {

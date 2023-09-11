@@ -1,4 +1,4 @@
-package gov.va.sparkcql;
+package gov.va.sparkcql.pipeline;
 
 import gov.va.sparkcql.configuration.Configuration;
 import gov.va.sparkcql.configuration.EnvironmentConfiguration;
@@ -6,7 +6,6 @@ import gov.va.sparkcql.domain.EvaluatedContext;
 import gov.va.sparkcql.domain.ExpressionReference;
 import gov.va.sparkcql.domain.Plan;
 import gov.va.sparkcql.log.Log;
-import gov.va.sparkcql.pipeline.Pipeline;
 import gov.va.sparkcql.pipeline.compiler.CompilerFactory;
 import gov.va.sparkcql.pipeline.converger.ConvergerFactory;
 import gov.va.sparkcql.pipeline.evaluator.EvaluatorFactory;
@@ -24,7 +23,7 @@ import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CqlPipelineBuilder {
+public class PipelineBuilder {
 
     private List<String> additionalLibrarySources;
     private List<QualifiedIdentifier> targetLibraries;
@@ -32,12 +31,15 @@ public class CqlPipelineBuilder {
     private Plan explicitPlan;
     private Map<String, Object> parameters;
 
-    public CqlPipelineBuilder() {
+    private PipelineBuilder() {
         additionalLibrarySources = new ArrayList<>();
         targetLibraries = new ArrayList<>();
         this.parameters = new HashMap<>();
-
         this.configuration = new EnvironmentConfiguration();
+    }
+
+    public static PipelineBuilder build() {
+        return new PipelineBuilder();
     }
 
     private Configuration getEffectiveConfiguration() {
@@ -76,12 +78,12 @@ public class CqlPipelineBuilder {
         }
     }
 
-    public CqlPipelineBuilder withConfig(String key, String value) {
+    public PipelineBuilder withConfig(String key, String value) {
         configuration.writeSetting(key, value);
         return this;
     }
 
-    public CqlPipelineBuilder withConfig(Configuration configuration) {
+    public PipelineBuilder withConfig(Configuration configuration) {
         // Apply the new configuration to current state.
         configuration.readAllSettings().forEach((key, value) -> {
             this.configuration.writeSetting(key, value);
@@ -89,42 +91,42 @@ public class CqlPipelineBuilder {
         return this;
     }
 
-    public <I> CqlPipelineBuilder withConfig(Class<I> interfaceClass, Class<? extends I> implementationClass) {
+    public <I> PipelineBuilder withConfig(Class<I> interfaceClass, Class<? extends I> implementationClass) {
         configuration.writeBinding(interfaceClass, implementationClass);
         return this;
     }
 
-    public CqlPipelineBuilder withCql(String libraryName, String version) {
+    public PipelineBuilder withCql(String libraryName, String version) {
 
         return this;
     }
 
-    public CqlPipelineBuilder withCql(String cqlSource) {
+    public PipelineBuilder withCql(String cqlSource) {
         this.additionalLibrarySources.add(cqlSource);
         return this;
     }
 
-    public CqlPipelineBuilder withCql(List<String> cqlSources) {
+    public PipelineBuilder withCql(List<String> cqlSources) {
         this.additionalLibrarySources.addAll(cqlSources);
         return this;
     }
 
-    public CqlPipelineBuilder withPlan(Plan plan) {
+    public PipelineBuilder withPlan(Plan plan) {
         this.explicitPlan = plan;
         return this;
     }
 
-    public CqlPipelineBuilder withParameter(String name, Date value) {
+    public PipelineBuilder withParameter(String name, Date value) {
         this.parameters.put(name, value);
         return this;
     }
 
-    public CqlPipelineBuilder withParameter(String name, LocalDateTime value) {
+    public PipelineBuilder withParameter(String name, LocalDateTime value) {
         this.parameters.put(name, value);
         return this;
     }
 
-    public CqlPipelineBuilder withParameter(String name, Period value) {
+    public PipelineBuilder withParameter(String name, Period value) {
         this.parameters.put(name, value);
         return this;
     }
@@ -163,9 +165,9 @@ public class CqlPipelineBuilder {
 
     static public final class EvaluateBuilder {
 
-        private final CqlPipelineBuilder parent;
+        private final PipelineBuilder parent;
 
-        private EvaluateBuilder(CqlPipelineBuilder parent) {
+        private EvaluateBuilder(PipelineBuilder parent) {
             this.parent = parent;
         }
 
@@ -215,9 +217,9 @@ public class CqlPipelineBuilder {
 
     static public final class RetrieveBuilder {
 
-        private final CqlPipelineBuilder parent;
+        private final PipelineBuilder parent;
 
-        private RetrieveBuilder(CqlPipelineBuilder parent) {
+        private RetrieveBuilder(PipelineBuilder parent) {
             this.parent = parent;
         }
 
@@ -262,9 +264,9 @@ public class CqlPipelineBuilder {
 
     static public final class PlanRunBuilder {
 
-        private final CqlPipelineBuilder parent;
+        private final PipelineBuilder parent;
 
-        private PlanRunBuilder(CqlPipelineBuilder parent) {
+        private PlanRunBuilder(PipelineBuilder parent) {
             this.parent = parent;
         }
 

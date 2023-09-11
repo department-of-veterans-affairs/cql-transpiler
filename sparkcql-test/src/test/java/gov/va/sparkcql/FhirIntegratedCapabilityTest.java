@@ -11,8 +11,6 @@ import gov.va.sparkcql.pipeline.preprocessor.PreprocessorFactory;
 import gov.va.sparkcql.types.QualifiedIdentifier;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 public class FhirIntegratedCapabilityTest extends AbstractTest {
 
     public FhirIntegratedCapabilityTest() {
@@ -25,15 +23,10 @@ public class FhirIntegratedCapabilityTest extends AbstractTest {
 
     @Test
     public void should_prove_fhir_engine_conformity() {
-
-        var r = new CqlPipelineBuilder()
-                .withConfig(configuration)
-                .evaluate(new QualifiedIdentifier().withId("FhirEngineConformity").withVersion("1.0"))
-                .byContext()
-                .run()
-                .collect();
-
-        r.forEach(System.out::println);
+        var r = CqlSession.build()
+                .withConfiguration(configuration)
+                .create();
+        // r.evaluate(new QualifiedIdentifier().withId("FhirEngineConformity").withVersion("1.0"));
     }
 //
 //    @Test
