@@ -1,7 +1,5 @@
 package gov.va.sparkcql.configuration;
 
-import gov.va.sparkcql.pipeline.Pipeline;
-import gov.va.sparkcql.pipeline.optimizer.Optimizer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +10,7 @@ public class InjectorTest {
     public void should_fail_gracefully_when_instantiating_interfaces() {
         try {
             var injector = new Injector(new EnvironmentConfiguration());
-            injector.getInstance(Optimizer.class);
+            injector.getInstance(String.class);
         } catch (Exception e) {
             assertEquals("Unable to locate binding for interface gov.va.sparkcql.pipeline.optimizer.Optimizer", e.getMessage());
         }

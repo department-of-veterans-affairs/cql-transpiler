@@ -1,7 +1,5 @@
 package gov.va.sparkcql.configuration;
 
-import gov.va.sparkcql.pipeline.optimizer.DefaultOptimizer;
-import gov.va.sparkcql.pipeline.optimizer.Optimizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -26,26 +24,26 @@ public class ConfigurationTest {
     @Test
     public void should_support_single_binding() {
         var cfg = new EnvironmentConfiguration()
-            .writeBinding(Optimizer.class, DefaultOptimizer.class);
-        var bindings = cfg.readBinding(Optimizer.class);
+            .writeBinding(String.class, String.class);
+        var bindings = cfg.readBinding(String.class);
         assertEquals(1, bindings.size());
     }
 
     @Test
     public void should_overwrite_single_binding() {
         var cfg = new EnvironmentConfiguration()
-            .writeBinding(Optimizer.class, Optimizer.class)
-            .writeBinding(Optimizer.class, DefaultOptimizer.class);
-        var bindings = cfg.readBinding(Optimizer.class);
+            .writeBinding(String.class, String.class)
+            .writeBinding(String.class, String.class);
+        var bindings = cfg.readBinding(String.class);
         assertEquals(1, bindings.size());
     }
 
     @Test
     public void should_allow_multiple_bindings() {
         var cfg = new EnvironmentConfiguration();
-        var x = List.of(Optimizer.class, DefaultOptimizer.class);
-        cfg.writeBinding(Optimizer.class, List.of(Optimizer.class, DefaultOptimizer.class));
-        var bindings = cfg.readBinding(Optimizer.class);
+        var x = List.of(String.class, String.class);
+        cfg.writeBinding(String.class, List.of(String.class, String.class));
+        var bindings = cfg.readBinding(String.class);
         assertEquals(2, bindings.size());
     }
 
@@ -53,7 +51,7 @@ public class ConfigurationTest {
     public void should_throw_meaningful_error_when_not_found() {
         var cfg = new EnvironmentConfiguration();
         try {
-            var bindings = cfg.readBinding(Optimizer.class);
+            var bindings = cfg.readBinding(String.class);
         } catch (Exception e) {
             assertEquals("Unable to locate binding for interface gov.va.sparkcql.pipeline.optimizer.Optimizer", e.getMessage());
         }
