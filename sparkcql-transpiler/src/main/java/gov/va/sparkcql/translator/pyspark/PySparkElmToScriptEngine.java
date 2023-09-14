@@ -3,32 +3,49 @@ package gov.va.sparkcql.translator.pyspark;
 import gov.va.sparkcql.translator.ElmToScriptEngine;
 import gov.va.sparkcql.translator.ScriptEngineState;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+
 import org.cqframework.cql.elm.tracking.Trackable;
-import org.hl7.elm.r1.Element;
 import org.hl7.elm.r1.ExpressionDef;
+import org.hl7.elm.r1.Library;
+import org.hl7.elm.r1.Literal;
 import org.hl7.elm.r1.UsingDef;
 
 public class PySparkElmToScriptEngine extends ElmToScriptEngine {
-    @Override
-    public String visitElement(Element element, ScriptEngineState context) {
-        String result = super.visitElement(element, context);
-        // TODO: to NOT modify this function... delete it once the relevant functions are implemented
-        return result;
+
+    private static final HashSet<Class<? extends Trackable>> implementedOperations = new LinkedHashSet<>();
+
+    {
+        implementedOperations.add(Literal.class);
+        implementedOperations.add(UsingDef.class);
+        implementedOperations.add(ExpressionDef.class);
+        implementedOperations.add(Library.class);
     }
 
     @Override
-    public String defaultResult(Trackable element, ScriptEngineState context) {
-        return element == null ? null : element.toString();
+    protected String defaultResult(Trackable elm, ScriptEngineState context) {
+        return elm == null || implementedOperations.contains(elm.getClass()) ? "" : elm.getClass().getSimpleName();
     }
 
     @Override
-    public String visitUsingDef(UsingDef element, ScriptEngineState context) {
-        return null;
+    protected String aggregateResult(String aggregate, String nextResult) {
+        if (aggregate == null && nextResult == null) {
+            return null;
+        }
+        if (aggregate == null || nextResult == null) {
+            return aggregate == null ? nextResult : aggregate;
+        }
+        return aggregate + nextResult;
     }
 
     @Override
-    public String visitExpressionDef(ExpressionDef element, ScriptEngineState context) {
-        // TODO
-        return super.visitExpressionDef(element, context);
+    public String visitLiteral(Literal literal, ScriptEngineState context) {
+        return literal.getValue();
+    }
+
+    @Override
+    public String visitExpressionDef(ExpressionDef expressionDef, ScriptEngineState context) {
+        return expressionDef.getName() + " = " + super.visitExpressionDef(expressionDef, context);
     }
 }

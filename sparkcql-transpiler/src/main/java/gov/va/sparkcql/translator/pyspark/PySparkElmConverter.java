@@ -1,5 +1,6 @@
 package gov.va.sparkcql.translator.pyspark;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hl7.elm.r1.Library;
@@ -12,10 +13,10 @@ public class PySparkElmConverter implements ElmConverter {
     @Override
     public String convert(List<Library> elm, ElmToScriptEngine engine) {
         var state = new PysparkElmToScriptEngineState();
-        // TODO
+        var convertedLibraries = new ArrayList<String>();
         for (Library library : elm) {
-            engine.visitLibrary(library, state);
+            convertedLibraries.add(engine.visitLibrary(library, state));
         }
-        return state.toScript();
+        return convertedLibraries.toString();
     }
 }
