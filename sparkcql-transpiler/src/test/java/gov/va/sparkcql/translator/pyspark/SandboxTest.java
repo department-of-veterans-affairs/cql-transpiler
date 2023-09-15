@@ -2,10 +2,8 @@ package gov.va.sparkcql.translator.pyspark;
 
 import java.util.Set;
 
-import org.hl7.elm.r1.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.w3._1999.xhtml.P;
 
 import gov.va.sparkcql.cqf.compiler.CqfCompiler;
 import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
