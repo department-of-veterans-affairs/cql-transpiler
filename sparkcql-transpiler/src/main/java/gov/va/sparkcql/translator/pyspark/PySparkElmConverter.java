@@ -15,7 +15,7 @@ public class PySparkElmConverter implements ElmConverter {
         var state = new PysparkElmToScriptEngineState();
         var convertedLibraries = new ArrayList<String>();
         for (Library library : elm) {
-            convertedLibraries.add(engine.visitLibrary(library, state));
+            convertedLibraries.add(engine.visitElement(library, state));
         }
         return convertedLibraries.toString();
     }
