@@ -2,13 +2,13 @@ package gov.va.sparkcql.translator.pyspark;
 
 import java.util.Set;
 
+import org.hl7.elm.r1.Literal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.cqf.compiler.CqfCompiler;
 import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
 import gov.va.sparkcql.translator.Transformer;
-import gov.va.sparkcql.translator.pyspark.transformationimpls.ModifyLiterals;
 
 public class SandboxTest {
 
@@ -21,7 +21,10 @@ public class SandboxTest {
 
     @Test
     public void test() {
-        var libraryList = compiler.compile("define myconst: 123");
+        var libraryList = compiler.compile(
+            "library Retrievals version '1.0'\n" +
+            "define myconst_1: 123\n" +
+            "define myconst_b: myconst_1");
         PySparkTransformationBucket bucket = new PySparkTransformationBucket(); 
         bucket.addTransformations(Set.of(new ModifyLiterals()));
         Transformer transformer = new Transformer(bucket);
@@ -31,5 +34,29 @@ public class SandboxTest {
         var algorithm = new PySparkElmToScriptEngine();
         String conversion = converter.convert(translatedELM, algorithm); 
         System.out.println(conversion);
+    }
+
+    private static class ModifyLiterals extends PySparkTransformation<Literal>{
+
+        @Override
+        public Class<Literal> transformsClass() {
+            return Literal.class;
+        }
+
+        @Override
+        public boolean appliesToNode(org.hl7.elm.r1.Element node, org.hl7.elm.r1.Element parentNode) {
+            return transformsClass().isInstance(node) && (((Literal) node).getValue().length() < 10);
+        }
+
+        @Override
+        public int transform(org.hl7.elm.r1.Element node, org.hl7.elm.r1.Element parentNode) {
+            if (appliesToNode(node, parentNode)) {
+                Literal currentNode = (Literal) node;
+                currentNode.setValue(currentNode.getValue() + "1");
+                return 1;
+            }
+            return 0;
+        }
+        
     }
 }
