@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import gov.va.sparkcql.cqf.compiler.CqfCompiler;
 import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
-import gov.va.transpiler.ElmTransformer;
 import gov.va.transpiler.ElmTransformerState;
 import gov.va.transpiler.bulk.BulkTransformationLoader;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverter;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverterState;
-import gov.va.transpiler.bulk.transformation.ModifyLiterals;
+import gov.va.transpiler.impl.ElmTransformerRecursive;
+import gov.va.transpiler.bulk.impl.ModifyLiterals;
 
 public class SandboxTest {
 
@@ -28,13 +28,14 @@ public class SandboxTest {
     @Test
     public void test() {
         var libraryList = compiler.compile(
+            "library TestCQL version '2.1'" +
             "define myconst_1: 123\n" +
             "define myconst_b: myconst_1");
 
         // Transform the CQL ELM tree into a more abstract version designed to be converted into data-based rather than patient-based semantics (the "bulk" elm tree)
         BulkTransformationLoader bulkTransformationLoader = new BulkTransformationLoader();
         bulkTransformationLoader.registerTransformations(Set.of(new ModifyLiterals()));
-        ElmTransformer elmTransformer = new ElmTransformer(bulkTransformationLoader);
+        ElmTransformerRecursive elmTransformerRecursive = new ElmTransformerRecursive(bulkTransformationLoader);
         for (Library library : libraryList) {
             // Create the state of the for the transformation transversal
             var elmTransformerState = new ElmTransformerState();
@@ -42,8 +43,8 @@ public class SandboxTest {
             elmTransformerState.enterSubtreeSettingMaximumDepth(-1);
             // Top-level libraries have no parents
             elmTransformerState.putNode(null);
-            // Transform the tree, starting with the specified library
-            elmTransformer.visitElement(library, elmTransformerState);
+            // Transform the tree rooted at the specified library.
+            elmTransformerRecursive.transform(library, elmTransformerState);
         }
 
         // Transform the bulk elm tree into PySpark Scripts

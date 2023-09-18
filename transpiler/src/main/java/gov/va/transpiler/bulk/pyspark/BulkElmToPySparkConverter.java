@@ -57,7 +57,18 @@ public class BulkElmToPySparkConverter extends ElmConverter<String, BulkElmToPyS
     }
 
     @Override
-    public String convert(Element toConvert, BulkElmToPySparkConverterState state) {
+    public String visitLibrary(Library library, BulkElmToPySparkConverterState context) {
+        String libraryName = "[empty]";
+        String libraryVersion = "[empty]";
+        if (library.getIdentifier() != null) {
+            libraryName = library.getIdentifier().getId();
+            libraryVersion = library.getIdentifier().getVersion();
+        }
+        return "\n# Library" + libraryName + " version " + libraryVersion;
+    }
+
+    @Override
+    public String convert(Library toConvert, BulkElmToPySparkConverterState state) {
         return visitElement(toConvert, state);
     }
 }
