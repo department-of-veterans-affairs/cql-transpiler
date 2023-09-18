@@ -8,6 +8,8 @@ import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.Literal;
+import org.hl7.elm.r1.Tuple;
+import org.hl7.elm.r1.TupleElement;
 import org.hl7.elm.r1.UsingDef;
 
 import gov.va.transpiler.ElmConverter;
@@ -53,6 +55,11 @@ public class BulkElmToPySparkConverter extends ElmConverter<String, BulkElmToPyS
     @Override
     public String visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
         return expressionRef.getName();
+    }
+
+    @Override
+    public String visitTupleElement(TupleElement tupleElement, BulkElmToPySparkConverterState context) {
+        return "\n" + tupleElement.getName() + " = " + super.visitTupleElement(tupleElement, context);
     }
 
     @Override
