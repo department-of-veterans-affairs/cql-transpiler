@@ -57,13 +57,14 @@ public class BulkElmToPySparkConverter extends ElmConverter<String, BulkElmToPyS
 
     @Override
     public String visitLibrary(Library library, BulkElmToPySparkConverterState context) {
+        // TODO: when visiting a library definition, we should create a new python file using a specific naming convention so it can be referenced like libraries are in CQL
         String libraryName = "[empty]";
         String libraryVersion = "[empty]";
         if (library.getIdentifier() != null) {
             libraryName = library.getIdentifier().getId();
             libraryVersion = library.getIdentifier().getVersion();
         }
-        return "\n# Library" + libraryName + " version " + libraryVersion;
+        return "# Library " + libraryName + " version " + libraryVersion + super.visitLibrary(library, context);
     }
 
     @Override
