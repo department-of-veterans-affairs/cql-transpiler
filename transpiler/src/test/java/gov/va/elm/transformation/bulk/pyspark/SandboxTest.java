@@ -28,7 +28,7 @@ public class SandboxTest {
     @Test
     public void test() {
         var libraryList = compiler.compile(
-            "library TestCQL version '2.1'" +
+            //"library TestCQL version '2.1'" +
             "define myconst_1: 123\n" +
             "define myconst_b: myconst_1");
 
