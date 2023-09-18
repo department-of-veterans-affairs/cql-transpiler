@@ -1,15 +1,15 @@
-package gov.va.sparkcql.translator;
+package gov.va.transformation;
 
 import java.util.Stack;
 
 import org.hl7.elm.r1.Element;
 
-public class TransformationState {
+public class ElmTransformerState {
 
     private Stack<Integer> depthIndicatorStack;
     private Stack<Element> nodeStack;
 
-    public TransformationState() {
+    public ElmTransformerState() {
         depthIndicatorStack = new Stack<>();
         nodeStack = new Stack<>();
     }

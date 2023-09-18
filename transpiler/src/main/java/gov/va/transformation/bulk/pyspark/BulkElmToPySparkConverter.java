@@ -1,19 +1,19 @@
-package gov.va.sparkcql.translator.pyspark;
-
-import gov.va.sparkcql.translator.ElmToScriptEngine;
-import gov.va.sparkcql.translator.ScriptEngineState;
+package gov.va.transformation.bulk.pyspark;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import org.cqframework.cql.elm.tracking.Trackable;
+import org.hl7.elm.r1.Element;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.Literal;
 import org.hl7.elm.r1.UsingDef;
 
-public class PySparkElmToScriptEngine extends ElmToScriptEngine {
+import gov.va.transformation.ElmConverter;
+
+public class BulkElmToPySparkConverter extends ElmConverter<String, BulkElmToPySparkConverterState> {
 
     private static final HashSet<Class<? extends Trackable>> implementedOperations = new LinkedHashSet<>();
 
@@ -26,7 +26,7 @@ public class PySparkElmToScriptEngine extends ElmToScriptEngine {
     }
 
     @Override
-    protected String defaultResult(Trackable elm, ScriptEngineState context) {
+    protected String defaultResult(Trackable elm, BulkElmToPySparkConverterState context) {
         return elm == null || implementedOperations.contains(elm.getClass()) ? "" : elm.getClass().getSimpleName();
     }
 
@@ -42,17 +42,22 @@ public class PySparkElmToScriptEngine extends ElmToScriptEngine {
     }
 
     @Override
-    public String visitLiteral(Literal literal, ScriptEngineState context) {
+    public String visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
         return literal.getValue();
     }
 
     @Override
-    public String visitExpressionDef(ExpressionDef expressionDef, ScriptEngineState context) {
+    public String visitExpressionDef(ExpressionDef expressionDef, BulkElmToPySparkConverterState context) {
         return "\n" + expressionDef.getName() + " = " + super.visitExpressionDef(expressionDef, context);
     }
 
     @Override
-    public String visitExpressionRef(ExpressionRef expressionRef, ScriptEngineState context) {
+    public String visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
         return expressionRef.getName();
+    }
+
+    @Override
+    public String convert(Element toConvert, BulkElmToPySparkConverterState state) {
+        return visitElement(toConvert, state);
     }
 }

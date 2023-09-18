@@ -3,5 +3,5 @@ include(
     'sparkcql-core',
     'sparkcql-cqf',
     'sparkcql-cqf-shadow',
-    'sparkcql-transpiler'
+    'transpiler'
 )
