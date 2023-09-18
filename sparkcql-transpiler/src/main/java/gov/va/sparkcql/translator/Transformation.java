@@ -10,7 +10,6 @@ public abstract class Transformation {
      */
     public abstract boolean appliesToNode(Element node, Element parentNode);
 
-    // TODO: somehow want to return both the modified depth level and the new (or old) node, in case a node gets cut out and replaced.
     /**
      * Applies this transformation to {@code node}. May modify both node and parentNode
      * Does nothing if (@see {@link #appliesToNode(Element, Element)}) is false for the given node and parent.

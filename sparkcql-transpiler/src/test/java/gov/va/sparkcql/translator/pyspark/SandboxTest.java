@@ -22,7 +22,6 @@ public class SandboxTest {
     @Test
     public void test() {
         var libraryList = compiler.compile(
-            "library Retrievals version '1.0'\n" +
             "define myconst_1: 123\n" +
             "define myconst_b: myconst_1");
         PySparkTransformationBucket bucket = new PySparkTransformationBucket(); 
@@ -36,16 +35,11 @@ public class SandboxTest {
         System.out.println(conversion);
     }
 
-    private static class ModifyLiterals extends PySparkTransformation<Literal>{
-
-        @Override
-        public Class<Literal> transformsClass() {
-            return Literal.class;
-        }
+    private static class ModifyLiterals extends PySparkTransformation<Literal> {
 
         @Override
         public boolean appliesToNode(org.hl7.elm.r1.Element node, org.hl7.elm.r1.Element parentNode) {
-            return transformsClass().isInstance(node) && (((Literal) node).getValue().length() < 10);
+            return node instanceof Literal && (((Literal) node).getValue().length() < 10);
         }
 
         @Override
@@ -57,6 +51,5 @@ public class SandboxTest {
             }
             return 0;
         }
-        
     }
 }

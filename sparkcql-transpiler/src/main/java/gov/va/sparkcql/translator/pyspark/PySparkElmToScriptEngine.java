@@ -42,24 +42,6 @@ public class PySparkElmToScriptEngine extends ElmToScriptEngine {
     }
 
     @Override
-    public String visitLibrary(Library library, ScriptEngineState context) {
-        // TODO: the 'Library' function in CQL actually defines the name and version of the library comprised of the current code, so it can be externally referenced
-        // Will probably want to transform libraries into a node that matches the Python semantics of referencing external code
-        /*
-        String importString = "";
-        if (library.getIdentifier() != null) {
-            importString = "\nimport " + library.getIdentifier().getId();
-            if (library.getIdentifier().getVersion() != null) {
-                // TODO need to decide how we handle import versions of libraries since CQL/Python do things pretty differently
-                importString += "_" + library.getIdentifier().getVersion();
-            }
-        }
-        return importString + super.visitLibrary(library, context);
-        */
-        return super.visitLibrary(library, context);
-    }
-
-    @Override
     public String visitLiteral(Literal literal, ScriptEngineState context) {
         return literal.getValue();
     }

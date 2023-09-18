@@ -1,6 +1,5 @@
 package gov.va.sparkcql.translator.pyspark;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -10,10 +9,10 @@ import gov.va.sparkcql.translator.TransformationBucket;
 
 public class PySparkTransformationBucket extends TransformationBucket<PySparkTransformation<? extends Element>> {
 
-    private HashMap<Class<? extends Element>, Set<PySparkTransformation<? extends Element>>> transformations;
+    private Set<PySparkTransformation<? extends Element>> transformations;
 
     public PySparkTransformationBucket() {
-        transformations = new HashMap<>();
+        transformations = new LinkedHashSet<>();
     }
 
     @Override
@@ -21,12 +20,9 @@ public class PySparkTransformationBucket extends TransformationBucket<PySparkTra
         if (node == null) {
             return null;
         }
-        Set<PySparkTransformation<? extends Element>> transformationSetforClass = transformations.get(node.getClass());
-        if (transformationSetforClass != null) {
-            for (PySparkTransformation<? extends Element> transformation : transformationSetforClass) {
-                if (transformation.appliesToNode(node, parentNode)) {
-                    return transformation;
-                }
+        for (PySparkTransformation<? extends Element> transformation : transformations) {
+            if (transformation.appliesToNode(node, parentNode)) {
+                return transformation;
             }
         }
         return null;
@@ -34,13 +30,6 @@ public class PySparkTransformationBucket extends TransformationBucket<PySparkTra
 
     @Override
     public void addTransformations(Set<PySparkTransformation<? extends Element>> transformationsToAdd) {
-        for (PySparkTransformation<? extends Element> transformation : transformationsToAdd) {
-            Set<PySparkTransformation<? extends Element>> transformationSetForClass = transformations.get(transformation.transformsClass());
-            if (transformationSetForClass == null) {
-                transformationSetForClass = new LinkedHashSet<>();
-                transformations.put(transformation.transformsClass(), transformationSetForClass);
-            }
-            transformationSetForClass.add(transformation);
-        }
+        transformations.addAll(transformationsToAdd);
     }
 }
