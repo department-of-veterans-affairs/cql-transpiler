@@ -1,9 +1,9 @@
-package gov.va.transformation.bulk.impl;
+package gov.va.transpiler.bulk.transformation;
 
 import org.hl7.elm.r1.Element;
 import org.hl7.elm.r1.Literal;
 
-import gov.va.transformation.bulk.BulkTransformation;
+import gov.va.transpiler.bulk.BulkTransformation;
 
 public class ModifyLiterals extends BulkTransformation<Literal> {
 
