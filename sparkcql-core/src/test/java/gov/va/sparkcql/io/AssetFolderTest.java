@@ -1,6 +1,5 @@
 package gov.va.sparkcql.io;
 
-import gov.va.sparkcql.AbstractTest;
 import gov.va.sparkcql.log.Log;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AssetFolderTest extends AbstractTest {
+public class AssetFolderTest {
 
     @Test
     public void should_read_file_modality() {

@@ -1,5 +1,0 @@
-dependencies {
-    //compile project(':sparkcql-core')
-}
-
-//include ':sparkcql-core'
