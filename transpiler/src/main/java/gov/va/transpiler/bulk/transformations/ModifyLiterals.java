@@ -1,4 +1,4 @@
-package gov.va.transpiler.bulk.impl;
+package gov.va.transpiler.bulk.transformations;
 
 import org.hl7.elm.r1.Element;
 import org.hl7.elm.r1.Literal;

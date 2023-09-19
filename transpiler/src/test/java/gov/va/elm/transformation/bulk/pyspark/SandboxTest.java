@@ -13,8 +13,9 @@ import gov.va.transpiler.ElmTransformerState;
 import gov.va.transpiler.bulk.BulkTransformationLoader;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverter;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverterState;
+import gov.va.transpiler.bulk.pyspark.output.PySparkOutputWriter;
+import gov.va.transpiler.bulk.transformations.ModifyLiterals;
 import gov.va.transpiler.impl.ElmTransformerRecursive;
-import gov.va.transpiler.bulk.impl.ModifyLiterals;
 
 public class SandboxTest {
 
@@ -27,11 +28,12 @@ public class SandboxTest {
 
     @Test
     public void test() {
-        var libraryList = compiler.compile(
-            "library TestCQL version '2.1\n'" +
-            "define MyTuple: Tuple { A: 'a1', B: 'b2'}\n" +
-            "define myconst_1: 123\n" +
-            "define myconst_b: myconst_1\n");
+        var libraryList = compiler.compile(""
+            //+ "library TestCQL version '2.1\n'"
+            //+ "define MyTuple: Tuple { A: 'a1', B: 'b2'}\n"
+            + "define myconst_1: 123\n"
+            //+ "define myconst_b: myconst_1\n"
+            );
 
         // Transform the CQL ELM tree into a more abstract version designed to be converted into data-based rather than patient-based semantics (the "bulk" elm tree)
         BulkTransformationLoader bulkTransformationLoader = new BulkTransformationLoader();
@@ -53,8 +55,14 @@ public class SandboxTest {
         var elmToPySparkConverterState = new BulkElmToPySparkConverterState();
         var convertedLibraries = new ArrayList<String>();
         for (Library library : libraryList) {
-            convertedLibraries.add(elmToPySparkConverter.convert(library, elmToPySparkConverterState));
+            var outputNode = elmToPySparkConverter.convert(library, elmToPySparkConverterState);
+            var pySparkOutputWriter = new PySparkOutputWriter(0, "    ", "\n");
+            outputNode.print(pySparkOutputWriter);
+            convertedLibraries.add(pySparkOutputWriter.getDocumentContents());
         }
-        System.out.println(convertedLibraries);
+
+        for (String output : convertedLibraries) {
+            System.out.println(output);
+        }
     }
 }

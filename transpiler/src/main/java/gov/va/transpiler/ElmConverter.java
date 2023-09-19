@@ -4,7 +4,7 @@ import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 
 import org.hl7.elm.r1.Library;
 
-public abstract class ElmConverter<O, S extends ElmConverterState> extends ElmBaseLibraryVisitor<String, S> {
+public abstract class ElmConverter<O, S extends ElmConverterState> extends ElmBaseLibraryVisitor<O, S> {
     /**
      * @param toConvert The top-level parent of an ELM tree
      * @param state The state tracker for a given conversion process.
