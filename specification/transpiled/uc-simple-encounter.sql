@@ -29,8 +29,16 @@ parameter "Measurement Period" Interval<DateTime>
 CREATE VIEW Parameter__Measurement_Period AS
 SELECT 
     -- Template placeholder would get resolved with runtime parameter
-    {{ MeasureStartDate }} StartDate,       -- e.g. '01/01/2023'
-    {{ MeasureEndDate }} EndDate            -- e.g. '12/31/2023'
+    {{ MeasureStartDate }} Low,     -- e.g. '01/01/2023'
+    {{ MeasureEndDate }} High       -- e.g. '12/31/2023'
+
+
+/*
+context Patient
+*/
+CREATE VIEW UC_Simple_Encounter__Population AS
+SELECT *
+FROM CQL_System.ActivePopulation
 
 /*
 define "ED Encounter":
@@ -39,8 +47,9 @@ define "ED Encounter":
 */
 CREATE VIEW UC_Simple_Encounter__ED_Encounter AS
 SELECT E.*
-FROM QDM56__Encounter_Performed E
+FROM UC_Simple_Encounter__Population POP
+INNER JOIN QDM56__Encounter_Performed E ON POP.PatientID = E.PatientID
 WHERE 
-    e.code IN (SELECT code FROM ValueSet__Emergency_Department_Visit)
+    E.code IN (SELECT code FROM ValueSet__Emergency_Department_Visit)
     AND E.endDate >= DATE(SELECT StartDate FROM Parameter__Measurement_Period)
     AND E.endDate < DATE_ADD((SELECT EndDate FROM Parameter__Measurement_Period), 1)
