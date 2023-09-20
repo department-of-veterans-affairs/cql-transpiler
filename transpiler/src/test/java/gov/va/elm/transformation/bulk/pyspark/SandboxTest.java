@@ -15,7 +15,7 @@ import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverter;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverterState;
 import gov.va.transpiler.bulk.pyspark.output.PySparkOutputWriter;
 import gov.va.transpiler.bulk.transformations.ModifyLiterals;
-import gov.va.transpiler.impl.ElmTransformerRecursive;
+import gov.va.transpiler.transformer.ElmTransformerRecursive;
 
 public class SandboxTest {
 
