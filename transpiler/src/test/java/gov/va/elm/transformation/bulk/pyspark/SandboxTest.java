@@ -34,6 +34,7 @@ public class SandboxTest {
             + "define myconst_1: 123\n"
             + "define myconst_2: myconst_1\n"
             + "define myconst_3: myconst_2 + 1\n"
+            + "define myconst_4: 'abc'\n"
             );
 
         // Transform the CQL ELM tree into a more abstract version designed to be converted into data-based rather than patient-based semantics (the "bulk" elm tree)

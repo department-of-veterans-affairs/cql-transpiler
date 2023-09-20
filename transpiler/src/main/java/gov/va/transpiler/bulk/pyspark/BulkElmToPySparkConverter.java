@@ -6,7 +6,6 @@ import org.hl7.elm.r1.Add;
 import org.hl7.elm.r1.Expression;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
-import org.hl7.elm.r1.FunctionDef;
 import org.hl7.elm.r1.FunctionRef;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.Literal;
@@ -17,6 +16,7 @@ import gov.va.transpiler.bulk.pyspark.output.ExpressionDefNode;
 import gov.va.transpiler.bulk.pyspark.output.ExpressionNode;
 import gov.va.transpiler.bulk.pyspark.output.expression.OperatorNode;
 import gov.va.transpiler.bulk.pyspark.output.expression.ValueNode;
+import gov.va.transpiler.bulk.pyspark.output.expression.ValueNode.PYTHON_DATA_TYPE;
 import gov.va.transpiler.output.DefaultOutputNode;
 import gov.va.transpiler.output.OutputNode;
 
@@ -29,7 +29,10 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
 
     @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
-        return new ValueNode(literal.getValue());
+        var valueNode = new ValueNode();
+        valueNode.setValue(valueNode.toPythonRepresentation(literal.getValue(),
+         valueNode.toPythonDataType(literal.getResultType().toString())));
+        return valueNode;
     }
 
     @Override
@@ -37,18 +40,6 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         var operatorNode = new OperatorNode("+");
         context.stack.push(operatorNode);
         return super.visitAdd(add, context);
-    }
-
-    @Override
-    public OutputNode visitFunctionDef(FunctionDef functionDef, BulkElmToPySparkConverterState context) {
-        // TODO
-        return super.visitFunctionDef(functionDef, context);
-    }
-
-    @Override
-    public OutputNode visitFunctionRef(FunctionRef functionRef, BulkElmToPySparkConverterState context) {
-        // TODO
-        return super.visitFunctionRef(functionRef, context);
     }
 
     @Override
@@ -61,7 +52,9 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     @Override
     public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
         if (!(expressionRef instanceof FunctionRef)) {
-            return new ValueNode(expressionRef.getName());
+            var valueNode = new ValueNode();
+            valueNode.setValue(valueNode.toPythonRepresentation(expressionRef.getName(), PYTHON_DATA_TYPE.Variable));
+            return valueNode;
         }
         return super.visitExpressionRef(expressionRef, context);
     }
