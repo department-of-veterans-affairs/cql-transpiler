@@ -7,24 +7,44 @@ import gov.va.transpiler.output.OutputNode;
 
 public class ExpressionDefNode extends OutputNode {
 
-    private Character operator;
-    private List<OutputNode> children = new ArrayList<>();
+    private String name;
+    private OutputNode child;
+    @SuppressWarnings("unused")
+    /** we don't support access modifiers */
+    private AccessModifierNode accessModifier;
+    private List<OutputNode> otherChildren = new ArrayList<>();
 
     @Override
     public void addChild(OutputNode child) {
-        children.add(child);
+        if (child instanceof LiteralNode || child instanceof ExpressionRefNode) {
+            this.child = child;
+        } else if (child instanceof AccessModifierNode){
+            accessModifier = (AccessModifierNode) child;
+        } else {
+            otherChildren.add(child);
+        }
     }
 
-    public void setOperator(Character operator) {
-        this.operator = operator;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String asOneLine() {
         String builder = "";
-        for (OutputNode child : children) {
-            builder += " " + operator;
-            builder += " " + child.asOneLine();
+        if (child == null) {
+            builder += "# no valid child for [ " + name + " ]";
+        } else {
+            // We don't support access modifiers
+            // builder += accessModifier.asOneLine() + " " + name + " = " + child.asOneLine();
+            builder += name + " = " + child.asOneLine();
+        }
+        if (!otherChildren.isEmpty()) {
+            builder += " # Unsupported children of [" + name + "] : [";
+            for (OutputNode child : otherChildren) {
+                builder += " " + child.asOneLine();
+            }
+            builder += " ]";
         }
         return builder;
     }

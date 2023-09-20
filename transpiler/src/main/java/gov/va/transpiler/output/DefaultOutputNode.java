@@ -20,7 +20,12 @@ public class DefaultOutputNode extends OutputNode {
 
     @Override
     public String asOneLine() {
-        return null;
+        String builder = "# Unsupported node " + name + " [ ";
+        for (var child : children) {
+            builder += child.asOneLine();
+        }
+        builder += " ]";
+        return builder;
     }
 
     @Override
