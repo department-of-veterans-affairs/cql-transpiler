@@ -8,7 +8,7 @@ import gov.va.transpiler.output.OutputNode;
 public class ExpressionDefNode extends OutputNode {
 
     private String name;
-    private OutputNode child;
+    private ExpressionNode child;
     @SuppressWarnings("unused")
     /** we don't support access modifiers */
     private AccessModifierNode accessModifier;
@@ -16,8 +16,8 @@ public class ExpressionDefNode extends OutputNode {
 
     @Override
     public void addChild(OutputNode child) {
-        if (child instanceof LiteralNode || child instanceof ExpressionRefNode) {
-            this.child = child;
+        if (child instanceof ExpressionNode) {
+            this.child = (ExpressionNode) child;
         } else if (child instanceof AccessModifierNode){
             accessModifier = (AccessModifierNode) child;
         } else {
@@ -33,7 +33,7 @@ public class ExpressionDefNode extends OutputNode {
     public String asOneLine() {
         String builder = "";
         if (child == null) {
-            builder += "# no valid child for [ " + name + " ]";
+            builder += name  + " = None # No valid child for [ " + name + " ]";
         } else {
             // We don't support access modifiers
             // builder += accessModifier.asOneLine() + " " + name + " = " + child.asOneLine();
