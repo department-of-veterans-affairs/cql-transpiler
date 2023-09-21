@@ -22,8 +22,12 @@ public class DefaultOutputNode extends OutputNode {
     @Override
     public String asOneLine() {
         String builder = "# Unsupported node " + name + " [ ";
-        for (var child : children) {
-            builder += child.asOneLine();
+        String childAsOneLine;
+        if (children.isEmpty()) {}
+        else if (children.size() == 1 && (childAsOneLine = children.get(0).asOneLine()) != null) {
+            builder += childAsOneLine;
+        } else {
+            return null;
         }
         builder += " ]";
         return builder;
@@ -31,13 +35,15 @@ public class DefaultOutputNode extends OutputNode {
 
     @Override
     public boolean print(OutputWriter outputWriter) {
-        outputWriter.addLine("# Unsupported node " + name + " [");
-        outputWriter.raiseIndentLevel();
-        for(OutputNode child : children) {
-            child.print(outputWriter);
+        if (!super.print(outputWriter)) {
+            outputWriter.addLine("# Unsupported node " + name + " [");
+            outputWriter.raiseIndentLevel();
+            for(OutputNode child : children) {
+                child.print(outputWriter);
+            }
+            outputWriter.lowerIndentLevel();
+            outputWriter.addLine("# ]");
         }
-        outputWriter.lowerIndentLevel();
-        outputWriter.addLine("# ]");
         return true;
     }
 }

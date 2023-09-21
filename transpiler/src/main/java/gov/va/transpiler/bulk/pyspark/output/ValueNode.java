@@ -22,6 +22,7 @@ public class ValueNode extends OutputNode {
     }
 
     private String value;
+    private PYTHON_DATA_TYPE type;
 
     @Override
     public boolean addChild(OutputNode child) {
@@ -30,14 +31,14 @@ public class ValueNode extends OutputNode {
 
     @Override
     public String asOneLine() {
-        return value;
+        return toPythonRepresentation(value, type);
     }
 
     public void setValue(String value) {
         this.value = value;
     }
 
-    public String toPythonRepresentation(String value, PYTHON_DATA_TYPE type) {
+    private String toPythonRepresentation(String value, PYTHON_DATA_TYPE type) {
         // TODO: expand for all types
         switch (type) {
             case String:
@@ -49,7 +50,11 @@ public class ValueNode extends OutputNode {
         }
     }
 
-    public PYTHON_DATA_TYPE toPythonDataType(String hl7FhirType) {
+    public void setPythonDataType(PYTHON_DATA_TYPE type) {
+        this.type = type;
+    }
+
+    public static PYTHON_DATA_TYPE getMatchingPythonDataType(String hl7FhirType) {
         return dataTypeMappings.get(hl7FhirType);
     }
 }

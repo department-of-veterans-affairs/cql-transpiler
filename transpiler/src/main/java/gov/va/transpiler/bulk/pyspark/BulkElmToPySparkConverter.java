@@ -30,8 +30,8 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
         var valueNode = new ValueNode();
-        valueNode.setValue(valueNode.toPythonRepresentation(literal.getValue(),
-         valueNode.toPythonDataType(literal.getResultType().toString())));
+        valueNode.setValue(literal.getValue());
+        valueNode.setPythonDataType(ValueNode.getMatchingPythonDataType(literal.getResultType().toString()));
         return valueNode;
     }
 
@@ -68,7 +68,8 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
         if (!(expressionRef instanceof FunctionRef)) {
             var valueNode = new ValueNode();
-            valueNode.setValue(valueNode.toPythonRepresentation(expressionRef.getName(), PYTHON_DATA_TYPE.Variable));
+            valueNode.setValue(expressionRef.getName());
+            valueNode.setPythonDataType(PYTHON_DATA_TYPE.Variable);
             return valueNode;
         }
         return super.visitExpressionRef(expressionRef, context);
