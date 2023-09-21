@@ -4,10 +4,9 @@ import gov.va.transpiler.output.OutputWriter;
 
 public class PySparkOutputWriter extends OutputWriter{
 
-    int indentLevel;
-    String toIndentWith;
-    String toLineBreakWith;
-    StringBuilder document;
+    private final String toIndentWith;
+    private final String toLineBreakWith;
+    private final StringBuilder document;
 
     public PySparkOutputWriter(int startingIndentLevel, String toIndentWith, String toLineBreakWith) {
         if (startingIndentLevel < 0) {

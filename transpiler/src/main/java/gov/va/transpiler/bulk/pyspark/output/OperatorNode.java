@@ -1,12 +1,11 @@
-package gov.va.transpiler.bulk.pyspark.output.expression;
+package gov.va.transpiler.bulk.pyspark.output;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import gov.va.transpiler.bulk.pyspark.output.ExpressionNode;
 import gov.va.transpiler.output.OutputNode;
 
-public class OperatorNode extends ExpressionNode {
+public class OperatorNode extends OutputNode {
     
     private final String operator;
 
@@ -18,8 +17,9 @@ public class OperatorNode extends ExpressionNode {
     }
 
     @Override
-    public void addChild(OutputNode child) {
+    public boolean addChild(OutputNode child) {
         children.add(child);
+        return true;
     }
 
     @Override

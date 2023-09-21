@@ -1,11 +1,11 @@
-package gov.va.transpiler.bulk.pyspark.output.expression;
+package gov.va.transpiler.bulk.pyspark.output;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import gov.va.transpiler.bulk.pyspark.output.ExpressionNode;
+import gov.va.transpiler.output.OutputNode;
 
-public class ValueNode extends ExpressionNode {
+public class ValueNode extends OutputNode {
 
     public static enum PYTHON_DATA_TYPE {
         Number,
@@ -22,6 +22,11 @@ public class ValueNode extends ExpressionNode {
     }
 
     private String value;
+
+    @Override
+    public boolean addChild(OutputNode child) {
+        return false;
+    }
 
     @Override
     public String asOneLine() {

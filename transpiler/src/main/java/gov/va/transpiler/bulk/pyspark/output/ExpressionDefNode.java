@@ -1,28 +1,28 @@
 package gov.va.transpiler.bulk.pyspark.output;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import gov.va.transpiler.output.OutputNode;
+import gov.va.transpiler.output.OutputWriter;
 
 public class ExpressionDefNode extends OutputNode {
 
     private String name;
-    private ExpressionNode child;
     @SuppressWarnings("unused")
     /** we don't support access modifiers */
     private AccessModifierNode accessModifier;
-    private List<OutputNode> otherChildren = new ArrayList<>();
+    private OutputNode child;
 
     @Override
-    public void addChild(OutputNode child) {
-        if (child instanceof ExpressionNode) {
-            this.child = (ExpressionNode) child;
-        } else if (child instanceof AccessModifierNode){
+    public boolean addChild(OutputNode child) {
+        if (child instanceof AccessModifierNode){
             accessModifier = (AccessModifierNode) child;
-        } else {
-            otherChildren.add(child);
+            return true;
+        } else if (this. child == null) {
+            this.child = child;
+            return true;
         }
+
+        return false;
     }
 
     public void setName(String name) {
@@ -31,21 +31,27 @@ public class ExpressionDefNode extends OutputNode {
 
     @Override
     public String asOneLine() {
-        String builder = "";
-        if (child == null) {
-            builder += name  + " = None # No valid child for [ " + name + " ]";
-        } else {
-            // We don't support access modifiers
-            // builder += accessModifier.asOneLine() + " " + name + " = " + child.asOneLine();
-            builder += name + " = " + child.asOneLine();
+        if (child == null || child.asOneLine() == null) {
+            return null;
         }
-        if (!otherChildren.isEmpty()) {
-            builder += " # Unsupported children of [" + name + "] : [";
-            for (OutputNode child : otherChildren) {
-                builder += " " + child.asOneLine();
-            }
-            builder += " ]";
-        }
+        // We don't support access modifiers
+        // String builder = accessModifier.asOneLine() + " " + name + " = " + child.asOneLine();
+        String builder = name == null ? "" : name + " = ";
+        builder += child.asOneLine();
         return builder;
+    }
+
+    @Override
+    public boolean print(OutputWriter outputWriter) {
+        if (child == null) {
+            return false;
+        }
+        if (!super.print(outputWriter)) {
+            if (name != null) {
+                outputWriter.addLine(name + " =");
+            }
+            return child.print(outputWriter);
+        }
+        return true;
     }
 }

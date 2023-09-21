@@ -6,5 +6,9 @@ import gov.va.transpiler.ElmConverterState;
 import gov.va.transpiler.output.OutputNode;
 
 public class BulkElmToPySparkConverterState extends ElmConverterState {
-    public Stack<OutputNode> stack = new Stack<>();
+    private final Stack<OutputNode> stack = new Stack<>();
+
+    public Stack<OutputNode> getStack() {
+        return stack;
+    }
 }
