@@ -4,14 +4,14 @@ import gov.va.transpiler.output.OutputNode;
 
 public abstract class NameValueNode extends OutputNode {
 
-    private String name;
+    private VariableNameNode name;
     private OutputNode value;
 
-    public void setName(String name) {
+    public void setName(VariableNameNode name) {
         this.name = name;
     }
 
-    protected String getName() {
+    protected VariableNameNode getName() {
         return name;
     }
 

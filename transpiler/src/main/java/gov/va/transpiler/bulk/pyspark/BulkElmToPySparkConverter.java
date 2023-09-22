@@ -29,7 +29,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToPySparkConverterState context) {
         var currentNode = new TupleElementNode();
         currentNode.setCqlNodeEquivalent(tupleElement);
-        currentNode.setName(tupleElement.getName());
+        currentNode.setName(new VariableNameNode(tupleElement.getName()));
         context.getStack().push(currentNode);
         OutputNode result = super.visitTupleElement(tupleElement, context);
         context.getStack().pop();
@@ -59,11 +59,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     @Override
     public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
         if (!(expressionRef instanceof FunctionRef)) {
-            var currentNode = new ValueNode();
-            currentNode.setValue(expressionRef.getName());
-            currentNode.setPythonDataType(PYTHON_DATA_TYPE.Variable);
-            currentNode.setCqlNodeEquivalent(expressionRef);
-            return currentNode;
+            return new VariableNameNode(expressionRef.getName());
         }
         return super.visitExpressionRef(expressionRef, context);
     }
@@ -71,7 +67,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     @Override
     public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToPySparkConverterState context) {
         var currentNode = new ExpressionDefNode();
-        currentNode.setName(expressionDef.getName());
+        currentNode.setName(new VariableNameNode(expressionDef.getName()));
         currentNode.setCqlNodeEquivalent(expressionDef);
         context.getStack().push(currentNode);
         OutputNode result = super.visitExpressionDef(expressionDef, context);

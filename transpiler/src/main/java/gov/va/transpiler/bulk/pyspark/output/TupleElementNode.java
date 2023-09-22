@@ -8,7 +8,7 @@ public class TupleElementNode extends NameValueNode {
     public String asOneLine() {
         String valueAString = getValue() == null ? "None" : getValue().asOneLine();
         if (valueAString != null) {
-            return getName() + ": " + getValue().asOneLine();
+            return getName().asOneLine() + ": " + getValue().asOneLine();
         }
         return null;
     }
@@ -18,7 +18,7 @@ public class TupleElementNode extends NameValueNode {
         if (asOneLine() != null) {
             return super.print(outputWriter);
         }
-        outputWriter.addLine(getName());
+        outputWriter.addLine(getName().asOneLine());
         outputWriter.raiseIndentLevel();
         getValue().print(outputWriter);
         outputWriter.lowerIndentLevel();
