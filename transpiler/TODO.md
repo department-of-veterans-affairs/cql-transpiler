@@ -1,6 +1,10 @@
-Libraries
+Support Nodes:
+* Property
+* UsingDef
 
-* Implement Libraries
+Libraries:
+
+* move imports to top of library printing, before "class" declaration"
 * Automatically transform libraries to use relevant python imports
  * Always
   * Spark
