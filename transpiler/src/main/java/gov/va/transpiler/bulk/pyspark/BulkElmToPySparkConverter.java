@@ -16,6 +16,17 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
+    public OutputNode visitLibrary(Library library, BulkElmToPySparkConverterState context) {
+        var currentNode = new ClassNode();
+        currentNode.setName(currentNode.getClassnameFromLibrary(library));
+        currentNode.setCqlNodeEquivalent(library);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitLibrary(library, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
         var currentNode = new ValueNode();
         currentNode.setValue(literal.getValue());

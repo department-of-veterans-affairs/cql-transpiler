@@ -1,6 +1,7 @@
 package gov.va.elm.transformation.bulk.pyspark;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,22 +45,21 @@ public class SandboxTest {
             System.out.println(output);
         }
         assertEquals(1, pyspark.size());
-        assertEquals(
-            "# Unsupported node Library [\n" + //
-            "    # Unsupported node UsingDef [  ]\n" + //
-            "    myconst_1 = 1231111111\n" + //
-            "    myconst_2 = myconst_1\n" + //
-            "    myconst_3 = myconst_2 + 1111111111\n" + //
-            "    myconst_4 = \"abc1111111\"\n" + //
-            "# ]\n",
-            pyspark.get(0));
+        String[] lines = pyspark.get(0).split("\n");
+        assertEquals(6, lines.length);
+        assertTrue(lines[0].contains("class AnonymousLibrary_"));
+        assertEquals("    # Unsupported node UsingDef [  ]", lines[1]);
+        assertEquals("    myconst_1 = 1231111111", lines[2]);
+        assertEquals("    myconst_2 = myconst_1", lines[3]);
+        assertEquals("    myconst_3 = myconst_2 + 1111111111", lines[4]);
+        assertEquals("    myconst_4 = \"abc1111111\"", lines[5]);
     }
 
     @Test
     public void testDefineTuple() {
         // TODO: tuple to python structfield or spark.withcolumn
         String cql = ""
-            //+ "library TestCQL version '2.1\n'"
+            + "library TestCQL version '2.1\n'"
             + "define \"My Tuple\": Tuple { a: 1, b: 'foo' }\n"
             + "define myconst: \"My Tuple\".a"
             ;
