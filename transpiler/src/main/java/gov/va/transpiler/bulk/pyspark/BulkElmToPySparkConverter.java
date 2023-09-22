@@ -5,7 +5,6 @@ import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.ElmConverter;
 import gov.va.transpiler.bulk.pyspark.output.*;
-import gov.va.transpiler.bulk.pyspark.output.ValueNode.PYTHON_DATA_TYPE;
 import gov.va.transpiler.output.DefaultOutputNode;
 import gov.va.transpiler.output.OutputNode;
 
@@ -30,6 +29,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         var currentNode = new TupleElementNode();
         currentNode.setCqlNodeEquivalent(tupleElement);
         currentNode.setName(new VariableNameNode(tupleElement.getName()));
+        currentNode.setType(tupleElement.getResultType().toString());
         context.getStack().push(currentNode);
         OutputNode result = super.visitTupleElement(tupleElement, context);
         context.getStack().pop();

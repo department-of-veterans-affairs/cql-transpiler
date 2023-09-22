@@ -35,9 +35,6 @@ public class VariableNameNode extends OutputNode{
 
     @Override
     public String asOneLine() {
-        if (!(getCqlNodeEquivalent() instanceof String)) {
-            return null;
-        }
         return variableNameToPythonVariableName((String) getCqlNodeEquivalent());
     }
 }

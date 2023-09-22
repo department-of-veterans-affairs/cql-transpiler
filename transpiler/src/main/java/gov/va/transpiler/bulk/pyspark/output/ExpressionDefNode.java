@@ -21,9 +21,6 @@ public class ExpressionDefNode extends NameValueNode {
 
     @Override
     public String asOneLine() {
-        if (getValue() == null || getValue().asOneLine() == null) {
-            return null;
-        }
         // We don't support access modifiers
         // String builder = accessModifier.asOneLine() + " " + name + " = " + child.asOneLine();
         String builder = getName() == null ? "" : getName() + " = ";

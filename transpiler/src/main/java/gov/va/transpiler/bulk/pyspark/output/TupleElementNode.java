@@ -1,27 +1,39 @@
 package gov.va.transpiler.bulk.pyspark.output;
 
-import gov.va.transpiler.output.OutputWriter;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-// TODO: print as a StructField
 public class TupleElementNode extends NameValueNode {
-    @Override
-    public String asOneLine() {
-        String valueAString = getValue() == null ? "None" : getValue().asOneLine();
-        if (valueAString != null) {
-            return getName().asOneLine() + ": " + getValue().asOneLine();
-        }
-        return null;
+
+    public enum PY_SPARK_DATA_TYPE {
+        StringType,
+        LongType
+    }
+
+    private static final HashMap<String, PY_SPARK_DATA_TYPE> dataTypeMappings = new LinkedHashMap<>();
+
+    {
+        // populate dateTypeMappings
+        dataTypeMappings.put("System.Integer", PY_SPARK_DATA_TYPE.LongType);
+        dataTypeMappings.put("System.String", PY_SPARK_DATA_TYPE.StringType);
+    }
+
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private PY_SPARK_DATA_TYPE cqlTypeToPySparkType(String type) {
+        return dataTypeMappings.get(type);
     }
 
     @Override
-    public boolean print(OutputWriter outputWriter) {
-        if (asOneLine() != null) {
-            return super.print(outputWriter);
-        }
-        outputWriter.addLine(getName().asOneLine());
-        outputWriter.raiseIndentLevel();
-        getValue().print(outputWriter);
-        outputWriter.lowerIndentLevel();
-        return true;
+    public String asOneLine() {
+        return "StructField(" + getValue().asOneLine() + ", " + cqlTypeToPySparkType(getType()) + "(), True)";
     }
 }

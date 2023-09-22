@@ -10,9 +10,6 @@ public class OperatorNode extends MultiChildNode {
 
     @Override
     public String asOneLine() {
-        if (getChildren().isEmpty()) {
-            return null;
-        }
         String builder = "";
         boolean first = true;
         for (var child : getChildren()) {
