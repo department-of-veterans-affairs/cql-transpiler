@@ -2,6 +2,8 @@ package gov.va.transpiler.bulk.pyspark.output;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import gov.va.transpiler.output.OutputNode;
 
@@ -43,8 +45,9 @@ public class ValueNode extends OutputNode {
         switch (type) {
             case String:
                 return "\"" + value + "\"";
-            case Number:
             case Variable:
+                return variableToPythonVariable(value);
+            case Number:
             default:
                 return value;
         }
@@ -56,5 +59,22 @@ public class ValueNode extends OutputNode {
 
     public static PYTHON_DATA_TYPE getMatchingPythonDataType(String hl7FhirType) {
         return dataTypeMappings.get(hl7FhirType);
+    }
+
+    public String variableToPythonVariable(String variableName) {
+        String toReturn = variableName;
+        // Match on any characters that are legal for variable names in CQL but illegal in Python
+        String illegalCharacters = " \\\"";
+        Pattern pattern = Pattern.compile("[" + illegalCharacters + "]");
+        Matcher matcher = pattern.matcher(variableName);
+        if (matcher.find()) {
+            // Replace all illegal characters with '_'
+            for (var illegalCharacter : illegalCharacters.toCharArray()) {
+                toReturn = toReturn.replace(illegalCharacter, '_');
+            }
+            // Append the hash of the variable name to make sure the variable name remains unique
+            toReturn += variableName.hashCode();
+        }
+        return toReturn;
     }
 }

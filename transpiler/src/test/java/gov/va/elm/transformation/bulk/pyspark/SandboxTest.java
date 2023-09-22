@@ -1,6 +1,9 @@
 package gov.va.elm.transformation.bulk.pyspark;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.hl7.elm.r1.Library;
@@ -27,15 +30,47 @@ public class SandboxTest {
     }
 
     @Test
-    public void test() {
-        var libraryList = compiler.compile(""
+    public void testDefineConstants() {
+        String cql = ""
             //+ "library TestCQL version '2.1\n'"
-            //+ "define \"MyTuple\": { A: 'B'}\n"
             + "define myconst_1: 123\n"
             + "define myconst_2: myconst_1\n"
             + "define myconst_3: myconst_2 + 1\n"
             + "define myconst_4: 'abc'\n"
-            );
+            ;
+
+        var pyspark = processCQLToPySpark(cql);
+        for (String output : pyspark) {
+            System.out.println(output);
+        }
+        assertEquals(1, pyspark.size());
+        assertEquals(
+            "# Unsupported node Library [\n" + //
+            "    # Unsupported node UsingDef [  ]\n" + //
+            "    myconst_1 = 1231111111\n" + //
+            "    myconst_2 = myconst_1\n" + //
+            "    myconst_3 = myconst_2 + 1111111111\n" + //
+            "    myconst_4 = \"abc1111111\"\n" + //
+            "# ]\n",
+            pyspark.get(0));
+    }
+
+    @Test
+    public void testDefineTuple() {
+        // TODO: tuple to python structfield or spark.withcolumn
+        String cql = ""
+            //+ "library TestCQL version '2.1\n'"
+            + "define \"My Tuple\": Tuple { a: 1, b: 'foo' }\n"
+            + "define myconst: \"My Tuple\".a"
+            ;
+
+        for (String output : processCQLToPySpark(cql)) {
+            System.out.println(output);
+        }
+    }
+
+    private List<String> processCQLToPySpark(String cql) {
+        var libraryList = compiler.compile(cql);
 
         // Transform the CQL ELM tree into a more abstract version designed to be converted into data-based rather than patient-based semantics (the "bulk" elm tree)
         BulkTransformationLoader bulkTransformationLoader = new BulkTransformationLoader();
@@ -63,8 +98,6 @@ public class SandboxTest {
             convertedLibraries.add(pySparkOutputWriter.getDocumentContents());
         }
 
-        for (String output : convertedLibraries) {
-            System.out.println(output);
-        }
+        return convertedLibraries;
     }
 }

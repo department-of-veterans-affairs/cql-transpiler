@@ -2,6 +2,16 @@ package gov.va.transpiler.output;
 
 public abstract class OutputNode {
 
+    private Object cqlNodeEquivalent;
+
+    public Object getCqlNodeEquivalent() {
+        return cqlNodeEquivalent;
+    }
+
+    public void setCqlNodeEquivalent(Object cqlNodeEquivalent) {
+        this.cqlNodeEquivalent = cqlNodeEquivalent;
+    }
+
     /**
      * @param child Child to add to this node.
      * @return True if the child was added. False otherwise.

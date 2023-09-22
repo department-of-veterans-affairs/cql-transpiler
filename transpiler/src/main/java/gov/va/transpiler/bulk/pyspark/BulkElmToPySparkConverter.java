@@ -1,21 +1,10 @@
 package gov.va.transpiler.bulk.pyspark;
 
 import org.cqframework.cql.elm.tracking.Trackable;
-import org.hl7.elm.r1.AccessModifier;
-import org.hl7.elm.r1.Add;
-import org.hl7.elm.r1.Expression;
-import org.hl7.elm.r1.ExpressionDef;
-import org.hl7.elm.r1.ExpressionRef;
-import org.hl7.elm.r1.FunctionRef;
-import org.hl7.elm.r1.Library;
-import org.hl7.elm.r1.Literal;
+import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.ElmConverter;
-import gov.va.transpiler.bulk.pyspark.output.AccessModifierNode;
-import gov.va.transpiler.bulk.pyspark.output.ExpressionDefNode;
-import gov.va.transpiler.bulk.pyspark.output.ExpressionNode;
-import gov.va.transpiler.bulk.pyspark.output.OperatorNode;
-import gov.va.transpiler.bulk.pyspark.output.ValueNode;
+import gov.va.transpiler.bulk.pyspark.output.*;
 import gov.va.transpiler.bulk.pyspark.output.ValueNode.PYTHON_DATA_TYPE;
 import gov.va.transpiler.output.DefaultOutputNode;
 import gov.va.transpiler.output.OutputNode;
@@ -29,71 +18,83 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
 
     @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
-        var valueNode = new ValueNode();
-        valueNode.setValue(literal.getValue());
-        valueNode.setPythonDataType(ValueNode.getMatchingPythonDataType(literal.getResultType().toString()));
-        return valueNode;
+        var currentNode = new ValueNode();
+        currentNode.setValue(literal.getValue());
+        currentNode.setPythonDataType(ValueNode.getMatchingPythonDataType(literal.getResultType().toString()));
+        currentNode.setCqlNodeEquivalent(literal);
+        return currentNode;
     }
 
     @Override
-    public OutputNode visitAdd(Add add, BulkElmToPySparkConverterState context) {
-        var operatorNode = new OperatorNode("+");
-        context.getStack().push(operatorNode);
-        return super.visitAdd(add, context);
-    }
-/*
-    @Override
     public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToPySparkConverterState context) {
-        var expressionDefNode = new ExpressionDefNode();
-        expressionDefNode.setName(tupleElement.getName());
-        context.getStack().push(expressionDefNode);
-        return super.visitTupleElement(tupleElement, context);
+        var currentNode = new TupleElementNode();
+        currentNode.setCqlNodeEquivalent(tupleElement);
+        currentNode.setName(tupleElement.getName());
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitTupleElement(tupleElement, context);
+        context.getStack().pop();
+        return result;
     }
 
     @Override
     public OutputNode visitTuple(Tuple tuple, BulkElmToPySparkConverterState context) {
-        var classNode = new ClassNode();
-        context.getStack().push(classNode);
-        return super.visitTuple(tuple, context);
+        var currentNode = new TupleNode();
+        currentNode.setCqlNodeEquivalent(tuple);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitTuple(tuple, context);
+        context.getStack().pop();
+        return result;
     }
-*/
+
     @Override
-    public OutputNode visitExpression(Expression expression, BulkElmToPySparkConverterState context) {
-        var expressionNode = new ExpressionNode();
-        context.getStack().push(expressionNode);
-        return super.visitExpression(expression, context);
+    public OutputNode visitAdd(Add add, BulkElmToPySparkConverterState context) {
+        var currentNode = new OperatorNode("+");
+        currentNode.setCqlNodeEquivalent(add);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitAdd(add, context);
+        context.getStack().pop();
+        return result;
     }
 
     @Override
     public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
         if (!(expressionRef instanceof FunctionRef)) {
-            var valueNode = new ValueNode();
-            valueNode.setValue(expressionRef.getName());
-            valueNode.setPythonDataType(PYTHON_DATA_TYPE.Variable);
-            return valueNode;
+            var currentNode = new ValueNode();
+            currentNode.setValue(expressionRef.getName());
+            currentNode.setPythonDataType(PYTHON_DATA_TYPE.Variable);
+            currentNode.setCqlNodeEquivalent(expressionRef);
+            return currentNode;
         }
         return super.visitExpressionRef(expressionRef, context);
     }
 
     @Override
     public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToPySparkConverterState context) {
-        var expressionDefNode = new ExpressionDefNode();
-        expressionDefNode.setName(expressionDef.getName());
-        context.getStack().push(expressionDefNode);
-        return super.visitExpressionDef(expressionDef, context);
+        var currentNode = new ExpressionDefNode();
+        currentNode.setName(expressionDef.getName());
+        currentNode.setCqlNodeEquivalent(expressionDef);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitExpressionDef(expressionDef, context);
+        context.getStack().pop();
+        return result;
     }
 
     @Override
     public OutputNode visitAccessModifier(AccessModifier accessModifier, BulkElmToPySparkConverterState context) {
-        return new AccessModifierNode();
+        var currentNode = new AccessModifierNode();
+        currentNode.setCqlNodeEquivalent(accessModifier);
+        return currentNode;
     }
 
     @Override
     protected OutputNode defaultResult(Trackable elm, BulkElmToPySparkConverterState context) {
-        if (!context.getStack().isEmpty()) {
-            return context.getStack().pop();
+        OutputNode stackLocation;
+        if (!context.getStack().empty() && elm == (stackLocation = context.getStack().peek()).getCqlNodeEquivalent()) {
+            return stackLocation;
         }
-        return new DefaultOutputNode(defaultNodeName(elm));
+        stackLocation = new DefaultOutputNode(defaultNodeName(elm));
+        context.getStack().push(stackLocation);
+        return stackLocation;
     }
 
     @Override
