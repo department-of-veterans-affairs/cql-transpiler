@@ -71,10 +71,10 @@ public class SandboxTest {
         assertEquals(1, pyspark.size());
         String[] lines = pyspark.get(0).split("\n");
         assertEquals(4, lines.length);
-        assertEquals("class TestCQL_2_1", lines[0]);
+        assertEquals("class TestCQL_2_1:", lines[0]);
         assertEquals("    # Unsupported node UsingDef [  ]", lines[1]);
-        assertEquals("    My_Tuple240974736 = StructType([StructField(1, LongType(), True), StructField(\"foo\", StringType(), True)]", lines[2]);
-        assertEquals("    myconst = # Unsupported node Property [ My_Tuple240974736 ]", lines[3]);
+        assertEquals("    My_Tuple240974736 = StructType([StructField(1, LongType(), True), StructField(\"foo\", StringType(), True)])", lines[2]);
+        assertEquals("    myconst = My_Tuple240974736.a", lines[3]);
     }
 
     private List<String> processCQLToPySpark(String cql) {

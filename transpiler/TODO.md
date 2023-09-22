@@ -1,8 +1,7 @@
-Support Nodes:
-* Property
+Support nodes:
 * UsingDef
 
-Libraries:
+Support addiitional functionality for libraries:
 
 * move imports to top of library printing, before "class" declaration"
 * Automatically transform libraries to use relevant python imports

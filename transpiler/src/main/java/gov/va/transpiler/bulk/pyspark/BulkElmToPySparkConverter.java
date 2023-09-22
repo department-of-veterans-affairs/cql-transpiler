@@ -16,6 +16,28 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
+    protected OutputNode defaultResult(Trackable elm, BulkElmToPySparkConverterState context) {
+        OutputNode stackLocation;
+        if (!context.getStack().empty() && elm == (stackLocation = context.getStack().peek()).getCqlNodeEquivalent()) {
+            return stackLocation;
+        }
+        stackLocation = new DefaultOutputNode(defaultNodeName(elm));
+        context.getStack().push(stackLocation);
+        return stackLocation;
+    }
+
+    @Override
+    protected OutputNode aggregateResult(OutputNode aggregate, OutputNode nextResult) {
+        if (nextResult != null) {
+            boolean added = aggregate.addChild(nextResult);
+            if (added == false) {
+                throw new IllegalAccessError("Tried to add invalid child [" + nextResult + "] to node [" + aggregate + "].");
+            }
+        }
+        return aggregate;
+    }
+
+    @Override
     public OutputNode visitLibrary(Library library, BulkElmToPySparkConverterState context) {
         var currentNode = new ClassNode();
         currentNode.setName(currentNode.getClassnameFromLibrary(library));
@@ -27,22 +49,20 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
-        var currentNode = new ValueNode();
-        currentNode.setValue(literal.getValue());
-        currentNode.setPythonDataType(ValueNode.getMatchingPythonDataType(literal.getResultType().toString()));
-        currentNode.setCqlNodeEquivalent(literal);
-        return currentNode;
+    public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
+        if (!(expressionRef instanceof FunctionRef)) {
+            return new VariableNameNode(expressionRef.getName());
+        }
+        return super.visitExpressionRef(expressionRef, context);
     }
 
     @Override
-    public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToPySparkConverterState context) {
-        var currentNode = new TupleElementNode();
-        currentNode.setCqlNodeEquivalent(tupleElement);
-        currentNode.setName(new VariableNameNode(tupleElement.getName()));
-        currentNode.setType(tupleElement.getResultType().toString());
+    public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToPySparkConverterState context) {
+        var currentNode = new ExpressionDefNode();
+        currentNode.setName(new VariableNameNode(expressionDef.getName()));
+        currentNode.setCqlNodeEquivalent(expressionDef);
         context.getStack().push(currentNode);
-        OutputNode result = super.visitTupleElement(tupleElement, context);
+        OutputNode result = super.visitExpressionDef(expressionDef, context);
         context.getStack().pop();
         return result;
     }
@@ -68,20 +88,24 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
-        if (!(expressionRef instanceof FunctionRef)) {
-            return new VariableNameNode(expressionRef.getName());
-        }
-        return super.visitExpressionRef(expressionRef, context);
+    public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToPySparkConverterState context) {
+        var currentNode = new TupleElementNode();
+        currentNode.setCqlNodeEquivalent(tupleElement);
+        currentNode.setName(new VariableNameNode(tupleElement.getName()));
+        currentNode.setType(tupleElement.getResultType().toString());
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitTupleElement(tupleElement, context);
+        context.getStack().pop();
+        return result;
     }
 
     @Override
-    public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToPySparkConverterState context) {
-        var currentNode = new ExpressionDefNode();
-        currentNode.setName(new VariableNameNode(expressionDef.getName()));
-        currentNode.setCqlNodeEquivalent(expressionDef);
+    public OutputNode visitProperty(Property property, BulkElmToPySparkConverterState context) {
+        var currentNode = new PropertyNode();
+        currentNode.setCqlNodeEquivalent(property);
+        currentNode.setName(new VariableNameNode(property.getPath()));
         context.getStack().push(currentNode);
-        OutputNode result = super.visitExpressionDef(expressionDef, context);
+        OutputNode result = super.visitProperty(property, context);
         context.getStack().pop();
         return result;
     }
@@ -94,25 +118,12 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    protected OutputNode defaultResult(Trackable elm, BulkElmToPySparkConverterState context) {
-        OutputNode stackLocation;
-        if (!context.getStack().empty() && elm == (stackLocation = context.getStack().peek()).getCqlNodeEquivalent()) {
-            return stackLocation;
-        }
-        stackLocation = new DefaultOutputNode(defaultNodeName(elm));
-        context.getStack().push(stackLocation);
-        return stackLocation;
-    }
-
-    @Override
-    protected OutputNode aggregateResult(OutputNode aggregate, OutputNode nextResult) {
-        if (nextResult != null) {
-            boolean added = aggregate.addChild(nextResult);
-            if (added == false) {
-                throw new IllegalAccessError("Tried to add invalid child [" + nextResult + "] to node [" + aggregate + "].");
-            }
-        }
-        return aggregate;
+    public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
+        var currentNode = new ValueNode();
+        currentNode.setValue(literal.getValue());
+        currentNode.setPythonDataType(ValueNode.getMatchingPythonDataType(literal.getResultType().toString()));
+        currentNode.setCqlNodeEquivalent(literal);
+        return currentNode;
     }
 
     private String defaultNodeName(Trackable elm) {

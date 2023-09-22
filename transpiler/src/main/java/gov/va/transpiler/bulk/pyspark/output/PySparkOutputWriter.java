@@ -25,11 +25,6 @@ public class PySparkOutputWriter extends OutputWriter{
     }
 
     @Override
-    public void addText(String text) {
-        document.append(text);
-    }
-
-    @Override
     public void addLine(String line) {
         for (int i = 0; i < getIndentLevel(); i++) {
             document.append(toIndentWith);

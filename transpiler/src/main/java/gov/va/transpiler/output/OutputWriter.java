@@ -20,7 +20,6 @@ public abstract class OutputWriter {
         return indentLevel;
     }
 
-    public abstract void addText(String text);
     public abstract void addLine(String line);
     public abstract String getDocumentContents();
 }
