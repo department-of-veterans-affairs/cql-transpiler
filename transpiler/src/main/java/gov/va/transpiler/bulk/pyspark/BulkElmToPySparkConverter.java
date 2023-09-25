@@ -92,7 +92,6 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         var currentNode = new TupleElementNode();
         currentNode.setCqlNodeEquivalent(tupleElement);
         currentNode.setName(new VariableNameNode(tupleElement.getName()));
-        currentNode.setType(tupleElement.getResultType().toString());
         context.getStack().push(currentNode);
         OutputNode result = super.visitTupleElement(tupleElement, context);
         context.getStack().pop();
@@ -104,6 +103,8 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         var currentNode = new PropertyNode();
         currentNode.setCqlNodeEquivalent(property);
         currentNode.setName(new VariableNameNode(property.getPath()));
+        currentNode.setAccessibleType(currentNode.accessibleTypeForCQLSourceType(
+            property.getSource().getResultType().toString()));
         context.getStack().push(currentNode);
         OutputNode result = super.visitProperty(property, context);
         context.getStack().pop();

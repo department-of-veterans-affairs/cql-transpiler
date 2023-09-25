@@ -6,7 +6,7 @@ public class TupleNode extends MultiChildNode {
 
     @Override
     public String asOneLine() {
-        String builder = "StructType([";
+        String builder = "{";
         boolean first = true;
         for (var child : getChildren()) {
             var childAsString = child.asOneLine();
@@ -17,14 +17,14 @@ public class TupleNode extends MultiChildNode {
             first = false;
             builder += childAsString;
         }
-        builder += "])";
+        builder += "}";
         return builder;
     }
 
     @Override
     public boolean print(OutputWriter outputWriter) {
         if (!super.print(outputWriter)) {
-            outputWriter.addLine("StructType([");
+            outputWriter.addLine("{");
             outputWriter.raiseIndentLevel();
             boolean first = true;
             for (var child : getChildren()) {
@@ -35,7 +35,7 @@ public class TupleNode extends MultiChildNode {
                 child.print(outputWriter);
             }
             outputWriter.lowerIndentLevel();
-            outputWriter.addLine("]}");
+            outputWriter.addLine("}");
         }
         return true;
     }

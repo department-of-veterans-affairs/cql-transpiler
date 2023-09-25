@@ -7,21 +7,21 @@ import gov.va.transpiler.output.OutputNode;
 
 public class ValueNode extends OutputNode {
 
-    public static enum PYTHON_DATA_TYPE {
+    public static enum PythonDataType {
         Number,
         String
     }
 
-    private static final HashMap<String, PYTHON_DATA_TYPE> dataTypeMappings = new LinkedHashMap<>();
+    private static final HashMap<String, PythonDataType> dataTypeMappings = new LinkedHashMap<>();
 
     {
         // populate dateTypeMappings
-        dataTypeMappings.put("System.Integer", PYTHON_DATA_TYPE.Number);
-        dataTypeMappings.put("System.String", PYTHON_DATA_TYPE.String);
+        dataTypeMappings.put("System.Integer", PythonDataType.Number);
+        dataTypeMappings.put("System.String", PythonDataType.String);
     }
 
     private String value;
-    private PYTHON_DATA_TYPE type;
+    private PythonDataType type;
 
     @Override
     public boolean addChild(OutputNode child) {
@@ -37,7 +37,7 @@ public class ValueNode extends OutputNode {
         this.value = value;
     }
 
-    private String toPythonRepresentation(String value, PYTHON_DATA_TYPE type) {
+    private String toPythonRepresentation(String value, PythonDataType type) {
         // TODO: expand for all types
         switch (type) {
             case String:
@@ -48,11 +48,11 @@ public class ValueNode extends OutputNode {
         }
     }
 
-    public void setPythonDataType(PYTHON_DATA_TYPE type) {
+    public void setPythonDataType(PythonDataType type) {
         this.type = type;
     }
 
-    public static PYTHON_DATA_TYPE getMatchingPythonDataType(String hl7FhirType) {
+    public static PythonDataType getMatchingPythonDataType(String hl7FhirType) {
         return dataTypeMappings.get(hl7FhirType);
     }
 }
