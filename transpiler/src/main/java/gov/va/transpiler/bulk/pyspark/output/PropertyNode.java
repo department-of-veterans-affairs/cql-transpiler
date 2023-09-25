@@ -19,8 +19,10 @@ public class PropertyNode extends NameValueNode {
     }
 
     public AccessibleType accessibleTypeForCQLSourceType(String sourcetype) {
-        if (sourcetype.startsWith("tuple")) {
-            return AccessibleType.Tuple;
+        if (sourcetype != null) {
+            if (sourcetype.startsWith("tuple")) {
+                return AccessibleType.Tuple;
+            }
         }
         return null;
     }
