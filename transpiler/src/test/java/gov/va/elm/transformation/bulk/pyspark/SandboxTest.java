@@ -40,6 +40,8 @@ public class SandboxTest {
             + "define myconst_4: 'abc'\n"
             ;
 
+        System.out.println(cql);
+
         var pyspark = processCQLToPySpark(cql);
         for (String output : pyspark) {
             System.out.println(output);
@@ -59,10 +61,12 @@ public class SandboxTest {
     public void testDefineTuple() {
         // TODO: tuple to python structfield or spark.withcolumn
         String cql = ""
-            + "library TestCQL version '2.1\n'"
+            + "library TestCQL version '2.1'\n"
             + "define \"My Tuple\": Tuple { a: 1, b: 'foo' }\n"
             + "define myconst: \"My Tuple\".a"
             ;
+
+        System.out.println(cql);
 
         var pyspark = processCQLToPySpark(cql);
         for (String output : pyspark) {
