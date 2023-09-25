@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hl7.elm.r1.Library;
+import org.hl7.fhir.Encounter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,9 @@ public class SandboxTest {
             + "define myconst_4: 'abc'\n"
             ;
 
+        System.out.println("# Original CQL ");
         System.out.println(cql);
+        System.out.println();
 
         var pyspark = processCQLToPySpark(cql);
         for (String output : pyspark) {
@@ -66,7 +69,9 @@ public class SandboxTest {
             + "define myconst: \"My Tuple\".a"
             ;
 
+        System.out.println("# Original CQL ");
         System.out.println(cql);
+        System.out.println();
 
         var pyspark = processCQLToPySpark(cql);
         for (String output : pyspark) {
@@ -79,6 +84,31 @@ public class SandboxTest {
         assertEquals("    # Unsupported node UsingDef [  ]", lines[1]);
         assertEquals("    My_Tuple240974736 = {'a' : 1, 'b' : \"foo\"}", lines[2]);
         assertEquals("    myconst = My_Tuple240974736['a']", lines[3]);
+    }
+
+    @Test
+    public void testRetrieval() {
+        // TODO: tuple to python structfield or spark.withcolumn
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using  FHIR version '4.0.1'\n"
+            + "define \"Encounter A\": [Encounter] E where E.status.value = 'planned'\n"
+            ;
+
+        System.out.println("# Original CQL ");
+        System.out.println(cql);
+        System.out.println();
+
+        var pyspark = processCQLToPySpark(cql);
+        for (String output : pyspark) {
+            System.out.println(output);
+        }
+        assertEquals(1, pyspark.size());
+        String[] lines = pyspark.get(0).split("\n");
+        assertEquals(4, lines.length);
+        assertTrue(lines[0].contains("class AnonymousLibrary_"));
+        assertEquals("    # Unsupported node UsingDef [  ]", lines[1]);
+        assertEquals("?", lines[2]);
     }
 
     private List<String> processCQLToPySpark(String cql) {

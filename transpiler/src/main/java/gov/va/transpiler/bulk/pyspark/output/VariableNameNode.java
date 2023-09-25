@@ -25,7 +25,7 @@ public class VariableNameNode extends OutputNode{
             // Append the hash of the variable name to make sure the variable name remains unique
             // Make sure the value is positive because Python doesn't support hyphens in variable names
             // Hash codes are deterministic for Strings, so running this more than once on the same variable name will produce the same results
-            toReturn += variableName.hashCode() * variableName.hashCode();
+            toReturn += Math.abs(variableName.hashCode());
         }
         return toReturn;
     }
