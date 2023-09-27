@@ -52,7 +52,6 @@ public class SandboxTest {
 
     @Test
     public void testDefineTuple() {
-        // TODO: tuple to python structfield or spark.withcolumn
         String cql = ""
             + "library TestCQL version '2.1'\n"
             + "define \"My Tuple\": Tuple { a: 1, b: 'foo' }\n"

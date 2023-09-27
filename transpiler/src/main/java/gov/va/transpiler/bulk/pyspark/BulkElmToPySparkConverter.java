@@ -6,12 +6,13 @@ import org.hl7.elm.r1.*;
 import gov.va.transpiler.ElmConverter;
 import gov.va.transpiler.bulk.pyspark.node.AccessModifierNode;
 import gov.va.transpiler.bulk.pyspark.node.ExpressionDefNode;
+import gov.va.transpiler.bulk.pyspark.node.ExpressionRefNode;
 import gov.va.transpiler.bulk.pyspark.node.LibraryNode;
 import gov.va.transpiler.bulk.pyspark.node.OperatorNode;
 import gov.va.transpiler.bulk.pyspark.node.PropertyNode;
 import gov.va.transpiler.bulk.pyspark.node.TupleElementNode;
 import gov.va.transpiler.bulk.pyspark.node.TupleNode;
-import gov.va.transpiler.bulk.pyspark.node.ValueNode;
+import gov.va.transpiler.bulk.pyspark.node.LiteralNode;
 import gov.va.transpiler.bulk.pyspark.utilities.CQLNameToPythonName;
 import gov.va.transpiler.bulk.pyspark.utilities.CQLTypeToPythonType;
 import gov.va.transpiler.node.DefaultOutputNode;
@@ -64,15 +65,17 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         context.getStack().pop();
         return result;
     }
-/*
+
     @Override
     public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
         if (!(expressionRef instanceof FunctionRef)) {
-            return new VariableNameNode(expressionRef.getName());
+            var expressionRefNode = new ExpressionRefNode(cqlNameToPythonName);
+            expressionRefNode.setName(expressionRef.getName());
+            return expressionRefNode;
         }
         return super.visitExpressionRef(expressionRef, context);
     }
-*/
+
     @Override
     public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToPySparkConverterState context) {
         var currentNode = new ExpressionDefNode(cqlNameToPythonName);
@@ -138,8 +141,8 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
 
     @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
-        var currentNode = new ValueNode(cqlTypeToPythonType);
-        currentNode.setValue(literal.getValue());
+        var currentNode = new LiteralNode(cqlTypeToPythonType);
+        currentNode.setName(literal.getValue());
         currentNode.setResultType(literal.getResultType().toString());
         currentNode.setCqlNodeEquivalent(literal);
         return currentNode;
