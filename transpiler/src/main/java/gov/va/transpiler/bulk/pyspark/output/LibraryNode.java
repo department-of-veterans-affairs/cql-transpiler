@@ -6,7 +6,7 @@ import org.hl7.elm.r1.Library;
 
 import gov.va.transpiler.output.OutputWriter;
 
-public class ClassNode extends MultiChildNode {
+public class LibraryNode extends MultiChildNode {
 
     String name;
     String version;
@@ -19,7 +19,7 @@ public class ClassNode extends MultiChildNode {
         this.name = name;
     }
 
-    public String getClassnameFromLibrary(Library library) {
+    public String getFileNameFromLibrary(Library library) {
         String className = null;
         var identifier = library.getIdentifier();
         if (identifier != null) {
@@ -35,14 +35,15 @@ public class ClassNode extends MultiChildNode {
             }
         }
         if (className == null) {
-            className = generateAnonymousLibraryName();
+            className = generateAnonymousFileName();
         }
         return className;
     }
 
-    private String generateAnonymousLibraryName() {
+    private String generateAnonymousFileName() {
         return "AnonymousLibrary_" + UUID.randomUUID().toString().replace('-', '_');
     }
+
     @Override
     public String asOneLine() {
         return null;
@@ -50,9 +51,6 @@ public class ClassNode extends MultiChildNode {
 
     @Override
     public boolean print(OutputWriter outputWriter) {
-        String classHeader = "class " + getName() + ":";
-        outputWriter.addLine(classHeader);
-        outputWriter.raiseIndentLevel();
         boolean printSuccess = true;
         for (var child : getChildren()) {
             if (!child.print(outputWriter)) {
@@ -60,7 +58,6 @@ public class ClassNode extends MultiChildNode {
                 outputWriter.addLine("# failed to print: [" + child.getClass().getName() + "@" + child.hashCode() + " / "+ child.asOneLine() +  "]");
             }
         }
-        outputWriter.lowerIndentLevel();
         return printSuccess;
     }
 }

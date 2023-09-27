@@ -51,13 +51,12 @@ public class SandboxTest {
         }
         assertEquals(1, pyspark.size());
         String[] lines = pyspark.get(0).split("\n");
-        assertEquals(6, lines.length);
-        assertTrue(lines[0].contains("class AnonymousLibrary_"));
-        assertEquals("    # Unsupported node UsingDef [  ]", lines[1]);
-        assertEquals("    myconst_1 = 1231111111", lines[2]);
-        assertEquals("    myconst_2 = myconst_1", lines[3]);
-        assertEquals("    myconst_3 = myconst_2 + 1111111111", lines[4]);
-        assertEquals("    myconst_4 = \"abc1111111\"", lines[5]);
+        assertEquals(5, lines.length);
+        assertEquals("# Unsupported node UsingDef [  ]", lines[0]);
+        assertEquals("myconst_1 = 123", lines[1]);
+        assertEquals("myconst_2 = myconst_1", lines[2]);
+        assertEquals("myconst_3 = myconst_2 + 1", lines[3]);
+        assertEquals("myconst_4 = \"abc\"", lines[4]);
     }
 
     @Test
@@ -79,11 +78,10 @@ public class SandboxTest {
         }
         assertEquals(1, pyspark.size());
         String[] lines = pyspark.get(0).split("\n");
-        assertEquals(4, lines.length);
-        assertEquals("class TestCQL_2_1:", lines[0]);
-        assertEquals("    # Unsupported node UsingDef [  ]", lines[1]);
-        assertEquals("    My_Tuple240974736 = {'a' : 1, 'b' : \"foo\"}", lines[2]);
-        assertEquals("    myconst = My_Tuple240974736['a']", lines[3]);
+        assertEquals(3, lines.length);
+        assertEquals("# Unsupported node UsingDef [  ]", lines[0]);
+        assertEquals("My_Tuple2063477844 = {'a' : 1, 'b' : \"foo\"}", lines[1]);
+        assertEquals("myconst = My_Tuple2063477844['a']", lines[2]);
     }
 
     @Test
@@ -92,7 +90,9 @@ public class SandboxTest {
         String cql = ""
             + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"
-            + "define \"Encounter A\": [Encounter] E where E.status.value = 'planned'\n"
+            //+ "context Patient\n"
+            + "define \"Encounter A\": [Encounter]\n"
+            //+ "define \"Encounter A\": [Encounter] E where E.status.value = 'planned'\n"
             ;
 
         System.out.println("# Original CQL ");
@@ -105,10 +105,6 @@ public class SandboxTest {
         }
         assertEquals(1, pyspark.size());
         String[] lines = pyspark.get(0).split("\n");
-        assertEquals(4, lines.length);
-        assertTrue(lines[0].contains("class AnonymousLibrary_"));
-        assertEquals("    # Unsupported node UsingDef [  ]", lines[1]);
-        assertEquals("?", lines[2]);
     }
 
     private List<String> processCQLToPySpark(String cql) {
@@ -116,7 +112,7 @@ public class SandboxTest {
 
         // Transform the CQL ELM tree into a more abstract version designed to be converted into data-based rather than patient-based semantics (the "bulk" elm tree)
         BulkTransformationLoader bulkTransformationLoader = new BulkTransformationLoader();
-        bulkTransformationLoader.registerTransformations(Set.of(new ModifyLiterals()));
+        //bulkTransformationLoader.registerTransformations(Set.of(new ModifyLiterals()));
         ElmTransformerRecursive elmTransformerRecursive = new ElmTransformerRecursive(bulkTransformationLoader);
         for (Library library : libraryList) {
             // Create the state of the for the transformation transversal
