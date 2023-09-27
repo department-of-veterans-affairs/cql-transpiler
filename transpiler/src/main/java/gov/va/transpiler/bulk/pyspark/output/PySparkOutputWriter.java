@@ -4,6 +4,7 @@ import gov.va.transpiler.output.OutputWriter;
 
 public class PySparkOutputWriter extends OutputWriter{
 
+    private boolean currentLineAlreadyStarted;
     private final String toIndentWith;
     private final String toLineBreakWith;
     private final StringBuilder document;
@@ -25,16 +26,39 @@ public class PySparkOutputWriter extends OutputWriter{
     }
 
     @Override
-    public void addLine(String line) {
-        for (int i = 0; i < getIndentLevel(); i++) {
-            document.append(toIndentWith);
-        }
-        document.append(line);
-        document.append(toLineBreakWith);
+    public String getDocumentContents() {
+        return document.toString();
     }
 
     @Override
-    public String getDocumentContents() {
-        return document.toString();
+    public boolean isCurrentLineAlreadyStarted() {
+       return currentLineAlreadyStarted;
+    }
+
+    @Override
+    protected void setCurrentLineAlreadyStarted(boolean started) {
+        currentLineAlreadyStarted = started;
+    }
+
+    @Override
+    public void startLine() {
+        if (isCurrentLineAlreadyStarted()) {
+            throw new IllegalStateException("Line already started");
+        }
+        setCurrentLineAlreadyStarted(true);
+        for (int i = 0; i < getIndentLevel(); i++) {
+            document.append(toIndentWith);
+        }
+    }
+
+    @Override
+    public void addText(String text) {
+        document.append(text);
+    }
+
+    @Override
+    public void endLine() {
+        setCurrentLineAlreadyStarted(false);
+        document.append(toLineBreakWith);
     }
 }

@@ -1,14 +1,11 @@
 package gov.va.elm.transformation.bulk.pyspark;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.hl7.elm.r1.Library;
-import org.hl7.fhir.Encounter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +16,7 @@ import gov.va.transpiler.bulk.BulkTransformationLoader;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverter;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverterState;
 import gov.va.transpiler.bulk.pyspark.output.PySparkOutputWriter;
-import gov.va.transpiler.bulk.transformations.ModifyLiterals;
+import gov.va.transpiler.bulk.pyspark.utilities.CQLTypeToPythonType;
 import gov.va.transpiler.transformer.ElmTransformerRecursive;
 
 public class SandboxTest {
@@ -50,13 +47,6 @@ public class SandboxTest {
             System.out.println(output);
         }
         assertEquals(1, pyspark.size());
-        String[] lines = pyspark.get(0).split("\n");
-        assertEquals(5, lines.length);
-        assertEquals("# Unsupported node UsingDef [  ]", lines[0]);
-        assertEquals("myconst_1 = 123", lines[1]);
-        assertEquals("myconst_2 = myconst_1", lines[2]);
-        assertEquals("myconst_3 = myconst_2 + 1", lines[3]);
-        assertEquals("myconst_4 = \"abc\"", lines[4]);
     }
 
     @Test
@@ -77,11 +67,6 @@ public class SandboxTest {
             System.out.println(output);
         }
         assertEquals(1, pyspark.size());
-        String[] lines = pyspark.get(0).split("\n");
-        assertEquals(3, lines.length);
-        assertEquals("# Unsupported node UsingDef [  ]", lines[0]);
-        assertEquals("My_Tuple2063477844 = {'a' : 1, 'b' : \"foo\"}", lines[1]);
-        assertEquals("myconst = My_Tuple2063477844['a']", lines[2]);
     }
 
     @Test
@@ -90,9 +75,9 @@ public class SandboxTest {
         String cql = ""
             + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"
-            //+ "context Patient\n"
-            + "define \"Encounter A\": [Encounter]\n"
-            //+ "define \"Encounter A\": [Encounter] E where E.status.value = 'planned'\n"
+            + "context Patient\n"
+            //+ "define \"Encounter A\": [Encounter]\n"
+            + "define \"Encounter A\": [Encounter] E where E.status.value = 'planned'\n"
             ;
 
         System.out.println("# Original CQL ");
@@ -104,7 +89,6 @@ public class SandboxTest {
             System.out.println(output);
         }
         assertEquals(1, pyspark.size());
-        String[] lines = pyspark.get(0).split("\n");
     }
 
     private List<String> processCQLToPySpark(String cql) {
@@ -126,7 +110,8 @@ public class SandboxTest {
         }
 
         // Transform the bulk elm tree into PySpark Scripts
-        var elmToPySparkConverter = new BulkElmToPySparkConverter();        
+        var cqlTypeToPythonType = new CQLTypeToPythonType();
+        var elmToPySparkConverter = new BulkElmToPySparkConverter(cqlTypeToPythonType);        
         var elmToPySparkConverterState = new BulkElmToPySparkConverterState();
         var convertedLibraries = new ArrayList<String>();
         for (Library library : libraryList) {

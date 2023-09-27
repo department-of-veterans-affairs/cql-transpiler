@@ -5,10 +5,17 @@ import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.ElmConverter;
 import gov.va.transpiler.bulk.pyspark.output.*;
+import gov.va.transpiler.bulk.pyspark.utilities.CQLTypeToPythonType;
 import gov.va.transpiler.output.DefaultOutputNode;
 import gov.va.transpiler.output.OutputNode;
 
 public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmToPySparkConverterState> {
+
+    private final CQLTypeToPythonType cqlTypeToPythonType;
+
+    public BulkElmToPySparkConverter(CQLTypeToPythonType cqlTypeToPythonType) {
+        this.cqlTypeToPythonType = cqlTypeToPythonType;
+    }
 
     @Override
     public OutputNode convert(Library library, BulkElmToPySparkConverterState state) {
@@ -121,9 +128,9 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
 
     @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
-        var currentNode = new ValueNode();
+        var currentNode = new ValueNode(cqlTypeToPythonType);
         currentNode.setValue(literal.getValue());
-        currentNode.setPythonDataType(ValueNode.getMatchingPythonDataType(literal.getResultType().toString()));
+        currentNode.setResultType(literal.getResultType().toString());
         currentNode.setCqlNodeEquivalent(literal);
         return currentNode;
     }

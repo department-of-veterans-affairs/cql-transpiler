@@ -23,8 +23,8 @@ public class LibraryNode extends MultiChildNode {
         String className = null;
         var identifier = library.getIdentifier();
         if (identifier != null) {
-            String libraryName = identifier.getId();
-            String libraryVersion = identifier.getVersion();
+            var libraryName = identifier.getId();
+            var libraryVersion = identifier.getVersion();
             if (libraryName != null) {
                 className = libraryName;
                 if (libraryVersion != null) {
@@ -51,11 +51,12 @@ public class LibraryNode extends MultiChildNode {
 
     @Override
     public boolean print(OutputWriter outputWriter) {
-        boolean printSuccess = true;
+        var printSuccess = true;
         for (var child : getChildren()) {
             if (!child.print(outputWriter)) {
                 printSuccess = false;
-                outputWriter.addLine("# failed to print: [" + child.getClass().getName() + "@" + child.hashCode() + " / "+ child.asOneLine() +  "]");
+                var failureMessage = "# failed to print: [" + child.getClass().getName() + "@" + child.hashCode() + " / "+ child.asOneLine() +  "]";
+                outputWriter.printFullLine(failureMessage);
             }
         }
         return printSuccess;

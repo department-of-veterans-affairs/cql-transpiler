@@ -35,15 +35,22 @@ public class DefaultOutputNode extends OutputNode {
 
     @Override
     public boolean print(OutputWriter outputWriter) {
-        if (!super.print(outputWriter)) {
-            outputWriter.addLine("# Unsupported node " + name + " [");
+        boolean success = true;
+        // Try to add this node to the current line
+        // Otherwise, try to add this node as a new, single line.
+        // If that can't be done, print in full.
+        if (outputWriter.isCurrentLineAlreadyStarted() && asOneLine() != null) {
+            outputWriter.addText(asOneLine());
+            outputWriter.endLine();
+        } else if (!super.print(outputWriter)) {
+            outputWriter.printFullLine("# Unsupported node " + name + " [");
             outputWriter.raiseIndentLevel();
             for(OutputNode child : children) {
-                child.print(outputWriter);
+                success |= child.print(outputWriter);
             }
             outputWriter.lowerIndentLevel();
-            outputWriter.addLine("# ]");
+            outputWriter.printFullLine("# ]");
         }
-        return true;
+        return success;
     }
 }

@@ -14,13 +14,6 @@ public class TupleElementNode extends NameValueNode {
 
     @Override
     public boolean print(OutputWriter outputWriter) {
-        if (!super.print(outputWriter)) {
-            outputWriter.addLine("'" + getName().asOneLine() + "' :");
-            outputWriter.raiseIndentLevel();
-            boolean printed = getValue().print(outputWriter);
-            outputWriter.lowerIndentLevel();
-            return printed;
-        }
-        return true;
+        return super.print(outputWriter);
     }
 }

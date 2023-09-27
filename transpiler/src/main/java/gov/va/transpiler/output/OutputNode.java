@@ -29,7 +29,12 @@ public abstract class OutputNode {
      */
     public boolean print(OutputWriter outputWriter) {
         if (asOneLine() != null) {
-            outputWriter.addLine(asOneLine());
+            if (outputWriter.isCurrentLineAlreadyStarted()) {
+                outputWriter.addText(asOneLine());
+                outputWriter.endLine();
+            } else {
+                outputWriter.printFullLine(asOneLine());
+            }
             return true;
         }
         return false;

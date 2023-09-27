@@ -1,0 +1,3 @@
+class CqlModel:
+    # TODO
+    pass
