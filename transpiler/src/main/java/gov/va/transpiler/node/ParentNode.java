@@ -1,11 +1,9 @@
-package gov.va.transpiler.bulk.pyspark.output;
+package gov.va.transpiler.node;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import gov.va.transpiler.output.OutputNode;
-
-public abstract class MultiChildNode extends OutputNode {
+public abstract class ParentNode extends OutputNode {
 
     private List<OutputNode> children = new ArrayList<>();
 

@@ -1,7 +1,9 @@
-package gov.va.transpiler.output;
+package gov.va.transpiler.node;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import gov.va.transpiler.bulk.pyspark.OutputWriter;
 
 public class DefaultOutputNode extends OutputNode {
 

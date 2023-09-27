@@ -1,7 +1,7 @@
-package gov.va.transpiler.bulk.pyspark.output;
+package gov.va.transpiler.bulk.pyspark.node;
 
 import gov.va.transpiler.bulk.pyspark.utilities.CQLTypeToPythonType;
-import gov.va.transpiler.output.OutputNode;
+import gov.va.transpiler.node.OutputNode;
 
 public class ValueNode extends OutputNode {
 

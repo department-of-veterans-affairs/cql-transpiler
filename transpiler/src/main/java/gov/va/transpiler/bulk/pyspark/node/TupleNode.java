@@ -1,8 +1,9 @@
-package gov.va.transpiler.bulk.pyspark.output;
+package gov.va.transpiler.bulk.pyspark.node;
 
-import gov.va.transpiler.output.OutputWriter;
+import gov.va.transpiler.bulk.pyspark.OutputWriter;
+import gov.va.transpiler.node.ParentNode;
 
-public class TupleNode extends MultiChildNode {
+public class TupleNode extends ParentNode {
 
     @Override
     public String asOneLine() {

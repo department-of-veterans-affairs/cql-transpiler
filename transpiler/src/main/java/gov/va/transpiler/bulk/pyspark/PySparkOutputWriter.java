@@ -1,6 +1,4 @@
-package gov.va.transpiler.bulk.pyspark.output;
-
-import gov.va.transpiler.output.OutputWriter;
+package gov.va.transpiler.bulk.pyspark;
 
 public class PySparkOutputWriter extends OutputWriter{
 

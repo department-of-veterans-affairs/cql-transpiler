@@ -1,6 +1,8 @@
-package gov.va.transpiler.bulk.pyspark.output;
+package gov.va.transpiler.bulk.pyspark.node;
 
-public class OperatorNode extends MultiChildNode {
+import gov.va.transpiler.node.ParentNode;
+
+public class OperatorNode extends ParentNode {
     
     private final String operator;
 
@@ -13,6 +15,10 @@ public class OperatorNode extends MultiChildNode {
         String builder = "";
         boolean first = true;
         for (var child : getChildren()) {
+            var childString = child.asOneLine();
+            if (childString == null) {
+                return null;
+            }
             builder += first ? child.asOneLine() : " " + operator + " " + child.asOneLine();
             first = false;
         }

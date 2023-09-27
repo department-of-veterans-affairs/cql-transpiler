@@ -1,8 +1,19 @@
-package gov.va.transpiler.output;
+package gov.va.transpiler.node;
+
+import gov.va.transpiler.bulk.pyspark.OutputWriter;
 
 public abstract class OutputNode {
 
     private Object cqlNodeEquivalent;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Object getCqlNodeEquivalent() {
         return cqlNodeEquivalent;

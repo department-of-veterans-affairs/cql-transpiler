@@ -1,7 +1,7 @@
-package gov.va.transpiler.bulk.pyspark.output;
+package gov.va.transpiler.bulk.pyspark.node;
 
-import gov.va.transpiler.output.OutputNode;
-import gov.va.transpiler.output.OutputWriter;
+import gov.va.transpiler.bulk.pyspark.OutputWriter;
+import gov.va.transpiler.node.OutputNode;
 
 public class AccessModifierNode extends OutputNode {
     // We don't support access modifiers

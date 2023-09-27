@@ -1,17 +1,10 @@
-package gov.va.transpiler.bulk.pyspark.output;
+package gov.va.transpiler.bulk.pyspark.utilities;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import gov.va.transpiler.output.OutputNode;
-
-public class VariableNameNode extends OutputNode{
-
-    public VariableNameNode(String variableName) {
-        setCqlNodeEquivalent(variableName);
-    }
-
-    private String variableNameToPythonVariableName(String variableName) {
+public class CQLNameToPythonName {
+    public String convertName(String variableName) {
         String toReturn = variableName;
         // Match on any characters that are legal for variable names in CQL but illegal in Python
         String illegalCharacters = " \\\"";
@@ -28,15 +21,5 @@ public class VariableNameNode extends OutputNode{
             toReturn += Math.abs(variableName.hashCode());
         }
         return toReturn;
-    }
-
-    @Override
-    public boolean addChild(OutputNode child) {
-        return false;
-    }
-
-    @Override
-    public String asOneLine() {
-        return variableNameToPythonVariableName((String) getCqlNodeEquivalent());
     }
 }

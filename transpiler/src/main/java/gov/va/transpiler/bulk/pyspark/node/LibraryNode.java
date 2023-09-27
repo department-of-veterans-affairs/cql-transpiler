@@ -1,23 +1,15 @@
-package gov.va.transpiler.bulk.pyspark.output;
+package gov.va.transpiler.bulk.pyspark.node;
 
 import java.util.UUID;
 
 import org.hl7.elm.r1.Library;
 
-import gov.va.transpiler.output.OutputWriter;
+import gov.va.transpiler.bulk.pyspark.OutputWriter;
+import gov.va.transpiler.node.ParentNode;
 
-public class LibraryNode extends MultiChildNode {
+public class LibraryNode extends ParentNode {
 
-    String name;
     String version;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getFileNameFromLibrary(Library library) {
         String className = null;

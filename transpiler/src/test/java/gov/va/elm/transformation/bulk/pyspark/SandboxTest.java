@@ -15,7 +15,8 @@ import gov.va.transpiler.ElmTransformerState;
 import gov.va.transpiler.bulk.BulkTransformationLoader;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverter;
 import gov.va.transpiler.bulk.pyspark.BulkElmToPySparkConverterState;
-import gov.va.transpiler.bulk.pyspark.output.PySparkOutputWriter;
+import gov.va.transpiler.bulk.pyspark.PySparkOutputWriter;
+import gov.va.transpiler.bulk.pyspark.utilities.CQLNameToPythonName;
 import gov.va.transpiler.bulk.pyspark.utilities.CQLTypeToPythonType;
 import gov.va.transpiler.transformer.ElmTransformerRecursive;
 
@@ -111,7 +112,8 @@ public class SandboxTest {
 
         // Transform the bulk elm tree into PySpark Scripts
         var cqlTypeToPythonType = new CQLTypeToPythonType();
-        var elmToPySparkConverter = new BulkElmToPySparkConverter(cqlTypeToPythonType);        
+        var cqlNameToPythonName = new CQLNameToPythonName();
+        var elmToPySparkConverter = new BulkElmToPySparkConverter(cqlTypeToPythonType, cqlNameToPythonName);        
         var elmToPySparkConverterState = new BulkElmToPySparkConverterState();
         var convertedLibraries = new ArrayList<String>();
         for (Library library : libraryList) {
