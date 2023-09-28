@@ -1,3 +1,3 @@
-class CqlModel:
+class CQLModel:
     # TODO
     pass
