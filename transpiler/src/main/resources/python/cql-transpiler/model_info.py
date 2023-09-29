@@ -1,3 +1,0 @@
-class ModelInfo:
-    # TODO
-    pass

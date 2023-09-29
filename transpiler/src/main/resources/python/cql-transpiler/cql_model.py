@@ -1,3 +1,0 @@
-class CQLModel:
-    # TODO
-    pass

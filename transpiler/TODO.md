@@ -8,6 +8,7 @@ Support addiitional functionality for libraries:
  * pip install pyspark
  * pip install pyspark[sql]
  * pip install pandas
+ * pip install pyxtension - (currently unused)
 * move imports to top of library printing, before "class" declaration"
 * Automatically transform libraries to use relevant python imports
  * If Tuple type definitions are used
