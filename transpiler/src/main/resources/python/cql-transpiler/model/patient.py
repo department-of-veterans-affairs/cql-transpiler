@@ -1,9 +1,9 @@
 from model.model_info import ModelInfo
 
-class PatientModelInfo(ModelInfo):
+class Patient(ModelInfo):
     
     def getIdColumnName(self) -> str:
         return 'patientID'
-    
-    def getTypeName(self) -> str:
-        return 'patient'
+
+    def getName(self) -> str:
+        return '?'
