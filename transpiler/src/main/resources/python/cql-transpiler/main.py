@@ -1,7 +1,7 @@
 import pandas as pd
 from user_provided_data import UserProvidedData
 from pyspark.sql import SparkSession
-from generated import Patient_Value1234567890, a, mytuple
+from generated import d, e, f
 
 # Manually set up database data for testing
 #
@@ -29,6 +29,5 @@ userProvidedData.setModelContextID("Patient", 123)
 #
 #
 #
-a(spark, userProvidedData).show()
-mytuple(spark, userProvidedData).show()
-Patient_Value1234567890(spark, userProvidedData).show()
+e(spark, userProvidedData).asDataFrame(spark).show()
+f(spark, userProvidedData).asDataFrame(spark).show()

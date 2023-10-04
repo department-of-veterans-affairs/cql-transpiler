@@ -3,10 +3,10 @@ from model.unfiltered import Unfiltered
 from model.model_info import ModelInfo
 
 class UserProvidedData:
-    _ids: dict[str, int] = {}
+    _ids: dict = {}
     
-    def setModelContextID(self, modelName: str, id: int):
+    def setModelContextID(self, modelName: str, id):
         self._ids[modelName] = id
 
-    def getModelContextID(self, modelName: str) -> int:
+    def getModelContextID(self, modelName: str):
         return self._ids[modelName]
