@@ -1,7 +1,7 @@
 import pandas as pd
 from user_provided_data import UserProvidedData
 from pyspark.sql import SparkSession
-from generated import a, b
+from generated import retrieved, a
 
 # Manually set up database data for testing
 #
@@ -23,11 +23,11 @@ encounterDF.registerTempTable('Encounter')
 #
 #
 userProvidedData = UserProvidedData()
-userProvidedData.setModelContextID("Patient", 123)
+userProvidedData.setModelContextID("Patient", 1)
 
 # Query generated functions for any desired data
 #
 #
 #
-# a(spark, userProvidedData).show()
-b(spark, userProvidedData).show()
+retrieved(spark, userProvidedData).show()
+a(spark, userProvidedData).show()
