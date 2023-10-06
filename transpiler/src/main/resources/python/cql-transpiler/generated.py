@@ -23,25 +23,24 @@ def retrieveWithContextFilter(spark: SparkSession, userProvidedData: UserProvide
         df = df.filter(models(modelSource)[model].getIdColumnName() == userProvidedData.getModelContextID(model))
     return df
 
-# def a: 1
-'''
-|value|
-|/////|
-|    1|
-'''
+
 def a(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
     return sparkSession.createDataFrame([[1]], ["value"])
 
 
-# def b: {a, 1}
 '''
+<def b: {a, 1}>
+=
+join (b: Table A) with (b: {{value 1}}) (merging columns with duplicate names)
+
+|
+v
 
 |value|
 |/////|
-|    1| 
+|    1|
 
 +
-
 
 |value|
 |/////|
@@ -54,6 +53,17 @@ v
 |/////|
 |    1|
 |    1|
+'''
+def b(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
+    df = a(sparkSession, userProvidedData).unionByName(sparkSession.createDataFrame([[1]], ["value"]), True)
+    listOfNameColumnPairs = [[lit(column_name), df[column_name]] for column_name in df.columns]
+    flatListOfNameColumnPairs = [item for sublist in listOfNameColumnPairs for item in sublist]
+    df = df.withColumn("value", create_map(flatListOfNameColumnPairs))
+    df = df.agg(collect_list("value").alias("value"))
+    return df
+
+# def c: {b, b}
+'''
 
 |
 v
@@ -68,11 +78,8 @@ v
 |value                   |
 |////////////////////////|
 |[[value->1], [value->1]]|
+
 '''
-def b(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
-    df = a(sparkSession, userProvidedData).unionByName(sparkSession.createDataFrame([[1]], ["value"]), True)
-    listOfNameColumnPairs = [[lit(column_name), df[column_name]] for column_name in df.columns]
-    flatListOfNameColumnPairs = [item for sublist in listOfNameColumnPairs for item in sublist]
-    df = df.withColumn("value", create_map(flatListOfNameColumnPairs))
-    df = df.agg(collect_list("value").alias("value"))
-    return df
+def c(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
+    df = b(sparkSession, userProvidedData)
+    return df.select(df["value"])
