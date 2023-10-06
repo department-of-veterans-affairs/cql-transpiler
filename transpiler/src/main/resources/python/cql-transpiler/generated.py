@@ -4,7 +4,7 @@ from functools import reduce
 import pandas as pd
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import array, lit, to_json, struct, json_tuple, create_map, collect_list
+from pyspark.sql.functions import array, lit, to_json, struct, json_tuple, create_map, collect_list, map_concat
 from user_provided_data import UserProvidedData
 from model.encounter import Encounter
 from model.patient import Patient
@@ -70,10 +70,14 @@ def retrieveWithContextFilter(spark: SparkSession, userProvidedData: UserProvide
         df = df.filter(df[models(modelSource)[model].getIdColumnName()] == userProvidedData.getModelContextID(model))
     return df
 
+#always present
+defaultColumnName = 'value'
+mergeColumnNameModification = 'right'
 '''
-Always present.
+Always present. Maps table from their original database format to a format that incorporates non-tabular values.
 
-Maps tables in the format
+Original:
+
 |a   |b   |...
 |/////////|...
 |r1v1|r1v2|...
@@ -81,17 +85,37 @@ Maps tables in the format
 .
 .
 .
-To the format
+
+Step 1: ->
+|value             |
+|//////////////////|
+|{a: r1v1, b: r1v2, ...}|
+|{a: r1v1, b: r1v2, ...}|
+.
+.
+.
+
+Step 2: ->
 |value                                                |
 |/////////////////////////////////////////////////////|
 |{{a: r1v1, b: r1v2,...}, {a: r2v1, b: r2v2,...}, ...}|
+
 '''
 def mapSourceTableToDataFrame(dataFrame: DataFrame) -> DataFrame:
+    '''
+    # original implementation (fails on DataFrames with types that can't be collapsed into a map)
     listOfNameColumnPairs = [[lit(column_name), dataFrame[column_name]] for column_name in dataFrame.columns]
     flatListOfNameColumnPairs = [item for sublist in listOfNameColumnPairs for item in sublist]
-    thinDF = dataFrame.withColumn("value", create_map(flatListOfNameColumnPairs))
-    crushedDF = thinDF.agg(collect_list("value").alias("value"))
+    thinDF = dataFrame.withColumn(defaultColumnName, create_map(flatListOfNameColumnPairs))
+    crushedDF = thinDF.agg(collect_list(defaultColumnName).alias(defaultColumnName))
     return crushedDF
+    '''
+     #TODO: needs to be a struct of maps, not a simple struct
+    return dataFrame.withColumn(defaultColumnName, struct(*dataFrame.columns)).agg(collect_list(defaultColumnName).alias(defaultColumnName))
+
+# always present
+def literalDF(sparkSession: SparkSession, literal) -> DataFrame:
+    return sparkSession.createDataFrame([[literal]], [defaultColumnName])
 
 # using FHIR '4.0.1'
 # context Patient
@@ -101,4 +125,24 @@ def retrieved(sparkSession: SparkSession, userProvidedData: UserProvidedData) ->
 
 # define a: 1
 def a(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
-    return sparkSession.createDataFrame([[1]], ["value"])
+    return literalDF(sparkSession, 1)
+
+# define b: a
+def b(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
+    return a(sparkSession, userProvidedData)
+
+# define c: {1, 1}
+def c(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
+    dfJoined = literalDF(sparkSession, 1).unionByName(sparkSession.createDataFrame([[1]], [defaultColumnName]))
+    return dfJoined.agg(collect_list(defaultColumnName).alias(defaultColumnName))
+
+# define d: {1, b}
+def d(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
+    dfJoined = literalDF(sparkSession, 1).unionByName(b(sparkSession, userProvidedData))
+    return dfJoined.agg(collect_list(defaultColumnName).alias(defaultColumnName))
+
+# define e: {foo: 1, bar: c}
+def e(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
+    elements = [literalDF(sparkSession, 1).withColumn(defaultColumnName, create_map(lit('foo'), defaultColumnName)), c(sparkSession, userProvidedData).withColumn(defaultColumnName, create_map(lit('bar'), defaultColumnName))]
+    # TODO: needs to join columns that are structs of maps into mega-structs.
+    return reduce(lambda a, b: a.join(b.withColumnRenamed(defaultColumnName, defaultColumnName + mergeColumnNameModification)).select(map_concat(defaultColumnName, defaultColumnName + mergeColumnNameModification)), elements)
