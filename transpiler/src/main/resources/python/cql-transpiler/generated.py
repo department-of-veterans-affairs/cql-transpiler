@@ -102,15 +102,6 @@ Step 2: ->
 
 '''
 def mapSourceTableToDataFrame(dataFrame: DataFrame) -> DataFrame:
-    '''
-    # original implementation (fails on DataFrames with types that can't be collapsed into a map)
-    listOfNameColumnPairs = [[lit(column_name), dataFrame[column_name]] for column_name in dataFrame.columns]
-    flatListOfNameColumnPairs = [item for sublist in listOfNameColumnPairs for item in sublist]
-    thinDF = dataFrame.withColumn(defaultColumnName, create_map(flatListOfNameColumnPairs))
-    crushedDF = thinDF.agg(collect_list(defaultColumnName).alias(defaultColumnName))
-    return crushedDF
-    '''
-     #TODO: needs to be a struct of maps, not a simple struct
     return dataFrame.withColumn(defaultColumnName, struct(*dataFrame.columns)).agg(collect_list(defaultColumnName).alias(defaultColumnName))
 
 # always present
@@ -143,6 +134,6 @@ def d(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFra
 
 # define e: {foo: 1, bar: c}
 def e(sparkSession: SparkSession, userProvidedData: UserProvidedData) -> DataFrame:
-    elements = [literalDF(sparkSession, 1).withColumn(defaultColumnName, create_map(lit('foo'), defaultColumnName)), c(sparkSession, userProvidedData).withColumn(defaultColumnName, create_map(lit('bar'), defaultColumnName))]
-    # TODO: needs to join columns that are structs of maps into mega-structs.
-    return reduce(lambda a, b: a.join(b.withColumnRenamed(defaultColumnName, defaultColumnName + mergeColumnNameModification)).select(map_concat(defaultColumnName, defaultColumnName + mergeColumnNameModification)), elements)
+    elements = [literalDF(sparkSession, 1).withColumnRenamed(defaultColumnName, 'foo'), c(sparkSession, userProvidedData).withColumnRenamed(defaultColumnName, 'bar')]
+    dataFrame = reduce(lambda a, b: a.join(b), elements)
+    return dataFrame.select(struct(*dataFrame.columns).alias(defaultColumnName))

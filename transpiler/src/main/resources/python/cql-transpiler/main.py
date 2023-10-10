@@ -29,10 +29,9 @@ userProvidedData.setModelContextID("Patient", 1)
 #
 #
 #
-
 retrieved(spark, userProvidedData).show()
-#a(spark, userProvidedData).show()
-#b(spark, userProvidedData).show()
-#c(spark, userProvidedData).show()
-#d(spark, userProvidedData).show()
+a(spark, userProvidedData).show()
+b(spark, userProvidedData).show()
+c(spark, userProvidedData).show()
+d(spark, userProvidedData).show()
 e(spark, userProvidedData).show()
