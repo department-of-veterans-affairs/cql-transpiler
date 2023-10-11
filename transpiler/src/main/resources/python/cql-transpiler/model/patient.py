@@ -6,4 +6,4 @@ class Patient(ModelInfo):
         return 'patientID'
 
     def getName(self) -> str:
-        return '?'
+        return 'Patient'

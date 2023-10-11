@@ -19,6 +19,16 @@ However, there is no way to make a DataFrame simpler than this one:
  |someDefaultColumnName|
  |/////////////////////|
  |          someLiteral|
+ |someDefaultColumnName|
+ |/////////////////////|
+ |          [foo]|
+ 
+ name|value
+ 1   | foo
+ 2   | bar
+ def var: [Encounter] -> [{name: encounter 1, value: foo}, {name: encounter 2, value bar}]
+ def tuple: {a: 1, b: var}
+ 
 If we transform all three of these statements into the above table, that means we're saying all three of those statements are equal to each other, and we're saying that they're all equal to:
  * <def variableName: {{someDefaultColumnName: someLiteral}}>
 But, this transformation makes it impossible to disambiguate between list nesting levels. For example, <def X: 1>, <def X: {1}}>, and <def X: {{1}}> all resolve to the dataframe
