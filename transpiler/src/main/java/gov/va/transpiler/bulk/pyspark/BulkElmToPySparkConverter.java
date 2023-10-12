@@ -11,6 +11,8 @@ import gov.va.transpiler.bulk.pyspark.node.ExpressionRefNode;
 import gov.va.transpiler.bulk.pyspark.node.LibraryNode;
 import gov.va.transpiler.bulk.pyspark.node.OperatorNode;
 import gov.va.transpiler.bulk.pyspark.node.PropertyNode;
+import gov.va.transpiler.bulk.pyspark.node.RetrieveNode;
+import gov.va.transpiler.bulk.pyspark.node.SingletonFromNode;
 import gov.va.transpiler.bulk.pyspark.node.TupleElementNode;
 import gov.va.transpiler.bulk.pyspark.node.TupleNode;
 import gov.va.transpiler.bulk.pyspark.node.LiteralNode;
@@ -152,7 +154,25 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     @Override
     public OutputNode visitContextDef(ContextDef contextDef, BulkElmToPySparkConverterState context) {
         var currentNode = new ContextDefNode(contextDef.getName());
+        currentNode.setCqlNodeEquivalent(contextDef);
         return currentNode;
+    }
+
+    @Override
+    public OutputNode visitRetrieve(Retrieve retrieve, BulkElmToPySparkConverterState context) {
+        var currentNode = new RetrieveNode(retrieve.getDataType().getLocalPart(), retrieve.getDataType().getNamespaceURI());
+        currentNode.setCqlNodeEquivalent(retrieve);
+        return currentNode;
+    }
+
+    @Override
+    public OutputNode visitSingletonFrom(SingletonFrom singletonFrom, BulkElmToPySparkConverterState context) {
+        var currentNode = new SingletonFromNode();
+        currentNode.setCqlNodeEquivalent(singletonFrom);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitSingletonFrom(singletonFrom, context);
+        context.getStack().pop();
+        return result;
     }
 
     private String defaultNodeName(Trackable elm) {

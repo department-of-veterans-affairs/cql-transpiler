@@ -49,11 +49,11 @@ using FHIR '4.0.1'
 define retrieved: [Encounter]
 '''
 def c(spark: SparkSession, userData: UserProvidedData):
-    return retrieve(spark,  models('FHIR 4.0.1')['Encounter'])
+    return retrieve(spark,  models('http://hl7.org/fhir')['Encounter'])
 
 '''
-define d: c where details = foo
+using FHIR '4.0.1'
+context Patient
 '''
-def d(spark: SparkSession, userData:UserProvidedData):
-    df = c(spark, userData)
-    return df.filter(df['details'] == 'foo')
+def Patient(spark: SparkSession, userData: UserProvidedData):
+    return retrieve(spark,  models('http://hl7.org/fhir')['Patient'])
