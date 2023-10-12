@@ -38,7 +38,7 @@ public class ExpressionDefNode extends SingleChildNode {
 
     @Override
     public boolean print(OutputWriter outputWriter) {
-        String functionDefinition = "def " + cqlNameToPythonName.convertName(getName()) + "(context: CQLModel, data: CQLDataFrame):";
+        String functionDefinition = "def " + cqlNameToPythonName.convertName(getName()) + "(spark: SparkSession, userData: UserProvidedData):";
         if (outputWriter.isCurrentLineAlreadyStarted()) {
             outputWriter.addText(functionDefinition);
             outputWriter.endLine();

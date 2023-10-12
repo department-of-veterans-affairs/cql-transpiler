@@ -43,6 +43,8 @@ public class LibraryNode extends ParentNode {
 
     @Override
     public boolean print(OutputWriter outputWriter) {
+        printPreface(outputWriter);
+
         var printSuccess = true;
         for (var child : getChildren()) {
             if (!child.print(outputWriter)) {
@@ -50,7 +52,43 @@ public class LibraryNode extends ParentNode {
                 var failureMessage = "# failed to print: [" + child.getClass().getName() + "@" + child.hashCode() + " / "+ child.asOneLine() +  "]";
                 outputWriter.printFullLine(failureMessage);
             }
+            outputWriter.endLine();
         }
         return printSuccess;
+    }
+
+    private void printPreface(OutputWriter outputWriter) {
+        outputWriter.addText("" +
+            "from pyspark.sql import DataFrame\n" + //
+            "from pyspark.sql import SparkSession\n" + //
+            "from user_provided_data import UserProvidedData\n" + //
+            "from model.encounter import Encounter\n" + //
+            "from model.patient import Patient\n" + //
+            "from model.model_info import ModelInfo\n" + //
+            "\n" + //
+            "# always present\n" + //
+            "def models(modelSource: str) -> dict[str, ModelInfo]:\n" + //
+            "    # TODO: populate models based off a source, e.g. FHIR 4.0.1,\n" + //
+            "    # TODO: models and model names should be generates/accessed based off imported model info files\n" + //
+            "    return {'Encounter': Encounter(), 'Patient': Patient()}\n" + //
+            "\n" + //
+            "# always present\n" + //
+            "def retrieve (spark: SparkSession, model: ModelInfo):\n" + //
+            "    return spark.table(model.getName())\n" + //
+            "\n" + //
+            "# always present\n" + //
+            "def applyContext(spark: SparkSession, dataFrame: DataFrame, context: ModelInfo):\n" + //
+            "    if (context != None): \n" + //
+            "        return dataFrame.join(retrieve(spark, context), on = context.getIdColumnName())\n" + //
+            "    return dataFrame\n" + //
+            "\n" + //
+            "# always present\n" + //
+            "def filterContext(userData: UserProvidedData, dataFrame: DataFrame, context: ModelInfo):\n" + //
+            "    if (context != None): \n" + //
+            "        return dataFrame.filter(dataFrame[context.getIdColumnName()] == userData.getModelContextID(context.getName()))\n" + //
+            "    return dataFrame\n" + //
+            "\n"
+        );
+        outputWriter.endLine();
     }
 }

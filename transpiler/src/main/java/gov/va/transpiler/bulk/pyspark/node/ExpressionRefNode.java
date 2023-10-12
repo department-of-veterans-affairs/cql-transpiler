@@ -13,6 +13,6 @@ public class ExpressionRefNode extends TerminalNode {
 
     @Override
     public String asOneLine() {
-        return cqlNameToPythonName.convertName(getName()) + "(context, data)";
+        return cqlNameToPythonName.convertName(getName()) + "(spark, userData)";
     }
 }

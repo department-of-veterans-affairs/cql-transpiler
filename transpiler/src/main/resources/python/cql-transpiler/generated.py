@@ -50,3 +50,10 @@ define retrieved: [Encounter]
 '''
 def c(spark: SparkSession, userData: UserProvidedData):
     return retrieve(spark,  models('FHIR 4.0.1')['Encounter'])
+
+'''
+define d: c where details = foo
+'''
+def d(spark: SparkSession, userData:UserProvidedData):
+    df = c(spark, userData)
+    return df.filter(df['details'] == 'foo')

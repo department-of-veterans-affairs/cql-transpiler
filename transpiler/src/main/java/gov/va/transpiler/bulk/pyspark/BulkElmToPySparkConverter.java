@@ -5,6 +5,7 @@ import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.ElmConverter;
 import gov.va.transpiler.bulk.pyspark.node.AccessModifierNode;
+import gov.va.transpiler.bulk.pyspark.node.ContextDefNode;
 import gov.va.transpiler.bulk.pyspark.node.ExpressionDefNode;
 import gov.va.transpiler.bulk.pyspark.node.ExpressionRefNode;
 import gov.va.transpiler.bulk.pyspark.node.LibraryNode;
@@ -145,6 +146,12 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         currentNode.setName(literal.getValue());
         currentNode.setResultType(literal.getResultType().toString());
         currentNode.setCqlNodeEquivalent(literal);
+        return currentNode;
+    }
+
+    @Override
+    public OutputNode visitContextDef(ContextDef contextDef, BulkElmToPySparkConverterState context) {
+        var currentNode = new ContextDefNode(contextDef.getName());
         return currentNode;
     }
 
