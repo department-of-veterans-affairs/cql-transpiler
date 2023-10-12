@@ -6,7 +6,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import array, lit, to_json, struct, json_tuple, create_map, collect_list
 from user_provided_data import UserProvidedData
 from model.encounter import Encounter
-from model.patient import Patient
+from model.patient import PatientModel
 from model.model_info import ModelInfo
 
 '''

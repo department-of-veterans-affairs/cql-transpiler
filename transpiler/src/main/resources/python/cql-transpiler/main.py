@@ -29,10 +29,10 @@ userProvidedData.setModelContextID("Patient", 1)
 #
 #
 #
-df = c(spark, userProvidedData)
+df = Patient(spark, userProvidedData)
 # context Patient
 '''
 # context Patient
 using FHIR '4.0.1'
 '''
-filterContext(userProvidedData, applyContext(spark, df, models('FHIR 4.0.1')['Patient']), models('FHIR 4.0.1')['Patient'])
+filterContext(userProvidedData, applyContext(spark, df, models('http://hl7.org/fhir')['Patient']), models('FHIR 4.0.1')['Patient']).show()

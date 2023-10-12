@@ -7,7 +7,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import array, lit, to_json, struct, json_tuple, create_map, collect_list, map_concat
 from user_provided_data import UserProvidedData
 from model.encounter import Encounter
-from model.patient import Patient
+from model.patient import PatientModel
 from model.model_info import ModelInfo
 
 '''
@@ -61,7 +61,7 @@ The access <def access: [SomeTable] T return T.a> must therefore result in the d
 def models(modelSource: str) -> dict[str, ModelInfo]:
     # TODO: populate models based off a source, e.g. FHIR 4.0.1,
     # TODO: models and model names should be generates/accessed based off imported model info files
-    return {'Encounter': Encounter(), 'Patient': Patient()}
+    return {'Encounter': Encounter(), 'Patient': PatientModel()}
 
 # always present
 def retrieveWithContextFilter(spark: SparkSession, userProvidedData: UserProvidedData, modelSource: str, model: str, currentContext = None) -> DataFrame:

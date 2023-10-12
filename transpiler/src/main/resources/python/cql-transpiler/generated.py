@@ -1,20 +1,17 @@
 # imports must be set up automatically
-from pyspark.sql.types import ArrayType, IntegerType, StructField, StructType
-from functools import reduce
-import pandas as pd
+
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import array, lit, to_json, struct, json_tuple, create_map, collect_list, map_concat
 from user_provided_data import UserProvidedData
-from model.encounter import Encounter
-from model.patient import Patient
+from model.encounter_model import EncounterModel
+from model.patient_model import PatientModel
 from model.model_info import ModelInfo
 
 # always present
 def models(modelSource: str) -> dict[str, ModelInfo]:
     # TODO: populate models based off a source, e.g. FHIR 4.0.1,
     # TODO: models and model names should be generates/accessed based off imported model info files
-    return {'Encounter': Encounter(), 'Patient': Patient()}
+    return {'Encounter': EncounterModel(), 'Patient': PatientModel()}
 
 # always present
 def retrieve (spark: SparkSession, model: ModelInfo):

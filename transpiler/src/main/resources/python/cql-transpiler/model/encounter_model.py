@@ -1,6 +1,6 @@
 from model.model_info import ModelInfo
 
-class Encounter(ModelInfo):
+class EncounterModel(ModelInfo):
     
     def getIdColumnName(self) -> str:
         return 'encounterID'

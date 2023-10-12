@@ -6,7 +6,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import lit
 from user_provided_data import UserProvidedData
 from model.encounter import Encounter
-from model.patient import Patient
+from model.patient import PatientModel
 from model.model_info import ModelInfo
 
 # always present
@@ -59,7 +59,7 @@ class CQLValue():
 def models(modelSource: str) -> dict[str, ModelInfo]:
     # TODO: populate models based off a source, e.g. FHIR 4.0.1,
     # TODO: models and model names should be generates/accessed based off imported model info files
-    return {'Encounter': Encounter(), 'Patient': Patient()}
+    return {'Encounter': Encounter(), 'Patient': PatientModel()}
 
 # always present
 def retrieveWithContextFilter(spark: SparkSession, userProvidedData: UserProvidedData, modelSource: str, model: str, currentContext: str) -> DataFrame:
