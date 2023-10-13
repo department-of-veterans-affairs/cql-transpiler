@@ -76,7 +76,7 @@ public class SandboxTest {
             + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"
             + "context Patient\n"
-            + "define \"Encounter A\": [Encounter]\n"
+            + "define \"Encounter A\": [Encounter] E where E.status.value = 'planned'\n"
             ;
 
         System.out.println("# Original CQL ");

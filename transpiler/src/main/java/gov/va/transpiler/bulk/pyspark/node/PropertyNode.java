@@ -1,5 +1,7 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
+import org.hl7.elm.r1.Expression;
+
 import gov.va.transpiler.bulk.pyspark.utilities.CQLNameToPythonName;
 import gov.va.transpiler.node.SingleChildNode;
 
@@ -7,23 +9,33 @@ public class PropertyNode extends SingleChildNode {
 
     public enum AccessibleType {
         Tuple,
-        Function
+        Function,
+        Reference
     }
 
     private final CQLNameToPythonName cqlNameToPythonName;
 
-    private AccessibleType accessibleType;
+    private String scope;
+    private Expression source;
+
+    public Expression getSource() {
+        return source;
+    }
+
+    public void setSource(Expression source) {
+        this.source = source;
+    }
 
     public PropertyNode(CQLNameToPythonName cqlNameToPythonName) {
         this.cqlNameToPythonName = cqlNameToPythonName;
     }
 
-    public AccessibleType getAccessibleType() {
-        return accessibleType;
+    public String getScope() {
+        return scope;
     }
 
-    public void setAccessibleType(AccessibleType accessibleType) {
-        this.accessibleType = accessibleType;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     public AccessibleType accessibleTypeForCQLSourceType(String sourcetype) {
@@ -32,17 +44,26 @@ public class PropertyNode extends SingleChildNode {
                 return AccessibleType.Tuple;
             }
         }
-        return null;
+        return AccessibleType.Reference;
     }
 
     @Override
     public String asOneLine() {
-        String value = getChildren().get(0).asOneLine();
+        String value;
+        AccessibleType accessibleType;
+        if (!getChildren().isEmpty()) {
+            value = getChildren().get(0).asOneLine();
+            accessibleType = accessibleTypeForCQLSourceType(getSource().getResultType().toString());
+        } else {
+            value = getScope();
+            accessibleType = AccessibleType.Reference;
+        }
+
         return value == null || getName() == null ? null :
             value
-            + getAccessStartForSourceType(getAccessibleType())
+            + getAccessStartForSourceType(accessibleType)
             + cqlNameToPythonName.convertName(getName())
-            + getAccessEndForSourceType(getAccessibleType());
+            + getAccessEndForSourceType(accessibleType);
     }
 
     protected String getAccessStartForSourceType(AccessibleType sourceType) {

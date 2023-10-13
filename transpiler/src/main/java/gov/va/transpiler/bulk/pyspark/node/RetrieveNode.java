@@ -14,6 +14,6 @@ public class RetrieveNode extends TerminalNode {
 
     @Override
     public String asOneLine() {
-        return "retrieve(spark,  models('" + modelSource + "')['" + retrieval + "'])";
+        return "retrieve(spark, models('" + modelSource + "')['" + retrieval + "'])";
     }
 }
