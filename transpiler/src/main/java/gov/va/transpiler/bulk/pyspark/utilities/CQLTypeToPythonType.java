@@ -27,7 +27,7 @@ public class CQLTypeToPythonType {
     public String toPythonRepresentation(String value, PythonLiteralType type) {
         switch (type) {
             case String:
-                return "\"" + value + "\"";
+                return "'" + value + "'";
             case Number:
             default:
                 return value;

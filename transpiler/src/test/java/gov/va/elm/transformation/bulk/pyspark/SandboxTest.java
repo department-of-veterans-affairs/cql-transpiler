@@ -71,12 +71,13 @@ public class SandboxTest {
 
     @Test
     public void testRetrieval() {
-        // TODO: tuple to python structfield or spark.withcolumn
+        // TODO Aliases and multiline returns should be handled by the context
         String cql = ""
             + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"
             + "context Patient\n"
-            + "define \"Encounter A\": [Encounter] E where E.status.value = 'planned'\n"
+            //+ "define \"Encounter A\": [Encounter]\n"
+            + "define \"Encounter B\": [Encounter] E where E.status.value = 'planned'\n"
             ;
 
         System.out.println("# Original CQL ");

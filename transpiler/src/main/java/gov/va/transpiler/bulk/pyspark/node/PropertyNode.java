@@ -70,7 +70,7 @@ public class PropertyNode extends SingleChildNode {
         switch(sourceType) {
             case Function:
                 return ".(";
-            case Tuple:
+            case Tuple, Reference:
                 return "['";
             default:
                 return ".";
@@ -81,7 +81,7 @@ public class PropertyNode extends SingleChildNode {
         switch(sourceType) {
             case Function:
                 return ")";
-            case Tuple:
+            case Tuple, Reference:
                 return "']";
             default:
                 return "";

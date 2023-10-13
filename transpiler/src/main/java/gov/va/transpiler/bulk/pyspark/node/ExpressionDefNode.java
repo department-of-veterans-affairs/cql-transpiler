@@ -47,8 +47,16 @@ public class ExpressionDefNode extends SingleChildNode {
         }
         outputWriter.raiseIndentLevel();
         outputWriter.startLine();
-        outputWriter.addText("return ");
-        boolean printResult = getChildren().get(0).print(outputWriter);
+        boolean printResult;
+        if (getChildren().get(0).asOneLine() != null) {
+            outputWriter.printFullLine("return " + getChildren().get(0).asOneLine());
+            printResult = true;
+        } else {
+            printResult = getChildren().get(0).print(outputWriter);
+            if (printResult) {
+                outputWriter.printFullLine("return returnVal");
+            }
+        }
         outputWriter.lowerIndentLevel();
         return printResult;
     }
