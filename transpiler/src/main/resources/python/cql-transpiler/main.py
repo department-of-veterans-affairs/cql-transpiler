@@ -13,9 +13,9 @@ encounterData = pd.DataFrame.from_records([{ 'encounterID': 1, 'patientID': 1, '
         { 'encounterID': 3, 'patientID': 2, 'details': 'baz' }])
 spark = SparkSession.Builder().getOrCreate()
 patientDF = spark.createDataFrame(patientData)
-patientDF.registerTempTable('Patient')
+patientDF.createOrReplaceTempView('Patient')
 encounterDF = spark.createDataFrame(encounterData)
-encounterDF.registerTempTable('Encounter')
+encounterDF.createOrReplaceTempView('Encounter')
 
 # Manually set up user provided data
 #
@@ -28,6 +28,13 @@ userProvidedData.setModelContextID("Patient", 1)
 #
 #
 #
-spark.sql("CREATE OR REPLACE VIEW a AS SELECT 1 _val")
-spark.sql("CREATE OR REPLACE VIEW b AS SELECT collect_list(_val) FROM a ALIAS _val")
-spark.sql("CREATE OR REPLACE VIEW c AS SELECT collect_list(_val) FROM (a union b) _val")
+spark.sql('CREATE OR REPLACE VIEW a AS (SELECT 1 _val);')
+spark.sql("CREATE OR REPLACE VIEW b AS (SELECT collect_list(_val) AS _val FROM a);")
+spark.sql('CREATE OR REPLACE VIEW c AS (SELECT collect_list(_val) AS _val FROM ((SELECT 1 _val) UNION ALL (SELECT * FROM a)));')
+spark.sql('CREATE OR REPLACE VIEW d AS (SELECT struct(foo, bar, baz) AS _val FROM (SELECT _val AS foo FROM b), (SELECT _val AS bar FROM c), (SELECT _val AS baz FROM (SELECT 1 _val)))')
+spark.sql('CREATE OR REPLACE VIEW e AS (SELECT _val.foo FROM d AS _val);')
+# We're using temp tables so references to them have to be temporary as well, but the actual conversion will not generate a temp view
+spark.sql('CREATE OR REPLACE TEMP VIEW f AS (SELECT * FROM Encounter);')
+spark.sql('CREATE OR REPLACE TEMP VIEW g AS (SELECT struct(struct(*) AS foo) AS _val FROM f);')
+spark.sql('CREATE OR REPLACE TEMP VIEW h AS (SELECT _val.foo AS _val FROM g);')
+spark.sql('SELECT * FROM h').show()
