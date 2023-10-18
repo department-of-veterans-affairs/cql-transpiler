@@ -1,7 +1,5 @@
 package gov.va.elm.transformation.bulk.sparksql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +12,7 @@ import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
 import gov.va.transpiler.bulk.sparksql.BulkElmToSparkSQLConverter;
 import gov.va.transpiler.bulk.sparksql.BulkElmToSparkSQLConverterState;
 import gov.va.transpiler.bulk.sparksql.SparkSQLOutputWriter;
+import gov.va.transpiler.bulk.sparksql.utilities.CQLNameToSparkSQLName;
 import gov.va.transpiler.bulk.sparksql.utilities.CQLTypeToSparkSQLType;
 
 public class SandboxTest {
@@ -43,7 +42,8 @@ public class SandboxTest {
 
         // Transform the AST into SparkSQL Scripts
         var cqlTypeToSparkSQLType = new CQLTypeToSparkSQLType();
-        var elmToSparkSQLConverter = new BulkElmToSparkSQLConverter(cqlTypeToSparkSQLType);        
+        var cqlNameToSparkSQLName = new CQLNameToSparkSQLName();
+        var elmToSparkSQLConverter = new BulkElmToSparkSQLConverter(cqlTypeToSparkSQLType, cqlNameToSparkSQLName);        
         var elmToSparkSQLConverterState = new BulkElmToSparkSQLConverterState();
         var convertedLibraries = new ArrayList<String>();
         for (Library library : libraryList) {

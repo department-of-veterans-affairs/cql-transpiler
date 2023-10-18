@@ -9,4 +9,8 @@ public abstract class SingleChildNode extends ParentNode {
         }
         return false;
     }
+
+    public OutputNode getChild() {
+        return getChildren().get(0);
+    }
 }

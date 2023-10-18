@@ -5,15 +5,18 @@ import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.ElmConverter;
 import gov.va.transpiler.bulk.sparksql.node.*;
+import gov.va.transpiler.bulk.sparksql.utilities.CQLNameToSparkSQLName;
 import gov.va.transpiler.bulk.sparksql.utilities.CQLTypeToSparkSQLType;
 import gov.va.transpiler.node.OutputNode;
 
 public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElmToSparkSQLConverterState> {
 
     private final CQLTypeToSparkSQLType cqlTypeToSparkSQLType;
+    private final CQLNameToSparkSQLName cqlNameToSparkSQLName;
 
-    public BulkElmToSparkSQLConverter(CQLTypeToSparkSQLType cqlTypeToSparkSQLType) {
+    public BulkElmToSparkSQLConverter(CQLTypeToSparkSQLType cqlTypeToSparkSQLType, CQLNameToSparkSQLName cqlNameToSparkSQLName) {
         this.cqlTypeToSparkSQLType = cqlTypeToSparkSQLType;
+        this.cqlNameToSparkSQLName = cqlNameToSparkSQLName;
     }
 
     @Override
@@ -64,6 +67,17 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         return currentNode;
     }
 
+    @Override
+    public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new ExpressionDefNode(cqlNameToSparkSQLName);
+        currentNode.setName(expressionDef.getName());
+        currentNode.setCqlNodeEquivalent(expressionDef);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitExpressionDef(expressionDef, context);
+        context.getStack().pop();
+        return result;
+    }
+
     /*
     @Override
     public OutputNode visitLibrary(Library library, BulkElmToSparkSQLConverterState context) {
@@ -84,17 +98,6 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
             return expressionRefNode;
         }
         return super.visitExpressionRef(expressionRef, context);
-    }
-
-    @Override
-    public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new ExpressionDefNode();
-        currentNode.setName(expressionDef.getName());
-        currentNode.setCqlNodeEquivalent(expressionDef);
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitExpressionDef(expressionDef, context);
-        context.getStack().pop();
-        return result;
     }
 
     @Override
