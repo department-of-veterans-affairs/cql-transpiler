@@ -22,3 +22,7 @@ CREATE OR REPLACE VIEW g AS (SELECT struct(*) AS _val FROM (SELECT _val as foo F
 
 -- define h: g.bar
 CREATE OR REPLACE VIEW h AS (SELECT _val.bar AS _val FROM g);
+
+-- define i: g.foo
+-- automatic decompression happens
+CREATE OR REPLACE VIEW i AS (SELECT col.* FROM (SELECT explode(*) FROM (SELECT _val.foo AS  _val FROM g)));

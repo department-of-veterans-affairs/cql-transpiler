@@ -36,5 +36,6 @@ spark.sql('CREATE OR REPLACE VIEW e AS (SELECT _val.foo FROM d AS _val);')
 # We're using temp tables so references to them have to be temporary as well, but the actual conversion will not generate a temp view
 spark.sql('CREATE OR REPLACE TEMP VIEW f AS (SELECT * FROM Encounter);')
 spark.sql('CREATE OR REPLACE TEMP VIEW g AS (SELECT struct(*) AS _val FROM (SELECT _val as foo FROM (SELECT collect_list(*) AS _val FROM (SELECT struct(*) FROM f))), (SELECT _val AS bar FROM (SELECT 1 _val)));')
-spark.sql('CREATE OR REPLACE TEMP VIEW h AS (SELECT _val.foo AS _val FROM g);')
-spark.sql('SELECT * FROM h').show()
+spark.sql('CREATE OR REPLACE TEMP VIEW h AS (SELECT _val.bar AS _val FROM g);')
+spark.sql('CREATE OR REPLACE TEMP VIEW i AS (SELECT col.* FROM (SELECT explode(*) FROM (SELECT _val.foo AS  _val FROM g)))')
+spark.sql('SELECT * FROM i').show()
