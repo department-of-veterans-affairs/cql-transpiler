@@ -1,15 +1,15 @@
-package gov.va.transpiler.bulk.pyspark;
+package gov.va.transpiler.bulk.sparksql;
 
 import gov.va.transpiler.node.OutputWriter;
 
-public class PySparkOutputWriter extends OutputWriter{
+public class SparkSQLOutputWriter extends OutputWriter{
 
     private boolean currentLineAlreadyStarted;
     private final String toIndentWith;
     private final String toLineBreakWith;
     private final StringBuilder document;
 
-    public PySparkOutputWriter(int startingIndentLevel, String toIndentWith, String toLineBreakWith) {
+    public SparkSQLOutputWriter(int startingIndentLevel, String toIndentWith, String toLineBreakWith) {
         if (startingIndentLevel < 0) {
             throw new IllegalArgumentException("Cannot have negative indent level");
         }

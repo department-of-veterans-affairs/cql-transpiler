@@ -1,7 +1,7 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
 
-import gov.va.transpiler.bulk.pyspark.OutputWriter;
+import gov.va.transpiler.node.OutputWriter;
 import gov.va.transpiler.bulk.pyspark.utilities.CQLNameToPythonName;
 import gov.va.transpiler.node.OutputNode;
 import gov.va.transpiler.node.SingleChildNode;

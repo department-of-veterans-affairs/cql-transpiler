@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.hl7.elm.r1.Library;
 
-import gov.va.transpiler.bulk.pyspark.OutputWriter;
+import gov.va.transpiler.node.OutputWriter;
 import gov.va.transpiler.node.ParentNode;
 
 public class LibraryNode extends ParentNode {

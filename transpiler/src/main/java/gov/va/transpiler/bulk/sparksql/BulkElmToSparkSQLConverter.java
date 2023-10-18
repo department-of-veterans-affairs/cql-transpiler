@@ -1,52 +1,34 @@
-package gov.va.transpiler.bulk.pyspark;
+package gov.va.transpiler.bulk.sparksql;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.ElmConverter;
-import gov.va.transpiler.bulk.pyspark.node.AccessModifierNode;
-import gov.va.transpiler.bulk.pyspark.node.AliasedQuerySourceNode;
-import gov.va.transpiler.bulk.pyspark.node.ContextDefNode;
-import gov.va.transpiler.bulk.pyspark.node.DefaultOutputNode;
-import gov.va.transpiler.bulk.pyspark.node.EqualNode;
-import gov.va.transpiler.bulk.pyspark.node.ExpressionDefNode;
-import gov.va.transpiler.bulk.pyspark.node.ExpressionRefNode;
-import gov.va.transpiler.bulk.pyspark.node.LibraryNode;
-import gov.va.transpiler.bulk.pyspark.node.OperatorNode;
-import gov.va.transpiler.bulk.pyspark.node.PropertyNode;
-import gov.va.transpiler.bulk.pyspark.node.QueryNode;
-import gov.va.transpiler.bulk.pyspark.node.RetrieveNode;
-import gov.va.transpiler.bulk.pyspark.node.SingletonFromNode;
-import gov.va.transpiler.bulk.pyspark.node.TupleElementNode;
-import gov.va.transpiler.bulk.pyspark.node.TupleNode;
-import gov.va.transpiler.bulk.pyspark.node.WhereNode;
-import gov.va.transpiler.bulk.pyspark.node.LiteralNode;
-import gov.va.transpiler.bulk.pyspark.utilities.CQLNameToPythonName;
-import gov.va.transpiler.bulk.pyspark.utilities.CQLTypeToPythonType;
+import gov.va.transpiler.bulk.sparksql.node.*;
+import gov.va.transpiler.bulk.sparksql.utilities.CQLTypeToSparkSQLType;
 import gov.va.transpiler.node.OutputNode;
 
-public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmToPySparkConverterState> {
+public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElmToSparkSQLConverterState> {
 
-    private final CQLTypeToPythonType cqlTypeToPythonType;
-    private final CQLNameToPythonName cqlNameToPythonName;
+    private final CQLTypeToSparkSQLType cqlTypeToSparkSQLType;
 
-    public BulkElmToPySparkConverter(CQLTypeToPythonType cqlTypeToPythonType, CQLNameToPythonName cqlNameToPythonName) {
-        this.cqlTypeToPythonType = cqlTypeToPythonType;
-        this.cqlNameToPythonName = cqlNameToPythonName;
+    public BulkElmToSparkSQLConverter(CQLTypeToSparkSQLType cqlTypeToSparkSQLType) {
+        this.cqlTypeToSparkSQLType = cqlTypeToSparkSQLType;
     }
 
     @Override
-    public OutputNode convert(Library library, BulkElmToPySparkConverterState state) {
+    public OutputNode convert(Library library, BulkElmToSparkSQLConverterState state) {
         return visitElement(library, state);
     }
 
     @Override
-    protected OutputNode defaultResult(Trackable elm, BulkElmToPySparkConverterState context) {
+    protected OutputNode defaultResult(Trackable elm, BulkElmToSparkSQLConverterState context) {
         OutputNode stackLocation;
         if (!context.getStack().empty() && elm == (stackLocation = context.getStack().peek()).getCqlNodeEquivalent()) {
             return stackLocation;
         }
         stackLocation = new DefaultOutputNode(defaultNodeName(elm));
+        stackLocation.setCqlNodeEquivalent(elm);
         context.getStack().push(stackLocation);
         return stackLocation;
     }
@@ -62,8 +44,29 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         return aggregate;
     }
 
+    protected String defaultNodeName(Trackable elm) {
+        return elm == null ? "NullElement" : elm.getClass().getSimpleName();
+    }
+
     @Override
-    public OutputNode visitLibrary(Library library, BulkElmToPySparkConverterState context) {
+    public OutputNode visitLiteral(Literal literal, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new LiteralNode(cqlTypeToSparkSQLType);
+        currentNode.setName(literal.getValue());
+        currentNode.setResultType(literal.getResultType().toString());
+        currentNode.setCqlNodeEquivalent(literal);
+        return currentNode;
+    }
+
+    @Override
+    public OutputNode visitAccessModifier(AccessModifier accessModifier, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new AccessModifierNode();
+        currentNode.setCqlNodeEquivalent(accessModifier);
+        return currentNode;
+    }
+
+    /*
+    @Override
+    public OutputNode visitLibrary(Library library, BulkElmToSparkSQLConverterState context) {
         var currentNode = new LibraryNode();
         currentNode.setName(currentNode.getFileNameFromLibrary(library));
         currentNode.setCqlNodeEquivalent(library);
@@ -74,9 +77,9 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToPySparkConverterState context) {
+    public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToSparkSQLConverterState context) {
         if (!(expressionRef instanceof FunctionRef)) {
-            var expressionRefNode = new ExpressionRefNode(cqlNameToPythonName);
+            var expressionRefNode = new ExpressionRefNode();
             expressionRefNode.setName(expressionRef.getName());
             return expressionRefNode;
         }
@@ -84,8 +87,8 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToPySparkConverterState context) {
-        var currentNode = new ExpressionDefNode(cqlNameToPythonName);
+    public OutputNode visitExpressionDef(ExpressionDef expressionDef, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new ExpressionDefNode();
         currentNode.setName(expressionDef.getName());
         currentNode.setCqlNodeEquivalent(expressionDef);
         context.getStack().push(currentNode);
@@ -95,7 +98,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitTuple(Tuple tuple, BulkElmToPySparkConverterState context) {
+    public OutputNode visitTuple(Tuple tuple, BulkElmToSparkSQLConverterState context) {
         var currentNode = new TupleNode();
         currentNode.setCqlNodeEquivalent(tuple);
         context.getStack().push(currentNode);
@@ -105,7 +108,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitAdd(Add add, BulkElmToPySparkConverterState context) {
+    public OutputNode visitAdd(Add add, BulkElmToSparkSQLConverterState context) {
         var currentNode = new OperatorNode("+");
         currentNode.setCqlNodeEquivalent(add);
         context.getStack().push(currentNode);
@@ -115,7 +118,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToPySparkConverterState context) {
+    public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToSparkSQLConverterState context) {
         var currentNode = new TupleElementNode();
         currentNode.setCqlNodeEquivalent(tupleElement);
         currentNode.setName(tupleElement.getName());
@@ -126,8 +129,8 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitProperty(Property property, BulkElmToPySparkConverterState context) {
-        var currentNode = new PropertyNode(cqlNameToPythonName);
+    public OutputNode visitProperty(Property property, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new PropertyNode();
         currentNode.setCqlNodeEquivalent(property);
         currentNode.setName(property.getPath());
         currentNode.setScope(property.getScope());
@@ -139,37 +142,21 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitAccessModifier(AccessModifier accessModifier, BulkElmToPySparkConverterState context) {
-        var currentNode = new AccessModifierNode();
-        currentNode.setCqlNodeEquivalent(accessModifier);
-        return currentNode;
-    }
-
-    @Override
-    public OutputNode visitLiteral(Literal literal, BulkElmToPySparkConverterState context) {
-        var currentNode = new LiteralNode(cqlTypeToPythonType);
-        currentNode.setName(literal.getValue());
-        currentNode.setResultType(literal.getResultType().toString());
-        currentNode.setCqlNodeEquivalent(literal);
-        return currentNode;
-    }
-
-    @Override
-    public OutputNode visitContextDef(ContextDef contextDef, BulkElmToPySparkConverterState context) {
+    public OutputNode visitContextDef(ContextDef contextDef, BulkElmToSparkSQLConverterState context) {
         var currentNode = new ContextDefNode(contextDef.getName());
         currentNode.setCqlNodeEquivalent(contextDef);
         return currentNode;
     }
 
     @Override
-    public OutputNode visitRetrieve(Retrieve retrieve, BulkElmToPySparkConverterState context) {
+    public OutputNode visitRetrieve(Retrieve retrieve, BulkElmToSparkSQLConverterState context) {
         var currentNode = new RetrieveNode(retrieve.getDataType().getLocalPart(), retrieve.getDataType().getNamespaceURI());
         currentNode.setCqlNodeEquivalent(retrieve);
         return currentNode;
     }
 
     @Override
-    public OutputNode visitSingletonFrom(SingletonFrom singletonFrom, BulkElmToPySparkConverterState context) {
+    public OutputNode visitSingletonFrom(SingletonFrom singletonFrom, BulkElmToSparkSQLConverterState context) {
         var currentNode = new SingletonFromNode();
         currentNode.setCqlNodeEquivalent(singletonFrom);
         context.getStack().push(currentNode);
@@ -179,7 +166,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitEqual(Equal equal, BulkElmToPySparkConverterState context) {
+    public OutputNode visitEqual(Equal equal, BulkElmToSparkSQLConverterState context) {
         var currentNode = new EqualNode();
         currentNode.setCqlNodeEquivalent(equal);
         context.getStack().push(currentNode);
@@ -189,7 +176,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitAliasedQuerySource(AliasedQuerySource aliasedQuerySource, BulkElmToPySparkConverterState context) {
+    public OutputNode visitAliasedQuerySource(AliasedQuerySource aliasedQuerySource, BulkElmToSparkSQLConverterState context) {
         var currentNode = new AliasedQuerySourceNode();
         currentNode.setAlias(aliasedQuerySource.getAlias());
         currentNode.setCqlNodeEquivalent(aliasedQuerySource);
@@ -200,7 +187,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitWhereClause(Expression elm, BulkElmToPySparkConverterState context) {
+    public OutputNode visitWhereClause(Expression elm, BulkElmToSparkSQLConverterState context) {
         OutputNode result = super.visitWhereClause(elm, context);
         // WhereNode is a wrapper
         var currentNode = new WhereNode();
@@ -209,7 +196,7 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
     }
 
     @Override
-    public OutputNode visitQuery(Query query, BulkElmToPySparkConverterState context) {
+    public OutputNode visitQuery(Query query, BulkElmToSparkSQLConverterState context) {
         var currentNode = new QueryNode();
         currentNode.setCqlNodeEquivalent(query);
         context.getStack().push(currentNode);
@@ -217,8 +204,5 @@ public class BulkElmToPySparkConverter extends ElmConverter<OutputNode, BulkElmT
         context.getStack().pop();
         return result;
     }
-
-    private String defaultNodeName(Trackable elm) {
-        return elm == null ? "NullElement" : elm.getClass().getSimpleName();
-    }
+     */
 }

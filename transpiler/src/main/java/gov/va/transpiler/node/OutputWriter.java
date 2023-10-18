@@ -1,4 +1,4 @@
-package gov.va.transpiler.bulk.pyspark;
+package gov.va.transpiler.node;
 
 public abstract class OutputWriter {
 

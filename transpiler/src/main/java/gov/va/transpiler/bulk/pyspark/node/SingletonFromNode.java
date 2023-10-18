@@ -1,6 +1,6 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
-import gov.va.transpiler.bulk.pyspark.OutputWriter;
+import gov.va.transpiler.node.OutputWriter;
 import gov.va.transpiler.node.SingleChildNode;
 
 public class SingletonFromNode extends SingleChildNode {

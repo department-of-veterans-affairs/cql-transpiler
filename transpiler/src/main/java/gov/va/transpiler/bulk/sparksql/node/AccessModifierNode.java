@@ -1,10 +1,10 @@
-package gov.va.transpiler.bulk.pyspark.node;
+package gov.va.transpiler.bulk.sparksql.node;
 
 import gov.va.transpiler.node.OutputWriter;
 import gov.va.transpiler.node.OutputNode;
 
 public class AccessModifierNode extends OutputNode {
-    // We don't support access modifiers
+    // Spark SQL doesn't support access modifiers
 
     @Override
     public boolean addChild(OutputNode child) {

@@ -1,7 +1,5 @@
 package gov.va.transpiler.node;
 
-import gov.va.transpiler.bulk.pyspark.OutputWriter;
-
 public abstract class OutputNode {
 
     private Object cqlNodeEquivalent;
