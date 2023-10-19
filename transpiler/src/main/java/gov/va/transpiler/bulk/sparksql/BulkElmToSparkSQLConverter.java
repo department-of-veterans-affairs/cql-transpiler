@@ -64,6 +64,13 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
     }
 
     @Override
+    public OutputNode visitUsingDef(UsingDef usingDef, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new UsingDefNode();
+        currentNode.setCqlNodeEquivalent(usingDef);
+        return currentNode;
+    }
+
+    @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToSparkSQLConverterState context) {
         var currentNode = new LiteralNode(cqlTypeToSparkSQLType);
         currentNode.setName(literal.getValue());

@@ -1,12 +1,26 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.hl7.elm.r1.Library;
 
+import gov.va.transpiler.node.OutputNode;
 import gov.va.transpiler.node.OutputWriter;
 
 public class LibraryNode extends AbstractNodeWithChildren {
+
+    private List<UsingDefNode> usingDefList = new ArrayList<>();
+
+    @Override
+    public boolean addChild(OutputNode child) {
+        if (child instanceof UsingDefNode) {
+            usingDefList.add((UsingDefNode) child);
+            return true;
+        }
+        return super.addChild(child);
+    }
 
     public String getFileNameFromLibrary(Library library) {
         String className = null;
