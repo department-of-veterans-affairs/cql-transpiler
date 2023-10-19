@@ -4,9 +4,8 @@ package gov.va.transpiler.bulk.sparksql.node;
 import gov.va.transpiler.node.OutputWriter;
 import gov.va.transpiler.bulk.sparksql.utilities.CQLNameToSparkSQLName;
 import gov.va.transpiler.node.OutputNode;
-import gov.va.transpiler.node.SingleChildNode;
 
-public class ExpressionDefNode extends SingleChildNode {
+public class ExpressionDefNode extends AbstractNodeOneChild {
 
     private final CQLNameToSparkSQLName cqlNameToSparkSQLName;
 

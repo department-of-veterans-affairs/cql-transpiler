@@ -1,7 +1,5 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
-import gov.va.transpiler.node.ParentNode;
-
 public class OperatorNode extends ParentNode {
     
     private final String operator;

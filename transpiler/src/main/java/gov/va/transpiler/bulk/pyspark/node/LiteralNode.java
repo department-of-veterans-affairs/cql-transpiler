@@ -1,7 +1,6 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
 import gov.va.transpiler.bulk.pyspark.utilities.CQLTypeToPythonType;
-import gov.va.transpiler.node.TerminalNode;
 
 public class LiteralNode extends TerminalNode {
 

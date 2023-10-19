@@ -1,9 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
 import gov.va.transpiler.bulk.sparksql.utilities.Standards;
-import gov.va.transpiler.node.ParentNode;
 
-public class ListNode extends ParentNode {
+public class ListNode extends AbstractNodeWithChildren {
 
     @Override
     public String asOneLine() {

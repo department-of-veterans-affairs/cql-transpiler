@@ -1,26 +1,9 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import gov.va.transpiler.node.OutputWriter;
 import gov.va.transpiler.node.OutputNode;
 
-public class DefaultOutputNode extends OutputNode {
-
-    private final String name;
-    private final List<OutputNode> children;
-
-    public DefaultOutputNode(String name) {
-        this.name = name;
-        this.children = new ArrayList<>();
-    }
-
-    @Override
-    public boolean addChild(OutputNode child) {
-        children.add(child);
-        return true;
-    }
+public class DefaultOutputNode extends AbstractNodeWithChildren {
 
     @Override
     public String asOneLine() {
@@ -37,9 +20,9 @@ public class DefaultOutputNode extends OutputNode {
             outputWriter.addText(asOneLine());
             outputWriter.endLine();
         } else if (!super.print(outputWriter)) {
-            outputWriter.printFullLine("-- Unsupported node " + name + " [");
+            outputWriter.printFullLine("-- Unsupported node " + getName() + " [");
             outputWriter.raiseIndentLevel();
-            for(OutputNode child : children) {
+            for(OutputNode child : getChildren()) {
                 success |= child.print(outputWriter);
             }
             outputWriter.lowerIndentLevel();

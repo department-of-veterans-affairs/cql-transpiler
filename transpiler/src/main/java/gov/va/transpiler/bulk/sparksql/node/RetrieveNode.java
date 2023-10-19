@@ -1,8 +1,6 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-import gov.va.transpiler.node.TerminalNode;
-
-public class RetrieveNode extends TerminalNode {
+public class RetrieveNode extends AbstractNodeNoChildren {
 
     @Override
     public String asOneLine() {

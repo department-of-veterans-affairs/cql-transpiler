@@ -30,7 +30,8 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         if (!context.getStack().empty() && elm == (stackLocation = context.getStack().peek()).getCqlNodeEquivalent()) {
             return stackLocation;
         }
-        stackLocation = new DefaultOutputNode(defaultNodeName(elm));
+        stackLocation = new DefaultOutputNode();
+        stackLocation.setName(defaultNodeName(elm));
         stackLocation.setCqlNodeEquivalent(elm);
         context.getStack().push(stackLocation);
         return stackLocation;

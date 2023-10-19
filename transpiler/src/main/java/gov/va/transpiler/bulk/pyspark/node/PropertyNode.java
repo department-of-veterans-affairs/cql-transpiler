@@ -3,7 +3,6 @@ package gov.va.transpiler.bulk.pyspark.node;
 import org.hl7.elm.r1.Expression;
 
 import gov.va.transpiler.bulk.pyspark.utilities.CQLNameToPythonName;
-import gov.va.transpiler.node.SingleChildNode;
 
 public class PropertyNode extends SingleChildNode {
 

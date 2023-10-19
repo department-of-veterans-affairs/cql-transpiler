@@ -1,7 +1,6 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
 import gov.va.transpiler.bulk.pyspark.utilities.CQLNameToPythonName;
-import gov.va.transpiler.node.TerminalNode;
 
 public class ExpressionRefNode extends TerminalNode {
 

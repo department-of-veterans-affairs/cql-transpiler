@@ -1,7 +1,5 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
-import gov.va.transpiler.node.SingleChildNode;
-
 public class WhereNode extends SingleChildNode {
 
     private String scope;

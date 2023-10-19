@@ -1,7 +1,5 @@
 package gov.va.transpiler.bulk.pyspark.node;
 
-import gov.va.transpiler.node.TerminalNode;
-
 public class RetrieveNode extends TerminalNode {
 
     private final String retrieval;

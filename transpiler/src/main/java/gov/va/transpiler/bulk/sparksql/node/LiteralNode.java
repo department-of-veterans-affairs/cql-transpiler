@@ -1,11 +1,10 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
 import gov.va.transpiler.bulk.sparksql.utilities.CQLTypeToSparkSQLType;
-import gov.va.transpiler.node.TerminalNode;
 
 import static gov.va.transpiler.bulk.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
 
-public class LiteralNode extends TerminalNode {
+public class LiteralNode extends AbstractNodeNoChildren {
 
     private final CQLTypeToSparkSQLType cqlTypeToSparkSQLType;
 
