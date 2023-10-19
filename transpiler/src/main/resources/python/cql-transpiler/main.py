@@ -28,7 +28,7 @@ userProvidedData.setModelContextID("Patient", 1)
 #
 #
 #
-spark.sql('SELECT collect_list(_val) FROM ((SELECT 1 _val) UNION ALL (SELECT * FROM (SELECT 1 _val)))').show()
+spark.sql('SELECT collect_list(_val) FROM (SELECT collect_list(*) AS _val FROM (SELECT struct(*) FROM (SELECT * FROM Encounter)))').show()
 '''
 spark.sql('CREATE OR REPLACE VIEW a AS (SELECT 1 _val);')
 spark.sql("CREATE OR REPLACE VIEW b AS (SELECT collect_list(_val) AS _val FROM a);")

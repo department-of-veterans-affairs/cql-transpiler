@@ -12,7 +12,12 @@ public abstract class AbstractNodeOneChild extends AbstractNodeWithChildren {
         return false;
     }
 
-    public OutputNode getChild() {
+    public AbstractCQLNode getChild() {
         return getChildren().get(0);
+    }
+
+    @Override
+    public boolean isTable() {
+        return getChild().isTable();
     }
 }

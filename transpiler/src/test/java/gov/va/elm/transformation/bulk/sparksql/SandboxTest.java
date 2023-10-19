@@ -80,7 +80,7 @@ public class SandboxTest {
     }
 
     @Test
-    public void testRetrieveComposed() {
+    public void testRetrieveCompressed() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"

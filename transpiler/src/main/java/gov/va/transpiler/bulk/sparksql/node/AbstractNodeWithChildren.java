@@ -7,15 +7,25 @@ import gov.va.transpiler.node.OutputNode;
 
 public abstract class AbstractNodeWithChildren extends AbstractCQLNode {
 
-    private List<OutputNode> children = new ArrayList<>();
+    private List<AbstractCQLNode> children = new ArrayList<>();
 
     @Override
     public boolean addChild(OutputNode child) {
-        children.add(child);
-        return true;
+        if (child instanceof AbstractCQLNode) {
+            children.add((AbstractCQLNode) child);
+            return true;
+        }
+        return false;
     }
 
-    protected List<OutputNode> getChildren() {
+    protected List<AbstractCQLNode> getChildren() {
         return children;
+    }
+
+    public String childAsOneLineCompressedIfTable(AbstractCQLNode child) {
+        if (child.isTable()) {
+            return "SELECT collect_list(*) AS _val FROM (SELECT struct(*) FROM (" + child.asOneLine() + "))";
+        }
+        return child.asOneLine();
     }
 }

@@ -6,4 +6,9 @@ public class RetrieveNode extends AbstractNodeNoChildren {
     public String asOneLine() {
         return "SELECT * FROM " + getName();
     }
+
+    @Override
+    public boolean isTable() {
+        return true;
+    }
 }

@@ -10,11 +10,11 @@ public class ListNode extends AbstractNodeWithChildren {
         if (getChildren().size() == 0) {
             unionStatement = Standards.EMPTY_TABLE;
         } else if (getChildren().size() == 1) {
-            unionStatement = getChildren().get(0).asOneLine();
+            unionStatement = childAsOneLineCompressedIfTable(getChildren().get(0));
         } else {
-            unionStatement = "(" + getChildren().get(0).asOneLine() + ")";
+            unionStatement = "(" + childAsOneLineCompressedIfTable(getChildren().get(0)) + ")";
             for (int i = 1; i < getChildren().size(); i++) {
-                unionStatement += " UNION ALL (" + getChildren().get(i).asOneLine() + ")";
+                unionStatement += " UNION ALL (" + childAsOneLineCompressedIfTable(getChildren().get(i)) + ")";
             }
         }
         return "SELECT collect_list(" + Standards.SINGLE_VALUE_COLUMN_NAME + ") FROM (" + unionStatement + ")";
