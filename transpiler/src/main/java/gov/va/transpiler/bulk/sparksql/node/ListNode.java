@@ -17,6 +17,6 @@ public class ListNode extends AbstractNodeWithChildren {
                 unionStatement += " UNION ALL (" + childAsOneLineCompressedIfTable(getChildren().get(i)) + ")";
             }
         }
-        return "SELECT collect_list(" + Standards.SINGLE_VALUE_COLUMN_NAME + ") FROM (" + unionStatement + ")";
+        return "SELECT collect_list(" + Standards.SINGLE_VALUE_COLUMN_NAME + ") AS " + Standards.SINGLE_VALUE_COLUMN_NAME + " FROM (" + unionStatement + ")";
     }
 }

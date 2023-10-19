@@ -53,6 +53,17 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
     }
 
     @Override
+    public OutputNode visitLibrary(Library library, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new LibraryNode();
+        currentNode.setName(currentNode.getFileNameFromLibrary(library));
+        currentNode.setCqlNodeEquivalent(library);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitLibrary(library, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToSparkSQLConverterState context) {
         var currentNode = new LiteralNode(cqlTypeToSparkSQLType);
         currentNode.setName(literal.getValue());
@@ -108,16 +119,6 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         return currentNode;
     }
     /*
-    @Override
-    public OutputNode visitLibrary(Library library, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new LibraryNode();
-        currentNode.setName(currentNode.getFileNameFromLibrary(library));
-        currentNode.setCqlNodeEquivalent(library);
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitLibrary(library, context);
-        context.getStack().pop();
-        return result;
-    }
 
     @Override
     public OutputNode visitTuple(Tuple tuple, BulkElmToSparkSQLConverterState context) {
