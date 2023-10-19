@@ -78,6 +78,25 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         return result;
     }
 
+    @Override
+    public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToSparkSQLConverterState context) {
+        if (!(expressionRef instanceof FunctionRef)) {
+            var expressionRefNode = new ExpressionRefNode();
+            expressionRefNode.setName(expressionRef.getName());
+            return expressionRefNode;
+        }
+        return super.visitExpressionRef(expressionRef, context);
+    }
+
+    @Override
+    public OutputNode visitList(List list, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new ListNode();
+        currentNode.setCqlNodeEquivalent(list);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitList(list, context);
+        context.getStack().pop();
+        return result;
+    }
     /*
     @Override
     public OutputNode visitLibrary(Library library, BulkElmToSparkSQLConverterState context) {
@@ -88,16 +107,6 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         OutputNode result = super.visitLibrary(library, context);
         context.getStack().pop();
         return result;
-    }
-
-    @Override
-    public OutputNode visitExpressionRef(ExpressionRef expressionRef, BulkElmToSparkSQLConverterState context) {
-        if (!(expressionRef instanceof FunctionRef)) {
-            var expressionRefNode = new ExpressionRefNode();
-            expressionRefNode.setName(expressionRef.getName());
-            return expressionRefNode;
-        }
-        return super.visitExpressionRef(expressionRef, context);
     }
 
     @Override

@@ -24,16 +24,7 @@ public class DefaultOutputNode extends OutputNode {
 
     @Override
     public String asOneLine() {
-        String builder = "-- Unsupported node " + name + " [ ";
-        String childAsOneLine;
-        if (children.isEmpty()) {}
-        else if (children.size() == 1 && (childAsOneLine = children.get(0).asOneLine()) != null) {
-            builder += childAsOneLine;
-        } else {
-            return null;
-        }
-        builder += " ]";
-        return builder;
+        return null;
     }
 
     @Override
