@@ -97,6 +97,15 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         context.getStack().pop();
         return result;
     }
+
+    @Override
+    public OutputNode visitRetrieve(Retrieve retrieve, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new RetrieveNode();
+        // TODO: We'll worry about retrieve.getDataType().getNamespaceURI() later
+        currentNode.setName(retrieve.getDataType().getLocalPart());
+        currentNode.setCqlNodeEquivalent(retrieve);
+        return currentNode;
+    }
     /*
     @Override
     public OutputNode visitLibrary(Library library, BulkElmToSparkSQLConverterState context) {
@@ -157,13 +166,6 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
     public OutputNode visitContextDef(ContextDef contextDef, BulkElmToSparkSQLConverterState context) {
         var currentNode = new ContextDefNode(contextDef.getName());
         currentNode.setCqlNodeEquivalent(contextDef);
-        return currentNode;
-    }
-
-    @Override
-    public OutputNode visitRetrieve(Retrieve retrieve, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new RetrieveNode(retrieve.getDataType().getLocalPart(), retrieve.getDataType().getNamespaceURI());
-        currentNode.setCqlNodeEquivalent(retrieve);
         return currentNode;
     }
 

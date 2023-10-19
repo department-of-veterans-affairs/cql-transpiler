@@ -40,7 +40,6 @@ public class SandboxTest {
     @Test
     public void testExpressionRef() {
         String cql = ""
-            //+ "library TestCQL version '2.1\n'"
             + "define myconst_1: 123\n"
             + "define myconst_2: myconst_1\n"
             ;
@@ -54,11 +53,10 @@ public class SandboxTest {
     @Test
     public void testList() {
         String cql = ""
-            //+ "library TestCQL version '2.1\n'"
             + "define myconst_1: 1\n"
-            + "define myconst_2: {}"
-            + "define myconst_3: { myconst_1 }"
-            + "define myconst_4: { 1, myconst_1 }"
+            + "define myconst_2: {}\n"
+            + "define myconst_3: { myconst_1 }\n"
+            + "define myconst_4: { 1, myconst_1 }\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
@@ -66,6 +64,21 @@ public class SandboxTest {
             System.out.println(output);
         }
     }
+
+    @Test
+    public void testRetrieve() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using  FHIR version '4.0.1'\n"
+            + "define var: [Encounter]\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
     private List<String> processCQLToSparkSQL(String cql) {
         var libraryList = compiler.compile(cql);
 
