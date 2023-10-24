@@ -73,6 +73,7 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
     @Override
     public OutputNode visitLiteral(Literal literal, BulkElmToSparkSQLConverterState context) {
         var currentNode = new LiteralNode(cqlTypeToSparkSQLType);
+        currentNode.setCqlNodeEquivalent(literal);
         currentNode.setName(literal.getValue());
         currentNode.setResultType(literal.getResultType().toString());
         currentNode.setCqlNodeEquivalent(literal);
@@ -102,6 +103,7 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         if (!(expressionRef instanceof FunctionRef)) {
             var expressionRefNode = new ExpressionRefNode();
             expressionRefNode.setName(expressionRef.getName());
+            expressionRefNode.setCqlNodeEquivalent(expressionRef);
             return expressionRefNode;
         }
         return super.visitExpressionRef(expressionRef, context);
@@ -113,6 +115,27 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         currentNode.setCqlNodeEquivalent(list);
         context.getStack().push(currentNode);
         OutputNode result = super.visitList(list, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new TupleElementNode();
+        currentNode.setCqlNodeEquivalent(tupleElement);
+        currentNode.setName(tupleElement.getName());
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitTupleElement(tupleElement, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitTuple(Tuple tuple, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new TupleNode();
+        currentNode.setCqlNodeEquivalent(tuple);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitTuple(tuple, context);
         context.getStack().pop();
         return result;
     }

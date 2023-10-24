@@ -93,6 +93,20 @@ public class SandboxTest {
         }
     }
 
+    @Test
+    public void testTuple() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using  FHIR version '4.0.1'\n"
+            + "define a: {foo: 1, bar: [Encounter]}\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
     private List<String> processCQLToSparkSQL(String cql) {
         var libraryList = compiler.compile(cql);
 

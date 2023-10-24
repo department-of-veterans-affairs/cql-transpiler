@@ -18,6 +18,7 @@ CREATE OR REPLACE VIEW e AS (SELECT _val.foo FROM d AS _val);
 CREATE OR REPLACE VIEW f AS (SELECT * FROM Encounter);
 
 -- define g: {foo: f, bar: 1}
+-- automatic compression happens
 CREATE OR REPLACE VIEW g AS (SELECT struct(*) AS _val FROM (SELECT _val as foo FROM (SELECT collect_list(*) AS _val FROM (SELECT struct(*) FROM f))), (SELECT _val AS bar FROM (SELECT 1 _val)));
 
 -- define h: g.bar
