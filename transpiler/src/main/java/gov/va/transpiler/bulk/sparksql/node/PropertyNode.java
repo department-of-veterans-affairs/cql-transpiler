@@ -4,7 +4,6 @@ public class PropertyNode extends AbstractNodeOneChild {
 
     @Override
     public String asOneLine() {
-        return "SELECT _val." + getName() + " FROM (" + getChild() + ")";
+        return "SELECT _val." + getName() + " FROM (" + childAsOneLineDecompressedIfTable(getChild()) + ")";
     }
-    
 }

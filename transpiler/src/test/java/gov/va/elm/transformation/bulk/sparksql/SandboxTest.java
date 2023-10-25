@@ -66,9 +66,22 @@ public class SandboxTest {
     }
 
     @Test
-    public void testRetrieve() {
+    public void testLibrary() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+        // TODO: libraries saved as files?
+        throw new RuntimeException();
+    }
+
+    @Test
+    public void testRetrieve() {
+        String cql = ""
             + "using  FHIR version '4.0.1'\n"
             + "define var: [Encounter]\n"
             ;
@@ -82,7 +95,6 @@ public class SandboxTest {
     @Test
     public void testRetrieveCompressed() {
         String cql = ""
-            + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"
             + "define var: {[Encounter]}\n"
             ;
@@ -94,9 +106,22 @@ public class SandboxTest {
     }
 
     @Test
+    public void testRetrieveReferenceCompressed() {
+        String cql = ""
+            + "using  FHIR version '4.0.1'\n"
+            + "define a: [Encounter]\n"
+            + "define b: {a}\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
     public void testTuple() {
         String cql = ""
-            + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"
             + "define a: {foo: 1, bar: [Encounter]}\n"
             ;
@@ -108,9 +133,8 @@ public class SandboxTest {
     }
 
     @Test
-    public void testSimplePropertyOfSimpleStruct() {
+    public void testSimplePropertyOfSimpleTuple() {
         String cql = ""
-            + "library Retrievals version '1.0'\n"
             + "using  FHIR version '4.0.1'\n"
             + "define a: {foo: 1, bar: 2}\n"
             + "define b: a.foo\n"
@@ -120,6 +144,22 @@ public class SandboxTest {
         for (String output : sparksql) {
             System.out.println(output);
         }
+    }
+
+    @Test
+    public void testSimplePropertyOfComplexTuple() {
+        String cql = ""
+            + "using  FHIR version '4.0.1'\n"
+            + "define a: {foo: [Encounter], bar: 2}\n"
+            + "define b: a.foo\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+        // TODO: decompression
+        throw new RuntimeException();
     }
 
     private List<String> processCQLToSparkSQL(String cql) {

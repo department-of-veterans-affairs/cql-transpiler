@@ -49,4 +49,9 @@ public class ExpressionDefNode extends AbstractNodeOneChild {
         }
         return printResult;
     }
+
+    @Override
+    public boolean isTable() {
+        return getChild().isTable();
+    }
 }

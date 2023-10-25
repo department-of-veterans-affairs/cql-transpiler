@@ -9,6 +9,7 @@ public class RetrieveNode extends AbstractNodeNoChildren {
 
     @Override
     public boolean isTable() {
-        return true;
+        setTable(true);
+        return super.isTable();
     }
 }

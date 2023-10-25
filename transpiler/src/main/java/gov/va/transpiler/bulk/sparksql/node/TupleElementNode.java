@@ -4,6 +4,6 @@ public class TupleElementNode extends AbstractNodeOneChild {
 
     @Override
     public String asOneLine() {
-        return "SELECT * FROM (" + getChild().asOneLine() + ") AS " + getName();
+        return "SELECT * FROM (" + childAsOneLineCompressedIfTable((AbstractCQLNode) getChild()) + ") AS " + getName();
     }    
 }

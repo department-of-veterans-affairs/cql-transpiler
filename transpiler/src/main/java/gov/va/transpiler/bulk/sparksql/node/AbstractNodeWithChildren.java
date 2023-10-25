@@ -28,4 +28,11 @@ public abstract class AbstractNodeWithChildren extends AbstractCQLNode {
         }
         return child.asOneLine();
     }
+
+    public String childAsOneLineDecompressedIfTable(AbstractCQLNode child) {
+        if (child.isTable()) {
+            return "SELECT col.* FROM (SELECT explode(*) FROM (" + child.asOneLine() + "))";
+        }
+        return child.asOneLine();
+    }
 }

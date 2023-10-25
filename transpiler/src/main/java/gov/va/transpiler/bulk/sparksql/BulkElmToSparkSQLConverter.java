@@ -95,6 +95,7 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         context.getStack().push(currentNode);
         OutputNode result = super.visitExpressionDef(expressionDef, context);
         context.getStack().pop();
+        context.getDefinedExpressions().put(currentNode.getName(), currentNode);
         return result;
     }
 
@@ -104,6 +105,7 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
             var expressionRefNode = new ExpressionRefNode();
             expressionRefNode.setName(expressionRef.getName());
             expressionRefNode.setCqlNodeEquivalent(expressionRef);
+            expressionRefNode.setTable(context.getDefinedExpressions().get(expressionRefNode.getName()).isTable());
             return expressionRefNode;
         }
         return super.visitExpressionRef(expressionRef, context);
