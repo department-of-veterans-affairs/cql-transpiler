@@ -155,12 +155,14 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
     public OutputNode visitProperty(Property property, BulkElmToSparkSQLConverterState context) {
         var currentNode = new PropertyNode();
         currentNode.setCqlNodeEquivalent(property);
+        currentNode.setResultType(property.getResultType());
         currentNode.setName(property.getPath());
         context.getStack().push(currentNode);
         OutputNode result = super.visitProperty(property, context);
         context.getStack().pop();
         return result;
     }
+    
     /*
 
     @Override

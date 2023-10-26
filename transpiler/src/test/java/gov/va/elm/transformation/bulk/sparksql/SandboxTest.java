@@ -158,8 +158,6 @@ public class SandboxTest {
         for (String output : sparksql) {
             System.out.println(output);
         }
-        // TODO: decompression
-        throw new RuntimeException();
     }
 
     private List<String> processCQLToSparkSQL(String cql) {
