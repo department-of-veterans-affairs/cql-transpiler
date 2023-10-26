@@ -157,12 +157,44 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         currentNode.setCqlNodeEquivalent(property);
         currentNode.setResultType(property.getResultType());
         currentNode.setName(property.getPath());
+        currentNode.setScope(property.getScope());
         context.getStack().push(currentNode);
         OutputNode result = super.visitProperty(property, context);
         context.getStack().pop();
         return result;
     }
-    
+
+    @Override
+    public OutputNode visitQuery(Query query, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new QueryNode();
+        currentNode.setCqlNodeEquivalent(query);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitQuery(query, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitAliasedQuerySource(AliasedQuerySource aliasedQuerySource, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new AliasedQuerySourceNode();
+        currentNode.setCqlNodeEquivalent(aliasedQuerySource);
+        currentNode.setName(aliasedQuerySource.getAlias());
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitAliasedQuerySource(aliasedQuerySource, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitReturnClause(ReturnClause returnClause, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new ReturnClauseNode();
+        currentNode.setCqlNodeEquivalent(returnClause);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitReturnClause(returnClause, context);
+        context.getStack().pop();
+        return result;
+    }
+
     /*
 
     @Override

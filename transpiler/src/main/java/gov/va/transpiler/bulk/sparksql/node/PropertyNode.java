@@ -7,6 +7,7 @@ import org.hl7.cql.model.ClassType;
 public class PropertyNode extends AbstractNodeOneChild {
 
     private DataType resultType;
+    private String scope;
 
     public DataType getResultType() {
         return resultType;
@@ -16,14 +17,25 @@ public class PropertyNode extends AbstractNodeOneChild {
         this.resultType = resultType;
     }
 
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
     public boolean isChildTable() {
         // a table is a list of classes
-        return getChild().isTable() || (getResultType() instanceof ListType && ((ListType) getResultType()).getElementType() instanceof ClassType);
+        return hasChild() && (getChild().isTable() || (getResultType() instanceof ListType && ((ListType) getResultType()).getElementType() instanceof ClassType));
     }
 
     @Override
     public String asOneLine() {
-        if (isChildTable()) {
+        if (!hasChild()) {
+            // we're in the middle of a retrieve
+            return getScope() + "." + getName();
+        } if (isChildTable()) {
             // decompress compressed child tables
             return "SELECT col.* FROM (SELECT explode(*) FROM (SELECT _val." + getName() + " FROM (" + getChild().asOneLine() + ")))";
         }

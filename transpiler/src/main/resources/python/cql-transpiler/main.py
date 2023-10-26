@@ -28,7 +28,9 @@ userProvidedData.setModelContextID("Patient", 1)
 #
 #
 #
-
+spark.sql('CREATE OR REPLACE TEMP VIEW a AS (SELECT struct (*) AS _val FROM (SELECT _val AS foo FROM (SELECT struct (*) AS _val FROM (SELECT _val AS alpha FROM (SELECT collect_list(*) AS _val FROM (SELECT struct(*) FROM (SELECT * FROM Encounter)))))), (SELECT _val AS bar FROM (SELECT 2 _val)));')
+spark.sql('CREATE OR REPLACE TEMP VIEW b AS (SELECT col.* FROM (SELECT explode(*) FROM (SELECT _val.alpha FROM (SELECT _val.foo AS _val FROM (SELECT * FROM a)))));')
+spark.sql('SELECT * from b;').show()
 '''
 spark.sql('CREATE OR REPLACE VIEW a AS (SELECT 1 _val);')
 spark.sql("CREATE OR REPLACE VIEW b AS (SELECT collect_list(_val) AS _val FROM a);")

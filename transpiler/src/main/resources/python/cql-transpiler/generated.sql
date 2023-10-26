@@ -27,3 +27,6 @@ CREATE OR REPLACE VIEW h AS (SELECT _val.bar AS _val FROM g);
 -- define i: g.foo
 -- automatic decompression happens
 CREATE OR REPLACE VIEW i AS (SELECT col.* FROM (SELECT explode(*) FROM (SELECT _val.foo AS  _val FROM g)));
+
+-- define j: [Encounter] E return E.period
+CREATE OR REPLACE VIEW j AS (SELECT E.period FROM ((SELECT * FROM Encounter) AS E))

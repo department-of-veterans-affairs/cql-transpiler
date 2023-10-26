@@ -12,6 +12,10 @@ public abstract class AbstractNodeOneChild extends AbstractNodeWithChildren {
         return false;
     }
 
+    public boolean hasChild() {
+        return !getChildren().isEmpty();
+    }
+
     public AbstractCQLNode getChild() {
         return getChildren().get(0);
     }
