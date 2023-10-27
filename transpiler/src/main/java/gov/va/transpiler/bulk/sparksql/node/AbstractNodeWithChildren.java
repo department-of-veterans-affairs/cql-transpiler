@@ -24,7 +24,7 @@ public abstract class AbstractNodeWithChildren extends AbstractCQLNode {
 
     public String childAsOneLineCompressedIfTable(AbstractCQLNode child) {
         if (child.isTable()) {
-            return "SELECT collect_list(*) AS _val FROM (SELECT struct(*) FROM (" + child.asOneLine() + "))";
+            return "SELECT collect_list(struct(*)) AS _val FROM (" + child.asOneLine() + ")";
         }
         return child.asOneLine();
     }

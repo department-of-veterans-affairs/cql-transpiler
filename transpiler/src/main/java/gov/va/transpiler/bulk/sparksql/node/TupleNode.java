@@ -16,7 +16,7 @@ public class TupleNode extends AbstractNodeWithChildren {
     @Override
     public String asOneLine() {
         if (!getChildren().isEmpty()) {
-            String builder = "SELECT struct (*) AS _val FROM ";
+            String builder = "SELECT struct(";
             boolean first = true;
             for (OutputNode child : getChildren()) {
                 if (first) {
@@ -24,13 +24,11 @@ public class TupleNode extends AbstractNodeWithChildren {
                 } else {
                     builder += ", ";
                 }
-                builder += "(";
                 builder += child.asOneLine();
-                builder += ")";
             }
+            builder += ") AS _val";
             return builder;
         }
         return Standards.EMPTY_TABLE;
     }
-    
 }
