@@ -27,7 +27,6 @@ public class SandboxTest {
     @Test
     public void testExpressionDefLiteral() {
         String cql = ""
-            //+ "library TestCQL version '2.1\n'"
             + "define myconst_1: 123\n"
             ;
 
@@ -179,6 +178,21 @@ public class SandboxTest {
         String cql = ""
             + "using FHIR version '4.0.1'\n"
             + "define a: [Encounter] E return E.period\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
+    public void testQueryWithComplexReturn() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using FHIR version '4.0.1'\n"
+            + "include FHIRHelpers version '4.1.000'\n"
+            + "define a: [Encounter] E where E.status = 'completed'\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);

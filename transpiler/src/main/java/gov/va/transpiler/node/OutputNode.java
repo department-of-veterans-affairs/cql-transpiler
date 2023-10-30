@@ -48,10 +48,4 @@ public abstract class OutputNode {
         }
         return false;
     }
-
-    @Override
-    public String toString() {
-        String asOneLine = asOneLine();
-        return asOneLine == null ? super.toString() : asOneLine;
-    }
 }
