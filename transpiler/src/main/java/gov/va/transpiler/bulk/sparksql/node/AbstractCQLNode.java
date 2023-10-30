@@ -4,16 +4,10 @@ import gov.va.transpiler.node.OutputNode;
 
 public abstract class AbstractCQLNode extends OutputNode {
 
-    protected boolean isTable = false;
-
     /**
      * We treat tables differently from simple values.
      */
     public boolean isTable() {
-        return isTable;
-    }
-
-    public void setTable(boolean isTable) {
-        this.isTable = isTable;
+        return false;
     }
 }

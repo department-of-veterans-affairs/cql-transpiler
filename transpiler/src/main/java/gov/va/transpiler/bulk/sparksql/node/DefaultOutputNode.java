@@ -7,7 +7,13 @@ public class DefaultOutputNode extends AbstractNodeWithChildren {
 
     @Override
     public String asOneLine() {
-        return null;
+        String builder = "Unsupported node " + getName();
+        for (var child : getChildren()) {
+            builder += "[";
+            builder += child.asOneLine();
+            builder += "]";
+        }
+        return builder;
     }
 
     @Override

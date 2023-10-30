@@ -6,6 +6,7 @@ public class QueryNode extends AbstractNodeWithChildren {
 
     private AliasedQuerySourceNode aliasedQuerySourceNode;
     private ReturnClauseNode returnClauseNode;
+    private WhereNode whereNode;
 
     @Override
     public boolean addChild(OutputNode child) {
@@ -14,6 +15,9 @@ public class QueryNode extends AbstractNodeWithChildren {
             return true;
         } else if (child instanceof ReturnClauseNode) {
             returnClauseNode = (ReturnClauseNode) child;
+            return true;
+        } else if (child instanceof WhereNode) {
+            whereNode = (WhereNode) child;
             return true;
         }
         return super.addChild(child);
@@ -25,6 +29,8 @@ public class QueryNode extends AbstractNodeWithChildren {
 
     @Override
     public String asOneLine() {
-        return "SELECT " + (returnClauseNode == null ? '*' : returnClauseNode.asOneLine()) + " FROM (" + aliasedQuerySourceNode.asOneLine() + "))";
+        return "SELECT " + (returnClauseNode == null ? '*' : returnClauseNode.asOneLine())
+            + " FROM (" + aliasedQuerySourceNode.asOneLine() + ")"
+            + (whereNode == null ? "" : " " + whereNode.asOneLine()) + ")";
     }
 }

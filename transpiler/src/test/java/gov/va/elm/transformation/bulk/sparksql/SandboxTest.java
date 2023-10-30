@@ -1,5 +1,7 @@
 package gov.va.elm.transformation.bulk.sparksql;
 
+import static gov.va.transpiler.bulk.sparksql.utilities.Standards.DEFAULT_CQL_DATE_TIME;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,12 +189,43 @@ public class SandboxTest {
     }
 
     @Test
-    public void testQueryWithComplexReturn() {
+    public void testInclude() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
-            + "using FHIR version '4.0.1'\n"
             + "include FHIRHelpers version '4.1.000'\n"
-            + "define a: [Encounter] E where E.status = 'completed'\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+        // TODO: 'include' causes the entire FHIRHelpers library to be imported, and then requires that it be supported
+        throw new RuntimeException();
+    }
+
+    @Test
+    public void testDateTime() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using QUICK\n"
+            + "define testdate: " + DEFAULT_CQL_DATE_TIME + "\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+        // Dates are a MASSIVE can of worms. I'm just not going to worry about them for now.
+        throw new RuntimeException();
+    }
+
+
+    @Test
+    public void testQueryWithWhereClause() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using QUICK\n"
+            + "define a: [Encounter] E where E.period ends after " + DEFAULT_CQL_DATE_TIME + "\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);

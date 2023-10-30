@@ -195,107 +195,62 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         return result;
     }
 
-    /*
-
     @Override
-    public OutputNode visitTuple(Tuple tuple, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new TupleNode();
-        currentNode.setCqlNodeEquivalent(tuple);
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitTuple(tuple, context);
-        context.getStack().pop();
-        return result;
-    }
-
-    @Override
-    public OutputNode visitAdd(Add add, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new OperatorNode("+");
-        currentNode.setCqlNodeEquivalent(add);
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitAdd(add, context);
-        context.getStack().pop();
-        return result;
-    }
-
-    @Override
-    public OutputNode visitTupleElement(TupleElement tupleElement, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new TupleElementNode();
-        currentNode.setCqlNodeEquivalent(tupleElement);
-        currentNode.setName(tupleElement.getName());
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitTupleElement(tupleElement, context);
-        context.getStack().pop();
-        return result;
-    }
-
-    @Override
-    public OutputNode visitProperty(Property property, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new PropertyNode();
-        currentNode.setCqlNodeEquivalent(property);
-        currentNode.setName(property.getPath());
-        currentNode.setScope(property.getScope());
-        currentNode.setSource(property.getSource());
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitProperty(property, context);
-        context.getStack().pop();
-        return result;
-    }
-
-    @Override
-    public OutputNode visitContextDef(ContextDef contextDef, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new ContextDefNode(contextDef.getName());
-        currentNode.setCqlNodeEquivalent(contextDef);
-        return currentNode;
-    }
-
-    @Override
-    public OutputNode visitSingletonFrom(SingletonFrom singletonFrom, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new SingletonFromNode();
-        currentNode.setCqlNodeEquivalent(singletonFrom);
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitSingletonFrom(singletonFrom, context);
-        context.getStack().pop();
-        return result;
-    }
-
-    @Override
-    public OutputNode visitEqual(Equal equal, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new EqualNode();
-        currentNode.setCqlNodeEquivalent(equal);
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitEqual(equal, context);
-        context.getStack().pop();
-        return result;
-    }
-
-    @Override
-    public OutputNode visitAliasedQuerySource(AliasedQuerySource aliasedQuerySource, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new AliasedQuerySourceNode();
-        currentNode.setAlias(aliasedQuerySource.getAlias());
-        currentNode.setCqlNodeEquivalent(aliasedQuerySource);
-        context.getStack().push(currentNode);
-        OutputNode result = super.visitAliasedQuerySource(aliasedQuerySource, context);
-        context.getStack().pop();
-        return result;
-    }
-
-    @Override
-    public OutputNode visitWhereClause(Expression elm, BulkElmToSparkSQLConverterState context) {
-        OutputNode result = super.visitWhereClause(elm, context);
-        // WhereNode is a wrapper
+    public OutputNode visitWhereClause(Expression where, BulkElmToSparkSQLConverterState context) {
         var currentNode = new WhereNode();
+        OutputNode result = super.visitWhereClause(where, context);
         currentNode.addChild(result);
         return currentNode;
     }
 
     @Override
-    public OutputNode visitQuery(Query query, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new QueryNode();
-        currentNode.setCqlNodeEquivalent(query);
+    public OutputNode visitDateTime(DateTime dateTime, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new DateTimeNode();
+        currentNode.setCqlNodeEquivalent(dateTime);
+        if (dateTime.getYear() != null) {
+            currentNode.setYear(visitExpression(dateTime.getYear(), context));
+        }
+        if (dateTime.getMonth() != null) {
+            currentNode.setMonth(visitExpression(dateTime.getMonth(), context));
+        }
+        if (dateTime.getDay() != null) {
+            currentNode.setDay(visitExpression(dateTime.getDay(), context));
+        }
+        if (dateTime.getHour() != null) {
+            currentNode.setHour(visitExpression(dateTime.getHour(), context));
+        }
+        if (dateTime.getMinute() != null) {
+            currentNode.setMinute(visitExpression(dateTime.getMinute(), context));
+        }
+        if (dateTime.getSecond() != null) {
+            currentNode.setSecond(visitExpression(dateTime.getSecond(), context));
+        }
+        if (dateTime.getMillisecond() != null) {
+            currentNode.setMillisecond(visitExpression(dateTime.getMillisecond(), context));
+        }
+        if (dateTime.getTimezoneOffset() != null) {
+            currentNode.setTimezoneOffset(visitExpression(dateTime.getTimezoneOffset(), context));
+        }
+        return currentNode;
+    }
+
+    @Override
+    public OutputNode visitAfter(After after, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new AfterNode();
+        currentNode.setCqlNodeEquivalent(after);
         context.getStack().push(currentNode);
-        OutputNode result = super.visitQuery(query, context);
+        OutputNode result = super.visitAfter(after, context);
         context.getStack().pop();
         return result;
     }
-     */
+
+    @Override
+    public OutputNode visitEnd(End end, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new EndNode();
+        currentNode.setCqlNodeEquivalent(end);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitEnd(end, context);
+        context.getStack().pop();
+        return result;
+    }
 }

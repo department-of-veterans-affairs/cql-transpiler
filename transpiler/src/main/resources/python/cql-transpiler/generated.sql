@@ -30,3 +30,6 @@ CREATE OR REPLACE VIEW i AS (SELECT col.* FROM (SELECT explode(*) FROM (SELECT _
 
 -- define j: [Encounter] E return E.period
 CREATE OR REPLACE VIEW j AS (SELECT E.period FROM ((SELECT * FROM Encounter) AS E))
+
+-- define k: [Encounter] E where E.period.end > 2011-1-1
+CREATE OR REPLACE VIEW k AS (SELECT * FROM ((SELECT * FROM Encounter) AS E) WHERE ((E.period.end) > (2011-1-1)))
