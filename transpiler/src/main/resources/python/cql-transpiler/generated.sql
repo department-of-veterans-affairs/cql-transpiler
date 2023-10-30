@@ -33,3 +33,9 @@ CREATE OR REPLACE VIEW j AS (SELECT E.period FROM ((SELECT * FROM Encounter) AS 
 
 -- define k: [Encounter] E where E.period.end > 2011-1-1
 CREATE OR REPLACE VIEW k AS (SELECT * FROM ((SELECT * FROM Encounter) AS E) WHERE ((E.period.end) > (2011-1-1)))
+
+-- define l: 1 + 2
+CREATE OR REPLACE VIEW l AS (SELECT leftval + rightval AS _val FROM ((SELECT _val AS leftval FROM (SELECT 1 _val)) OUTER JOIN ((SELECT _val AS rightval FROM (SELECT 1 _val)))))
+
+-- define l: '1' + '2'
+CREATE OR REPLACE VIEW l AS (SELECT leftval + rightval AS _val FROM ((SELECT _val AS leftval FROM (SELECT '1' _val)) OUTER JOIN ((SELECT _val AS rightval FROM (SELECT '1' _val)))))

@@ -28,7 +28,7 @@ userProvidedData.setModelContextID("Patient", 1)
 #
 #
 #
-spark.sql('SELECT period.end FROM ((SELECT * FROM Encounter) AS E) WHERE ((E.period.end) < (\'2011-01-01\'))').show()
+spark.sql('SELECT concat(leftval, rightval) AS _val FROM ((SELECT _val AS leftval FROM (SELECT "1" _val)) OUTER JOIN ((SELECT _val AS rightval FROM (SELECT "2" _val))))').show()
 '''
 spark.sql('CREATE OR REPLACE VIEW a AS (SELECT 1 _val);')
 spark.sql("CREATE OR REPLACE VIEW b AS (SELECT collect_list(_val) AS _val FROM a);")

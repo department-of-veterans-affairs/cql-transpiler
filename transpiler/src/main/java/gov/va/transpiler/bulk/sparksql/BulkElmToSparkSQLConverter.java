@@ -253,4 +253,24 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         context.getStack().pop();
         return result;
     }
+
+    @Override
+    public OutputNode visitAdd(Add add, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new AddNode();
+        currentNode.setCqlNodeEquivalent(add);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitAdd(add, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitConcatenate(Concatenate concatenate, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new ConcatenateNode();
+        currentNode.setCqlNodeEquivalent(concatenate);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitConcatenate(concatenate, context);
+        context.getStack().pop();
+        return result;
+    }
 }

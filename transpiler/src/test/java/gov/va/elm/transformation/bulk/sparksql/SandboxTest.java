@@ -219,13 +219,38 @@ public class SandboxTest {
         throw new RuntimeException();
     }
 
-
     @Test
     public void testQueryWithWhereClause() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
             + "using QUICK\n"
             + "define a: [Encounter] E where E.period ends after " + DEFAULT_CQL_DATE_TIME + "\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
+    public void testAddNumber() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "define a: 1 + 2\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
+    public void testConcatenateString() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "define a: '1' + '2'\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
