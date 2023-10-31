@@ -37,5 +37,8 @@ CREATE OR REPLACE VIEW k AS (SELECT * FROM ((SELECT * FROM Encounter) AS E) WHER
 -- define l: 1 + 2
 CREATE OR REPLACE VIEW l AS (SELECT leftval + rightval AS _val FROM ((SELECT _val AS leftval FROM (SELECT 1 _val)) OUTER JOIN ((SELECT _val AS rightval FROM (SELECT 1 _val)))))
 
--- define l: '1' + '2'
-CREATE OR REPLACE VIEW l AS (SELECT leftval + rightval AS _val FROM ((SELECT _val AS leftval FROM (SELECT '1' _val)) OUTER JOIN ((SELECT _val AS rightval FROM (SELECT '1' _val)))))
+-- define m: '1' + '2'
+CREATE OR REPLACE VIEW m AS (SELECT leftval + rightval AS _val FROM ((SELECT _val AS leftval FROM (SELECT '1' _val)) OUTER JOIN ((SELECT _val AS rightval FROM (SELECT '1' _val)))))
+
+--define n: (1 - 2 / -3) * 5
+CREATE OR REPLACE VIEW n AS (SELECT leftval * rightval AS _val FROM ((SELECT _val AS leftval FROM SELECT leftval - rightval AS _val FROM ((SELECT _val AS leftval FROM SELECT 0.0 + _val AS _val FROM (SELECT 1 _val)) OUTER JOIN ((SELECT _val AS rightval FROM SELECT 0.0 + _val AS _val FROM (SELECT 1 _val)))))) OUTER JOIN ((SELECT _val AS rightval FROM SELECT leftval - rightval AS _val FROM ((SELECT _val AS leftval FROM SELECT 0.0 + _val AS _val FROM (SELECT 1 _val)) OUTER JOIN ((SELECT _val AS rightval FROM SELECT 0.0 + _val AS _val FROM (SELECT 1 _val))))))))));

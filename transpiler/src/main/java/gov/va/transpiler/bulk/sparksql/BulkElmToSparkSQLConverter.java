@@ -256,10 +256,40 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
 
     @Override
     public OutputNode visitAdd(Add add, BulkElmToSparkSQLConverterState context) {
-        var currentNode = new AddNode();
+        var currentNode = new BinaryOperatorNode("+");
         currentNode.setCqlNodeEquivalent(add);
         context.getStack().push(currentNode);
         OutputNode result = super.visitAdd(add, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitSubtract(Subtract subtract, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new BinaryOperatorNode("-");
+        currentNode.setCqlNodeEquivalent(subtract);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitSubtract(subtract, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitDivide(Divide divide, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new BinaryOperatorNode("/");
+        currentNode.setCqlNodeEquivalent(divide);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitDivide(divide, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitMultiply(Multiply multiply, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new BinaryOperatorNode("*");
+        currentNode.setCqlNodeEquivalent(multiply);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitMultiply(multiply, context);
         context.getStack().pop();
         return result;
     }
@@ -270,6 +300,26 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         currentNode.setCqlNodeEquivalent(concatenate);
         context.getStack().push(currentNode);
         OutputNode result = super.visitConcatenate(concatenate, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitNegate(Negate negate, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new NegateNode();
+        currentNode.setCqlNodeEquivalent(negate);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitNegate(negate, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitToDecimal(ToDecimal toDecimal, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new ToDecimalNode();
+        currentNode.setCqlNodeEquivalent(toDecimal);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitToDecimal(toDecimal, context);
         context.getStack().pop();
         return result;
     }

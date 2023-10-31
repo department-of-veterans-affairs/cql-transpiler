@@ -234,10 +234,9 @@ public class SandboxTest {
     }
 
     @Test
-    public void testAddNumber() {
+    public void testConcatenateString() {
         String cql = ""
-            + "library Retrievals version '1.0'\n"
-            + "define a: 1 + 2\n"
+            + "define a: '1' + '2'\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
@@ -245,12 +244,16 @@ public class SandboxTest {
             System.out.println(output);
         }
     }
-
     @Test
-    public void testConcatenateString() {
+    public void testMath() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
-            + "define a: '1' + '2'\n"
+            + "define a: 2 + 3\n"
+            + "define b: 2 - 3\n"
+            + "define c: 2 / 3\n"
+            + "define d: 2 * 3\n"
+            + "define e: -1\n"
+            + "define f: (1 + 2 / -3 + 4) * 5\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
