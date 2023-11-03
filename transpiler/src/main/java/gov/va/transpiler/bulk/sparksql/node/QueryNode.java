@@ -22,6 +22,7 @@ public class QueryNode extends AbstractNodeWithChildren {
         }
         return super.addChild(child);
     }
+
     @Override
     public boolean isTable() {
         return true;
@@ -31,6 +32,6 @@ public class QueryNode extends AbstractNodeWithChildren {
     public String asOneLine() {
         return "SELECT " + (returnClauseNode == null ? '*' : returnClauseNode.asOneLine())
             + " FROM (" + aliasedQuerySourceNode.asOneLine() + ")"
-            + (whereNode == null ? "" : " " + whereNode.asOneLine()) + ")";
+            + (whereNode == null ? "" : " " + whereNode.asOneLine());
     }
 }

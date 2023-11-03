@@ -22,6 +22,6 @@ public abstract class AbstractNodeOneChild extends AbstractNodeWithChildren {
 
     @Override
     public boolean isTable() {
-        return getChild().isTable();
+        return hasChild() && getChild().isTable();
     }
 }

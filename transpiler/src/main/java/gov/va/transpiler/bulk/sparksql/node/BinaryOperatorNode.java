@@ -8,7 +8,6 @@ public class BinaryOperatorNode extends AbstractNodeBinaryExpression {
 
     @Override
     public String asOneLine() {
-        return "SELECT leftval " + getName() + " rightval AS _val FROM ((SELECT _val AS leftval FROM (" + getChild1().asOneLine() + ")) OUTER JOIN (SELECT _val AS rightval FROM (" + getChild2().asOneLine() + ")))";
+        return "SELECT " + "(" + getChild1().asOneLine() + ") " + getName() + " (" + getChild2().asOneLine() + ") _val";
     }
-    
 }

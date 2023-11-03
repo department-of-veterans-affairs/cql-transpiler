@@ -155,7 +155,6 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
     public OutputNode visitProperty(Property property, BulkElmToSparkSQLConverterState context) {
         var currentNode = new PropertyNode();
         currentNode.setCqlNodeEquivalent(property);
-        currentNode.setResultType(property.getResultType());
         currentNode.setName(property.getPath());
         currentNode.setScope(property.getScope());
         context.getStack().push(currentNode);
@@ -320,6 +319,16 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode, BulkElm
         currentNode.setCqlNodeEquivalent(toDecimal);
         context.getStack().push(currentNode);
         OutputNode result = super.visitToDecimal(toDecimal, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode visitEqual(Equal equal, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new BinaryOperatorNode("=");
+        currentNode.setCqlNodeEquivalent(equal);
+        context.getStack().push(currentNode);
+        OutputNode result = super.visitEqual(equal, context);
         context.getStack().pop();
         return result;
     }

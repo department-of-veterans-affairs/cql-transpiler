@@ -176,19 +176,6 @@ public class SandboxTest {
     }
 
     @Test
-    public void testQueryWithSimpleReturn() {
-        String cql = ""
-            + "using FHIR version '4.0.1'\n"
-            + "define a: [Encounter] E return E.period\n"
-            ;
-
-        var sparksql = processCQLToSparkSQL(cql);
-        for (String output : sparksql) {
-            System.out.println(output);
-        }
-    }
-
-    @Test
     public void testInclude() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
@@ -220,6 +207,61 @@ public class SandboxTest {
     }
 
     @Test
+    public void testConcatenateString() {
+        String cql = ""
+            + "define a: '1' + '2'\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
+    public void testMath() {
+        String cql = ""
+            + "define a: 2 + 3\n"
+            + "define b: 2 - 3\n"
+            + "define c: 2 / 3\n"
+            + "define d: 2 * 3\n"
+            + "define e: -1\n"
+            + "define f: (1 + 2 / -3 + 4) * 5\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
+    public void testEqual() {
+        String cql = ""
+            + "define a: 1 = 2\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+
+    @Test
+    public void testQueryWithSimpleReturn() {
+        String cql = ""
+            + "using FHIR version '4.0.1'\n"
+            + "define a: [Encounter] E return E.period\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
     public void testQueryWithWhereClause() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
@@ -234,9 +276,11 @@ public class SandboxTest {
     }
 
     @Test
-    public void testConcatenateString() {
+    public void testPropertyDuringRetrieve() {
         String cql = ""
-            + "define a: '1' + '2'\n"
+            + "library Retrievals version '1.0'\n"
+            + "using QUICK\n"
+            + "define a: [Encounter] E return E.status.value\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
@@ -244,16 +288,13 @@ public class SandboxTest {
             System.out.println(output);
         }
     }
+
     @Test
-    public void testMath() {
+    public void testEqualDuringRetrieve() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
-            + "define a: 2 + 3\n"
-            + "define b: 2 - 3\n"
-            + "define c: 2 / 3\n"
-            + "define d: 2 * 3\n"
-            + "define e: -1\n"
-            + "define f: (1 + 2 / -3 + 4) * 5\n"
+            + "using QUICK\n"
+            + "define a: [Encounter] E where E.status.value = 'finished'\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);

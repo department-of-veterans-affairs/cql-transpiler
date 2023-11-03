@@ -1,21 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-import org.hl7.cql.model.DataType;
-import org.hl7.cql.model.ListType;
-import org.hl7.cql.model.ClassType;
-
 public class PropertyNode extends AbstractNodeOneChild {
 
-    private DataType resultType;
     private String scope;
-
-    public DataType getResultType() {
-        return resultType;
-    }
-
-    public void setResultType(DataType resultType) {
-        this.resultType = resultType;
-    }
 
     public String getScope() {
         return scope;
@@ -25,20 +12,23 @@ public class PropertyNode extends AbstractNodeOneChild {
         this.scope = scope;
     }
 
-    public boolean isChildTable() {
-        // a table is a list of classes
-        return hasChild() && (getChild().isTable() || (getResultType() instanceof ListType && ((ListType) getResultType()).getElementType() instanceof ClassType));
+    public boolean isColumnReference() {
+        return (getScope() != null) || (getChild() instanceof PropertyNode && ((PropertyNode) getChild()).isColumnReference());
     }
 
     @Override
     public String asOneLine() {
-        if (!hasChild()) {
-            // we're in the middle of a retrieve
-            return getScope() + "." + getName();
-        } if (isChildTable()) {
+        if (isColumnReference()) {
+            if (getScope() != null) {
+                return getScope() + "." + getName();
+            } else {
+                return getChild().asOneLine() + "." + getName();
+            }
+        } else if (getChild().isTable()) {
             // decompress compressed child tables
             return "SELECT col.* FROM (SELECT explode(*) FROM (SELECT _val." + getName() + " FROM (" + getChild().asOneLine() + ")))";
+        } else {
+            return "SELECT _val." + getName() + " AS _val FROM (" + getChild().asOneLine() + ")";
         }
-        return "SELECT _val." + getName() + " AS _val FROM (" + getChild().asOneLine() + ")";
     }
 }
