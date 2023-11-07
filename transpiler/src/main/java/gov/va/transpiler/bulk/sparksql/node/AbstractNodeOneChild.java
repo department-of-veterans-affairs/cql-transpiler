@@ -1,11 +1,13 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import org.cqframework.cql.elm.tracking.Trackable;
+
 import gov.va.transpiler.node.OutputNode;
 
-public abstract class AbstractNodeOneChild extends AbstractNodeWithChildren {
+public abstract class AbstractNodeOneChild<T extends Trackable> extends AbstractNodeWithChildren<T> {
 
     @Override
-    public boolean addChild(OutputNode child) {
+    public boolean addChild(OutputNode<? extends Trackable> child) {
         if (getChildren().isEmpty()) {
             return super.addChild(child);
         }
@@ -16,7 +18,7 @@ public abstract class AbstractNodeOneChild extends AbstractNodeWithChildren {
         return !getChildren().isEmpty();
     }
 
-    public AbstractCQLNode getChild() {
+    public AbstractCQLNode<? extends Trackable> getChild() {
         return getChildren().get(0);
     }
 

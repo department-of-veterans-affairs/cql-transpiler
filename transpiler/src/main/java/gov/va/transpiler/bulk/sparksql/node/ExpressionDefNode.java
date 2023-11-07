@@ -2,10 +2,14 @@ package gov.va.transpiler.bulk.sparksql.node;
 
 
 import gov.va.transpiler.node.OutputWriter;
+
+import org.cqframework.cql.elm.tracking.Trackable;
+import org.hl7.elm.r1.ExpressionDef;
+
 import gov.va.transpiler.bulk.sparksql.utilities.CQLNameToSparkSQLName;
 import gov.va.transpiler.node.OutputNode;
 
-public class ExpressionDefNode extends AbstractNodeOneChild {
+public class ExpressionDefNode extends AbstractNodeOneChild<ExpressionDef> {
 
     private final CQLNameToSparkSQLName cqlNameToSparkSQLName;
 
@@ -22,7 +26,7 @@ public class ExpressionDefNode extends AbstractNodeOneChild {
     }
 
     @Override
-    public boolean addChild(OutputNode child) {
+    public boolean addChild(OutputNode<? extends Trackable> child) {
         if (child instanceof AccessModifierNode){
             setAccessModifier((AccessModifierNode) child);
             return true;

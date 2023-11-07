@@ -1,8 +1,10 @@
 package gov.va.transpiler.node;
 
-public abstract class OutputNode {
+import org.cqframework.cql.elm.tracking.Trackable;
 
-    private Object cqlNodeEquivalent;
+public abstract class OutputNode<T extends Trackable> {
+
+    private T cqlNodeEquivalent;
     private String name;
 
     public String getName() {
@@ -13,11 +15,11 @@ public abstract class OutputNode {
         this.name = name;
     }
 
-    public Object getCqlNodeEquivalent() {
+    public T getCqlNodeEquivalent() {
         return cqlNodeEquivalent;
     }
 
-    public void setCqlNodeEquivalent(Object cqlNodeEquivalent) {
+    public void setCqlNodeEquivalent(T cqlNodeEquivalent) {
         this.cqlNodeEquivalent = cqlNodeEquivalent;
     }
 
@@ -25,7 +27,7 @@ public abstract class OutputNode {
      * @param child Child to add to this node.
      * @return True if the child was added. False otherwise.
      */
-    public abstract boolean addChild(OutputNode child);
+    public abstract boolean addChild(OutputNode<? extends Trackable> child);
 
     /**
      * @return If this node and all its children can be returned as a single line of text, returns that. Otherwise returns null.

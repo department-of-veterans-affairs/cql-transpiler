@@ -1,9 +1,12 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class TupleElementNode extends AbstractNodeOneChild {
+import org.cqframework.cql.elm.tracking.Trackable;
+import org.hl7.elm.r1.TupleElement;
+
+public class TupleElementNode extends AbstractNodeOneChild<TupleElement> {
 
     @Override
     public String asOneLine() {
-        return "(" + childAsOneLineCompressedIfTable((AbstractCQLNode) getChild()) + ") " + getName();
+        return "(" + childAsOneLineCompressedIfTable((AbstractCQLNode<? extends Trackable>) getChild()) + ") " + getName();
     }    
 }

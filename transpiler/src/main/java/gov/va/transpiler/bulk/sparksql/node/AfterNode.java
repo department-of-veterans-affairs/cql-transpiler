@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class AfterNode extends AbstractNodeBinaryExpression {
+import org.hl7.elm.r1.After;
+
+public class AfterNode extends AbstractNodeBinaryExpression<After> {
 
     @Override
     public String asOneLine() {

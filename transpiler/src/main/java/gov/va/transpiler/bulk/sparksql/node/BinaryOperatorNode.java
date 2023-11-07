@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class BinaryOperatorNode extends AbstractNodeBinaryExpression {
+import org.hl7.elm.r1.OperatorExpression;
+
+public class BinaryOperatorNode<T extends OperatorExpression> extends AbstractNodeBinaryExpression<T> {
 
     public BinaryOperatorNode(String operator) {
         setName(operator);

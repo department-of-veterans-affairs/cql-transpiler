@@ -1,8 +1,10 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import org.hl7.elm.r1.List;
+
 import gov.va.transpiler.bulk.sparksql.utilities.Standards;
 
-public class ListNode extends AbstractNodeWithChildren {
+public class ListNode extends AbstractNodeWithChildren<List> {
 
     @Override
     public String asOneLine() {

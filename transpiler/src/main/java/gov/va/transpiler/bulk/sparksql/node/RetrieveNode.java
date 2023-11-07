@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class RetrieveNode extends AbstractNodeNoChildren {
+import org.hl7.elm.r1.Retrieve;
+
+public class RetrieveNode extends AbstractNodeNoChildren<Retrieve> {
 
     @Override
     public String asOneLine() {

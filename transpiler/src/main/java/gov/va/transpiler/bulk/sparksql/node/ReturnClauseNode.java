@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class ReturnClauseNode extends AbstractNodeOneChild {
+import org.hl7.elm.r1.ReturnClause;
+
+public class ReturnClauseNode extends AbstractNodeOneChild<ReturnClause> {
 
     @Override
     public String asOneLine() {

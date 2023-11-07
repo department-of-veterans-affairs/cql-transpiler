@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class NegateNode extends AbstractNodeOneChild {
+import org.hl7.elm.r1.Negate;
+
+public class NegateNode extends AbstractNodeOneChild<Negate> {
 
     @Override
     public String asOneLine() {

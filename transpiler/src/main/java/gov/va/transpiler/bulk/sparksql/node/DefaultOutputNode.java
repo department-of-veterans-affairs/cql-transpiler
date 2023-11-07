@@ -1,9 +1,12 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
 import gov.va.transpiler.node.OutputWriter;
+
+import org.cqframework.cql.elm.tracking.Trackable;
+
 import gov.va.transpiler.node.OutputNode;
 
-public class DefaultOutputNode extends AbstractNodeWithChildren {
+public class DefaultOutputNode extends AbstractNodeWithChildren<Trackable> {
 
     @Override
     public String asOneLine() {
@@ -28,7 +31,7 @@ public class DefaultOutputNode extends AbstractNodeWithChildren {
         } else if (!super.print(outputWriter)) {
             outputWriter.printFullLine("-- Unsupported node " + getName() + " [");
             outputWriter.raiseIndentLevel();
-            for(OutputNode child : getChildren()) {
+            for(OutputNode<? extends Trackable> child : getChildren()) {
                 success |= child.print(outputWriter);
             }
             outputWriter.lowerIndentLevel();

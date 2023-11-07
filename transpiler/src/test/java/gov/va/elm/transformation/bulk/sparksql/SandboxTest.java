@@ -303,6 +303,21 @@ public class SandboxTest {
         }
     }
 
+    @Test
+    public void testContextDuringRetrieve() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using QUICK\n"
+            + "context Patient\n"
+            + "define a: [Encounter]\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
     private List<String> processCQLToSparkSQL(String cql) {
         var libraryList = compiler.compile(cql);
 

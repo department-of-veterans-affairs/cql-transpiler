@@ -1,15 +1,18 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import org.cqframework.cql.elm.tracking.Trackable;
+import org.hl7.elm.r1.Query;
+
 import gov.va.transpiler.node.OutputNode;
 
-public class QueryNode extends AbstractNodeWithChildren {
+public class QueryNode extends AbstractNodeWithChildren<Query> {
 
     private AliasedQuerySourceNode aliasedQuerySourceNode;
     private ReturnClauseNode returnClauseNode;
     private WhereNode whereNode;
 
     @Override
-    public boolean addChild(OutputNode child) {
+    public boolean addChild(OutputNode<? extends Trackable> child) {
         if (child instanceof AliasedQuerySourceNode) {
             aliasedQuerySourceNode = (AliasedQuerySourceNode) child;
             return true;

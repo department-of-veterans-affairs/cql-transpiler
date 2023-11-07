@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class ToDecimalNode extends AbstractNodeOneChild {
+import org.hl7.elm.r1.ToDecimal;
+
+public class ToDecimalNode extends AbstractNodeOneChild<ToDecimal> {
 
     @Override
     public String asOneLine() {

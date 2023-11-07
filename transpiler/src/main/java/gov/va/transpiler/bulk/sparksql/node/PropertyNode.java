@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class PropertyNode extends AbstractNodeOneChild {
+import org.hl7.elm.r1.Property;
+
+public class PropertyNode extends AbstractNodeOneChild<Property> {
 
     private String scope;
 

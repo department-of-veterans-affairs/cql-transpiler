@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class ExpressionRefNode extends AbstractNodeNoChildren {
+import org.hl7.elm.r1.ExpressionRef;
+
+public class ExpressionRefNode extends AbstractNodeNoChildren<ExpressionRef> {
 
     private boolean isTable;
 

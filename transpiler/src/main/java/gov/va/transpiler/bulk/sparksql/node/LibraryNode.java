@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.cqframework.cql.elm.tracking.Trackable;
 import org.hl7.elm.r1.Library;
 
 import gov.va.transpiler.node.OutputNode;
 import gov.va.transpiler.node.OutputWriter;
 
-public class LibraryNode extends AbstractNodeWithChildren {
+public class LibraryNode extends AbstractNodeWithChildren<Library> {
 
     private List<UsingDefNode> usingDefList = new ArrayList<>();
 
     @Override
-    public boolean addChild(OutputNode child) {
+    public boolean addChild(OutputNode<? extends Trackable> child) {
         if (child instanceof UsingDefNode) {
             usingDefList.add((UsingDefNode) child);
             return true;

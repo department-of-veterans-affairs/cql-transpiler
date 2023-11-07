@@ -4,7 +4,9 @@ import gov.va.transpiler.bulk.sparksql.utilities.CQLTypeToSparkSQLType;
 
 import static gov.va.transpiler.bulk.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
 
-public class LiteralNode extends AbstractNodeNoChildren {
+import org.hl7.elm.r1.Literal;
+
+public class LiteralNode extends AbstractNodeNoChildren<Literal> {
 
     private final CQLTypeToSparkSQLType cqlTypeToSparkSQLType;
 

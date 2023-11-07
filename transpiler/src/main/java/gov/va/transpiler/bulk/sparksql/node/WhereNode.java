@@ -1,7 +1,14 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import org.cqframework.cql.elm.tracking.Trackable;
+
 // WhereNode is a wrapper
-public class WhereNode extends AbstractNodeWithChildren {
+public class WhereNode extends AbstractNodeWithChildren<Trackable> {
+
+    @Override
+    public void setCqlNodeEquivalent(Trackable cqlNodeEquivalent) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public String asOneLine() {

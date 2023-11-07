@@ -28,4 +28,3 @@ userProvidedData.setModelContextID("Patient", 1)
 #
 #
 # spark.sql('SQL GOES HERE').show()
-spark.sql('SELECT * FROM (Encounter AS E) WHERE ((E.period.end) > (2010-01-02))').show()

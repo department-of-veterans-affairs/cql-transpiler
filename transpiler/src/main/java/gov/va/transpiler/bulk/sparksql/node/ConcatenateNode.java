@@ -1,6 +1,8 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
-public class ConcatenateNode extends AbstractNodeBinaryExpression {
+import org.hl7.elm.r1.Concatenate;
+
+public class ConcatenateNode extends AbstractNodeBinaryExpression<Concatenate> {
 
     @Override
     public String asOneLine() {
