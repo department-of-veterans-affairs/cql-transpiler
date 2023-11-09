@@ -1,5 +1,7 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import static gov.va.transpiler.bulk.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
+
 import org.hl7.elm.r1.Property;
 
 public class PropertyNode extends AbstractNodeOneChild<Property> {
@@ -28,9 +30,9 @@ public class PropertyNode extends AbstractNodeOneChild<Property> {
             }
         } else if (getChild().isTable()) {
             // decompress compressed child tables
-            return "SELECT col.* FROM (SELECT explode(*) FROM (SELECT _val." + getName() + " FROM (" + getChild().asOneLine() + ")))";
+            return "SELECT col.* FROM (SELECT explode(*) FROM (SELECT " + SINGLE_VALUE_COLUMN_NAME + "." + getName() + " FROM (" + getChild().asOneLine() + ")))";
         } else {
-            return "SELECT _val." + getName() + " AS _val FROM (" + getChild().asOneLine() + ")";
+            return "SELECT " + SINGLE_VALUE_COLUMN_NAME + "." + getName() + " AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (" + getChild().asOneLine() + ")";
         }
     }
 }

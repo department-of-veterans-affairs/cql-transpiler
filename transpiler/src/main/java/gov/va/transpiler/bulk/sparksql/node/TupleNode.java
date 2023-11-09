@@ -1,5 +1,7 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import static gov.va.transpiler.bulk.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
+
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.hl7.elm.r1.Tuple;
 
@@ -29,7 +31,7 @@ public class TupleNode extends AbstractNodeWithChildren<Tuple> {
                 }
                 builder += child.asOneLine();
             }
-            builder += ") AS _val";
+            builder += ") AS " + SINGLE_VALUE_COLUMN_NAME;
             return builder;
         }
         return Standards.EMPTY_TABLE;

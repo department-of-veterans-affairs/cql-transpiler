@@ -20,12 +20,11 @@ public class CountNode extends AbstractCQLAggregator<Count> {
     @Override
     public String asOneLine() {
         if (getChild().isTable()) {
-            String builder = "SELECT count(*) FROM (" + getChild().asOneLine() + ")";
+            String builder = "SELECT count(*) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (" + getChild().asOneLine() + ")";
             builder += getCqlContext() == null ? "" :  " GROUP BY " + contextToParam(getCqlContext());
-            builder += " AS " + SINGLE_VALUE_COLUMN_NAME;
             return builder;
         } else {
-            return "SELECT count(explode(*)) FROM (" + getChild().asOneLine() + ") AS " + SINGLE_VALUE_COLUMN_NAME;
+            return "SELECT count(explode(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (" + getChild().asOneLine() + ") AS " + SINGLE_VALUE_COLUMN_NAME;
         }
     }
 }

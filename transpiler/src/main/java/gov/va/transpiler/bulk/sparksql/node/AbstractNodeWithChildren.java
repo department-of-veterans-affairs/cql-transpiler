@@ -1,5 +1,7 @@
 package gov.va.transpiler.bulk.sparksql.node;
 
+import static gov.va.transpiler.bulk.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public abstract class AbstractNodeWithChildren<T extends Trackable> extends Abst
 
     public String childAsOneLineCompressedIfTable(AbstractCQLNode<? extends Trackable> child) {
         if (child.isTable()) {
-            return "SELECT collect_list(struct(*)) AS _val FROM (" + child.asOneLine() + ")";
+            return "SELECT collect_list(struct(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (" + child.asOneLine() + ")";
         }
         return child.asOneLine();
     }
