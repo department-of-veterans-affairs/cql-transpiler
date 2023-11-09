@@ -17,6 +17,6 @@ public class AliasedQuerySourceNode extends AbstractNodeOneChild<AliasedQuerySou
 
     @Override
     public String asOneLine() {
-        return getChild().getName() + " AS " + getName();
+        return ((RetrieveNode) getChild()).asOneLineWithAlias(getName());
     }
 }

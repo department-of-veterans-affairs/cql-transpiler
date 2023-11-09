@@ -309,13 +309,17 @@ public class SandboxTest {
             + "library Retrievals version '1.0'\n"
             + "using QUICK\n"
             + "context Patient\n"
-            + "define a: [Encounter]\n"
+            + "define a: Count([Encounter])\n"
+            + "context Unfiltered\n"
+            + "define b: Count([Encounter])\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
         for (String output : sparksql) {
             System.out.println(output);
         }
+        // Contexts aren't ordered properly??? The current AST parser only supports one context per file???
+        throw new RuntimeException();
     }
 
     private List<String> processCQLToSparkSQL(String cql) {

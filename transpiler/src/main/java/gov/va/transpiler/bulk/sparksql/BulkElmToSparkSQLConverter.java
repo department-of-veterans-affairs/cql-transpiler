@@ -88,12 +88,14 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode<? extend
     @Override
     public OutputNode<? extends Trackable> visitExpressionDef(ExpressionDef expressionDef, BulkElmToSparkSQLConverterState context) {
         var currentNode = new ExpressionDefNode(cqlNameToSparkSQLName);
+        context.setCqlContext(expressionDef.getContext());
         currentNode.setName(expressionDef.getName());
         currentNode.setCqlNodeEquivalent(expressionDef);
         context.getStack().push(currentNode);
         OutputNode<? extends Trackable> result = super.visitExpressionDef(expressionDef, context);
         context.getStack().pop();
         context.getDefinedExpressions().put(currentNode.getName(), currentNode);
+        context.setCqlContext(null);
         return result;
     }
 
@@ -146,6 +148,7 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode<? extend
         // TODO: We'll worry about retrieve.getDataType().getNamespaceURI() later
         currentNode.setName(retrieve.getDataType().getLocalPart());
         currentNode.setCqlNodeEquivalent(retrieve);
+        currentNode.setCqlContext(context.getCqlContext());
         return currentNode;
     }
 
@@ -327,6 +330,24 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode<? extend
         currentNode.setCqlNodeEquivalent(equal);
         context.getStack().push(currentNode);
         OutputNode<? extends Trackable> result = super.visitEqual(equal, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public OutputNode<? extends Trackable> visitContextDef(ContextDef contextDef, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new ContextDefNode();
+        currentNode.setCqlNodeEquivalent(contextDef);
+        currentNode.setName(contextDef.getName());
+        return currentNode;
+    }
+
+    @Override
+    public OutputNode<? extends Trackable> visitSingletonFrom(SingletonFrom singletonFrom, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new SingletonFromNode();
+        currentNode.setCqlNodeEquivalent(singletonFrom);
+        context.getStack().push(currentNode);
+        OutputNode<? extends Trackable> result = super.visitSingletonFrom(singletonFrom, context);
         context.getStack().pop();
         return result;
     }
