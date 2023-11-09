@@ -5,4 +5,10 @@ public class Standards {
     public static final String EMPTY_TABLE = "SELECT * FROM (SELECT 1 " + SINGLE_VALUE_COLUMN_NAME + ") WHERE " + SINGLE_VALUE_COLUMN_NAME + " = 0";
     public static final String DEFAULT_CQL_DATE_TIME = "@2010-01-02T14:30:07.76";
     public static final String DEFAULT_SQL_DATE_TIME = "2010-01-02T14:30:07.76";
+    public static final String CONTEXT_ID_COLUMN_PARAM_PREFIX = "@Context";
+    public static final String CONTEXT_ID_COLUMN_PARAM_SUFFIX = "IDColumnName";
+
+    public static String contextToParam(String context) {
+        return CONTEXT_ID_COLUMN_PARAM_PREFIX + context + CONTEXT_ID_COLUMN_PARAM_SUFFIX;
+    }
 }

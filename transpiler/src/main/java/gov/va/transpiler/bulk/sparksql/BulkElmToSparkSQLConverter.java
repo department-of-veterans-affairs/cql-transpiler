@@ -351,4 +351,15 @@ public class BulkElmToSparkSQLConverter extends ElmConverter<OutputNode<? extend
         context.getStack().pop();
         return result;
     }
+
+    @Override
+    public OutputNode<? extends Trackable> visitCount(Count count, BulkElmToSparkSQLConverterState context) {
+        var currentNode = new CountNode();
+        currentNode.setCqlNodeEquivalent(count);
+        currentNode.setCqlContext(context.getCqlContext());
+        context.getStack().push(currentNode);
+        OutputNode<? extends Trackable> result = super.visitCount(count, context);
+        context.getStack().pop();
+        return result;
+    }
 }
