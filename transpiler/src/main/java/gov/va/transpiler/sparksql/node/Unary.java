@@ -1,6 +1,6 @@
 package gov.va.transpiler.sparksql.node;
 
-public abstract class AbstractNodeOneChild extends AbstractNodeWithChildren {
+public abstract class Unary extends Ary {
 
     @Override
     public boolean addChild(AbstractCQLNode child) {

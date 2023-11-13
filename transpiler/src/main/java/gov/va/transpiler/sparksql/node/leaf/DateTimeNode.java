@@ -3,9 +3,9 @@ package gov.va.transpiler.sparksql.node.leaf;
 import static gov.va.transpiler.sparksql.utilities.Standards.DEFAULT_SQL_DATE_TIME;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.AbstractNodeNoChildren;
+import gov.va.transpiler.sparksql.node.Leaf;
 
-public class DateTimeNode extends AbstractNodeNoChildren {
+public class DateTimeNode extends Leaf {
 
     private AbstractCQLNode year;
     private AbstractCQLNode month;

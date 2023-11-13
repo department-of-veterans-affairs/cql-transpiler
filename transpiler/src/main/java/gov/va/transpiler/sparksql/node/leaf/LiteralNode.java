@@ -2,10 +2,10 @@ package gov.va.transpiler.sparksql.node.leaf;
 
 import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeNoChildren;
+import gov.va.transpiler.sparksql.node.Leaf;
 import gov.va.transpiler.sparksql.utilities.CQLTypeToSparkSQLType;
 
-public class LiteralNode extends AbstractNodeNoChildren {
+public class LiteralNode extends Leaf {
 
     private final CQLTypeToSparkSQLType cqlTypeToSparkSQLType;
 

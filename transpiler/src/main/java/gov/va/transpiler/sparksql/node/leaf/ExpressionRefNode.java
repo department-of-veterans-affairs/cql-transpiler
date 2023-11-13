@@ -1,8 +1,8 @@
 package gov.va.transpiler.sparksql.node.leaf;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeNoChildren;
+import gov.va.transpiler.sparksql.node.Leaf;
 
-public class ExpressionRefNode extends AbstractNodeNoChildren {
+public class ExpressionRefNode extends Leaf {
 
     private boolean isTable;
 

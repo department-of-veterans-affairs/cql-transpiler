@@ -1,9 +1,9 @@
 package gov.va.transpiler.sparksql.node.unary;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeOneChild;
+import gov.va.transpiler.sparksql.node.Unary;
 
 // Child is always a period
-public class EndNode extends AbstractNodeOneChild {
+public class EndNode extends Unary {
 
     @Override
     public String asOneLine() {

@@ -5,7 +5,7 @@ import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractNodeWithChildren extends AbstractCQLNode {
+public abstract class Ary extends AbstractCQLNode {
 
     private List<AbstractCQLNode> children = new ArrayList<>();
 

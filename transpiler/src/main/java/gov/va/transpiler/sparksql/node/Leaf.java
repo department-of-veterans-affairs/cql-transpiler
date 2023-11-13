@@ -1,6 +1,6 @@
 package gov.va.transpiler.sparksql.node;
 
-public abstract class AbstractNodeNoChildren extends AbstractCQLNode {
+public abstract class Leaf extends AbstractCQLNode {
 
     @Override
     public boolean addChild(AbstractCQLNode child) {

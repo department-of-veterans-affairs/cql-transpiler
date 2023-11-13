@@ -1,9 +1,9 @@
 package gov.va.transpiler.sparksql.node.ary;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeWithChildren;
+import gov.va.transpiler.sparksql.node.Ary;
 
 // WhereNode is a wrapper
-public class WhereNode extends AbstractNodeWithChildren {
+public class WhereNode extends Ary {
 
     @Override
     public void setCqlNodeEquivalent(Object cqlNodeEquivalent) {

@@ -1,6 +1,6 @@
 package gov.va.transpiler.sparksql.node;
 
-public class DefaultOutputNode extends AbstractNodeWithChildren {
+public class Default extends Ary {
 
     @Override
     public String asOneLine() {

@@ -2,9 +2,9 @@ package gov.va.transpiler.sparksql.node.binary;
 
 import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeBinaryExpression;
+import gov.va.transpiler.sparksql.node.Binary;
 
-public class ConcatenateNode extends AbstractNodeBinaryExpression {
+public class ConcatenateNode extends Binary {
 
     @Override
     public String asOneLine() {

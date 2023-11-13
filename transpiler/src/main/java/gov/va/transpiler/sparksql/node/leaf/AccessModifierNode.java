@@ -1,15 +1,15 @@
 package gov.va.transpiler.sparksql.node.leaf;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeNoChildren;
+import gov.va.transpiler.sparksql.node.Leaf;
 
-public class AccessModifierNode extends AbstractNodeNoChildren {
+// Spark SQL doesn't support access modifiers
+public class AccessModifierNode extends Leaf {
 
     @Override
     public void setCqlNodeEquivalent(Object cqlNodeEquivalent) {
         throw new UnsupportedOperationException();
     }
 
-    // Spark SQL doesn't support access modifiers
     @Override
     public String asOneLine() {
         return null;

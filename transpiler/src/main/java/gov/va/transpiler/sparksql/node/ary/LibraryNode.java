@@ -7,11 +7,11 @@ import java.util.UUID;
 import org.hl7.elm.r1.Library;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.AbstractNodeWithChildren;
+import gov.va.transpiler.sparksql.node.Ary;
 import gov.va.transpiler.sparksql.node.OutputWriter;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
 
-public class LibraryNode extends AbstractNodeWithChildren {
+public class LibraryNode extends Ary {
 
     private List<UsingDefNode> usingDefList = new ArrayList<>();
 

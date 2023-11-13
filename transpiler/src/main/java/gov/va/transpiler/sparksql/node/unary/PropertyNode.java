@@ -2,9 +2,9 @@ package gov.va.transpiler.sparksql.node.unary;
 
 import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeOneChild;
+import gov.va.transpiler.sparksql.node.Unary;
 
-public class PropertyNode extends AbstractNodeOneChild {
+public class PropertyNode extends Unary {
 
     private String scope;
 

@@ -1,11 +1,11 @@
 package gov.va.transpiler.sparksql.node.unary;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.AbstractNodeOneChild;
+import gov.va.transpiler.sparksql.node.Unary;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
 import gov.va.transpiler.sparksql.utilities.CQLNameToSparkSQLName;
 
-public class ExpressionDefNode extends AbstractNodeOneChild {
+public class ExpressionDefNode extends Unary {
 
     private final CQLNameToSparkSQLName cqlNameToSparkSQLName;
 

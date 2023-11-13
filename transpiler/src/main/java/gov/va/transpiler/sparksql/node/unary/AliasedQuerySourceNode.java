@@ -1,10 +1,10 @@
 package gov.va.transpiler.sparksql.node.unary;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.AbstractNodeOneChild;
+import gov.va.transpiler.sparksql.node.Unary;
 import gov.va.transpiler.sparksql.node.ary.RetrieveNode;
 
-public class AliasedQuerySourceNode extends AbstractNodeOneChild {
+public class AliasedQuerySourceNode extends Unary {
 
     @Override
     public boolean addChild(AbstractCQLNode child) {

@@ -2,44 +2,17 @@ package gov.va.transpiler.sparksql.converter;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
-import org.hl7.elm.r1.AccessModifier;
-import org.hl7.elm.r1.Add;
-import org.hl7.elm.r1.After;
-import org.hl7.elm.r1.AliasedQuerySource;
-import org.hl7.elm.r1.Concatenate;
-import org.hl7.elm.r1.ContextDef;
-import org.hl7.elm.r1.Count;
-import org.hl7.elm.r1.DateTime;
-import org.hl7.elm.r1.Divide;
-import org.hl7.elm.r1.End;
-import org.hl7.elm.r1.Equal;
-import org.hl7.elm.r1.Expression;
-import org.hl7.elm.r1.ExpressionDef;
-import org.hl7.elm.r1.ExpressionRef;
-import org.hl7.elm.r1.FunctionRef;
-import org.hl7.elm.r1.Library;
-import org.hl7.elm.r1.List;
-import org.hl7.elm.r1.Literal;
-import org.hl7.elm.r1.Multiply;
-import org.hl7.elm.r1.Negate;
-import org.hl7.elm.r1.Property;
-import org.hl7.elm.r1.Query;
-import org.hl7.elm.r1.Retrieve;
-import org.hl7.elm.r1.ReturnClause;
-import org.hl7.elm.r1.SingletonFrom;
-import org.hl7.elm.r1.Subtract;
-import org.hl7.elm.r1.ToDecimal;
-import org.hl7.elm.r1.Tuple;
-import org.hl7.elm.r1.TupleElement;
-import org.hl7.elm.r1.UsingDef;
+import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.DefaultOutputNode;
+import gov.va.transpiler.sparksql.node.Default;
+import gov.va.transpiler.sparksql.node.ary.ChoiceTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.ary.LibraryNode;
 import gov.va.transpiler.sparksql.node.ary.ListNode;
 import gov.va.transpiler.sparksql.node.ary.QueryNode;
 import gov.va.transpiler.sparksql.node.ary.RetrieveNode;
 import gov.va.transpiler.sparksql.node.ary.TupleNode;
+import gov.va.transpiler.sparksql.node.ary.UnionNode;
 import gov.va.transpiler.sparksql.node.ary.WhereNode;
 import gov.va.transpiler.sparksql.node.binary.BinaryOperatorNode;
 import gov.va.transpiler.sparksql.node.binary.ConcatenateNode;
@@ -48,11 +21,14 @@ import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
 import gov.va.transpiler.sparksql.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
+import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
 import gov.va.transpiler.sparksql.node.unary.AliasedQuerySourceNode;
+import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
 import gov.va.transpiler.sparksql.node.unary.EndNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
+import gov.va.transpiler.sparksql.node.unary.ListTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.unary.NegateNode;
 import gov.va.transpiler.sparksql.node.unary.PropertyNode;
 import gov.va.transpiler.sparksql.node.unary.ReturnClauseNode;
@@ -81,7 +57,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         if (!context.getStack().empty() && elm == context.getStack().peek().getCqlNodeEquivalent()) {
             return context.getStack().peek();
         }
-        AbstractCQLNode placeholder = new DefaultOutputNode();
+        AbstractCQLNode placeholder = new Default();
         placeholder.setName(defaultNodeName(elm));
         placeholder.setCqlNodeEquivalent(elm);
         context.getStack().push(placeholder);
@@ -411,6 +387,56 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlContext(context.getCqlContext());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitCount(count, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitUnion(Union union, State context) {
+        var currentNode = new UnionNode();
+        currentNode.setCqlNodeEquivalent(union);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitUnion(union, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitAs(As as, State context) {
+        var currentNode = new AsNode();
+        currentNode.setCqlNodeEquivalent(as);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitAs(as, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitListTypeSpecifier(ListTypeSpecifier listTypeSpecifier, State context) {
+        var currentNode = new ListTypeSpecifierNode();
+        currentNode.setCqlNodeEquivalent(listTypeSpecifier);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitListTypeSpecifier(listTypeSpecifier, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitChoiceTypeSpecifier(ChoiceTypeSpecifier choiceTypeSpecifier, State context) {
+        var currentNode = new ChoiceTypeSpecifierNode();
+        currentNode.setCqlNodeEquivalent(choiceTypeSpecifier);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitChoiceTypeSpecifier(choiceTypeSpecifier, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitNamedTypeSpecifier(NamedTypeSpecifier namedTypeSpecifier, State context) {
+        var currentNode = new NamedTypeSpecifierNode();
+        currentNode.setCqlNodeEquivalent(namedTypeSpecifier);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitNamedTypeSpecifier(namedTypeSpecifier, context);
         context.getStack().pop();
         return result;
     }

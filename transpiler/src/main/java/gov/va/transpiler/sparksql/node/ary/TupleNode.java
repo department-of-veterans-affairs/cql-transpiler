@@ -5,10 +5,10 @@ import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN
 import org.hl7.elm.r1.TupleElement;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.AbstractNodeWithChildren;
+import gov.va.transpiler.sparksql.node.Ary;
 import gov.va.transpiler.sparksql.utilities.Standards;
 
-public class TupleNode extends AbstractNodeWithChildren {
+public class TupleNode extends Ary {
 
     @Override
     public boolean addChild(AbstractCQLNode child) {

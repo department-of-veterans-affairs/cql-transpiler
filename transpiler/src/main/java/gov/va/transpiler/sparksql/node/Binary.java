@@ -1,6 +1,6 @@
 package gov.va.transpiler.sparksql.node;
 
-public abstract class AbstractNodeBinaryExpression extends AbstractCQLNode {
+public abstract class Binary extends AbstractCQLNode {
 
     private AbstractCQLNode child1;
     private AbstractCQLNode child2;

@@ -1,8 +1,8 @@
 package gov.va.transpiler.sparksql.node.ary;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeWithChildren;
+import gov.va.transpiler.sparksql.node.Ary;
 
-public class RetrieveNode extends AbstractNodeWithChildren {
+public class RetrieveNode extends Ary {
 
     private String cqlContext;
 

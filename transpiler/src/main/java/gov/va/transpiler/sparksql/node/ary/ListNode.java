@@ -1,9 +1,9 @@
 package gov.va.transpiler.sparksql.node.ary;
 
-import gov.va.transpiler.sparksql.node.AbstractNodeWithChildren;
+import gov.va.transpiler.sparksql.node.Ary;
 import gov.va.transpiler.sparksql.utilities.Standards;
 
-public class ListNode extends AbstractNodeWithChildren {
+public class ListNode extends Ary {
 
     @Override
     public String asOneLine() {
