@@ -19,4 +19,9 @@ public class ExpressionRefNode extends Leaf {
     public void setTable(boolean isTable) {
         this.isTable = isTable;
     }
+
+    @Override
+    public boolean isEncapsulated() {
+        return !isTable();
+    }
 }

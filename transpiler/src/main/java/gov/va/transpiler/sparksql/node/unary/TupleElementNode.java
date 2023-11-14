@@ -7,6 +7,7 @@ public class TupleElementNode extends Unary {
 
     @Override
     public String asOneLine() {
-        return "(" + childAsOneLineCompressedIfTable((AbstractCQLNode) getChild()) + ") " + getName();
+        var builder = getChild().isEncapsulated() || getChild().isTable() ? "(" + childAsOneLineCompressedIfTable((AbstractCQLNode) getChild()) + ")" : getChild().asOneLine();
+        return builder + " " + getName();
     }    
 }

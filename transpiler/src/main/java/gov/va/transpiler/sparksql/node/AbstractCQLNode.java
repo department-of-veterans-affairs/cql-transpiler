@@ -1,5 +1,7 @@
 package gov.va.transpiler.sparksql.node;
 
+import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
+
 public abstract class AbstractCQLNode {
 
     private Object cqlNodeEquivalent;
@@ -17,6 +19,13 @@ public abstract class AbstractCQLNode {
     public abstract String asOneLine();
     public String getName() {
         return name;
+    }
+
+    public String childAsOneLineCompressedIfTable(AbstractCQLNode child) {
+        if (child.isTable()) {
+            return "SELECT collect_list(struct(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (" + child.asOneLine() + ")";
+        }
+        return child.asOneLine();
     }
 
     public void setName(String name) {
@@ -53,9 +62,16 @@ public abstract class AbstractCQLNode {
     }
 
     /**
-     * We treat tables differently from simple values.
+     * @return whether this node represents a table value
      */
     public boolean isTable() {
+        return false;
+    }
+
+    /**
+     * @return Whether this node represents an encapsulated value
+     */
+    public boolean isEncapsulated() {
         return false;
     }
 }

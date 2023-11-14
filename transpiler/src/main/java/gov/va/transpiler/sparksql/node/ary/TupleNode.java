@@ -36,4 +36,9 @@ public class TupleNode extends Ary {
         }
         return Standards.EMPTY_TABLE;
     }
+
+    @Override
+    public boolean isEncapsulated() {
+        return true;
+    }
 }

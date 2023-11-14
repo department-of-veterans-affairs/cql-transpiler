@@ -1,7 +1,5 @@
 package gov.va.transpiler.sparksql.node.leaf;
 
-import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
-
 import gov.va.transpiler.sparksql.node.Leaf;
 import gov.va.transpiler.sparksql.utilities.CQLTypeToSparkSQLType;
 
@@ -25,6 +23,11 @@ public class LiteralNode extends Leaf {
 
     @Override
     public String asOneLine() {
-        return "SELECT " + cqlTypeToSparkSQLType.toSparkSQLType(getName(), cqlTypeToSparkSQLType.asSparkSQLType(getResultType())) + " " + SINGLE_VALUE_COLUMN_NAME;
+        return cqlTypeToSparkSQLType.toSparkSQLType(getName(), cqlTypeToSparkSQLType.asSparkSQLType(getResultType()));
+    }
+
+    @Override
+    public boolean isEncapsulated() {
+        return false;
     }
 }

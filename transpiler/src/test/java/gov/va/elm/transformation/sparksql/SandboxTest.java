@@ -219,7 +219,7 @@ public class SandboxTest {
     }
 
     @Test
-    public void testMath() {
+    public void testLiteralMath() {
         String cql = ""
             + "define a: 2 + 3\n"
             + "define b: 2 - 3\n"
@@ -227,6 +227,19 @@ public class SandboxTest {
             + "define d: 2 * 3\n"
             + "define e: -1\n"
             + "define f: (1 + 2 / -3 + 4) * 5\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
+    public void testMathWithReference() {
+        String cql = ""
+            + "define a: 2 + 3\n"
+            + "define b: a - 3\n"
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
@@ -325,7 +338,6 @@ public class SandboxTest {
         String cql = ""
             + "library Retrievals version '1.0'\n"
             + "using QUICK\n"
-            + "context Patient\n"
             + "define a: [Encounter] union [Patient]\n"
             ;
 

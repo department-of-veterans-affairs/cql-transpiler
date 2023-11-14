@@ -39,4 +39,9 @@ public abstract class Binary extends AbstractCQLNode {
     public boolean isTable() {
         return false;
     }
+
+    @Override
+    public boolean isEncapsulated() {
+        return getChild1().isEncapsulated() || getChild2().isEncapsulated();
+    }
 }

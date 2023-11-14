@@ -1,5 +1,7 @@
 package gov.va.transpiler.sparksql.node.unary;
 
+import static gov.va.transpiler.sparksql.utilities.Standards.SINGLE_VALUE_COLUMN_NAME;
+
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Unary;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
@@ -33,11 +35,11 @@ public class ExpressionDefNode extends Unary {
     @Override
     public String asOneLine() {
         String prefix = "CREATE OR REPLACE VIEW " + cqlNameToSparkSQLName.convertName(getName()) + " AS (";
-        return getChild().asOneLine() == null ? null : prefix + getChild().asOneLine() + ");";
-    }
-
-    @Override
-    public boolean isTable() {
-        return getChild().isTable();
+        if (getChild().isTable() || getChild().isEncapsulated()) {
+            return getChild().asOneLine() == null ? null : prefix + getChild().asOneLine() + ");";
+        } else {
+            // This protects against statements encapsulating raw literal values
+            return getChild().asOneLine() == null ? null : prefix + "SELECT " + getChild().asOneLine() + " " + SINGLE_VALUE_COLUMN_NAME + ");";
+        }
     }
 }

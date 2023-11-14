@@ -22,4 +22,9 @@ public abstract class Unary extends Ary {
     public boolean isTable() {
         return hasChild() && getChild().isTable();
     }
+
+    @Override
+    public boolean isEncapsulated() {
+        return hasChild() && getChild().isEncapsulated();
+    }
 }

@@ -25,4 +25,14 @@ public class CountNode extends AbstractCQLAggregator {
             return "SELECT count(explode(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (" + getChild().asOneLine() + ") AS " + SINGLE_VALUE_COLUMN_NAME;
         }
     }
+
+    @Override
+    public boolean isTable() {
+        return getChild().isTable() && getCqlContext() != null;
+    }
+
+    @Override
+    public boolean isEncapsulated() {
+        return true;
+    }
 }
