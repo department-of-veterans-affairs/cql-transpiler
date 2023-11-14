@@ -2,7 +2,7 @@ package gov.va.transpiler.sparksql.node.ary;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Ary;
-import gov.va.transpiler.sparksql.node.unary.AliasedQuerySourceNode;
+import gov.va.transpiler.sparksql.node.leaf.AliasedQuerySourceNode;
 import gov.va.transpiler.sparksql.node.unary.ReturnClauseNode;
 
 public class QueryNode extends Ary {

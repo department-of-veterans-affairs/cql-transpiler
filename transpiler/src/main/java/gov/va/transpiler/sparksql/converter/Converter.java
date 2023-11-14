@@ -17,17 +17,18 @@ import gov.va.transpiler.sparksql.node.ary.WhereNode;
 import gov.va.transpiler.sparksql.node.binary.BinaryOperatorNode;
 import gov.va.transpiler.sparksql.node.binary.ConcatenateNode;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
+import gov.va.transpiler.sparksql.node.leaf.AliasedQuerySourceNode;
 import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
 import gov.va.transpiler.sparksql.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
 import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
-import gov.va.transpiler.sparksql.node.unary.AliasedQuerySourceNode;
 import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
 import gov.va.transpiler.sparksql.node.unary.EndNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
+import gov.va.transpiler.sparksql.node.unary.IntervalTypeSpecifier;
 import gov.va.transpiler.sparksql.node.unary.ListTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.unary.NegateNode;
 import gov.va.transpiler.sparksql.node.unary.PropertyNode;
@@ -115,6 +116,10 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
 
     @Override
     public AbstractCQLNode visitExpressionDef(ExpressionDef expressionDef, State context) {
+        if (expressionDef instanceof FunctionDef) {
+            // TODO
+            return super.visitExpressionDef((FunctionDef) expressionDef, context);
+        }
         var currentNode = new ExpressionDefNode(cqlNameToSparkSQLName);
         context.setCqlContext(expressionDef.getContext());
         currentNode.setName(expressionDef.getName());
@@ -437,6 +442,16 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlNodeEquivalent(namedTypeSpecifier);
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitNamedTypeSpecifier(namedTypeSpecifier, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitIntervalTypeSpecifier(org.hl7.elm.r1.IntervalTypeSpecifier intervalTypeSpecifier, State context) {
+        var currentNode = new IntervalTypeSpecifier();
+        currentNode.setCqlNodeEquivalent(intervalTypeSpecifier);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitIntervalTypeSpecifier(intervalTypeSpecifier, context);
         context.getStack().pop();
         return result;
     }

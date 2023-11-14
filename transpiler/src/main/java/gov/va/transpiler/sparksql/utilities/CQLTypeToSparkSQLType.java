@@ -25,6 +25,10 @@ public class CQLTypeToSparkSQLType {
     }
 
     public String toSparkSQLType(String value, SparkSQLLiteralType type) {
+        if (type == null) {
+            // TODO: fill out all other types, remove this.
+            return "UNSUPPORTED LITERAL TYPE" + value;
+        }
         switch (type) {
             case String:
                 return "'" + value + "'";
