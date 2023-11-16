@@ -176,6 +176,22 @@ public class SandboxTest {
     }
 
     @Test
+    public void testFunction() {
+        // TODO: libraries sort their statements so function definitions come after expression definitions. Why?
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "define function double(val Integer):\n"
+            + "    2 * val\n"
+            + "define a: double(1)\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
     public void testInclude() {
         String cql = ""
             + "library Retrievals version '1.0'\n"

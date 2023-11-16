@@ -10,15 +10,29 @@ import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Ary;
 import gov.va.transpiler.sparksql.node.OutputWriter;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
+import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 
 public class LibraryNode extends Ary {
 
     private List<UsingDefNode> usingDefList = new ArrayList<>();
-
+    /**
+     * // TODO: support include statements
+     */
+    private List<LibraryNode> includedLibraries = new ArrayList<>();
+    /**
+     * We expand functions inline and therefore won't print them at the top level
+     */
+    private List<FunctionDefNode> functionDefinitions = new ArrayList<>();
     @Override
     public boolean addChild(AbstractCQLNode child) {
         if (child instanceof UsingDefNode) {
             usingDefList.add((UsingDefNode) child);
+            return true;
+        } else if (child instanceof FunctionDefNode) {
+            functionDefinitions.add((FunctionDefNode) child);
+            return true;
+        } else if (child instanceof LibraryNode) {
+            includedLibraries.add((LibraryNode) child);
             return true;
         }
         return super.addChild(child);
@@ -58,6 +72,25 @@ public class LibraryNode extends Ary {
     public boolean print(OutputWriter outputWriter) {
         outputWriter.printFullLine("-- Library: " + getName());
         var printSuccess = true;
+        // Include other libraries
+        // TODO: print the entire library inside the SQL file, or find a way to reference SQL files from other SQL files
+        if (!includedLibraries.isEmpty()) {
+            outputWriter.printFullLine("/* include statements from CQL");
+            for (var includedLibrary : includedLibraries) {
+                outputWriter.printFullLine("include " + includedLibrary.getName());
+            }
+            outputWriter.printFullLine("*/");
+        }
+        // Print function definitions
+        // TODO: no more inline functions!
+        if (!functionDefinitions.isEmpty()) {
+            outputWriter.printFullLine("/* function definitions from CQL");
+            for (var functionDefinitions : functionDefinitions) {
+                outputWriter.printFullLine("include " + functionDefinitions.asOneLine());
+            }
+            outputWriter.printFullLine("*/");
+        }
+        // Print children
         for (var child : getChildren()) {
             if (!child.print(outputWriter)) {
                 printSuccess = false;

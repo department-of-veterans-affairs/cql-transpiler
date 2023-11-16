@@ -7,6 +7,7 @@ import org.hl7.elm.r1.*;
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Default;
 import gov.va.transpiler.sparksql.node.ary.ChoiceTypeSpecifierNode;
+import gov.va.transpiler.sparksql.node.ary.FunctionRefNode;
 import gov.va.transpiler.sparksql.node.ary.LibraryNode;
 import gov.va.transpiler.sparksql.node.ary.ListNode;
 import gov.va.transpiler.sparksql.node.ary.QueryNode;
@@ -23,14 +24,17 @@ import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
 import gov.va.transpiler.sparksql.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
 import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
+import gov.va.transpiler.sparksql.node.leaf.OperandRefNode;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
 import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
 import gov.va.transpiler.sparksql.node.unary.EndNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
+import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 import gov.va.transpiler.sparksql.node.unary.IntervalTypeSpecifier;
 import gov.va.transpiler.sparksql.node.unary.ListTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.unary.NegateNode;
+import gov.va.transpiler.sparksql.node.unary.OperandDefNode;
 import gov.va.transpiler.sparksql.node.unary.PropertyNode;
 import gov.va.transpiler.sparksql.node.unary.ReturnClauseNode;
 import gov.va.transpiler.sparksql.node.unary.SingletonFromNode;
@@ -117,7 +121,6 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     @Override
     public AbstractCQLNode visitExpressionDef(ExpressionDef expressionDef, State context) {
         if (expressionDef instanceof FunctionDef) {
-            // TODO
             return super.visitExpressionDef((FunctionDef) expressionDef, context);
         }
         var currentNode = new ExpressionDefNode(cqlNameToSparkSQLName);
@@ -129,6 +132,64 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         context.getStack().pop();
         context.getDefinedExpressions().put(currentNode.getName(), currentNode);
         context.setCqlContext(null);
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitFunctionDef(FunctionDef functionDef, State context) {
+        var currentNode = new FunctionDefNode();
+        context.setCqlContext(functionDef.getContext());
+        currentNode.setName(functionDef.getName());
+        currentNode.setCqlNodeEquivalent(functionDef);
+        // if this function is enclosed by another, set that function as this function's scope
+        if (!context.getFunctionStack().empty()) {
+            currentNode.setScope(context.getFunctionStack().peek());
+        }
+        context.getFunctionStack().push(currentNode);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitFunctionDef(functionDef, context);
+        context.getStack().pop();
+        context.getFunctionStack().pop();
+        context.setCqlContext(null);
+        // This function has now been defined, and can be referenced. We don't allow functions to be referenced recursively.
+        context.getDefinedFunctions().put(currentNode.getName(), currentNode);
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitFunctionRef(FunctionRef functionRef, State context) {
+        var currentNode = new FunctionRefNode();
+        currentNode.setName(functionRef.getName());
+        currentNode.setFunctionBeingReferenced(context.getDefinedFunctions().get(currentNode.getName()));
+        currentNode.setCqlNodeEquivalent(functionRef);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitFunctionRef(functionRef, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitOperandDef(OperandDef operandDef, State context) {
+        var currentNode = new OperandDefNode();
+        currentNode.setCqlNodeEquivalent(operandDef);
+        currentNode.setName(operandDef.getName());
+        currentNode.setScope(context.getFunctionStack().peek());
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitOperandDef(operandDef, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitOperandRef(OperandRef operandRef, State context) {
+        var currentNode = new OperandRefNode();
+        currentNode.setCqlNodeEquivalent(operandRef);
+        currentNode.setName(operandRef.getName());
+        // Operand references must be enclosed by a function
+        currentNode.setScope(context.getFunctionStack().peek());
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitOperandRef(operandRef, context);
+        context.getStack().pop();
         return result;
     }
 
@@ -420,6 +481,8 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitListTypeSpecifier(ListTypeSpecifier listTypeSpecifier, State context) {
         var currentNode = new ListTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(listTypeSpecifier);
+        // TODO: worry about name space URI later
+        currentNode.setName(listTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitListTypeSpecifier(listTypeSpecifier, context);
         context.getStack().pop();
@@ -430,6 +493,8 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitChoiceTypeSpecifier(ChoiceTypeSpecifier choiceTypeSpecifier, State context) {
         var currentNode = new ChoiceTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(choiceTypeSpecifier);
+        // TODO: worry about name space URI later
+        currentNode.setName(choiceTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitChoiceTypeSpecifier(choiceTypeSpecifier, context);
         context.getStack().pop();
@@ -440,6 +505,8 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitNamedTypeSpecifier(NamedTypeSpecifier namedTypeSpecifier, State context) {
         var currentNode = new NamedTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(namedTypeSpecifier);
+        // TODO: worry about name space URI later
+        currentNode.setName(namedTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitNamedTypeSpecifier(namedTypeSpecifier, context);
         context.getStack().pop();
@@ -450,6 +517,8 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitIntervalTypeSpecifier(org.hl7.elm.r1.IntervalTypeSpecifier intervalTypeSpecifier, State context) {
         var currentNode = new IntervalTypeSpecifier();
         currentNode.setCqlNodeEquivalent(intervalTypeSpecifier);
+        // TODO: worry about name space URI later
+        currentNode.setName(intervalTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitIntervalTypeSpecifier(intervalTypeSpecifier, context);
         context.getStack().pop();

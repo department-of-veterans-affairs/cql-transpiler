@@ -6,10 +6,13 @@ import java.util.Stack;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
+import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 
 public class State {
     private final Stack<AbstractCQLNode> stack = new Stack<>();
     private final Map<String, ExpressionDefNode> definedExpressions = new LinkedHashMap<>();
+    private final Map<String, FunctionDefNode> definedFunctions = new LinkedHashMap<>();
+    private final Stack<FunctionDefNode> functionStack = new Stack<>();
 
     private String cqlContext = null;
 
@@ -17,8 +20,16 @@ public class State {
         return stack;
     }
 
+    public Stack<FunctionDefNode> getFunctionStack() {
+        return functionStack;
+    }
+
     public Map<String, ExpressionDefNode> getDefinedExpressions() {
         return definedExpressions;
+    }
+
+    public Map<String, FunctionDefNode> getDefinedFunctions() {
+        return definedFunctions;
     }
 
     public String getCqlContext() {

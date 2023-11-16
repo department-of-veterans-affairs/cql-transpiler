@@ -7,6 +7,6 @@ public abstract class TypeSpecifierNode extends Ary {
 
     @Override
     public String asOneLine() {
-        return null;
+        return getName();
     }
 }
