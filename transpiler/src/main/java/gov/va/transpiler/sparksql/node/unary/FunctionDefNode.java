@@ -38,7 +38,7 @@ public class FunctionDefNode extends Unary {
     }
 
     public AbstractCQLNode getParameterReplacementForOperandDef(OperandDefNode operandDef) {
-        return operandDefToCurrentReplacementMap.get(operandDef);
+        return operandDefToCurrentReplacementMap == null ? null : operandDefToCurrentReplacementMap.get(operandDef);
     }
 
     public String asInlineFunction(List<AbstractCQLNode> parameters) {

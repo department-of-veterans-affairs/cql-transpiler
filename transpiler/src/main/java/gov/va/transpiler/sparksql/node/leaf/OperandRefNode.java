@@ -18,6 +18,22 @@ public class OperandRefNode extends Leaf {
 
     @Override
     public String asOneLine() {
-        return getName();
+        OperandDefNode operandDefForRef = getOperandDefMatchingParameterFromScope();
+        var parameterReplacement = operandDefForRef == null ? null : operandDefForRef.getParameterReplacementFromScope();
+        return parameterReplacement == null ? (operandDefForRef == null ? getName() : operandDefForRef.getName()) : parameterReplacement.asOneLine();
+    }
+
+    @Override
+    public boolean isTable() {
+        OperandDefNode operandDefForRef = getOperandDefMatchingParameterFromScope();
+        var parameterReplacement = operandDefForRef == null ? null : operandDefForRef.getParameterReplacementFromScope();
+        return parameterReplacement == null ? (operandDefForRef == null ? false : operandDefForRef.isTable()) : parameterReplacement.isTable();
+    }
+
+    @Override
+    public boolean isEncapsulated() {
+        OperandDefNode operandDefForRef = getOperandDefMatchingParameterFromScope();
+        var parameterReplacement = operandDefForRef == null ? null : operandDefForRef.getParameterReplacementFromScope();
+        return parameterReplacement == null ? (operandDefForRef == null ? false : operandDefForRef.isEncapsulated()) : parameterReplacement.isEncapsulated();
     }
 }
