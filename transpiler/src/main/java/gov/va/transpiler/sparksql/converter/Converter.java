@@ -481,8 +481,6 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitListTypeSpecifier(ListTypeSpecifier listTypeSpecifier, State context) {
         var currentNode = new ListTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(listTypeSpecifier);
-        // TODO: worry about name space URI later
-        currentNode.setName(listTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitListTypeSpecifier(listTypeSpecifier, context);
         context.getStack().pop();
@@ -493,8 +491,6 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitChoiceTypeSpecifier(ChoiceTypeSpecifier choiceTypeSpecifier, State context) {
         var currentNode = new ChoiceTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(choiceTypeSpecifier);
-        // TODO: worry about name space URI later
-        currentNode.setName(choiceTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitChoiceTypeSpecifier(choiceTypeSpecifier, context);
         context.getStack().pop();
@@ -505,8 +501,6 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitNamedTypeSpecifier(NamedTypeSpecifier namedTypeSpecifier, State context) {
         var currentNode = new NamedTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(namedTypeSpecifier);
-        // TODO: worry about name space URI later
-        currentNode.setName(namedTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitNamedTypeSpecifier(namedTypeSpecifier, context);
         context.getStack().pop();
@@ -517,8 +511,6 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitIntervalTypeSpecifier(org.hl7.elm.r1.IntervalTypeSpecifier intervalTypeSpecifier, State context) {
         var currentNode = new IntervalTypeSpecifier();
         currentNode.setCqlNodeEquivalent(intervalTypeSpecifier);
-        // TODO: worry about name space URI later
-        currentNode.setName(intervalTypeSpecifier.getResultTypeName().getLocalPart());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitIntervalTypeSpecifier(intervalTypeSpecifier, context);
         context.getStack().pop();
