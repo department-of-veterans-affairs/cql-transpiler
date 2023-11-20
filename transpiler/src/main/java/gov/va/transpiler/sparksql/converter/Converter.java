@@ -22,6 +22,7 @@ import gov.va.transpiler.sparksql.node.leaf.AliasedQuerySourceNode;
 import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
 import gov.va.transpiler.sparksql.node.leaf.ExpressionRefNode;
+import gov.va.transpiler.sparksql.node.leaf.IncludeDefNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
 import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.leaf.OperandRefNode;
@@ -99,6 +100,13 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitUsingDef(UsingDef usingDef, State context) {
         var currentNode = new UsingDefNode();
         currentNode.setCqlNodeEquivalent(usingDef);
+        return currentNode;
+    }
+
+    @Override
+    public AbstractCQLNode visitIncludeDef(IncludeDef includeDef, State context) {
+        var currentNode = new IncludeDefNode();
+        currentNode.setCqlNodeEquivalent(includeDef);
         return currentNode;
     }
 

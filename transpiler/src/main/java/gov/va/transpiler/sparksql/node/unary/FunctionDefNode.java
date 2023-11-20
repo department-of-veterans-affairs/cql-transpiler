@@ -7,6 +7,7 @@ import java.util.Map;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Unary;
+import gov.va.transpiler.sparksql.node.ary.TypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
 
 // TODO: support overloaded functions
@@ -20,6 +21,7 @@ public class FunctionDefNode extends Unary {
     private Map<String, OperandDefNode> nameToOperandDefMap = new LinkedHashMap<>();
     /** Temporary state. Not thread safe. */
     private Map<OperandDefNode, AbstractCQLNode> operandDefToCurrentReplacementMap;
+    private List<TypeSpecifierNode> typeSpecifierNodeList = new ArrayList<>();
 
     private void setAccessModifier(AccessModifierNode accessModifier) {
         this.accessModifier = accessModifier;
@@ -64,6 +66,9 @@ public class FunctionDefNode extends Unary {
         } else if (child instanceof OperandDefNode) {
             operandDefList.add((OperandDefNode) child);
             nameToOperandDefMap.put(child.getName(), (OperandDefNode) child);
+            return true;
+        } else if (child instanceof TypeSpecifierNode) {
+            typeSpecifierNodeList.add((TypeSpecifierNode) child);
             return true;
         }
         return super.addChild(child);

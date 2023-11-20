@@ -3,6 +3,7 @@ package gov.va.elm.transformation.sparksql;
 import static gov.va.transpiler.sparksql.utilities.Standards.DEFAULT_CQL_DATE_TIME;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.hl7.elm.r1.Library;
@@ -194,16 +195,15 @@ public class SandboxTest {
     @Test
     public void testInclude() {
         String cql = ""
-            + "library Retrievals version '1.0'\n"
-            + "include FHIRHelpers version '4.1.000'\n"
+            + "library Stuff version '1.0'\n"
+            + "include TestInclude version '1.0'\n"
+            + "define a: TestInclude.var + 1";
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
         for (String output : sparksql) {
             System.out.println(output);
         }
-        // TODO: 'include' causes the entire FHIRHelpers library to be imported, and then requires that it be supported
-        throw new RuntimeException();
     }
 
     @Test
@@ -363,8 +363,30 @@ public class SandboxTest {
         }
     }
 
+    @Test
+    public void testDemoMeasure() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using QDM version '5.6'\n"
+            + "include MATGlobalCommonFunctions version '7.0.000' called Global\n"
+            + "valueset \"Nonelective Inpatient Encounter\": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424'\n"
+            + "parameter \"Measurement Period\" Interval<DateTime>\n"
+            + "define \"Non Elective Inpatient Encounter\":\n"
+            + "  [\"Encounter, Performed\": \"Nonelective Inpatient Encounter\"] NonElectiveEncounter\n"
+            + "    where Global.\"LengthInDays\" ( NonElectiveEncounter.relevantPeriod ) <= 120\n"
+            + "      and NonElectiveEncounter.relevantPeriod ends during day of \"Measurement Period\"\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
     private List<String> processCQLToSparkSQL(String cql) {
         var libraryList = compiler.compile(cql);
+        // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them
+        Collections.reverse(libraryList);
 
         // Transform the AST into SparkSQL Scripts
         var cqlTypeToSparkSQLType = new CQLTypeToSparkSQLType();
