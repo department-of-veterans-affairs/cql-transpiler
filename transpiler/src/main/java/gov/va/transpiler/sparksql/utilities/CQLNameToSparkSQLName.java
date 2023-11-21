@@ -4,7 +4,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CQLNameToSparkSQLName {
-    public String convertName(String variableName) {
+
+    public String convertNameToSafe(String variableName) {
+        // TODO
+        return variableName.replace(" ", "_");
+    }
+
+    public String convertNameToUnique(String variableName) {
         String toReturn = variableName;
         // Match on any characters that are legal for variable names in CQL but illegal in Python
         String illegalCharacters = " \\\"";

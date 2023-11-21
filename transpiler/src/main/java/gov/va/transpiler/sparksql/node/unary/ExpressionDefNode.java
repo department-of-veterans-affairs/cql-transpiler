@@ -34,7 +34,7 @@ public class ExpressionDefNode extends Unary {
 
     @Override
     public String asOneLine() {
-        String prefix = "CREATE OR REPLACE VIEW " + cqlNameToSparkSQLName.convertName(getName()) + " AS (";
+        String prefix = "CREATE OR REPLACE VIEW " + cqlNameToSparkSQLName.convertNameToSafe(getName()) + " AS (";
         if (getChild().isTable() || getChild().isEncapsulated()) {
             return getChild().asOneLine() == null ? null : prefix + getChild().asOneLine() + ");";
         } else {

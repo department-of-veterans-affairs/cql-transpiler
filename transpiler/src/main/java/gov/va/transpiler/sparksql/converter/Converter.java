@@ -26,7 +26,10 @@ import gov.va.transpiler.sparksql.node.leaf.IncludeDefNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
 import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.leaf.OperandRefNode;
+import gov.va.transpiler.sparksql.node.leaf.ParameterDefNode;
+import gov.va.transpiler.sparksql.node.leaf.ParameterRefNode;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
+import gov.va.transpiler.sparksql.node.leaf.ValueSetDefNode;
 import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
@@ -107,6 +110,31 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new IncludeDefNode();
         currentNode.setCqlNodeEquivalent(includeDef);
         return currentNode;
+    }
+
+    @Override
+    public AbstractCQLNode visitValueSetDef(ValueSetDef valueSetDef, State context) {
+        var currentNode = new ValueSetDefNode();
+        currentNode.setCqlNodeEquivalent(valueSetDef);
+        return currentNode;
+    }
+
+    @Override
+    public AbstractCQLNode visitParameterDef(ParameterDef parameterDef, State context) {
+        var currentNode = new ParameterDefNode();
+        currentNode.setCqlNodeEquivalent(parameterDef);
+        return currentNode;
+    }
+
+    @Override
+    public AbstractCQLNode visitParameterRef(ParameterRef parameterRef, State context) {
+        var currentNode = new ParameterRefNode(cqlNameToSparkSQLName);
+        currentNode.setCqlNodeEquivalent(parameterRef);
+        currentNode.setName(parameterRef.getName());
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitParameterRef(parameterRef, context);
+        context.getStack().pop();
+        return result;
     }
 
     @Override

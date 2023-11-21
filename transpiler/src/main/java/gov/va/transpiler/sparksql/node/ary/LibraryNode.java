@@ -10,13 +10,18 @@ import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Ary;
 import gov.va.transpiler.sparksql.node.OutputWriter;
 import gov.va.transpiler.sparksql.node.leaf.IncludeDefNode;
+import gov.va.transpiler.sparksql.node.leaf.ParameterDefNode;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
+import gov.va.transpiler.sparksql.node.leaf.ValueSetDefNode;
 import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 
 public class LibraryNode extends Ary {
 
     private List<UsingDefNode> usingDefList = new ArrayList<>();
     private List<IncludeDefNode> includeDefList = new ArrayList<>();
+    private List<ValueSetDefNode> valueSetList = new ArrayList<>();
+    private List<ParameterDefNode> paramaterDefList = new ArrayList<>();
+
     /**
      * We expand functions inline and therefore won't print them at the top level
      */
@@ -31,6 +36,12 @@ public class LibraryNode extends Ary {
             return true;
         } else if (child instanceof FunctionDefNode) {
             functionDefinitions.add((FunctionDefNode) child);
+            return true;
+        } else if (child instanceof ValueSetDefNode) {
+            valueSetList.add((ValueSetDefNode) child);
+            return true;
+        } else if (child instanceof ParameterDefNode) {
+            paramaterDefList.add((ParameterDefNode) child);
             return true;
         }
         return super.addChild(child);
