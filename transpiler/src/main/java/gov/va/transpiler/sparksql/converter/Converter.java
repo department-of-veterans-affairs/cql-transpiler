@@ -29,7 +29,6 @@ import gov.va.transpiler.sparksql.node.leaf.OperandRefNode;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
 import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
-import gov.va.transpiler.sparksql.node.unary.EndNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
 import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 import gov.va.transpiler.sparksql.node.unary.IntervalTypeSpecifier;
@@ -347,8 +346,20 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     }
 
     @Override
+    public AbstractCQLNode visitStart(Start start, State context) {
+        var currentNode = new PropertyNode();
+        currentNode.setName("start");
+        currentNode.setCqlNodeEquivalent(start);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitStart(start, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
     public AbstractCQLNode visitEnd(End end, State context) {
-        var currentNode = new EndNode();
+        var currentNode = new PropertyNode();
+        currentNode.setName("end");
         currentNode.setCqlNodeEquivalent(end);
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitEnd(end, context);
@@ -392,6 +403,57 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlNodeEquivalent(multiply);
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitMultiply(multiply, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitAnd(And and, State context) {
+        var currentNode = new BinaryOperatorNode("AND");
+        currentNode.setCqlNodeEquivalent(and);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitAnd(and, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitOr(Or or, State context) {
+        var currentNode = new BinaryOperatorNode("OR");
+        currentNode.setCqlNodeEquivalent(or);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitOr(or, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitIn(In in, State context) {
+        var currentNode = new BinaryOperatorNode("IN");
+        currentNode.setCqlNodeEquivalent(in);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitIn(in, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitLessOrEqual(LessOrEqual lessOrEqual, State context) {
+        var currentNode = new BinaryOperatorNode("<=");
+        currentNode.setCqlNodeEquivalent(lessOrEqual);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitLessOrEqual(lessOrEqual, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitDifferenceBetween(DifferenceBetween differenceBetween, State context) {
+        // TODO: DifferenceBetween has a "precision" field that needs to be taken into account.
+        var currentNode = new BinaryOperatorNode("-");
+        currentNode.setCqlNodeEquivalent(differenceBetween);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitDifferenceBetween(differenceBetween, context);
         context.getStack().pop();
         return result;
     }

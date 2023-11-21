@@ -75,8 +75,8 @@ public class LibraryNode extends Ary {
         // TODO: no more inline functions!
         if (!functionDefinitions.isEmpty()) {
             outputWriter.printFullLine("/* function definitions from CQL");
-            for (var functionDefinitions : functionDefinitions) {
-                outputWriter.printFullLine("include " + functionDefinitions.asOneLine());
+            for (var functionDefinition : functionDefinitions) {
+                outputWriter.printFullLine("include " + functionDefinition.asOneLine());
             }
             outputWriter.printFullLine("*/");
         }

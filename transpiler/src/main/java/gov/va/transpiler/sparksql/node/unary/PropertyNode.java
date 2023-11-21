@@ -16,8 +16,9 @@ public class PropertyNode extends Unary {
         this.scope = scope;
     }
 
+    @Override
     public boolean isColumnReference() {
-        return (getScope() != null) || (getChild() instanceof PropertyNode && ((PropertyNode) getChild()).isColumnReference());
+        return getScope() != null || getChild().isColumnReference();
     }
 
     @Override

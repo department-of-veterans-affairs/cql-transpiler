@@ -31,4 +31,10 @@ public class OperandDefNode extends Unary {
         var replacement = getParameterReplacementFromScope();
         return replacement == null ? false : replacement.isEncapsulated();
     }
+
+    @Override
+    public boolean isColumnReference() {
+        var replacement = getParameterReplacementFromScope();
+        return replacement == null ? false : replacement.isColumnReference();
+    }
 }

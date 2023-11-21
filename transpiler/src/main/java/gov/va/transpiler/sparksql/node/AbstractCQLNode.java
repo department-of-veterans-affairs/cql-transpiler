@@ -74,4 +74,11 @@ public abstract class AbstractCQLNode {
     public boolean isEncapsulated() {
         return false;
     }
+
+    /**
+     * @return Whether this node is a reference to a table column within a retrieve.
+     */
+    public boolean isColumnReference() {
+        return false;
+    }
 }

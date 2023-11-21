@@ -36,4 +36,10 @@ public class OperandRefNode extends Leaf {
         var parameterReplacement = operandDefForRef == null ? null : operandDefForRef.getParameterReplacementFromScope();
         return parameterReplacement == null ? (operandDefForRef == null ? false : operandDefForRef.isEncapsulated()) : parameterReplacement.isEncapsulated();
     }
+
+    @Override
+    public boolean isColumnReference() {
+        OperandDefNode operandDefForRef = getOperandDefMatchingParameterFromScope();
+        var parameterReplacement = operandDefForRef == null ? null : operandDefForRef.getParameterReplacementFromScope();
+        return parameterReplacement == null ? (operandDefForRef == null ? false : operandDefForRef.isColumnReference()) : parameterReplacement.isColumnReference();    }
 }
