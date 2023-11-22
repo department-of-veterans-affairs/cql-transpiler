@@ -23,8 +23,11 @@ import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
 import gov.va.transpiler.sparksql.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.sparksql.node.leaf.IncludeDefNode;
+import gov.va.transpiler.sparksql.node.leaf.IntervalNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
 import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
+import gov.va.transpiler.sparksql.node.leaf.NullNode;
+import gov.va.transpiler.sparksql.node.leaf.OperandDefNode;
 import gov.va.transpiler.sparksql.node.leaf.OperandRefNode;
 import gov.va.transpiler.sparksql.node.leaf.ParameterDefNode;
 import gov.va.transpiler.sparksql.node.leaf.ParameterRefNode;
@@ -32,15 +35,18 @@ import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
 import gov.va.transpiler.sparksql.node.leaf.ValueSetDefNode;
 import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
+import gov.va.transpiler.sparksql.node.unary.DateFromNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
 import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 import gov.va.transpiler.sparksql.node.unary.IntervalTypeSpecifier;
+import gov.va.transpiler.sparksql.node.unary.IsNullNode;
 import gov.va.transpiler.sparksql.node.unary.ListTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.unary.NegateNode;
-import gov.va.transpiler.sparksql.node.unary.OperandDefNode;
+import gov.va.transpiler.sparksql.node.unary.NotNode;
 import gov.va.transpiler.sparksql.node.unary.PropertyNode;
 import gov.va.transpiler.sparksql.node.unary.ReturnClauseNode;
 import gov.va.transpiler.sparksql.node.unary.SingletonFromNode;
+import gov.va.transpiler.sparksql.node.unary.ToDateNode;
 import gov.va.transpiler.sparksql.node.unary.ToDecimalNode;
 import gov.va.transpiler.sparksql.node.unary.TupleElementNode;
 import gov.va.transpiler.sparksql.utilities.CQLNameToSparkSQLName;
@@ -148,6 +154,13 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     }
 
     @Override
+    public AbstractCQLNode visitNull(Null nullElement, State context) {
+        var currentNode = new NullNode();
+        currentNode.setCqlNodeEquivalent(nullElement);
+        return currentNode;
+    }
+
+    @Override
     public AbstractCQLNode visitAccessModifier(AccessModifier accessModifier, State context) {
         var currentNode = new AccessModifierNode();
         return currentNode;
@@ -208,11 +221,10 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new OperandDefNode();
         currentNode.setCqlNodeEquivalent(operandDef);
         currentNode.setName(operandDef.getName());
-        currentNode.setScope(context.getFunctionStack().peek());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitOperandDef(operandDef, context);
+        currentNode.setType(visitTypeSpecifier(operandDef.getOperandTypeSpecifier(), context));
         context.getStack().pop();
-        return result;
+        return currentNode;
     }
 
     @Override
@@ -507,6 +519,28 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     }
 
     @Override
+    public AbstractCQLNode visitNot(Not not, State context) {
+        var currentNode = new NotNode();
+        currentNode.setCqlNodeEquivalent(not);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitNot(not, context);
+        context.getStack().pop();
+        return result;
+    }
+
+
+    @Override
+    public AbstractCQLNode visitIsNull(IsNull isNull, State context) {
+        var currentNode = new IsNullNode();
+        currentNode.setCqlNodeEquivalent(isNull);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitIsNull(isNull, context);
+        context.getStack().pop();
+        return result;
+    }
+
+
+    @Override
     public AbstractCQLNode visitToDecimal(ToDecimal toDecimal, State context) {
         var currentNode = new ToDecimalNode();
         currentNode.setCqlNodeEquivalent(toDecimal);
@@ -613,5 +647,44 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         AbstractCQLNode result = super.visitIntervalTypeSpecifier(intervalTypeSpecifier, context);
         context.getStack().pop();
         return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitToDate(ToDate toDate, State context) {
+        var currentNode = new ToDateNode();
+        currentNode.setCqlNodeEquivalent(toDate);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitToDate(toDate, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitDateFrom(DateFrom dateFrom, State context) {
+        var currentNode = new DateFromNode();
+        currentNode.setCqlNodeEquivalent(dateFrom);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitDateFrom(dateFrom, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitInterval(Interval interval, State context) {
+        var currentNode = new IntervalNode();
+        currentNode.setCqlNodeEquivalent(interval);
+        if (interval.getLow() != null) {
+            currentNode.setLow(visitElement(interval.getLow(), context));
+        }
+        if (interval.getLowClosedExpression() != null) {
+            currentNode.setLowClosed(visitElement(interval.getLowClosedExpression(), context));
+        }
+        if (interval.getHigh() != null) {
+            currentNode.setHigh(visitElement(interval.getHigh(), context));
+        }
+        if (interval.getHighClosedExpression() != null) {
+            currentNode.setHighClosed(visitElement(interval.getHighClosedExpression(), context));
+        }
+        return currentNode;
     }
 }

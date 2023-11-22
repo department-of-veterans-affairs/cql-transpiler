@@ -1,23 +1,29 @@
-package gov.va.transpiler.sparksql.node.unary;
+package gov.va.transpiler.sparksql.node.leaf;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.Unary;
+import gov.va.transpiler.sparksql.node.Leaf;
+import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 
-public class OperandDefNode extends Unary {
+public class OperandDefNode extends Leaf {
 
     private FunctionDefNode scope;
+    private AbstractCQLNode type;
+
+    public void setType(AbstractCQLNode type) {
+        this.type = type;
+    }
 
     public void setScope(FunctionDefNode scope) {
         this.scope = scope;
     }
 
     public AbstractCQLNode getParameterReplacementFromScope() {
-        return scope.getParameterReplacementForOperandDef(this);
+        return scope == null ? null : scope.getParameterReplacementForOperandDef(this);
     }
 
     @Override
     public String asOneLine() {
-        return getName() + " " + getChild().asOneLine();
+        return getName() + " " + type.asOneLine();
     }
 
     @Override

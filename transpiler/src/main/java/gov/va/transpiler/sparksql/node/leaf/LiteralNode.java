@@ -25,9 +25,4 @@ public class LiteralNode extends Leaf {
     public String asOneLine() {
         return cqlTypeToSparkSQLType.toSparkSQLType(getName(), cqlTypeToSparkSQLType.asSparkSQLType(getResultType()));
     }
-
-    @Override
-    public boolean isEncapsulated() {
-        return false;
-    }
 }

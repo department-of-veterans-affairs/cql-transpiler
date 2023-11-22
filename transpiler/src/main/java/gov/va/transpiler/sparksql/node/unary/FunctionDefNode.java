@@ -9,6 +9,7 @@ import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Unary;
 import gov.va.transpiler.sparksql.node.ary.TypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
+import gov.va.transpiler.sparksql.node.leaf.OperandDefNode;
 
 // TODO: support overloaded functions
 public class FunctionDefNode extends Unary {
