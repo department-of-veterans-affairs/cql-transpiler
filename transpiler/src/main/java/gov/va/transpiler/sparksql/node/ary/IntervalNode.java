@@ -1,10 +1,12 @@
-package gov.va.transpiler.sparksql.node.leaf;
+package gov.va.transpiler.sparksql.node.ary;
+
+import org.hl7.elm.r1.Interval;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
-import gov.va.transpiler.sparksql.node.Leaf;
+import gov.va.transpiler.sparksql.node.Ary;
 import gov.va.transpiler.sparksql.utilities.Standards;
 
-public class IntervalNode extends Leaf {
+public class IntervalNode extends Ary {
 
     private AbstractCQLNode low;
     private AbstractCQLNode lowClosed;
@@ -14,6 +16,26 @@ public class IntervalNode extends Leaf {
     @Override
     public boolean isEncapsulated() {
         return true;
+    }
+
+    @Override
+    public boolean addChild(AbstractCQLNode child) {
+        Interval cqleq = (Interval) getCqlNodeEquivalent();
+        if (cqleq.getLow() == child.getCqlNodeEquivalent()) {
+            low = child;
+            return true;
+        } else if (cqleq.getLowClosedExpression() == child.getCqlNodeEquivalent()) {
+            lowClosed = child;
+            return true;
+        } else if (cqleq.getHigh() == child.getCqlNodeEquivalent()) {
+            high = child;
+            return true;
+        } else if (cqleq.getHighClosedExpression() == child.getCqlNodeEquivalent()) {
+            highClosed = child;
+            return true;
+        }
+        super.addChild(child);
+        return false;
     }
 
     @Override

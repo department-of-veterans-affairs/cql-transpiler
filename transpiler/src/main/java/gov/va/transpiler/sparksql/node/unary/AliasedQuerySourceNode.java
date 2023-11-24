@@ -1,9 +1,8 @@
-package gov.va.transpiler.sparksql.node.leaf;
+package gov.va.transpiler.sparksql.node.unary;
 
 import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Unary;
 import gov.va.transpiler.sparksql.node.ary.RetrieveNode;
-import gov.va.transpiler.sparksql.node.unary.PropertyNode;
 
 public class AliasedQuerySourceNode extends Unary {
 

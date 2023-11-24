@@ -8,6 +8,8 @@ import gov.va.transpiler.sparksql.node.AbstractCQLNode;
 import gov.va.transpiler.sparksql.node.Default;
 import gov.va.transpiler.sparksql.node.ary.ChoiceTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.ary.FunctionRefNode;
+import gov.va.transpiler.sparksql.node.ary.IfNode;
+import gov.va.transpiler.sparksql.node.ary.IntervalNode;
 import gov.va.transpiler.sparksql.node.ary.LibraryNode;
 import gov.va.transpiler.sparksql.node.ary.ListNode;
 import gov.va.transpiler.sparksql.node.ary.QueryNode;
@@ -18,12 +20,10 @@ import gov.va.transpiler.sparksql.node.ary.WhereNode;
 import gov.va.transpiler.sparksql.node.binary.BinaryOperatorNode;
 import gov.va.transpiler.sparksql.node.binary.ConcatenateNode;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
-import gov.va.transpiler.sparksql.node.leaf.AliasedQuerySourceNode;
 import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
 import gov.va.transpiler.sparksql.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.sparksql.node.leaf.IncludeDefNode;
-import gov.va.transpiler.sparksql.node.leaf.IntervalNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
 import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
 import gov.va.transpiler.sparksql.node.leaf.NullNode;
@@ -33,6 +33,7 @@ import gov.va.transpiler.sparksql.node.leaf.ParameterDefNode;
 import gov.va.transpiler.sparksql.node.leaf.ParameterRefNode;
 import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
 import gov.va.transpiler.sparksql.node.leaf.ValueSetDefNode;
+import gov.va.transpiler.sparksql.node.unary.AliasedQuerySourceNode;
 import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
 import gov.va.transpiler.sparksql.node.unary.DateFromNode;
@@ -673,18 +674,20 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     public AbstractCQLNode visitInterval(Interval interval, State context) {
         var currentNode = new IntervalNode();
         currentNode.setCqlNodeEquivalent(interval);
-        if (interval.getLow() != null) {
-            currentNode.setLow(visitElement(interval.getLow(), context));
-        }
-        if (interval.getLowClosedExpression() != null) {
-            currentNode.setLowClosed(visitElement(interval.getLowClosedExpression(), context));
-        }
-        if (interval.getHigh() != null) {
-            currentNode.setHigh(visitElement(interval.getHigh(), context));
-        }
-        if (interval.getHighClosedExpression() != null) {
-            currentNode.setHighClosed(visitElement(interval.getHighClosedExpression(), context));
-        }
-        return currentNode;
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitInterval(interval, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitIf(If cqlIf, State context) {
+        var currentNode = new IfNode();
+        currentNode.setCqlNodeEquivalent(cqlIf);
+        context.getStack().push(currentNode);
+        AbstractCQLNode result = super.visitIf(cqlIf, context);
+        context.getStack().pop();
+        return result;
+
     }
 }
