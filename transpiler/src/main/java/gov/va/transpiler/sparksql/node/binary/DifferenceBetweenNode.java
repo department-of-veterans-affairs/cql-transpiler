@@ -20,7 +20,7 @@ public class DifferenceBetweenNode extends Binary {
     public String asOneLine() {
         switch (dateTimePrecision) {
             case DAY:
-                return "DATEDIFF(" + getChild1().asOneLine() + ", " + getChild2().asOneLine() + ")";
+                return "datediff(" + getChild1().asOneLine() + ", " + getChild2().asOneLine() + ")";
             default:
                 break;
         }
