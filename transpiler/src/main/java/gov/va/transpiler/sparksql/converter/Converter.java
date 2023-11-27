@@ -19,6 +19,7 @@ import gov.va.transpiler.sparksql.node.ary.UnionNode;
 import gov.va.transpiler.sparksql.node.ary.WhereNode;
 import gov.va.transpiler.sparksql.node.binary.BinaryOperatorNode;
 import gov.va.transpiler.sparksql.node.binary.ConcatenateNode;
+import gov.va.transpiler.sparksql.node.binary.DifferenceBetweenNode;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
 import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
@@ -222,6 +223,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new OperandDefNode();
         currentNode.setCqlNodeEquivalent(operandDef);
         currentNode.setName(operandDef.getName());
+        currentNode.setScope(context.getFunctionStack().peek());
         context.getStack().push(currentNode);
         currentNode.setType(visitTypeSpecifier(operandDef.getOperandTypeSpecifier(), context));
         context.getStack().pop();
@@ -490,9 +492,9 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
 
     @Override
     public AbstractCQLNode visitDifferenceBetween(DifferenceBetween differenceBetween, State context) {
-        // TODO: DifferenceBetween has a "precision" field that needs to be taken into account.
-        var currentNode = new BinaryOperatorNode("-");
+        var currentNode = new DifferenceBetweenNode();
         currentNode.setCqlNodeEquivalent(differenceBetween);
+        currentNode.setDateTimePrecision(differenceBetween.getPrecision());
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitDifferenceBetween(differenceBetween, context);
         context.getStack().pop();
