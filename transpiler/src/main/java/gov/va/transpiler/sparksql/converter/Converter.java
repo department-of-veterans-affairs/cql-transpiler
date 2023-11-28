@@ -20,6 +20,7 @@ import gov.va.transpiler.sparksql.node.ary.WhereNode;
 import gov.va.transpiler.sparksql.node.binary.BinaryOperatorNode;
 import gov.va.transpiler.sparksql.node.binary.ConcatenateNode;
 import gov.va.transpiler.sparksql.node.binary.DifferenceBetweenNode;
+import gov.va.transpiler.sparksql.node.binary.InNode;
 import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
 import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
@@ -472,7 +473,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
 
     @Override
     public AbstractCQLNode visitIn(In in, State context) {
-        var currentNode = new BinaryOperatorNode("IN");
+        var currentNode = new InNode();
         currentNode.setCqlNodeEquivalent(in);
         context.getStack().push(currentNode);
         AbstractCQLNode result = super.visitIn(in, context);

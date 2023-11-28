@@ -12,16 +12,15 @@ public class WhereNode extends Ary {
 
     @Override
     public String asOneLine() {
-        String builder = "WHERE (";
+        String builder = "WHERE ";
         boolean first = true;
         for (var child : getChildren()) {
             if (first) {
                 first = false;
             } else {
-                builder += " AND (";
+                builder += " AND ";
             }
             builder += child.asOneLine();
-            builder += ")";
         }
         return builder;
     }

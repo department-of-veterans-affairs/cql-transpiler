@@ -23,7 +23,7 @@ public class AliasedQuerySourceNode extends Unary {
             if(getChild() instanceof RetrieveNode) {
                 return ((RetrieveNode) getChild()).asOneLineWithAlias(getName());
             } else {
-                return "SELECT * FROM (" + getChild().asOneLine() + ") AS " + getName();
+                return getChild().asOneLine() + " AS " + getName();
             }
         }
         // TODO

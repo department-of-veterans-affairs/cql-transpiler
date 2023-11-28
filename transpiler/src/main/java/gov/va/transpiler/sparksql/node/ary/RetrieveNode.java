@@ -15,12 +15,12 @@ public class RetrieveNode extends Ary {
     }
 
     public String asOneLineWithAlias(String alias) {
-        return alias == null ? "SELECT * FROM " + getName() : "SELECT * FROM " + getName() + " AS " + alias;
+        return alias == null ? getName() : getName() + " AS " + alias;
     }
 
     @Override
     public String asOneLine() {
-        return asOneLineWithAlias(null);
+        return "SELECT * FROM " + asOneLineWithAlias(null);
     }
 
     @Override

@@ -13,6 +13,11 @@ public class BinaryOperatorNode extends Binary {
         String leftSide = getChild1().isEncapsulated() ? "(" + getChild1().asOneLine() + ")" : getChild1().asOneLine();
         String rightSide = getChild2().isEncapsulated() ? "(" + getChild2().asOneLine() + ")" : getChild2().asOneLine();
         String builder = leftSide + " " + getName() + " " + rightSide;
-        return isEncapsulated() ? "SELECT " + builder + " _val" : builder;
+        return builder;
+    }
+
+    @Override
+    public boolean isEncapsulated() {
+        return false;
     }
 }

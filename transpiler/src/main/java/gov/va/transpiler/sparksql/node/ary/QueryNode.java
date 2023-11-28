@@ -23,8 +23,7 @@ public class QueryNode extends Ary {
             whereNode = (WhereNode) child;
             return true;
         }
-        super.addChild(child);
-        return false;
+        return super.addChild(child);
     }
 
     @Override
@@ -35,7 +34,7 @@ public class QueryNode extends Ary {
     @Override
     public String asOneLine() {
         return "SELECT " + (returnClauseNode == null ? '*' : returnClauseNode.asOneLine())
-            + " FROM (" + aliasedQuerySourceNode.asOneLine() + ")"
+            + " FROM " + aliasedQuerySourceNode.asOneLine()
             + (whereNode == null ? "" : " " + whereNode.asOneLine());
     }
 }

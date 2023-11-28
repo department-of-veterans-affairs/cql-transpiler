@@ -26,4 +26,9 @@ public class DifferenceBetweenNode extends Binary {
         }
         return "Unsupported DifferenceBetween with precision " + dateTimePrecision + " and children [" + getChild1().asOneLine() + "][" + getChild2().asOneLine() + "]";
     }
+
+    @Override
+    public boolean isEncapsulated() {
+        return false;
+    }
 }
