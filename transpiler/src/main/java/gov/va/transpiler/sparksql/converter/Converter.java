@@ -40,6 +40,7 @@ import gov.va.transpiler.sparksql.node.unary.AsNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
 import gov.va.transpiler.sparksql.node.unary.DateFromNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
+import gov.va.transpiler.sparksql.node.unary.FlattenNode;
 import gov.va.transpiler.sparksql.node.unary.FunctionDefNode;
 import gov.va.transpiler.sparksql.node.unary.IntervalTypeSpecifier;
 import gov.va.transpiler.sparksql.node.unary.IsNullNode;
@@ -102,7 +103,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setName(currentNode.getFileNameFromLibrary(library));
         currentNode.setCqlNodeEquivalent(library);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitLibrary(library, context);
+        var result = super.visitLibrary(library, context);
         context.getStack().pop();
         return result;
     }
@@ -141,7 +142,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlNodeEquivalent(parameterRef);
         currentNode.setName(parameterRef.getName());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitParameterRef(parameterRef, context);
+        var result = super.visitParameterRef(parameterRef, context);
         context.getStack().pop();
         return result;
     }
@@ -179,7 +180,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setName(expressionDef.getName());
         currentNode.setCqlNodeEquivalent(expressionDef);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitExpressionDef(expressionDef, context);
+        var result = super.visitExpressionDef(expressionDef, context);
         context.getStack().pop();
         context.getDefinedExpressions().put(currentNode.getName(), currentNode);
         context.setCqlContext(null);
@@ -198,7 +199,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         }
         context.getFunctionStack().push(currentNode);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitFunctionDef(functionDef, context);
+        var result = super.visitFunctionDef(functionDef, context);
         context.getStack().pop();
         context.getFunctionStack().pop();
         context.setCqlContext(null);
@@ -214,7 +215,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setFunctionBeingReferenced(context.getDefinedFunctions().get(currentNode.getName()));
         currentNode.setCqlNodeEquivalent(functionRef);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitFunctionRef(functionRef, context);
+        var result = super.visitFunctionRef(functionRef, context);
         context.getStack().pop();
         return result;
     }
@@ -239,7 +240,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         // Operand references must be enclosed by a function
         currentNode.setScope(context.getFunctionStack().peek());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitOperandRef(operandRef, context);
+        var result = super.visitOperandRef(operandRef, context);
         context.getStack().pop();
         return result;
     }
@@ -261,7 +262,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new ListNode();
         currentNode.setCqlNodeEquivalent(list);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitList(list, context);
+        var result = super.visitList(list, context);
         context.getStack().pop();
         return result;
     }
@@ -272,7 +273,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlNodeEquivalent(tupleElement);
         currentNode.setName(tupleElement.getName());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitTupleElement(tupleElement, context);
+        var result = super.visitTupleElement(tupleElement, context);
         context.getStack().pop();
         return result;
     }
@@ -282,7 +283,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new TupleNode();
         currentNode.setCqlNodeEquivalent(tuple);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitTuple(tuple, context);
+        var result = super.visitTuple(tuple, context);
         context.getStack().pop();
         return result;
     }
@@ -304,7 +305,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setName(property.getPath());
         currentNode.setScope(property.getScope());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitProperty(property, context);
+        var result = super.visitProperty(property, context);
         context.getStack().pop();
         return result;
     }
@@ -314,7 +315,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new QueryNode();
         currentNode.setCqlNodeEquivalent(query);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitQuery(query, context);
+        var result = super.visitQuery(query, context);
         context.getStack().pop();
         return result;
     }
@@ -325,7 +326,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlNodeEquivalent(aliasedQuerySource);
         currentNode.setName(aliasedQuerySource.getAlias());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitAliasedQuerySource(aliasedQuerySource, context);
+        var result = super.visitAliasedQuerySource(aliasedQuerySource, context);
         context.getStack().pop();
         return result;
     }
@@ -335,7 +336,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new ReturnClauseNode();
         currentNode.setCqlNodeEquivalent(returnClause);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitReturnClause(returnClause, context);
+        var result = super.visitReturnClause(returnClause, context);
         context.getStack().pop();
         return result;
     }
@@ -343,7 +344,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
     @Override
     public AbstractCQLNode visitWhereClause(Expression where, State context) {
         var currentNode = new WhereNode();
-        AbstractCQLNode result = super.visitWhereClause(where, context);
+        var result = super.visitWhereClause(where, context);
         currentNode.addChild(result);
         return currentNode;
     }
@@ -384,7 +385,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode(">");
         currentNode.setCqlNodeEquivalent(after);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitAfter(after, context);
+        var result = super.visitAfter(after, context);
         context.getStack().pop();
         return result;
     }
@@ -395,7 +396,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setName("start");
         currentNode.setCqlNodeEquivalent(start);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitStart(start, context);
+        var result = super.visitStart(start, context);
         context.getStack().pop();
         return result;
     }
@@ -406,7 +407,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setName("end");
         currentNode.setCqlNodeEquivalent(end);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitEnd(end, context);
+        var result = super.visitEnd(end, context);
         context.getStack().pop();
         return result;
     }
@@ -416,7 +417,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("+");
         currentNode.setCqlNodeEquivalent(add);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitAdd(add, context);
+        var result = super.visitAdd(add, context);
         context.getStack().pop();
         return result;
     }
@@ -426,7 +427,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("-");
         currentNode.setCqlNodeEquivalent(subtract);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitSubtract(subtract, context);
+        var result = super.visitSubtract(subtract, context);
         context.getStack().pop();
         return result;
     }
@@ -436,7 +437,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("/");
         currentNode.setCqlNodeEquivalent(divide);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitDivide(divide, context);
+        var result = super.visitDivide(divide, context);
         context.getStack().pop();
         return result;
     }
@@ -446,7 +447,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("*");
         currentNode.setCqlNodeEquivalent(multiply);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitMultiply(multiply, context);
+        var result = super.visitMultiply(multiply, context);
         context.getStack().pop();
         return result;
     }
@@ -456,7 +457,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("AND");
         currentNode.setCqlNodeEquivalent(and);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitAnd(and, context);
+        var result = super.visitAnd(and, context);
         context.getStack().pop();
         return result;
     }
@@ -466,7 +467,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("OR");
         currentNode.setCqlNodeEquivalent(or);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitOr(or, context);
+        var result = super.visitOr(or, context);
         context.getStack().pop();
         return result;
     }
@@ -476,7 +477,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new InNode();
         currentNode.setCqlNodeEquivalent(in);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitIn(in, context);
+        var result = super.visitIn(in, context);
         context.getStack().pop();
         return result;
     }
@@ -486,7 +487,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("<=");
         currentNode.setCqlNodeEquivalent(lessOrEqual);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitLessOrEqual(lessOrEqual, context);
+        var result = super.visitLessOrEqual(lessOrEqual, context);
         context.getStack().pop();
         return result;
     }
@@ -497,7 +498,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlNodeEquivalent(differenceBetween);
         currentNode.setDateTimePrecision(differenceBetween.getPrecision());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitDifferenceBetween(differenceBetween, context);
+        var result = super.visitDifferenceBetween(differenceBetween, context);
         context.getStack().pop();
         return result;
     }
@@ -507,7 +508,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new ConcatenateNode();
         currentNode.setCqlNodeEquivalent(concatenate);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitConcatenate(concatenate, context);
+        var result = super.visitConcatenate(concatenate, context);
         context.getStack().pop();
         return result;
     }
@@ -517,7 +518,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new NegateNode();
         currentNode.setCqlNodeEquivalent(negate);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitNegate(negate, context);
+        var result = super.visitNegate(negate, context);
         context.getStack().pop();
         return result;
     }
@@ -527,7 +528,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new NotNode();
         currentNode.setCqlNodeEquivalent(not);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitNot(not, context);
+        var result = super.visitNot(not, context);
         context.getStack().pop();
         return result;
     }
@@ -538,7 +539,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new IsNullNode();
         currentNode.setCqlNodeEquivalent(isNull);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitIsNull(isNull, context);
+        var result = super.visitIsNull(isNull, context);
         context.getStack().pop();
         return result;
     }
@@ -549,7 +550,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new ToDecimalNode();
         currentNode.setCqlNodeEquivalent(toDecimal);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitToDecimal(toDecimal, context);
+        var result = super.visitToDecimal(toDecimal, context);
         context.getStack().pop();
         return result;
     }
@@ -559,7 +560,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new BinaryOperatorNode("=");
         currentNode.setCqlNodeEquivalent(equal);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitEqual(equal, context);
+        var result = super.visitEqual(equal, context);
         context.getStack().pop();
         return result;
     }
@@ -577,7 +578,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new SingletonFromNode();
         currentNode.setCqlNodeEquivalent(singletonFrom);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitSingletonFrom(singletonFrom, context);
+        var result = super.visitSingletonFrom(singletonFrom, context);
         context.getStack().pop();
         return result;
     }
@@ -588,7 +589,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         currentNode.setCqlNodeEquivalent(count);
         currentNode.setCqlContext(context.getCqlContext());
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitCount(count, context);
+        var result = super.visitCount(count, context);
         context.getStack().pop();
         return result;
     }
@@ -598,7 +599,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new UnionNode();
         currentNode.setCqlNodeEquivalent(union);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitUnion(union, context);
+        var result = super.visitUnion(union, context);
         context.getStack().pop();
         return result;
     }
@@ -608,7 +609,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new AsNode();
         currentNode.setCqlNodeEquivalent(as);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitAs(as, context);
+        var result = super.visitAs(as, context);
         context.getStack().pop();
         return result;
     }
@@ -618,7 +619,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new ListTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(listTypeSpecifier);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitListTypeSpecifier(listTypeSpecifier, context);
+        var result = super.visitListTypeSpecifier(listTypeSpecifier, context);
         context.getStack().pop();
         return result;
     }
@@ -628,7 +629,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new ChoiceTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(choiceTypeSpecifier);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitChoiceTypeSpecifier(choiceTypeSpecifier, context);
+        var result = super.visitChoiceTypeSpecifier(choiceTypeSpecifier, context);
         context.getStack().pop();
         return result;
     }
@@ -638,7 +639,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new NamedTypeSpecifierNode();
         currentNode.setCqlNodeEquivalent(namedTypeSpecifier);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitNamedTypeSpecifier(namedTypeSpecifier, context);
+        var result = super.visitNamedTypeSpecifier(namedTypeSpecifier, context);
         context.getStack().pop();
         return result;
     }
@@ -648,7 +649,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new IntervalTypeSpecifier();
         currentNode.setCqlNodeEquivalent(intervalTypeSpecifier);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitIntervalTypeSpecifier(intervalTypeSpecifier, context);
+        var result = super.visitIntervalTypeSpecifier(intervalTypeSpecifier, context);
         context.getStack().pop();
         return result;
     }
@@ -658,7 +659,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new ToDateNode();
         currentNode.setCqlNodeEquivalent(toDate);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitToDate(toDate, context);
+        var result = super.visitToDate(toDate, context);
         context.getStack().pop();
         return result;
     }
@@ -668,7 +669,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new DateFromNode();
         currentNode.setCqlNodeEquivalent(dateFrom);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitDateFrom(dateFrom, context);
+        var result = super.visitDateFrom(dateFrom, context);
         context.getStack().pop();
         return result;
     }
@@ -678,7 +679,7 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new IntervalNode();
         currentNode.setCqlNodeEquivalent(interval);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitInterval(interval, context);
+        var result = super.visitInterval(interval, context);
         context.getStack().pop();
         return result;
     }
@@ -688,9 +689,18 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var currentNode = new IfNode();
         currentNode.setCqlNodeEquivalent(cqlIf);
         context.getStack().push(currentNode);
-        AbstractCQLNode result = super.visitIf(cqlIf, context);
+        var result = super.visitIf(cqlIf, context);
         context.getStack().pop();
         return result;
+    }
 
+    @Override
+    public AbstractCQLNode visitFlatten(Flatten flatten, State context) {
+        var currentNode = new FlattenNode();
+        currentNode.setCqlNodeEquivalent(flatten);
+        context.getStack().push(currentNode);
+        var result = super.visitFlatten(flatten, context);
+        context.getStack().pop();
+        return result;
     }
 }

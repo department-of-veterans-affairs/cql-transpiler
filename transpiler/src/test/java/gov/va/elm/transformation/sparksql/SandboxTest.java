@@ -276,7 +276,6 @@ public class SandboxTest {
         }
     }
 
-
     @Test
     public void testQueryWithSimpleReturn() {
         String cql = ""
