@@ -6,6 +6,6 @@ public class StartNode extends Unary {
 
     @Override
     public String asOneLine() {
-        return getChild().asOneLine() + ".start";
+        return getChild().asOneLine() + ".low";
     }
 }
