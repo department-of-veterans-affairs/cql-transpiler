@@ -3,5 +3,15 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        
+        {
+            "type": "java",
+            "name": "Transpiler",
+            "request": "launch",
+            "mainClass": "gov.va.transpiler.sparksql.Transpiler",
+            "projectName": "transpiler",
+            "args": "transpiler/src/test/resources/cql/cq_core transpiler/src/test/resources/cql/cq_core/demo-measure.cql"
+        }
+    ]
 }
