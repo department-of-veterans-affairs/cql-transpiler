@@ -12,7 +12,6 @@ import gov.va.sparkcql.cqf.domain.CqlSource;
 import org.cqframework.cql.cql2elm.*;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
-import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 
@@ -88,6 +87,7 @@ public class CqfCompiler {
         var libraryManager = new LibraryManager(modelManager);
         libraryManager.getCqlCompilerOptions().setOptions(CqlCompilerOptions.Options.EnableResultTypes);
         libraryManager.getLibrarySourceLoader().registerProvider(librarySourceProvider);
+        libraryManager.getCqlCompilerOptions().setOptions(CqlCompilerOptions.Options.EnableDetailedErrors);
 
         var translator = CqlTranslator.fromText(cqlText, libraryManager);
         var elm = translator.toELM();
@@ -97,11 +97,6 @@ public class CqfCompiler {
         if (errorChecker.hasErrors()) {
             throw new RuntimeException(errorChecker.toPrettyString());
         }
-
-        // the CQF evaluator uses binary searches which requires a sorted ExpressionDef
-        // list. Perform that sort here so it's generally available.
-        if (elm.getStatements() != null && !elm.getStatements().getDef().isEmpty())
-            elm.getStatements().getDef().sort(Comparator.comparing(ExpressionDef::getName));
 
         return elm;
     }
