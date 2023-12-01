@@ -14,6 +14,7 @@ import gov.va.transpiler.sparksql.node.ary.LibraryNode;
 import gov.va.transpiler.sparksql.node.ary.ListNode;
 import gov.va.transpiler.sparksql.node.ary.QueryNode;
 import gov.va.transpiler.sparksql.node.ary.RetrieveNode;
+import gov.va.transpiler.sparksql.node.ary.SortClauseNode;
 import gov.va.transpiler.sparksql.node.ary.TupleNode;
 import gov.va.transpiler.sparksql.node.ary.UnionNode;
 import gov.va.transpiler.sparksql.node.ary.WhereNode;
@@ -25,6 +26,7 @@ import gov.va.transpiler.sparksql.node.leaf.AccessModifierNode;
 import gov.va.transpiler.sparksql.node.leaf.ContextDefNode;
 import gov.va.transpiler.sparksql.node.leaf.DateTimeNode;
 import gov.va.transpiler.sparksql.node.leaf.ExpressionRefNode;
+import gov.va.transpiler.sparksql.node.leaf.IdentifierRefNode;
 import gov.va.transpiler.sparksql.node.leaf.IncludeDefNode;
 import gov.va.transpiler.sparksql.node.leaf.LiteralNode;
 import gov.va.transpiler.sparksql.node.leaf.NamedTypeSpecifierNode;
@@ -37,6 +39,7 @@ import gov.va.transpiler.sparksql.node.leaf.UsingDefNode;
 import gov.va.transpiler.sparksql.node.leaf.ValueSetDefNode;
 import gov.va.transpiler.sparksql.node.unary.AliasedQuerySourceNode;
 import gov.va.transpiler.sparksql.node.unary.AsNode;
+import gov.va.transpiler.sparksql.node.unary.ByExpressionNode;
 import gov.va.transpiler.sparksql.node.unary.CountNode;
 import gov.va.transpiler.sparksql.node.unary.DateFromNode;
 import gov.va.transpiler.sparksql.node.unary.ExpressionDefNode;
@@ -50,6 +53,7 @@ import gov.va.transpiler.sparksql.node.unary.NotNode;
 import gov.va.transpiler.sparksql.node.unary.PropertyNode;
 import gov.va.transpiler.sparksql.node.unary.ReturnClauseNode;
 import gov.va.transpiler.sparksql.node.unary.SingletonFromNode;
+import gov.va.transpiler.sparksql.node.unary.SortByItemNode;
 import gov.va.transpiler.sparksql.node.unary.ToDateNode;
 import gov.va.transpiler.sparksql.node.unary.ToDecimalNode;
 import gov.va.transpiler.sparksql.node.unary.TupleElementNode;
@@ -318,6 +322,44 @@ public class Converter extends ElmBaseLibraryVisitor<AbstractCQLNode, State> {
         var result = super.visitQuery(query, context);
         context.getStack().pop();
         return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitSortClause(SortClause sortClause, State context) {
+        var currentNode = new SortClauseNode();
+        currentNode.setCqlNodeEquivalent(sortClause);
+        context.getStack().push(currentNode);
+        var result = super.visitSortClause(sortClause, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitSortByItem(SortByItem sortByItem, State context) {
+        var currentNode = new SortByItemNode();
+        currentNode.setCqlNodeEquivalent(sortByItem);
+        context.getStack().push(currentNode);
+        var result = super.visitSortByItem(sortByItem, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitByExpression(ByExpression byExpression, State context) {
+        var currentNode = new ByExpressionNode();
+        currentNode.setCqlNodeEquivalent(byExpression);
+        context.getStack().push(currentNode);
+        var result = super.visitByExpression(byExpression, context);
+        context.getStack().pop();
+        return result;
+    }
+
+    @Override
+    public AbstractCQLNode visitIdentifierRef(IdentifierRef identifierRef, State context) {
+        var currentNode = new IdentifierRefNode();
+        currentNode.setCqlNodeEquivalent(identifierRef);
+        currentNode.setName(identifierRef.getName());
+        return currentNode;
     }
 
     @Override

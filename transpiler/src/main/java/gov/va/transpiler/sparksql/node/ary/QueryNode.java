@@ -10,6 +10,7 @@ public class QueryNode extends Ary {
     private AliasedQuerySourceNode aliasedQuerySourceNode;
     private ReturnClauseNode returnClauseNode;
     private WhereNode whereNode;
+    private SortClauseNode sortNode;
 
     @Override
     public boolean addChild(AbstractCQLNode child) {
@@ -22,8 +23,12 @@ public class QueryNode extends Ary {
         } else if (child instanceof WhereNode) {
             whereNode = (WhereNode) child;
             return true;
+        } else if (child instanceof SortClauseNode) {
+            sortNode = (SortClauseNode) child;
+            return true;
         }
-        return super.addChild(child);
+        super.addChild(child);
+        return false;
     }
 
     @Override
@@ -35,6 +40,7 @@ public class QueryNode extends Ary {
     public String asOneLine() {
         return "SELECT " + (returnClauseNode == null ? '*' : returnClauseNode.asOneLine())
             + " FROM " + aliasedQuerySourceNode.asOneLine()
-            + (whereNode == null ? "" : " " + whereNode.asOneLine());
+            + (whereNode == null ? "" : " " + whereNode.asOneLine())
+            + (sortNode == null ? "" : " " + sortNode.asOneLine());
     }
 }

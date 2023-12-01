@@ -304,6 +304,20 @@ public class SandboxTest {
     }
 
     @Test
+    public void testQueryWithSortByClause() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using QUICK\n"
+            + "define a: [Encounter] E sort by status.value\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
     public void testPropertyDuringRetrieve() {
         String cql = ""
             + "library Retrievals version '1.0'\n"
