@@ -1,9 +1,0 @@
-dependencies {
-    implementation "info.cqframework:cql:${cqfVersion}"
-    implementation "info.cqframework:cql-to-elm:${cqfVersion}"
-    implementation "info.cqframework:elm:${cqfVersion}"
-    implementation "info.cqframework:elm-jackson:${cqfVersion}"
-    implementation "info.cqframework:model-jackson:${cqfVersion}"
-    implementation "info.cqframework:quick:${cqfVersion}"
-    implementation "org.fhir:ucum:${ucumVersion}"
-}

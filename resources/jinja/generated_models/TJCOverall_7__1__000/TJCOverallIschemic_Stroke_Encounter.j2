@@ -1,0 +1,18 @@
+{# original CQL begins -#}
+/*
+define "Ischemic Stroke Encounter":
+  "Encounter with Principal Diagnosis and Age" EncounterWithAge
+    where exists ( EncounterWithAge.diagnoses Diagnosis
+        where Diagnosis.code in "Ischemic Stroke"
+          and Diagnosis.rank = 1
+    )
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/TJCOverall_7__1__000.j2" import TJCOverallIschemic_Stroke_Encounter %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ TJCOverallIschemic_Stroke_Encounter(environment, none) }}

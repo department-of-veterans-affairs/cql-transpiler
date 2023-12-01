@@ -1,0 +1,6 @@
+dependencies {
+    implementation(project(":compiler"))
+
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "info.cqframework:cql-to-elm:${cqfVersion}"
+}

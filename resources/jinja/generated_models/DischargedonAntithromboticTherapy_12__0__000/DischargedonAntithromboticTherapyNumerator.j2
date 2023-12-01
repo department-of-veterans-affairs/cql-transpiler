@@ -1,0 +1,16 @@
+{# original CQL begins -#}
+/*
+define "Numerator":
+  TJC."Ischemic Stroke Encounter" IschemicStrokeEncounter
+    with ["Medication, Discharge": "Antithrombotic Therapy for Ischemic Stroke"] DischargeAntithrombotic
+      such that DischargeAntithrombotic.authorDatetime during IschemicStrokeEncounter.relevantPeriod
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/DischargedonAntithromboticTherapy_12__0__000.j2" import DischargedonAntithromboticTherapyNumerator %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ DischargedonAntithromboticTherapyNumerator(environment, none) }}

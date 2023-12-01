@@ -1,0 +1,15 @@
+{# original CQL begins -#}
+/*
+define "Intervention Comfort Measures":
+  ["Intervention, Order": "Comfort Measures"]
+    union ["Intervention, Performed": "Comfort Measures"]
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/TJCOverall_7__1__000.j2" import TJCOverallIntervention_Comfort_Measures %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ TJCOverallIntervention_Comfort_Measures(environment, none) }}

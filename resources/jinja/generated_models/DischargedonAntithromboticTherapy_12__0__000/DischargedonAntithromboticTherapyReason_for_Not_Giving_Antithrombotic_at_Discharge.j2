@@ -1,0 +1,16 @@
+{# original CQL begins -#}
+/*
+define "Reason for Not Giving Antithrombotic at Discharge":
+  ["Medication, Not Discharged": "Antithrombotic Therapy for Ischemic Stroke"] NoAntithromboticDischarge
+    where NoAntithromboticDischarge.negationRationale in "Medical Reason For Not Providing Treatment"
+      or NoAntithromboticDischarge.negationRationale in "Patient Refusal"
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/DischargedonAntithromboticTherapy_12__0__000.j2" import DischargedonAntithromboticTherapyReason_for_Not_Giving_Antithrombotic_at_Discharge %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ DischargedonAntithromboticTherapyReason_for_Not_Giving_Antithrombotic_at_Discharge(environment, none) }}

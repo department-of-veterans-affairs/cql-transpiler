@@ -5,10 +5,6 @@
     "java.eclipse.downloadSources": true,
     "java.maven.downloadSources": true,
     "java.test.config": {
-        "classPaths": [
-            // Workaround to issue where VS Code isn't correctly adding shadow jar to classpath
-            "${workspaceFolder}/sparkcql-cqf/build/libs/sparkcql-cqf-1.0-SNAPSHOT.jar",
-        ],
         "vmArgs": [
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
             "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
@@ -52,5 +48,8 @@
         "sparkcql"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "files.associations": {
+        "*.sql": "jinja-sql",
+    }
 }

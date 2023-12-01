@@ -1,0 +1,16 @@
+{# original CQL begins -#}
+/*
+define "Encounter with Comfort Measures during Hospitalization":
+  "Ischemic Stroke Encounter" IschemicStrokeEncounter
+    with "Intervention Comfort Measures" ComfortMeasure
+      such that Coalesce(start of Global."NormalizeInterval"(ComfortMeasure.relevantDatetime, ComfortMeasure.relevantPeriod), ComfortMeasure.authorDatetime)during Global."HospitalizationWithObservation" ( IschemicStrokeEncounter )
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/TJCOverall_7__1__000.j2" import TJCOverallEncounter_with_Comfort_Measures_during_Hospitalization %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ TJCOverallEncounter_with_Comfort_Measures_during_Hospitalization(environment, none) }}

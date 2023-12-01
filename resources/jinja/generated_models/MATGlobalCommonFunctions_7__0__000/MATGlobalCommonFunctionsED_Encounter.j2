@@ -1,0 +1,14 @@
+{# original CQL begins -#}
+/*
+define "ED Encounter":
+  ["Encounter, Performed": "Emergency Department Visit"]
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/MATGlobalCommonFunctions_7__0__000.j2" import MATGlobalCommonFunctionsED_Encounter %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ MATGlobalCommonFunctionsED_Encounter(environment, none) }}

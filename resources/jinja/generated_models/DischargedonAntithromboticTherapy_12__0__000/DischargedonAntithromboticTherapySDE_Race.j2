@@ -1,0 +1,14 @@
+{# original CQL begins -#}
+/*
+define "SDE Race":
+  ["Patient Characteristic Race": "Race"]
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/DischargedonAntithromboticTherapy_12__0__000.j2" import DischargedonAntithromboticTherapySDE_Race %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ DischargedonAntithromboticTherapySDE_Race(environment, none) }}
