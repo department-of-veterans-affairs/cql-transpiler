@@ -6,13 +6,37 @@ import java.util.List;
 public class Segment {
     private static final String INDENT = "\t";
     private static final String NEWLINE = "\n";
+    private static final String FOLDER_SEPARATOR = "/";
 
-    private boolean printThisInline = false;
-    private boolean printInOwnFile = false;
-    private String fileName = null;
+    public enum PrintType {
+        Unset,
+        Folder,
+        File,
+        Line,
+        Inline
+    }
+
+    private PrintType printType = PrintType.Unset;
     private String head = "";
     private List<Segment> body = new ArrayList<>();
     private String tail = "";
+    private String name = null;
+
+    public PrintType getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(PrintType printType) {
+        this.printType = printType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setHead(String head) {
         this.head = head;
@@ -20,24 +44,6 @@ public class Segment {
 
     public void setTail(String tail) {
         this.tail = tail;
-    }
-
-    public void disableInlinePrinting() {
-        printThisInline = true;
-    }
-
-    public void setToPrintInOwnFile() {
-        printInOwnFile = true;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public boolean canBePrintedInlineWithPreviousSegment() {
-        return !printInOwnFile
-            && printThisInline
-            && body.stream().allMatch(Segment::canBePrintedInlineWithPreviousSegment);
     }
 
     public void addSegmentToBody(Segment segment) {
@@ -54,42 +60,53 @@ public class Segment {
         return sb.toString();
     }
 
+    protected boolean printInline() {
+        return getPrintType() == PrintType.Inline && body.stream().allMatch(Segment::printInline);
+    }
+
     public String print(int indentLevel, boolean splitFiles) {
+        if (getPrintType() == PrintType.Unset) {
+            throw new RuntimeException("Nodes must have print type set");
+        }
         var sb = new StringBuilder();
 
-        // Print intended filename if relevant
-        if (splitFiles) {
-            // TODO
-            throw new UnsupportedOperationException();
-        } else if (printInOwnFile) {
-            sb.append(indentToLevel(indentLevel));
-            sb.append("-- splits to own file: ");
-            sb.append(fileName);
-            sb.append(NEWLINE);
+        if ((getPrintType() == PrintType.File) || (getPrintType() == PrintType.Folder)) {
+            if (splitFiles) {
+                // TODO
+                throw new UnsupportedOperationException();
+            } else {
+                sb.append(indentToLevel(indentLevel));
+                if (getPrintType() == PrintType.File) {
+                    sb.append("-- splits to own file: ");
+                } else if (getPrintType() == PrintType.Folder) {
+                    sb.append(indentToLevel(indentLevel));
+                    sb.append("-- splits to own folder: ");
+                }
+                sb.append(getName());
+                sb.append(FOLDER_SEPARATOR);
+                sb.append(NEWLINE);
+            }
         }
 
-        // Print head
-        sb.append(indentToLevel(indentLevel));
-        sb.append(head);
-
-        // Append body
-        if (body.stream().allMatch(Segment::canBePrintedInlineWithPreviousSegment)) {
-            for (var item : body) {
-                sb.append(item.print(0, splitFiles));
-            }
+        if (printInline()) {
+                sb.append(indentToLevel(indentLevel));
+                sb.append(head);
+                for (var item : body) {
+                    sb.append(item.print(0, splitFiles));
+                }
+                sb.append(tail);
         } else {
+            sb.append(indentToLevel(indentLevel));
+            sb.append(head);
             for (var item : body) {
                 sb.append(NEWLINE);
                 sb.append(item.print(indentLevel + 1, splitFiles));
             }
-
-            // Prepare to print tail
             sb.append(NEWLINE);
             sb.append(indentToLevel(indentLevel));
+            sb.append(tail);
         }
 
-        // Append tail
-        sb.append(tail);
 
         return sb.toString();
     }

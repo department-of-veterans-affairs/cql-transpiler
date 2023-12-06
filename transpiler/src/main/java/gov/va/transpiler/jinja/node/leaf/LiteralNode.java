@@ -3,6 +3,7 @@ package gov.va.transpiler.jinja.node.leaf;
 import org.hl7.elm.r1.Literal;
 
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.printing.Segment.PrintType;
 
 public class LiteralNode extends Leaf<Literal> {
 
@@ -21,6 +22,11 @@ public class LiteralNode extends Leaf<Literal> {
         return false;
     }
 
+    @Override
+    public boolean isSimpleValue() {
+        return true;
+    }
+
     public LiteralType getTypeForLiteral() {
         switch (getCqlEquivalent().getResultType().toString()) {
             case "System.Integer" :
@@ -31,9 +37,11 @@ public class LiteralNode extends Leaf<Literal> {
         }
         return LiteralType.Unsupported;
     }
+
     @Override
     public Segment toSegment() {
         var segment = new Segment();
+        segment.setPrintType(PrintType.Inline);
         var type = getTypeForLiteral();
         switch (type) {
             case Integer:

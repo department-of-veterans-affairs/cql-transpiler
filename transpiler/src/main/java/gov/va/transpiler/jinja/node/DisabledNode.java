@@ -1,6 +1,7 @@
 package gov.va.transpiler.jinja.node;
 
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.printing.Segment.PrintType;
 
 /**
  * Represents a node that CQL does not actually support. E.g., AccessModifier
@@ -16,11 +17,17 @@ public class DisabledNode implements TranspilerNode {
     public Segment toSegment() {
         var segment = new Segment();
         segment.setHead("Disabled Node");
+        segment.setPrintType(PrintType.Inline);
         return segment;
     }
 
     @Override
     public boolean isTable() {
+        return false;
+    }
+
+    @Override
+    public boolean isSimpleValue() {
         return false;
     }
 }

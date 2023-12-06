@@ -2,13 +2,18 @@ package gov.va.transpiler.jinja.converter;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
+import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.Literal;
+import org.hl7.elm.r1.UsingDef;
 
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.UnsupportedNode;
 import gov.va.transpiler.jinja.node.leaf.LiteralNode;
+import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
+import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
@@ -35,6 +40,30 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     protected TranspilerNode aggregateResult(TranspilerNode aggregate, TranspilerNode nextResult) {
         aggregate.addChild(nextResult);
         return aggregate;
+    }
+
+    @Override
+    public TranspilerNode visitLibrary(Library library, State state) {
+        var currentNode = new LibraryNode(library);
+        state.getLibraryStack().add(currentNode);
+        state.setCurrentNode(currentNode);
+        var returnval = super.visitLibrary(library, state);
+        state.getLibraryStack().pop();
+        return returnval;
+    }
+
+    @Override
+    public TranspilerNode visitUsingDef(UsingDef usingdef, State state) {
+        var currentNode = new UsingDefNode(usingdef);
+        state.setCurrentNode(currentNode);
+        return super.visitUsingDef(usingdef, state);
+    }
+
+    @Override
+    public TranspilerNode visitExpressionDef(ExpressionDef expressiondef, State state) {
+        var currentNode = new ExpressionDefNode(expressiondef);
+        state.setCurrentNode(currentNode);
+        return super.visitExpressionDef(expressiondef, state);
     }
 
     @Override

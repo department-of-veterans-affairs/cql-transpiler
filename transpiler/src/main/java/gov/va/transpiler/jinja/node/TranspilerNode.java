@@ -18,5 +18,10 @@ public interface TranspilerNode {
     /**
      * @return whether this represents a table value
      */
-    public abstract boolean isTable();
+    public boolean isTable();
+
+    /**
+     * @return whether this represents a simple value
+     */
+    public boolean isSimpleValue();
 }
