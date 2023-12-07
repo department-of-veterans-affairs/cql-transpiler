@@ -37,6 +37,20 @@ public class SanboxTest {
         );
     }
 
+    @Test
+    public void testExpressionRef() {
+        String cql = ""
+            + "define myconst_1: 123\n"
+            + "define myconst_2: myconst_1\n"
+            ;
+
+        processCQLToJinja(cql).stream().map(TranspilerNode::toSegment).map(Segment::toString).forEach(
+            libraryAsString -> {
+                System.out.print(libraryAsString);
+            }
+        );
+    }
+
     private List<TranspilerNode> processCQLToJinja(String cql) {
         var libraryList = compiler.compile(cql);
         // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them

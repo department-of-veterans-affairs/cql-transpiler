@@ -39,16 +39,15 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     protected TranspilerNode aggregateResult(TranspilerNode aggregate, TranspilerNode nextResult) {
         aggregate.addChild(nextResult);
+        nextResult.setParent(aggregate);
         return aggregate;
     }
 
     @Override
     public TranspilerNode visitLibrary(Library library, State state) {
         var currentNode = new LibraryNode(library);
-        state.getLibraryStack().add(currentNode);
         state.setCurrentNode(currentNode);
         var returnval = super.visitLibrary(library, state);
-        state.getLibraryStack().pop();
         return returnval;
     }
 

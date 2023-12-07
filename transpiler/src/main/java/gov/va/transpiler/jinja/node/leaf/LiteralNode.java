@@ -3,7 +3,6 @@ package gov.va.transpiler.jinja.node.leaf;
 import org.hl7.elm.r1.Literal;
 
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 
 public class LiteralNode extends Leaf<Literal> {
 
@@ -40,8 +39,7 @@ public class LiteralNode extends Leaf<Literal> {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment();
-        segment.setPrintType(PrintType.Inline);
+        var segment = new Segment(this);
         var type = getTypeForLiteral();
         switch (type) {
             case Integer:
@@ -55,5 +53,10 @@ public class LiteralNode extends Leaf<Literal> {
                 break;
         }
         return segment;
+    }
+
+    @Override
+    public PrintType getPrintType() {
+        return PrintType.Inline;
     }
 }

@@ -24,4 +24,9 @@ public class UsingDefNode extends Leaf<UsingDef> {
     public Segment toSegment() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public PrintType getPrintType() {
+        return PrintType.Inline;
+    }
 }

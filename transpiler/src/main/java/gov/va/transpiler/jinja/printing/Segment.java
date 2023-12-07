@@ -3,39 +3,23 @@ package gov.va.transpiler.jinja.printing;
 import java.util.ArrayList;
 import java.util.List;
 
+import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.TranspilerNode.PrintType;
+import gov.va.transpiler.jinja.standards.Standards;
+
 public class Segment {
-    private static final String INDENT = "\t";
-    private static final String NEWLINE = "\n";
-    private static final String FOLDER_SEPARATOR = "/";
 
-    public enum PrintType {
-        Unset,
-        Folder,
-        File,
-        Line,
-        Inline
-    }
-
-    private PrintType printType = PrintType.Unset;
+    private TranspilerNode fromNode;
     private String head = "";
     private List<Segment> body = new ArrayList<>();
     private String tail = "";
-    private String name = null;
 
-    public PrintType getPrintType() {
-        return printType;
+    public Segment(TranspilerNode fromNode) {
+        this.fromNode = fromNode;
     }
 
-    public void setPrintType(PrintType printType) {
-        this.printType = printType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public TranspilerNode getFromNode() {
+        return fromNode;
     }
 
     public void setHead(String head) {
@@ -55,36 +39,28 @@ public class Segment {
     protected String indentToLevel(int indentLevel) {
         var sb = new StringBuilder();
         for (var i = 0; i < indentLevel; i++) {
-            sb.append(INDENT);
+            sb.append(Standards.INDENT);
         }
         return sb.toString();
     }
 
     protected boolean printInline() {
-        return getPrintType() == PrintType.Inline && body.stream().allMatch(Segment::printInline);
+        return (getFromNode().getPrintType()) == PrintType.Inline && body.stream().allMatch(Segment::printInline);
     }
 
     public String print(int indentLevel, boolean splitFiles) {
-        if (getPrintType() == PrintType.Unset) {
-            throw new RuntimeException("Nodes must have print type set");
-        }
         var sb = new StringBuilder();
 
-        if ((getPrintType() == PrintType.File) || (getPrintType() == PrintType.Folder)) {
+        if ((getFromNode().getPrintType() == PrintType.File) || (getFromNode().getPrintType() == PrintType.Folder)) {
             if (splitFiles) {
                 // TODO
                 throw new UnsupportedOperationException();
-            } else {
+            } else if (getFromNode().getPrintType() == PrintType.Folder || getFromNode().getPrintType() == PrintType.File) {
                 sb.append(indentToLevel(indentLevel));
-                if (getPrintType() == PrintType.File) {
-                    sb.append("-- splits to own file: ");
-                } else if (getPrintType() == PrintType.Folder) {
-                    sb.append(indentToLevel(indentLevel));
-                    sb.append("-- splits to own folder: ");
-                }
-                sb.append(getName());
-                sb.append(FOLDER_SEPARATOR);
-                sb.append(NEWLINE);
+                sb.append("-- splits to own ");
+                sb.append(getFromNode().getPrintType());
+                sb.append(":");
+                sb.append(getFromNode().getRelativeFilePath());
             }
         }
 
@@ -99,14 +75,13 @@ public class Segment {
             sb.append(indentToLevel(indentLevel));
             sb.append(head);
             for (var item : body) {
-                sb.append(NEWLINE);
+                sb.append(Standards.NEWLINE);
                 sb.append(item.print(indentLevel + 1, splitFiles));
             }
-            sb.append(NEWLINE);
+            sb.append(Standards.NEWLINE);
             sb.append(indentToLevel(indentLevel));
             sb.append(tail);
         }
-
 
         return sb.toString();
     }

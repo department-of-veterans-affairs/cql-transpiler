@@ -8,7 +8,6 @@ import org.hl7.elm.r1.Library;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 
 public class LibraryNode extends Ary<Library> {
 
@@ -37,16 +36,20 @@ public class LibraryNode extends Ary<Library> {
         return false;
     }
 
-    public String getFileNameForTranslatedLibrary() {
+    @Override
+    public PrintType getPrintType() {
+        return PrintType.Folder;
+    }
+
+    @Override
+    public String getReferenceName() {
         var identifier = getCqlEquivalent().getIdentifier();
         return identifier.getId() == null ? "Anonymous Library" : identifier.getVersion() == null ? identifier.getId() : identifier.getId() + identifier.getVersion();
     }
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment();
-        segment.setName(getFileNameForTranslatedLibrary());
-        segment.setPrintType(PrintType.Folder);
+        var segment = new Segment(this);
         getChildren().stream().forEach(child -> segment.addSegmentToBody(child.toSegment()));
         return segment;
     }

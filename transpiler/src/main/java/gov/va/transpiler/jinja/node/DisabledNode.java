@@ -1,12 +1,13 @@
 package gov.va.transpiler.jinja.node;
 
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 
 /**
  * Represents a node that CQL does not actually support. E.g., AccessModifier
  */
 public class DisabledNode implements TranspilerNode {
+
+    private TranspilerNode parent;
 
     @Override
     public void addChild(TranspilerNode child) throws UnsupportedChildNodeException {
@@ -15,9 +16,8 @@ public class DisabledNode implements TranspilerNode {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment();
+        var segment = new Segment(this);
         segment.setHead("Disabled Node");
-        segment.setPrintType(PrintType.Inline);
         return segment;
     }
 
@@ -29,5 +29,20 @@ public class DisabledNode implements TranspilerNode {
     @Override
     public boolean isSimpleValue() {
         return false;
+    }
+
+    @Override
+    public void setParent(TranspilerNode parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public TranspilerNode getParent() {
+        return parent;
+    }
+
+    @Override
+    public PrintType getPrintType() {
+        return PrintType.Inline;
     }
 }
