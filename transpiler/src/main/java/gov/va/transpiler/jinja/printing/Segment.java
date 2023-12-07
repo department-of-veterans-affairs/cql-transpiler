@@ -1,5 +1,8 @@
 package gov.va.transpiler.jinja.printing;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,31 +47,31 @@ public class Segment {
         return sb.toString();
     }
 
-    protected boolean printInline() {
-        return (getFromNode().getPrintType()) == PrintType.Inline && body.stream().allMatch(Segment::printInline);
+    protected boolean printsInline() {
+        return (getFromNode().getPrintType()) == PrintType.Inline && body.stream().allMatch(Segment::printsInline);
     }
 
-    public String print(int indentLevel, boolean splitFiles) {
+    @Override
+    public String toString() {
+        return toString(0);
+    }
+
+    public String toString(int indentLevel) {
         var sb = new StringBuilder();
 
-        if ((getFromNode().getPrintType() == PrintType.File) || (getFromNode().getPrintType() == PrintType.Folder)) {
-            if (splitFiles) {
-                // TODO
-                throw new UnsupportedOperationException();
-            } else if (getFromNode().getPrintType() == PrintType.Folder || getFromNode().getPrintType() == PrintType.File) {
-                sb.append(indentToLevel(indentLevel));
-                sb.append("-- splits to own ");
-                sb.append(getFromNode().getPrintType());
-                sb.append(":");
-                sb.append(getFromNode().getRelativeFilePath());
-            }
+        if (getFromNode().getPrintType() == PrintType.Folder || getFromNode().getPrintType() == PrintType.File) {
+            sb.append(indentToLevel(indentLevel));
+            sb.append("-- splits to own ");
+            sb.append(getFromNode().getPrintType());
+            sb.append(":");
+            sb.append(getFromNode().getRelativeFilePath());
         }
 
-        if (printInline()) {
+        if (printsInline()) {
                 sb.append(indentToLevel(indentLevel));
                 sb.append(head);
                 for (var item : body) {
-                    sb.append(item.print(0, splitFiles));
+                    sb.append(item.toString(0));
                 }
                 sb.append(tail);
         } else {
@@ -76,7 +79,7 @@ public class Segment {
             sb.append(head);
             for (var item : body) {
                 sb.append(Standards.NEWLINE);
-                sb.append(item.print(indentLevel + 1, splitFiles));
+                sb.append(item.toString(indentLevel + 1));
             }
             sb.append(Standards.NEWLINE);
             sb.append(indentToLevel(indentLevel));
@@ -86,8 +89,52 @@ public class Segment {
         return sb.toString();
     }
 
-    @Override
-    public String toString() {
-        return print(0, false);
+    public void toFiles(String basePath) throws IOException {
+        toFiles(basePath, 0);
+    }
+
+    public void toFiles(String basePath, int indentLevel) throws IOException {
+        var path = basePath + getFromNode().getRelativeFilePath();
+        File file = new File(path);
+
+        // Print this file's contents
+        if (getFromNode().getPrintType() == PrintType.Folder || getFromNode().getPrintType() == PrintType.File) {
+            if (file.exists()) {
+                throw new IOException("File already exists at path: " + path);
+            } else {
+                if (getFromNode().getPrintType() == PrintType.Folder) {
+                    file.mkdir();
+                } else if (getFromNode().getPrintType() == PrintType.File) {
+                    file.createNewFile();
+                }
+            }
+            for (var item : body) {
+                item.toFiles(basePath);
+            }
+        } else {
+            try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+                outputStream.write(indentToLevel(indentLevel).getBytes());
+                if (printsInline()) {
+                    outputStream.write(head.getBytes());
+                } else {
+                    outputStream.write(Standards.NEWLINE.getBytes());
+                    outputStream.write(head.getBytes());
+                }
+            }
+
+            for (var item : body) {
+                item.toFiles(basePath, printsInline() ? 0 : indentLevel + 1);
+            }
+
+            try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+                if (printsInline()) {
+                    outputStream.write(tail.getBytes());
+                } else {
+                    outputStream.write(Standards.NEWLINE.getBytes());
+                    outputStream.write(indentToLevel(indentLevel).getBytes());
+                    outputStream.write(tail.getBytes());
+                }
+            }
+        }
     }
 }
