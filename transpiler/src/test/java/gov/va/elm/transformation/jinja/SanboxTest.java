@@ -1,5 +1,6 @@
 package gov.va.elm.transformation.jinja;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +14,6 @@ import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
 import gov.va.transpiler.jinja.converter.Converter;
 import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.printing.Segment;
 
 public class SanboxTest {
 
@@ -25,30 +25,30 @@ public class SanboxTest {
     }
 
     @Test
-    public void testExpressionDefLiteral() {
+    public void testExpressionDefLiteral() throws IOException {
         String cql = ""
             + "define myconst_1: 123\n"
             ;
 
-        processCQLToJinja(cql).stream().map(TranspilerNode::toSegment).map(Segment::toString).forEach(
-            libraryAsString -> {
-                System.out.print(libraryAsString);
-            }
-        );
+        var convertedLibraries = processCQLToJinja(cql);
+
+        for (var mapped : convertedLibraries) {
+            mapped.toSegment().toFiles("./");
+        }
     }
 
     @Test
-    public void testExpressionRef() {
+    public void testExpressionRef() throws IOException {
         String cql = ""
             + "define myconst_1: 123\n"
             + "define myconst_2: myconst_1\n"
             ;
 
-        processCQLToJinja(cql).stream().map(TranspilerNode::toSegment).map(Segment::toString).forEach(
-            libraryAsString -> {
-                System.out.print(libraryAsString);
-            }
-        );
+        var convertedLibraries = processCQLToJinja(cql);
+
+        for (var mapped : convertedLibraries) {
+            mapped.toSegment().toFiles("./");
+        }
     }
 
     private List<TranspilerNode> processCQLToJinja(String cql) {

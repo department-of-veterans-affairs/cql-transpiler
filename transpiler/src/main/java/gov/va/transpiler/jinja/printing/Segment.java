@@ -8,11 +8,15 @@ import java.util.List;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.TranspilerNode.PrintType;
+import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.standards.Standards;
 
 public class Segment {
 
+    private static final boolean PRINT_LOCATORS = true;
+
     private TranspilerNode fromNode;
+    private String locator;
     private String head = "";
     private List<Segment> body = new ArrayList<>();
     private String tail = "";
@@ -23,6 +27,10 @@ public class Segment {
 
     public TranspilerNode getFromNode() {
         return fromNode;
+    }
+
+    public void setLocator(String locator) {
+        this.locator = locator;
     }
 
     public void setHead(String head) {
@@ -51,61 +59,45 @@ public class Segment {
         return (getFromNode().getPrintType()) == PrintType.Inline && body.stream().allMatch(Segment::printsInline);
     }
 
-    @Override
-    public String toString() {
-        return toString(0);
-    }
-
-    public String toString(int indentLevel) {
-        var sb = new StringBuilder();
-
-        if (getFromNode().getPrintType() == PrintType.Folder || getFromNode().getPrintType() == PrintType.File) {
-            sb.append(indentToLevel(indentLevel));
-            sb.append("-- splits to own ");
-            sb.append(getFromNode().getPrintType());
-            sb.append(":");
-            sb.append(getFromNode().getRelativeFilePath());
-        }
-
-        if (printsInline()) {
-                sb.append(indentToLevel(indentLevel));
-                sb.append(head);
-                for (var item : body) {
-                    sb.append(item.toString(0));
-                }
-                sb.append(tail);
-        } else {
-            sb.append(indentToLevel(indentLevel));
-            sb.append(head);
-            for (var item : body) {
-                sb.append(Standards.NEWLINE);
-                sb.append(item.toString(indentLevel + 1));
-            }
-            sb.append(Standards.NEWLINE);
-            sb.append(indentToLevel(indentLevel));
-            sb.append(tail);
-        }
-
-        return sb.toString();
-    }
-
     public void toFiles(String basePath) throws IOException {
         toFiles(basePath, 0);
     }
 
     public void toFiles(String basePath, int indentLevel) throws IOException {
-        var path = basePath + getFromNode().getRelativeFilePath();
+        var node = getFromNode();
+        var path = basePath + node.getRelativeFilePath();
         File file = new File(path);
 
         // Print this file's contents
-        if (getFromNode().getPrintType() == PrintType.Folder || getFromNode().getPrintType() == PrintType.File) {
+        if (node.getPrintType() == PrintType.Folder || node.getPrintType() == PrintType.File) {
             if (file.exists()) {
                 throw new IOException("File already exists at path: " + path);
             } else {
-                if (getFromNode().getPrintType() == PrintType.Folder) {
+                if (node.getPrintType() == PrintType.Folder) {
                     file.mkdir();
-                } else if (getFromNode().getPrintType() == PrintType.File) {
+                } else if (node.getPrintType() == PrintType.File) {
                     file.createNewFile();
+
+                    if (PRINT_LOCATORS && locator != null) {
+                        var current = node;
+                        do {
+                            current = current.getParent();
+                        } while (!(current == null || current instanceof LibraryNode));
+
+                        if (current instanceof LibraryNode) {
+                            try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+                                outputStream.write(("/* " + ((LibraryNode) current).getReferenceName() + " lines [" + locator + "]").getBytes());
+                                outputStream.write(Standards.NEWLINE.getBytes());
+                                var linesFromFile = Locator.fromString(locator).getLinesFromFile(((LibraryNode) current).getAbsolutePathToLibrary());
+                                for (var line : linesFromFile) {
+                                    outputStream.write(line.getBytes());
+                                    outputStream.write(Standards.NEWLINE.getBytes());
+                                }
+                                outputStream.write("*/".getBytes());
+                                outputStream.write(Standards.NEWLINE.getBytes());
+                            }
+                        }
+                    }
                 }
             }
             for (var item : body) {

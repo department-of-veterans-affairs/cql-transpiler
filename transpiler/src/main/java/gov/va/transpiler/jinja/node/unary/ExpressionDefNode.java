@@ -27,6 +27,7 @@ public class ExpressionDefNode extends Unary<ExpressionDef> {
     @Override
     public Segment toSegment() {
         var expressionFileSegment = new Segment(this);
+        expressionFileSegment.setLocator(getCqlEquivalent().getLocator());
 
         Segment expressionContentsSegment;
         if (getChild().isSimpleValue()) {

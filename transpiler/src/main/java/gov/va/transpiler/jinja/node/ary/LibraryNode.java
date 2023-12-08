@@ -11,11 +11,11 @@ import gov.va.transpiler.jinja.printing.Segment;
 
 public class LibraryNode extends Ary<Library> {
 
+    private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
+
     public LibraryNode(Library t) {
         super(t);
     }
-
-    private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
 
     @Override
     public void addChild(TranspilerNode child) {
@@ -52,5 +52,10 @@ public class LibraryNode extends Ary<Library> {
         var segment = new Segment(this);
         getChildren().stream().forEach(child -> segment.addSegmentToBody(child.toSegment()));
         return segment;
+    }
+
+    public String getAbsolutePathToLibrary() {
+        // TODO
+        return "exlib.cql";
     }
 }
