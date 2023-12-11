@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.cqframework.cql.cql2elm.LibrarySourceProvider;
 import org.hl7.elm.r1.Library;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +15,18 @@ import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
 import gov.va.transpiler.jinja.converter.Converter;
 import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.printing.CQLFileContentRetriever;
+import gov.va.transpiler.jinja.printing.SegmentPrinter;
 
 public class SanboxTest {
 
+    private LibrarySourceProvider provider;
     private CqfCompiler compiler;
 
     @BeforeEach
     public void setup() {
-        compiler = new CqfCompiler(new FileLibrarySourceProvider("./src/test/resources/cql"));
+        provider = new FileLibrarySourceProvider("./src/test/resources/cql");
+        compiler = new CqfCompiler(provider);
     }
 
     @Test
@@ -31,23 +36,11 @@ public class SanboxTest {
             ;
 
         var convertedLibraries = processCQLToJinja(cql);
+        var retriever = new CQLFileContentRetriever(provider, cql);
+        var printer = new SegmentPrinter(retriever);
 
         for (var mapped : convertedLibraries) {
-            mapped.toSegment().toFiles("./");
-        }
-    }
-
-    @Test
-    public void testExpressionRef() throws IOException {
-        String cql = ""
-            + "define myconst_1: 123\n"
-            + "define myconst_2: myconst_1\n"
-            ;
-
-        var convertedLibraries = processCQLToJinja(cql);
-
-        for (var mapped : convertedLibraries) {
-            mapped.toSegment().toFiles("./");
+            printer.toFiles(mapped.toSegment(), "./");
         }
     }
 

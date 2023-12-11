@@ -1,13 +1,7 @@
 package gov.va.transpiler.jinja.printing;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Locator {
 
@@ -48,11 +42,5 @@ public class Locator {
 
     public int getEndCharacter() {
         return endCharacter;
-    }
-
-    public List<String> getLinesFromFile(String absoluteFilePath) throws FileNotFoundException, IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(absoluteFilePath))) {
-            return reader.lines().skip(startLine - 1).limit(endLine - startLine + 1).collect(Collectors.toList());
-        }
     }
 }

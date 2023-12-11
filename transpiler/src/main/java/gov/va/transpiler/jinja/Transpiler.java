@@ -11,11 +11,14 @@ import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
 import gov.va.transpiler.jinja.converter.Converter;
 import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.printing.CQLFileContentRetriever;
+import gov.va.transpiler.jinja.printing.SegmentPrinter;
 
 public class Transpiler {
 
     public static void main(String[] args) throws IOException {
-        var compiler = new CqfCompiler(new FileLibrarySourceProvider("./src/test/resources/cql"));
+        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
+        var compiler = new CqfCompiler(fileLibrarySourceProvider);
         String cql = ""
             + "define myconst_1: 123\n"
             + "define myconst_2: myconst_1\n"
@@ -33,9 +36,11 @@ public class Transpiler {
             var outputNode = converter.convert(library, state);
             convertedLibraries.add(outputNode);
         }
+        var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cql);
 
+        var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
         for (var mapped : convertedLibraries) {
-            mapped.toSegment().toFiles("./");
+           segmentPrinter.toFiles(mapped.toSegment(), "temp/");
         }
     }
 }

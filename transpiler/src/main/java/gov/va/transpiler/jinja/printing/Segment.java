@@ -1,44 +1,30 @@
 package gov.va.transpiler.jinja.printing;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.TranspilerNode.PrintType;
-import gov.va.transpiler.jinja.node.ary.LibraryNode;
-import gov.va.transpiler.jinja.standards.Standards;
 
 public class Segment {
 
-    private static final boolean PRINT_LOCATORS = true;
-
-    private TranspilerNode fromNode;
+    private final List<Segment> body;
+    private final TranspilerNode origin;
     private String locator;
     private String head = "";
-    private List<Segment> body = new ArrayList<>();
     private String tail = "";
 
-    public Segment(TranspilerNode fromNode) {
-        this.fromNode = fromNode;
+    public Segment(TranspilerNode origin) {
+        this.origin = origin;
+        body = new ArrayList<>();
     }
 
-    public TranspilerNode getFromNode() {
-        return fromNode;
+    protected boolean printsInline() {
+        return (getOrigin().getPrintType()) == PrintType.Inline && body.stream().allMatch(Segment::printsInline);
     }
 
-    public void setLocator(String locator) {
-        this.locator = locator;
-    }
-
-    public void setHead(String head) {
-        this.head = head;
-    }
-
-    public void setTail(String tail) {
-        this.tail = tail;
+    public List<Segment> getBody() {
+        return body;
     }
 
     public void addSegmentToBody(Segment segment) {
@@ -47,86 +33,31 @@ public class Segment {
         }
     }
 
-    protected String indentToLevel(int indentLevel) {
-        var sb = new StringBuilder();
-        for (var i = 0; i < indentLevel; i++) {
-            sb.append(Standards.INDENT);
-        }
-        return sb.toString();
+    public TranspilerNode getOrigin() {
+        return origin;
     }
 
-    protected boolean printsInline() {
-        return (getFromNode().getPrintType()) == PrintType.Inline && body.stream().allMatch(Segment::printsInline);
+    public String getLocator() {
+        return locator;
     }
 
-    public void toFiles(String basePath) throws IOException {
-        toFiles(basePath, 0);
+    public void setLocator(String locator) {
+        this.locator = locator;
     }
 
-    public void toFiles(String basePath, int indentLevel) throws IOException {
-        var node = getFromNode();
-        var path = basePath + node.getRelativeFilePath();
-        File file = new File(path);
+    public String getHead() {
+        return head;
+    }
 
-        // Print this file's contents
-        if (node.getPrintType() == PrintType.Folder || node.getPrintType() == PrintType.File) {
-            if (file.exists()) {
-                throw new IOException("File already exists at path: " + path);
-            } else {
-                if (node.getPrintType() == PrintType.Folder) {
-                    file.mkdir();
-                } else if (node.getPrintType() == PrintType.File) {
-                    file.createNewFile();
+    public void setHead(String head) {
+        this.head = head;
+    }
 
-                    if (PRINT_LOCATORS && locator != null) {
-                        var current = node;
-                        do {
-                            current = current.getParent();
-                        } while (!(current == null || current instanceof LibraryNode));
+    public String getTail() {
+        return tail;
+    }
 
-                        if (current instanceof LibraryNode) {
-                            try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-                                outputStream.write(("/* " + ((LibraryNode) current).getReferenceName() + " lines [" + locator + "]").getBytes());
-                                outputStream.write(Standards.NEWLINE.getBytes());
-                                var linesFromFile = Locator.fromString(locator).getLinesFromFile(((LibraryNode) current).getAbsolutePathToLibrary());
-                                for (var line : linesFromFile) {
-                                    outputStream.write(line.getBytes());
-                                    outputStream.write(Standards.NEWLINE.getBytes());
-                                }
-                                outputStream.write("*/".getBytes());
-                                outputStream.write(Standards.NEWLINE.getBytes());
-                            }
-                        }
-                    }
-                }
-            }
-            for (var item : body) {
-                item.toFiles(basePath);
-            }
-        } else {
-            try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-                outputStream.write(indentToLevel(indentLevel).getBytes());
-                if (printsInline()) {
-                    outputStream.write(head.getBytes());
-                } else {
-                    outputStream.write(Standards.NEWLINE.getBytes());
-                    outputStream.write(head.getBytes());
-                }
-            }
-
-            for (var item : body) {
-                item.toFiles(basePath, printsInline() ? 0 : indentLevel + 1);
-            }
-
-            try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-                if (printsInline()) {
-                    outputStream.write(tail.getBytes());
-                } else {
-                    outputStream.write(Standards.NEWLINE.getBytes());
-                    outputStream.write(indentToLevel(indentLevel).getBytes());
-                    outputStream.write(tail.getBytes());
-                }
-            }
-        }
+    public void setTail(String tail) {
+        this.tail = tail;
     }
 }
