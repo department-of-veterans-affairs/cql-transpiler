@@ -20,8 +20,10 @@ public class Transpiler {
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
         String cql = ""
-            + "define myconst_1: 123\n"
-            + "define myconst_2: myconst_1\n"
+            + "library Retrievals version '1.0'\n"
+            + "define function a(val Integer):\n"
+            + "    2 * val\n"
+            + "define b: a(1)\n"
             ;
 
         var libraryList = compiler.compile(cql);
@@ -40,7 +42,7 @@ public class Transpiler {
 
         var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
         for (var mapped : convertedLibraries) {
-           segmentPrinter.toFiles(mapped.toSegment(), "temp/");
+           segmentPrinter.toFiles(mapped.toSegment(), "./");
         }
     }
 }

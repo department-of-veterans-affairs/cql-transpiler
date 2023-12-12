@@ -2,21 +2,12 @@ package gov.va.transpiler.jinja.node.unary;
 
 import org.hl7.elm.r1.ExpressionDef;
 
-import gov.va.transpiler.jinja.node.DisabledNode;
-import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.Segment;
 
 public class ExpressionDefNode extends Unary<ExpressionDef> {
 
     public ExpressionDefNode(ExpressionDef t) {
         super(t);
-    }
-
-    @Override
-    public void addChild(TranspilerNode child) {
-        if (!(child instanceof DisabledNode)) {
-            super.addChild(child);
-        }
     }
 
     @Override

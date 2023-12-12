@@ -44,7 +44,7 @@ public class LibraryNode extends Ary<Library> {
     @Override
     public String getReferenceName() {
         var identifier = getCqlEquivalent().getIdentifier();
-        return identifier.getId() == null ? "Anonymous Library" : identifier.getVersion() == null ? identifier.getId() : identifier.getId() + identifier.getVersion();
+        return identifier.getId() == null ? "Anonymous Library" : identifier.getVersion() == null ? identifier.getId() : identifier.getId() + "_" + identifier.getVersion();
     }
 
     @Override

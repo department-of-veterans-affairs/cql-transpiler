@@ -6,6 +6,7 @@ import java.util.List;
 import org.cqframework.cql.elm.tracking.Trackable;
 
 import gov.va.transpiler.jinja.node.CQLEquivalent;
+import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
 
@@ -19,7 +20,9 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
 
     @Override
     public void addChild(TranspilerNode child) throws UnsupportedChildNodeException {
+    if (!(child instanceof DisabledNode)) {
         children.add(child);
+    }
     }
 
     protected List<TranspilerNode> getChildren() {

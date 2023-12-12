@@ -17,7 +17,7 @@ public class DisabledNode implements TranspilerNode {
     @Override
     public Segment toSegment() {
         var segment = new Segment(this);
-        segment.setHead("Disabled Node");
+        segment.setHead("<Disabled Node>");
         return segment;
     }
 
@@ -43,6 +43,6 @@ public class DisabledNode implements TranspilerNode {
 
     @Override
     public PrintType getPrintType() {
-        return PrintType.Inline;
+        return PrintType.Line;
     }
 }
