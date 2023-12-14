@@ -3,6 +3,7 @@ package gov.va.transpiler.jinja.converter;
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.elm.r1.ExpressionDef;
+import org.hl7.elm.r1.ExpressionRef;
 import org.hl7.elm.r1.FunctionDef;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.Literal;
@@ -14,6 +15,7 @@ import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.UnsupportedNode;
+import gov.va.transpiler.jinja.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.leaf.LiteralNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
@@ -66,6 +68,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         }
         new ExpressionDefNode(state, expressionDef);
         return super.visitExpressionDef(expressionDef, state);
+    }
+
+    @Override
+    public TranspilerNode visitExpressionRef(ExpressionRef expressionRef, State state) {
+        new ExpressionRefNode(state, expressionRef);
+        return super.visitExpressionRef(expressionRef, state);
     }
 
     @Override

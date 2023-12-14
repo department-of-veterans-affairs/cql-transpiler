@@ -44,24 +44,14 @@ public class SegmentPrinter {
                 } else if (node.getPrintType() == PrintType.File) {
                     file.createNewFile();
 
-                    // Print the original CQL text
+                    // Print the original CQL text if locators are specified
                     if (PRINT_LOCATORS && segment.getLocator() != null) {
                         var current = node;
-                        do {
+                        while (current != null) {
                             current = current.getParent();
-                        } while (!(current == null || current instanceof LibraryNode));
-
-                        if (current instanceof LibraryNode) {
-                            try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-                                outputStream.write(("/* " + ((LibraryNode) current).referenceIs() + " lines [" + segment.getLocator() + "]").getBytes());
-                                outputStream.write(Standards.NEWLINE.getBytes());
-                                var linesFromFile = contentRetriever.getTextFromLibrary(((LibraryNode) current).getCqlEquivalent().getIdentifier(), Locator.fromString(segment.getLocator()));
-                                for (var line : linesFromFile) {
-                                    outputStream.write(line.getBytes());
-                                    outputStream.write(Standards.NEWLINE.getBytes());
-                                }
-                                outputStream.write("*/".getBytes());
-                                outputStream.write(Standards.NEWLINE.getBytes());
+                            if (current instanceof LibraryNode) {
+                                printOriginalCQLToFile(file, (LibraryNode) current, segment.getLocator());
+                                break;
                             }
                         }
                     }
@@ -99,6 +89,23 @@ public class SegmentPrinter {
                     outputStream.write(segment.getTail().getBytes());
                 }
             }
+        }
+    }
+
+    protected void printOriginalCQLToFile(File file, LibraryNode libraryNode, String locator) throws IOException {
+        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+            outputStream.write("{% endcomment %}" .getBytes());
+            outputStream.write(Standards.NEWLINE.getBytes());
+            outputStream.write((Standards.INDENT + "// " + libraryNode.referenceIs() + " lines [" + locator + "]").getBytes());
+            var linesFromFile = contentRetriever.getTextFromLibrary(libraryNode.getCqlEquivalent().getIdentifier(), Locator.fromString(locator));
+            for (var line : linesFromFile) {
+                outputStream.write(Standards.NEWLINE.getBytes());
+                outputStream.write(Standards.INDENT.getBytes());
+                outputStream.write(line.getBytes());
+            }
+            outputStream.write(Standards.NEWLINE.getBytes());
+            outputStream.write("{% endcomment %}".getBytes());
+            outputStream.write(Standards.NEWLINE.getBytes());
         }
     }
 }

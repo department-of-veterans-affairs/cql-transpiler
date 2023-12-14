@@ -23,7 +23,7 @@ public class ExpressionRefNode extends Leaf<ExpressionRef> {
     @Override
     public Segment toSegment() {
         var segment = new Segment(this);
-        segment.setHead("{{ " + referenceTo.referenceIs() + " }}");
+        segment.setHead("{% include " + referenceTo.getScope() + " %}");
         return segment;
     }
 
