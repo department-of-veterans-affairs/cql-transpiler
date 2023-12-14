@@ -19,6 +19,7 @@ import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.unary.FunctionDefNode;
+import gov.va.transpiler.jinja.state.State;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     public TranspilerNode convert(Library library, State state) {
@@ -49,8 +50,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     public TranspilerNode visitLibrary(Library library, State state) {
         new LibraryNode(state, library);
-        var returnval = super.visitLibrary(library, state);
-        return returnval;
+        return super.visitLibrary(library, state);
     }
 
     @Override

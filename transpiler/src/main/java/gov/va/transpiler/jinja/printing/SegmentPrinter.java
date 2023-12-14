@@ -31,7 +31,7 @@ public class SegmentPrinter {
 
     public void toFiles(Segment segment, String targetPath, int indentLevel) throws IOException {
         var node = segment.getOrigin();
-        var path = targetPath + node.getRelativeFilePath();
+        var path = targetPath + node.getScope();
         File file = new File(path);
 
         // Print this file's contents
@@ -53,7 +53,7 @@ public class SegmentPrinter {
 
                         if (current instanceof LibraryNode) {
                             try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-                                outputStream.write(("/* " + ((LibraryNode) current).getReferenceName() + " lines [" + segment.getLocator() + "]").getBytes());
+                                outputStream.write(("/* " + ((LibraryNode) current).referenceIs() + " lines [" + segment.getLocator() + "]").getBytes());
                                 outputStream.write(Standards.NEWLINE.getBytes());
                                 var linesFromFile = contentRetriever.getTextFromLibrary(((LibraryNode) current).getCqlEquivalent().getIdentifier(), Locator.fromString(segment.getLocator()));
                                 for (var line : linesFromFile) {

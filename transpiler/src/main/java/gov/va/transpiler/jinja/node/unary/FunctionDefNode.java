@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.hl7.elm.r1.FunctionDef;
 
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.state.State;
 
 public class FunctionDefNode extends Unary<FunctionDef> {
 
@@ -19,6 +19,10 @@ public class FunctionDefNode extends Unary<FunctionDef> {
 
     public FunctionDefNode(State state, FunctionDef t) {
         super(state, t);
+    }
+
+    protected String getNameFromOperand(OperandDefNode operandDefNode) {
+        return operandDefNode.getCqlEquivalent().getName();
     }
 
     @Override
@@ -31,7 +35,7 @@ public class FunctionDefNode extends Unary<FunctionDef> {
         // Create the macro definition
         var sb = new StringBuilder();
         sb.append("{% macro ");
-        sb.append(getCqlEquivalent().getName());
+        sb.append(referenceIs());
         sb.append(" (");
         boolean first = true;;
         for (var operand : operandDefList) {
@@ -40,7 +44,7 @@ public class FunctionDefNode extends Unary<FunctionDef> {
             } else {
                 sb.append(", ");
             }
-            sb.append(operand.getReferenceName());
+            sb.append(getNameFromOperand(operand));
         }
         sb.append(") %}");
         functionContentsSegment.setHead(sb.toString());
@@ -57,7 +61,7 @@ public class FunctionDefNode extends Unary<FunctionDef> {
     public void addChild(TranspilerNode child) {
         if (child instanceof OperandDefNode) {
             operandDefList.add((OperandDefNode) child);
-            nameToOperandDefMap.put(child.getReferenceName(), (OperandDefNode) child);
+            nameToOperandDefMap.put(getNameFromOperand((OperandDefNode) child), (OperandDefNode) child);
         } else {
             super.addChild(child);
         }
@@ -74,12 +78,12 @@ public class FunctionDefNode extends Unary<FunctionDef> {
     }
 
     @Override
-    public PrintType getPrintType() {
-        return PrintType.File;
+    public String referenceIs() {
+        return getCqlEquivalent().getName();
     }
 
     @Override
-    public String getReferenceName() {
-        return getCqlEquivalent().getName();
+    public PrintType getPrintType() {
+        return PrintType.File;
     }
 }

@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.hl7.elm.r1.Library;
 
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.state.State;
 
 public class LibraryNode extends Ary<Library> {
 
@@ -43,7 +43,7 @@ public class LibraryNode extends Ary<Library> {
     }
 
     @Override
-    public String getReferenceName() {
+    public String referenceIs() {
         var identifier = getCqlEquivalent().getIdentifier();
         return identifier.getId() == null ? "Anonymous Library" : identifier.getVersion() == null ? identifier.getId() : identifier.getId() + "_" + identifier.getVersion();
     }
@@ -53,10 +53,5 @@ public class LibraryNode extends Ary<Library> {
         var segment = new Segment(this);
         getChildren().stream().forEach(child -> segment.addSegmentToBody(child.toSegment()));
         return segment;
-    }
-
-    public String getAbsolutePathToLibrary() {
-        // TODO
-        return "exlib.cql";
     }
 }

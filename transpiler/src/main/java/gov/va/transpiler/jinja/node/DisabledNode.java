@@ -1,7 +1,7 @@
 package gov.va.transpiler.jinja.node;
 
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.state.State;
 
 /**
  * Represents a node that CQL does not actually support. E.g., AccessModifier
@@ -11,8 +11,6 @@ public class DisabledNode extends TranspilerNode {
     public DisabledNode(State state) {
         super(state);
     }
-
-    private TranspilerNode parent;
 
     @Override
     public void addChild(TranspilerNode child) throws UnsupportedChildNodeException {
@@ -34,16 +32,6 @@ public class DisabledNode extends TranspilerNode {
     @Override
     public boolean isSimpleValue() {
         return false;
-    }
-
-    @Override
-    public void setParent(TranspilerNode parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public TranspilerNode getParent() {
-        return parent;
     }
 
     @Override

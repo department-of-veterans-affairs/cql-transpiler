@@ -1,14 +1,9 @@
 package gov.va.transpiler.jinja.node;
 
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.standards.Standards;
+import gov.va.transpiler.jinja.state.State;
 
 public abstract class TranspilerNode {
-
-    public TranspilerNode(State state) {
-        state.setCurrentNode(this);
-    }
 
     public enum PrintType {
         Folder,
@@ -17,15 +12,27 @@ public abstract class TranspilerNode {
         Inline
     }
 
+    private TranspilerNode parent;
+
+    public TranspilerNode(State state) {
+        state.setCurrentNode(this);
+    }
+
+    /* TREE CONSTRUCTION */
+
     /**
      * @param parent This node's parent, to allow transversal.
      */
-    public abstract void setParent(TranspilerNode parent);
+    public void setParent(TranspilerNode parent) {
+        this.parent = parent;
+    }
 
     /**
      * @preturn This node's parent.
      */
-    public abstract TranspilerNode getParent();
+    public TranspilerNode getParent() {
+        return parent;
+    }
 
     /**
      * @param child Child to add to this node.
@@ -33,10 +40,7 @@ public abstract class TranspilerNode {
      */
     public abstract void addChild(TranspilerNode child) throws UnsupportedChildNodeException;
 
-    /**
-     * @return A segment to use to print this node.
-     */
-    public abstract Segment toSegment();
+    /* VALUE TYPE */
 
     /**
      * @return whether this represents a table value
@@ -48,33 +52,29 @@ public abstract class TranspilerNode {
      */
     public abstract boolean isSimpleValue();
 
+    /* PRINTING */
+
     /**
      * @return How this node should be printed overall.
      */
-    public abstract PrintType getPrintType();
-
-    /**
-     * @return The name this node can be referenced by. Null if none exists.
-     */
-    public String getReferenceName() {
-        return null;
+    public PrintType getPrintType() {
+        return PrintType.Inline;
     }
 
     /**
      * @return Where this node is located.
      */
-    public String getRelativeFilePath() {
+    public String getScope() {
         var sb = new StringBuilder();
+        // Get the parent's file path
         if (getParent() != null) {
-            sb.append(getParent().getRelativeFilePath());
-        }
-        if (getPrintType() == PrintType.Folder) {
-            sb.append(getReferenceName());
-            sb.append(Standards.FOLDER_SEPARATOR);
-        } else if (getPrintType() == PrintType.File) {
-            // Files are never parents of other files
-            sb.append(getReferenceName());
+            sb.append(getParent().getScope());
         }
         return sb.toString();
     }
+
+    /**
+     * @return A segment to use to print this node.
+     */
+    public abstract Segment toSegment();
 }

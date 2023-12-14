@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 import gov.va.sparkcql.cqf.compiler.CqfCompiler;
 import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
 import gov.va.transpiler.jinja.converter.Converter;
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.CQLFileContentRetriever;
 import gov.va.transpiler.jinja.printing.SegmentPrinter;
+import gov.va.transpiler.jinja.state.State;
 
 public class SanboxTest {
 

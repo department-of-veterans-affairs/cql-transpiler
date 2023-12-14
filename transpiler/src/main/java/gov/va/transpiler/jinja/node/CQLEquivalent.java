@@ -2,16 +2,19 @@ package gov.va.transpiler.jinja.node;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
-import gov.va.transpiler.jinja.converter.State;
+import gov.va.transpiler.jinja.standards.Standards;
+import gov.va.transpiler.jinja.state.State;
 
 public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode {
 
     private T cqlEquivalent;
-    private TranspilerNode parent;
 
     public CQLEquivalent(State state, T cqlEquivalent) {
         super(state);
         this.cqlEquivalent = cqlEquivalent;
+        if (referenceIs() != null) {
+            state.getReferences().put(referenceIs(), this);
+        }
     }
 
     public T getCqlEquivalent() {
@@ -19,12 +22,29 @@ public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode 
     }
 
     @Override
-    public void setParent(TranspilerNode parent) {
-        this.parent = parent;
+    public String getScope() {
+        var scope = super.getScope();
+        // If this node is can be referenced, it creates its own scope.
+        if (referenceIs() != null) {
+            scope += referenceIs();
+            if (getPrintType() == PrintType.Folder) {
+                scope += Standards.FOLDER_SEPARATOR;
+            }
+        }
+        return scope;
     }
 
-    @Override
-    public TranspilerNode getParent() {
-        return parent;
+    /**
+     * @return If this node can be externally referenced, return the name it can be referenced by. Otherwise return null.
+     */
+    public String referenceIs() {
+        return null;
+    }
+
+    /**
+     * @return If this node is a refernce to another, returns the name of that other null. Otherwise returns null.
+     */
+    public String references() {
+        return null;
     }
 }

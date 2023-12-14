@@ -2,8 +2,8 @@ package gov.va.transpiler.jinja.node.ary;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.state.State;
 
 /**
  * Represents a node we don't support yet.
@@ -33,10 +33,5 @@ public class UnsupportedNode extends Ary<Trackable> {
         }
         segment.setTail("]");
         return segment;
-    }
-
-    @Override
-    public PrintType getPrintType() {
-        return PrintType.Inline;
     }
 }

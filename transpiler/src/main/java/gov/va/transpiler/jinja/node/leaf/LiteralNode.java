@@ -2,8 +2,8 @@ package gov.va.transpiler.jinja.node.leaf;
 
 import org.hl7.elm.r1.Literal;
 
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.state.State;
 
 public class LiteralNode extends Leaf<Literal> {
 
@@ -17,16 +17,6 @@ public class LiteralNode extends Leaf<Literal> {
         super(state, t);
     }
 
-    @Override
-    public boolean isTable() {
-        return false;
-    }
-
-    @Override
-    public boolean isSimpleValue() {
-        return true;
-    }
-
     public LiteralType getTypeForLiteral() {
         switch (getCqlEquivalent().getResultType().toString()) {
             case "System.Integer" :
@@ -36,6 +26,16 @@ public class LiteralNode extends Leaf<Literal> {
             default:
         }
         return LiteralType.Unsupported;
+    }
+
+    @Override
+    public boolean isTable() {
+        return false;
+    }
+
+    @Override
+    public boolean isSimpleValue() {
+        return true;
     }
 
     @Override
@@ -54,10 +54,5 @@ public class LiteralNode extends Leaf<Literal> {
                 break;
         }
         return segment;
-    }
-
-    @Override
-    public PrintType getPrintType() {
-        return PrintType.Inline;
     }
 }

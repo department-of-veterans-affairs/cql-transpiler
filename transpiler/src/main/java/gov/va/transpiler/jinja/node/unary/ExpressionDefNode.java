@@ -2,8 +2,8 @@ package gov.va.transpiler.jinja.node.unary;
 
 import org.hl7.elm.r1.ExpressionDef;
 
-import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.state.State;
 
 public class ExpressionDefNode extends Unary<ExpressionDef> {
 
@@ -41,12 +41,12 @@ public class ExpressionDefNode extends Unary<ExpressionDef> {
     }
 
     @Override
-    public PrintType getPrintType() {
-        return PrintType.File;
+    public String referenceIs() {
+        return getCqlEquivalent().getName();
     }
 
     @Override
-    public String getReferenceName() {
-        return getCqlEquivalent().getName();
+    public PrintType getPrintType() {
+        return PrintType.File;
     }
 }
