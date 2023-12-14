@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hl7.elm.r1.Library;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
@@ -13,8 +14,8 @@ public class LibraryNode extends Ary<Library> {
 
     private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
 
-    public LibraryNode(Library t) {
-        super(t);
+    public LibraryNode(State state, Library t) {
+        super(state, t);
     }
 
     @Override

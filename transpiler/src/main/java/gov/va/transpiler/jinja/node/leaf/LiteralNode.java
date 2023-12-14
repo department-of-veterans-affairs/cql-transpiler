@@ -2,6 +2,7 @@ package gov.va.transpiler.jinja.node.leaf;
 
 import org.hl7.elm.r1.Literal;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
 
 public class LiteralNode extends Leaf<Literal> {
@@ -12,8 +13,8 @@ public class LiteralNode extends Leaf<Literal> {
         String
     }
 
-    public LiteralNode(Literal t) {
-        super(t);
+    public LiteralNode(State state, Literal t) {
+        super(state, t);
     }
 
     @Override

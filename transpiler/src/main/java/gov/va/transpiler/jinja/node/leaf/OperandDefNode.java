@@ -2,12 +2,13 @@ package gov.va.transpiler.jinja.node.leaf;
 
 import org.hl7.elm.r1.OperandDef;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
 
 public class OperandDefNode extends Leaf<OperandDef> {
 
-    public OperandDefNode(OperandDef t) {
-        super(t);
+    public OperandDefNode(State state, OperandDef t) {
+        super(state, t);
     }
 
     @Override

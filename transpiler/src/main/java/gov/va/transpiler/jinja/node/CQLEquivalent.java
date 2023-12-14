@@ -2,13 +2,16 @@ package gov.va.transpiler.jinja.node;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
-public abstract class CQLEquivalent<T extends Trackable> implements TranspilerNode {
+import gov.va.transpiler.jinja.converter.State;
+
+public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode {
 
     private T cqlEquivalent;
     private TranspilerNode parent;
 
-    public CQLEquivalent(T t) {
-        cqlEquivalent = t;
+    public CQLEquivalent(State state, T cqlEquivalent) {
+        super(state);
+        this.cqlEquivalent = cqlEquivalent;
     }
 
     public T getCqlEquivalent() {

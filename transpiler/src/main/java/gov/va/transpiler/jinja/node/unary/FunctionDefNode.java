@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.hl7.elm.r1.FunctionDef;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
@@ -16,8 +17,8 @@ public class FunctionDefNode extends Unary<FunctionDef> {
     private List<OperandDefNode> operandDefList = new ArrayList<>();
     private Map<String, OperandDefNode> nameToOperandDefMap = new LinkedHashMap<>();
 
-    public FunctionDefNode(FunctionDef t) {
-        super(t);
+    public FunctionDefNode(State state, FunctionDef t) {
+        super(state, t);
     }
 
     @Override

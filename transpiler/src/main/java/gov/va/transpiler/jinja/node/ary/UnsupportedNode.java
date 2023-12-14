@@ -2,6 +2,7 @@ package gov.va.transpiler.jinja.node.ary;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
 
 /**
@@ -9,8 +10,8 @@ import gov.va.transpiler.jinja.printing.Segment;
  */
 public class UnsupportedNode extends Ary<Trackable> {
 
-    public UnsupportedNode(Trackable t) {
-        super(t);
+    public UnsupportedNode(State state, Trackable t) {
+        super(state, t);
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
@@ -14,8 +15,8 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
 
     private final List<TranspilerNode> children = new ArrayList<>();
 
-    public Ary(T t) {
-        super(t);
+    public Ary(State state, T t) {
+        super(state, t);
     }
 
     @Override

@@ -2,6 +2,7 @@ package gov.va.transpiler.jinja.node.leaf;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
@@ -9,8 +10,8 @@ import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
 
 public abstract class Leaf<T extends Trackable> extends CQLEquivalent<T>  {
 
-    public Leaf(T t) {
-        super(t);
+    public Leaf(State state, T t) {
+        super(state, t);
     }
 
     @Override

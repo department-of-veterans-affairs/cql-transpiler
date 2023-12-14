@@ -1,11 +1,16 @@
 package gov.va.transpiler.jinja.node;
 
+import gov.va.transpiler.jinja.converter.State;
 import gov.va.transpiler.jinja.printing.Segment;
 
 /**
  * Represents a node that CQL does not actually support. E.g., AccessModifier
  */
-public class DisabledNode implements TranspilerNode {
+public class DisabledNode extends TranspilerNode {
+
+    public DisabledNode(State state) {
+        super(state);
+    }
 
     private TranspilerNode parent;
 

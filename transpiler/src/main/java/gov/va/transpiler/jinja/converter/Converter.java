@@ -21,7 +21,6 @@ import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.unary.FunctionDefNode;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
-    
     public TranspilerNode convert(Library library, State state) {
         return visitElement(library, state);
     }
@@ -31,13 +30,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         var current = state.getCurrentNode();
         if (current == null) {
             if (elm == null) {
-                current = new DisabledNode();
+                current = new DisabledNode(state);
             } else {
-                current = new UnsupportedNode(elm);
+                current = new UnsupportedNode(state, elm);
             }
-        } else {
-            state.setCurrentNode(null);
         }
+        state.setCurrentNode(null);
         return current;
     }
 
@@ -50,16 +48,14 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitLibrary(Library library, State state) {
-        var currentNode = new LibraryNode(library);
-        state.setCurrentNode(currentNode);
+        new LibraryNode(state, library);
         var returnval = super.visitLibrary(library, state);
         return returnval;
     }
 
     @Override
     public TranspilerNode visitUsingDef(UsingDef usingdef, State state) {
-        var currentNode = new UsingDefNode(usingdef);
-        state.setCurrentNode(currentNode);
+        new UsingDefNode(state, usingdef);
         return super.visitUsingDef(usingdef, state);
     }
 
@@ -68,34 +64,32 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         if (expressionDef instanceof FunctionDef) {
             return super.visitExpressionDef((FunctionDef) expressionDef, state);
         }
-        var currentNode = new ExpressionDefNode(expressionDef);
-        state.setCurrentNode(currentNode);
+        new ExpressionDefNode(state, expressionDef);
         return super.visitExpressionDef(expressionDef, state);
     }
 
     @Override
     public TranspilerNode visitFunctionDef(FunctionDef functionDef, State state) {
-        var currentNode = new FunctionDefNode(functionDef);
-        state.setCurrentNode(currentNode);
+        new FunctionDefNode(state, functionDef);
         return super.visitFunctionDef(functionDef, state);
     }
 
     @Override
     public TranspilerNode visitOperandDef(OperandDef operandDef, State state) {
-        var currentNode = new OperandDefNode(operandDef);
-        state.setCurrentNode(currentNode);
+        new OperandDefNode(state, operandDef);
         return super.visitOperandDef(operandDef, state);
     }
 
     @Override
     public TranspilerNode visitTypeSpecifier(TypeSpecifier typeSpecifier, State state) {
-        return new DisabledNode();
+        var current = new DisabledNode(state);
+        state.setCurrentNode(null);
+        return current;
     }
 
     @Override
     public TranspilerNode visitLiteral(Literal literal, State state) {
-        var currentNode = new LiteralNode(literal);
-        state.setCurrentNode(currentNode);
+        new LiteralNode(state, literal);
         return super.visitLiteral(literal, state);
     }
 }
