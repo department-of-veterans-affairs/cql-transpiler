@@ -2,25 +2,93 @@ package gov.va.transpiler.jinja.converter;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
+import org.hl7.elm.r1.AliasedQuerySource;
+import org.hl7.elm.r1.As;
+import org.hl7.elm.r1.ByExpression;
+import org.hl7.elm.r1.Concatenate;
+import org.hl7.elm.r1.ContextDef;
+import org.hl7.elm.r1.Count;
+import org.hl7.elm.r1.DateFrom;
+import org.hl7.elm.r1.DateTime;
+import org.hl7.elm.r1.DifferenceBetween;
+import org.hl7.elm.r1.End;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
+import org.hl7.elm.r1.Flatten;
 import org.hl7.elm.r1.FunctionDef;
+import org.hl7.elm.r1.IdentifierRef;
+import org.hl7.elm.r1.If;
+import org.hl7.elm.r1.IncludeDef;
+import org.hl7.elm.r1.Interval;
+import org.hl7.elm.r1.IntervalTypeSpecifier;
 import org.hl7.elm.r1.Library;
+import org.hl7.elm.r1.List;
 import org.hl7.elm.r1.Literal;
+import org.hl7.elm.r1.NamedTypeSpecifier;
+import org.hl7.elm.r1.Negate;
+import org.hl7.elm.r1.Not;
+import org.hl7.elm.r1.Null;
 import org.hl7.elm.r1.OperandDef;
+import org.hl7.elm.r1.OperandRef;
+import org.hl7.elm.r1.ParameterDef;
+import org.hl7.elm.r1.ParameterRef;
+import org.hl7.elm.r1.Property;
+import org.hl7.elm.r1.Query;
+import org.hl7.elm.r1.Retrieve;
+import org.hl7.elm.r1.ReturnClause;
+import org.hl7.elm.r1.Start;
+import org.hl7.elm.r1.ToDate;
+import org.hl7.elm.r1.ToDecimal;
+import org.hl7.elm.r1.Tuple;
+import org.hl7.elm.r1.TupleElement;
 import org.hl7.elm.r1.TypeSpecifier;
+import org.hl7.elm.r1.Union;
 import org.hl7.elm.r1.UsingDef;
 
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.ary.LibraryNode;
-import gov.va.transpiler.jinja.node.ary.UnsupportedNode;
+import gov.va.transpiler.jinja.node.ary.ListNode;
 import gov.va.transpiler.jinja.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.leaf.LiteralNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.unary.FunctionDefNode;
+import gov.va.transpiler.jinja.node.unsupported.AliasedQuerySourceNode;
+import gov.va.transpiler.jinja.node.unsupported.AsNode;
+import gov.va.transpiler.jinja.node.unsupported.ByExpressionNode;
+import gov.va.transpiler.jinja.node.unsupported.ConcatenateNode;
+import gov.va.transpiler.jinja.node.unsupported.ContextDefNode;
+import gov.va.transpiler.jinja.node.unsupported.CountNode;
+import gov.va.transpiler.jinja.node.unsupported.DateFromNode;
+import gov.va.transpiler.jinja.node.unsupported.DateTimeNode;
+import gov.va.transpiler.jinja.node.unsupported.DifferenceBetweenNode;
+import gov.va.transpiler.jinja.node.unsupported.EndNode;
+import gov.va.transpiler.jinja.node.unsupported.FlattenNode;
+import gov.va.transpiler.jinja.node.unsupported.IdentifierRefNode;
+import gov.va.transpiler.jinja.node.unsupported.IfNode;
+import gov.va.transpiler.jinja.node.unsupported.IncludeDefNode;
+import gov.va.transpiler.jinja.node.unsupported.IntervalNode;
+import gov.va.transpiler.jinja.node.unsupported.IntervalTypeSpecifierNode;
+import gov.va.transpiler.jinja.node.unsupported.NamedTypeSpecifierNode;
+import gov.va.transpiler.jinja.node.unsupported.NegateNode;
+import gov.va.transpiler.jinja.node.unsupported.NotNode;
+import gov.va.transpiler.jinja.node.unsupported.NullNode;
+import gov.va.transpiler.jinja.node.unsupported.OperandRefNode;
+import gov.va.transpiler.jinja.node.unsupported.ParameterDefNode;
+import gov.va.transpiler.jinja.node.unsupported.ParameterRefNode;
+import gov.va.transpiler.jinja.node.unsupported.PropertyNode;
+import gov.va.transpiler.jinja.node.unsupported.QueryNode;
+import gov.va.transpiler.jinja.node.unsupported.RetrieveNode;
+import gov.va.transpiler.jinja.node.unsupported.ReturnClauseNode;
+import gov.va.transpiler.jinja.node.unsupported.StartNode;
+import gov.va.transpiler.jinja.node.unsupported.ToDateNode;
+import gov.va.transpiler.jinja.node.unsupported.ToDecimalNode;
+import gov.va.transpiler.jinja.node.unsupported.TupleElementNode;
+import gov.va.transpiler.jinja.node.unsupported.TupleNode;
+import gov.va.transpiler.jinja.node.unsupported.UnionNode;
+import gov.va.transpiler.jinja.node.unsupported.UnsupportedNode;
 import gov.va.transpiler.jinja.state.State;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
@@ -50,54 +118,258 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
-    public TranspilerNode visitLibrary(Library library, State state) {
-        new LibraryNode(state, library);
-        return super.visitLibrary(library, state);
+    public TranspilerNode visitLibrary(Library element, State state) {
+        new LibraryNode(state, element);
+        return super.visitLibrary(element, state);
     }
 
     @Override
-    public TranspilerNode visitUsingDef(UsingDef usingdef, State state) {
-        new UsingDefNode(state, usingdef);
-        return super.visitUsingDef(usingdef, state);
-    }
-
-    @Override
-    public TranspilerNode visitExpressionDef(ExpressionDef expressionDef, State state) {
-        if (expressionDef instanceof FunctionDef) {
-            return super.visitExpressionDef((FunctionDef) expressionDef, state);
+    public TranspilerNode visitExpressionDef(ExpressionDef element, State state) {
+        if (element instanceof FunctionDef) {
+            return super.visitExpressionDef((FunctionDef) element, state);
         }
-        new ExpressionDefNode(state, expressionDef);
-        return super.visitExpressionDef(expressionDef, state);
+        new ExpressionDefNode(state, element);
+        return super.visitExpressionDef(element, state);
     }
 
     @Override
-    public TranspilerNode visitExpressionRef(ExpressionRef expressionRef, State state) {
-        new ExpressionRefNode(state, expressionRef);
-        return super.visitExpressionRef(expressionRef, state);
+    public TranspilerNode visitExpressionRef(ExpressionRef element, State state) {
+        new ExpressionRefNode(state, element);
+        return super.visitExpressionRef(element, state);
     }
 
     @Override
-    public TranspilerNode visitFunctionDef(FunctionDef functionDef, State state) {
-        new FunctionDefNode(state, functionDef);
-        return super.visitFunctionDef(functionDef, state);
+    public TranspilerNode visitFunctionDef(FunctionDef element, State state) {
+        new FunctionDefNode(state, element);
+        return super.visitFunctionDef(element, state);
     }
 
     @Override
-    public TranspilerNode visitOperandDef(OperandDef operandDef, State state) {
-        new OperandDefNode(state, operandDef);
-        return super.visitOperandDef(operandDef, state);
+    public TranspilerNode visitOperandDef(OperandDef element, State state) {
+        new OperandDefNode(state, element);
+        return super.visitOperandDef(element, state);
     }
 
     @Override
-    public TranspilerNode visitTypeSpecifier(TypeSpecifier typeSpecifier, State state) {
+    public TranspilerNode visitTypeSpecifier(TypeSpecifier element, State state) {
         var current = new DisabledNode(state);
         state.setCurrentNode(null);
         return current;
     }
 
     @Override
-    public TranspilerNode visitLiteral(Literal literal, State state) {
-        new LiteralNode(state, literal);
-        return super.visitLiteral(literal, state);
+    public TranspilerNode visitLiteral(Literal element, State state) {
+        new LiteralNode(state, element);
+        return super.visitLiteral(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitAliasedQuerySource(AliasedQuerySource element, State state) {
+        new AliasedQuerySourceNode(state, element);
+        return super.visitAliasedQuerySource(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitAs(As element, State state) {
+        new AsNode(state, element);
+        return super.visitAs(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitByExpression(ByExpression element, State state) {
+        new ByExpressionNode(state, element);
+        return super.visitByExpression(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitConcatenate(Concatenate element, State state) {
+        new ConcatenateNode(state, element);
+        return super.visitConcatenate(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitContextDef(ContextDef element, State state) {
+        new ContextDefNode(state, element);
+        return super.visitContextDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitCount(Count element, State state) {
+        new CountNode(state, element);
+        return super.visitCount(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitDateFrom(DateFrom element, State state) {
+        new DateFromNode(state, element);
+        return super.visitDateFrom(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitDateTime(DateTime element, State state) {
+        new DateTimeNode(state, element);
+        return super.visitDateTime(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitDifferenceBetween(DifferenceBetween element, State state) {
+        new DifferenceBetweenNode(state, element);
+        return super.visitDifferenceBetween(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitEnd(End element, State state) {
+        new EndNode(state, element);
+        return super.visitEnd(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitFlatten(Flatten element, State state) {
+        new FlattenNode(state, element);
+        return super.visitFlatten(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitIdentifierRef(IdentifierRef element, State state) {
+        new IdentifierRefNode(state, element);
+        return super.visitIdentifierRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitIf(If element, State state) {
+        new IfNode(state, element);
+        return super.visitIf(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitIncludeDef(IncludeDef element, State state) {
+        new IncludeDefNode(state, element);
+        return super.visitIncludeDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitInterval(Interval element, State state) {
+        new IntervalNode(state, element);
+        return super.visitInterval(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {
+        new IntervalTypeSpecifierNode(state, element);
+        return super.visitIntervalTypeSpecifier(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitList(List element, State state) {
+        new ListNode(state, element);
+        return super.visitList(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitNamedTypeSpecifier(NamedTypeSpecifier element, State state) {
+        new NamedTypeSpecifierNode(state, element);
+        return super.visitNamedTypeSpecifier(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitNegate(Negate element, State state) {
+        new NegateNode(state, element);
+        return super.visitNegate(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitNot(Not element, State state) {
+        new NotNode(state, element);
+        return super.visitNot(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitNull(Null element, State state) {
+        new NullNode(state, element);
+        return super.visitNull(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitOperandRef(OperandRef element, State state) {
+        new OperandRefNode(state, element);
+        return super.visitOperandRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitParameterDef(ParameterDef element, State state) {
+        new ParameterDefNode(state, element);
+        return super.visitParameterDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitParameterRef(ParameterRef element, State state) {
+        new ParameterRefNode(state, element);
+        return super.visitParameterRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitProperty(Property element, State state) {
+        new PropertyNode(state, element);
+        return super.visitProperty(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitQuery(Query element, State state) {
+        new QueryNode(state, element);
+        return super.visitQuery(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitRetrieve(Retrieve element, State state) {
+        new RetrieveNode(state, element);
+        return super.visitRetrieve(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitReturnClause(ReturnClause element, State state) {
+        new ReturnClauseNode(state, element);
+        return super.visitReturnClause(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitStart(Start element, State state) {
+        new StartNode(state, element);
+        return super.visitStart(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitToDate(ToDate element, State state) {
+        new ToDateNode(state, element);
+        return super.visitToDate(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitToDecimal(ToDecimal element, State state) {
+        new ToDecimalNode(state, element);
+        return super.visitToDecimal(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitTupleElement(TupleElement element, State state) {
+        new TupleElementNode(state, element);
+        return super.visitTupleElement(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitTuple(Tuple element, State state) {
+        new TupleNode(state, element);
+        return super.visitTuple(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitUnion(Union element, State state) {
+        new UnionNode(state, element);
+        return super.visitUnion(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitUsingDef(UsingDef element, State state) {
+        new UsingDefNode(state, element);
+        return super.visitUsingDef(element, state);
     }
 }

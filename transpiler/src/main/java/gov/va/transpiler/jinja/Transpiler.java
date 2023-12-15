@@ -20,9 +20,10 @@ public class Transpiler {
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
         String cql = ""
-            + "library Retrievals version '1.0'\n"
-            + "define a: 1\n"
-            + "define b: a\n"
+            + "define myconst_1: 1\n"
+            + "define myconst_2: {}\n"
+            + "define myconst_3: { myconst_1 }\n"
+            + "define myconst_4: { 1, myconst_1 }\n"
             ;
 
         var libraryList = compiler.compile(cql);

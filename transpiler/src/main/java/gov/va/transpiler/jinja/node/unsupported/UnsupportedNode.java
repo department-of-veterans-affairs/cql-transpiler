@@ -1,7 +1,8 @@
-package gov.va.transpiler.jinja.node.ary;
+package gov.va.transpiler.jinja.node.unsupported;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
+import gov.va.transpiler.jinja.node.ary.Ary;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
@@ -27,7 +28,7 @@ public class UnsupportedNode extends Ary<Trackable> {
     @Override
     public Segment toSegment() {
         var segment = new Segment(this);
-        segment.setHead("Unsupported Node from type {" + getCqlEquivalent() + "} with children [");
+        segment.setHead("Unsupported Node from type {" + getCqlEquivalent().getClass() + "} with children [");
         for (var child : getChildren()) {
             segment.addSegmentToBody(child.toSegment());
         }

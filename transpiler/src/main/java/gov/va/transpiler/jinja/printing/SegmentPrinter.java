@@ -94,7 +94,7 @@ public class SegmentPrinter {
 
     protected void printOriginalCQLToFile(File file, LibraryNode libraryNode, String locator) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-            outputStream.write("{% endcomment %}" .getBytes());
+            outputStream.write("{% comment %}" .getBytes());
             outputStream.write(Standards.NEWLINE.getBytes());
             outputStream.write((Standards.INDENT + "// " + libraryNode.referenceIs() + " lines [" + locator + "]").getBytes());
             var linesFromFile = contentRetriever.getTextFromLibrary(libraryNode.getCqlEquivalent().getIdentifier(), Locator.fromString(locator));
