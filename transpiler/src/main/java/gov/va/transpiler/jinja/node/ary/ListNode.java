@@ -35,14 +35,14 @@ public class ListNode extends Ary<List> {
             boolean firstChild = true;
             boolean onlyChild = getChildren().size() == 1;
             for (var child : getChildren()) {
-                var childContainer = containerizer.childToSegmentContainerizingIfSimpleValue(child);
+                Segment childSegment = containerizer.childToSegmentContainerizing(child);
                 if (onlyChild) {
-                    topLevel.addSegmentToBody(childContainer);
+                    topLevel.addSegmentToBody(childSegment);
                 } else {
                     var unionContainer = new Segment(child);
                     unionContainer.setHead(firstChild ? "(" : " UNION (");
                     unionContainer.setTail(")");
-                    unionContainer.addSegmentToBody(childContainer);
+                    unionContainer.addSegmentToBody(childSegment);
                     topLevel.addSegmentToBody(unionContainer);
                 }
                 firstChild = false;

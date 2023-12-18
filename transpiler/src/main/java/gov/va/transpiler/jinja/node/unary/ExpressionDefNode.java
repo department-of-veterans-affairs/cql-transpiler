@@ -21,7 +21,12 @@ public class ExpressionDefNode extends Unary<ExpressionDef> {
         var expressionFileSegment = new Segment(this);
         expressionFileSegment.setLocator(getCqlEquivalent().getLocator());
 
-        Segment expressionContentsSegment = containerizer.childToSegmentContainerizingIfSimpleValue(getChild());
+        Segment expressionContentsSegment;
+        if (getChild().isSimpleValue()) {
+            expressionContentsSegment = containerizer.containerizeSimpleValue(getChild());
+        } else {
+            expressionContentsSegment = getChild().toSegment();
+        }
         expressionFileSegment.addSegmentToBody(expressionContentsSegment);
 
         return expressionFileSegment;

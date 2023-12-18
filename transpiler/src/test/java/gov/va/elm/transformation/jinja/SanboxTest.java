@@ -3,7 +3,6 @@ package gov.va.elm.transformation.jinja;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import org.cqframework.cql.cql2elm.LibrarySourceProvider;
 import org.hl7.elm.r1.Library;
@@ -20,31 +19,10 @@ import gov.va.transpiler.jinja.state.State;
 
 public class SanboxTest {
 
-    private LibrarySourceProvider provider;
-    private CqfCompiler compiler;
+    private void processCQL(String cql) throws IOException {
+        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
+        var compiler = new CqfCompiler(fileLibrarySourceProvider);
 
-    @BeforeEach
-    public void setup() {
-        provider = new FileLibrarySourceProvider("./src/test/resources/cql");
-        compiler = new CqfCompiler(provider);
-    }
-
-    @Test
-    public void testExpressionDefLiteral() throws IOException {
-        String cql = ""
-            + "define myconst_1: 123\n"
-            ;
-
-        var convertedLibraries = processCQLToJinja(cql);
-        var retriever = new CQLFileContentRetriever(provider, cql);
-        var printer = new SegmentPrinter(retriever);
-
-        for (var mapped : convertedLibraries) {
-            printer.toFiles(mapped.toSegment(), "./");
-        }
-    }
-
-    private List<TranspilerNode> processCQLToJinja(String cql) {
         var libraryList = compiler.compile(cql);
         // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them
         Collections.reverse(libraryList);
@@ -57,7 +35,20 @@ public class SanboxTest {
             var outputNode = converter.convert(library, state);
             convertedLibraries.add(outputNode);
         }
+        var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cql);
 
-        return convertedLibraries;
+        var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
+        for (var mapped : convertedLibraries) {
+           segmentPrinter.toFiles(mapped.toSegment(), "./");
+        }
+    }
+
+    @Test
+    public void testExpressionDefLiteral() throws IOException {
+        String cql = ""
+            + "using FHIR version '4.0.1'\n"
+            + "define var: [Encounter]\n"            ;
+
+        processCQL(cql);
     }
 }

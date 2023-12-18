@@ -17,12 +17,13 @@ import gov.va.transpiler.jinja.state.State;
 public class Transpiler {
 
     public static void main(String[] args) throws IOException {
-        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
-        var compiler = new CqfCompiler(fileLibrarySourceProvider);
         String cql = ""
             + "using FHIR version '4.0.1'\n"
-            + "define var: [Encounter]\n"
+            + "define var: {[Encounter]}\n"
             ;
+
+        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
+        var compiler = new CqfCompiler(fileLibrarySourceProvider);
 
         var libraryList = compiler.compile(cql);
         // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them
