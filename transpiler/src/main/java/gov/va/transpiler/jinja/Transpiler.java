@@ -20,10 +20,8 @@ public class Transpiler {
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
         String cql = ""
-            + "define myconst_1: 1\n"
-            + "define myconst_2: {}\n"
-            + "define myconst_3: { myconst_1 }\n"
-            + "define myconst_4: { 1, myconst_1 }\n"
+            + "using FHIR version '4.0.1'\n"
+            + "define var: [Encounter]\n"
             ;
 
         var libraryList = compiler.compile(cql);
