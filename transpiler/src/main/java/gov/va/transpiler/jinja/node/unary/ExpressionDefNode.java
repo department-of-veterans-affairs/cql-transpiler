@@ -21,15 +21,7 @@ public class ExpressionDefNode extends Unary<ExpressionDef> {
         var expressionFileSegment = new Segment(this);
         expressionFileSegment.setLocator(getCqlEquivalent().getLocator());
 
-        Segment expressionContentsSegment;
-        if (getChild().isSimpleValue()) {
-            expressionContentsSegment = new Segment(getChild());
-            expressionContentsSegment.setHead("SELECT ");
-            expressionContentsSegment.setTail(" _val");
-            expressionContentsSegment.addSegmentToBody(getChild().toSegment());
-        } else {
-            expressionContentsSegment = getChild().toSegment();
-        }
+        Segment expressionContentsSegment = containerizer.childToSegmentContainerizingIfSimpleValue(getChild());
         expressionFileSegment.addSegmentToBody(expressionContentsSegment);
 
         return expressionFileSegment;

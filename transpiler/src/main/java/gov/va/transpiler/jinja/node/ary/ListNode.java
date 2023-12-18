@@ -2,7 +2,6 @@ package gov.va.transpiler.jinja.node.ary;
 
 import org.hl7.elm.r1.List;
 
-import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
@@ -23,18 +22,6 @@ public class ListNode extends Ary<List> {
         return false;
     }
 
-    protected Segment containerSegmentForChild(TranspilerNode child, boolean isFirstChild) {
-        var segment = new Segment(child);
-        if (!isFirstChild) {
-            segment.setHead(" UNION (");
-        } else {
-            segment.setHead("(");
-        }
-        segment.addSegmentToBody(child.toSegment());
-        segment.setTail(")");
-        return segment;
-    }
-
     @Override
     public Segment toSegment() {
         var topLevel = new Segment(this);
@@ -45,10 +32,20 @@ public class ListNode extends Ary<List> {
             emptySegment.setHead(Standards.EMPTY_TABLE);
             topLevel.addSegmentToBody(emptySegment);
         } else {
-            boolean first = true;
+            boolean firstChild = true;
+            boolean onlyChild = getChildren().size() == 1;
             for (var child : getChildren()) {
-                topLevel.addSegmentToBody(containerSegmentForChild(child, first));
-                first = false;
+                var childContainer = containerizer.childToSegmentContainerizingIfSimpleValue(child);
+                if (onlyChild) {
+                    topLevel.addSegmentToBody(childContainer);
+                } else {
+                    var unionContainer = new Segment(child);
+                    unionContainer.setHead(firstChild ? "(" : " UNION (");
+                    unionContainer.setTail(")");
+                    unionContainer.addSegmentToBody(childContainer);
+                    topLevel.addSegmentToBody(unionContainer);
+                }
+                firstChild = false;
             }
         }
 
