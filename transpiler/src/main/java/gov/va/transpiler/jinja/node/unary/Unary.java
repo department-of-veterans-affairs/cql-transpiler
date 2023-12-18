@@ -32,6 +32,11 @@ public abstract class Unary<T extends Trackable> extends CQLEquivalent<T> {
         return getChild().isSimpleValue();
     }
 
+    @Override
+    public boolean isTable() {
+        return getChild().isTable();
+    }
+
     protected TranspilerNode getChild() {
         return child;
     }

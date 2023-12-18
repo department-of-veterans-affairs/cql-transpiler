@@ -33,11 +33,6 @@ public class ExpressionDefNode extends Unary<ExpressionDef> {
     }
 
     @Override
-    public boolean isTable() {
-        return getChild().isTable();
-    }
-
-    @Override
     public String referenceIs() {
         return getCqlEquivalent().getName();
     }

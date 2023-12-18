@@ -68,16 +68,6 @@ public class FunctionDefNode extends Unary<FunctionDef> {
     }
 
     @Override
-    public boolean isTable() {
-        return getChild().isTable();
-    }
-
-    @Override
-    public boolean isSimpleValue() {
-        return getChild().isTable();
-    }
-
-    @Override
     public String referenceIs() {
         return getCqlEquivalent().getName();
     }

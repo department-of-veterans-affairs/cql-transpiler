@@ -66,17 +66,19 @@ public class SegmentPrinter {
             // Print this segment's head
             try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
                 outputStream.write(indentToLevel(indentLevel).getBytes());
-                if (segment.printsInline()) {
-                    outputStream.write(segment.getHead().getBytes());
-                } else {
-                    outputStream.write(Standards.NEWLINE.getBytes());
-                    outputStream.write(segment.getHead().getBytes());
-                }
+                outputStream.write(segment.getHead().getBytes());
             }
 
-            // recursively print this item's children as files
+            // recursively print this item's children
             for (var item : segment.getBody()) {
-                toFiles(item, targetPath, segment.printsInline() ? 0 : indentLevel + 1);
+                if (segment.printsInline()) {
+                    toFiles(item, targetPath, 0);
+                } else {
+                    try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+                        outputStream.write(Standards.NEWLINE.getBytes());
+                    }
+                    toFiles(item, targetPath, indentLevel + 1);
+                }
             }
 
             // Print this segment's tail
