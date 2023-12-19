@@ -18,8 +18,10 @@ public class Transpiler {
 
     public static void main(String[] args) throws IOException {
         String cql = ""
-        + "using FHIR version '4.0.1'\n"
-        + "define a: {foo: 1, bar: [Encounter]}\n"
+        + "library Retrievals version '1.0'\n"
+        + "define function a(val Integer):\n"
+        + "    2 * val\n"
+        + "define b: a(1)\n"
             ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");

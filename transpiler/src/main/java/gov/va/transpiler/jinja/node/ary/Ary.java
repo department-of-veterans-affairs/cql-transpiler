@@ -38,7 +38,7 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
     }
 
     public PrintType getPrintType() {
-        if (getChildren().size() > 1) {
+        if (getChildren().size() > 3) {
             return PrintType.Line;
         }
         return PrintType.Inline;
