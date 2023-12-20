@@ -36,6 +36,6 @@ public class TupleNode extends Ary<Tuple> {
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren("SELECT struct(*) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (", ")", ", ");
+        return toSegmentWithJoinedChildren("SELECT struct(*) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (", ")", "(", ")", ", ", ",");
     }
 }

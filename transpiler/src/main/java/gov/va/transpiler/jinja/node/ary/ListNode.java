@@ -30,6 +30,6 @@ public class ListNode extends Ary<List> {
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren("SELECT collect_list(" + Standards.SINGLE_VALUE_COLUMN_NAME + ") AS " + Standards.SINGLE_VALUE_COLUMN_NAME + " FROM (", ")", " UNION ");
+        return toSegmentWithJoinedChildren("SELECT collect_list(" + Standards.SINGLE_VALUE_COLUMN_NAME + ") AS " + Standards.SINGLE_VALUE_COLUMN_NAME + " FROM (", ")", "(", ")", " UNION ", " UNION");
     }
 }
