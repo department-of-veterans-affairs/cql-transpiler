@@ -62,7 +62,7 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
                     topLevel.addChild(prefixSegment);
 
                     // Child
-                    topLevel.addChild(childToSegment(getChildren().get(0)));
+                    topLevel.addChild(childToSegment(getChildren().get(i)));
 
                     // Postfix
                     var postfixSegment = new Segment();
