@@ -1,9 +1,7 @@
 package gov.va.transpiler.jinja.node.unary;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hl7.elm.r1.FunctionDef;
 
@@ -20,7 +18,6 @@ public class FunctionDefNode extends Unary<FunctionDef> implements Referenceable
     public static final String REFERENCE_TYPE = "FunctionDef";
 
     private List<OperandDefNode> operandDefList = new ArrayList<>();
-    private Map<String, OperandDefNode> nameToOperandDefMap = new LinkedHashMap<>();
 
     public FunctionDefNode(State state, FunctionDef t) {
         super(state, t);
@@ -34,7 +31,6 @@ public class FunctionDefNode extends Unary<FunctionDef> implements Referenceable
     public void addChild(TranspilerNode child) {
         if (child instanceof OperandDefNode) {
             operandDefList.add((OperandDefNode) child);
-            nameToOperandDefMap.put(getNameFromOperand((OperandDefNode) child), (OperandDefNode) child);
         } else {
             super.addChild(child);
         }
@@ -49,6 +45,7 @@ public class FunctionDefNode extends Unary<FunctionDef> implements Referenceable
 
         // wrap function with macro definition
         var functionContentsSegment = new Segment();
+        functionContentsSegment.setPrintType(PrintType.Line);
         var sb = new StringBuilder();
         sb.append("{% macro ");
         sb.append(referenceName());
@@ -64,10 +61,12 @@ public class FunctionDefNode extends Unary<FunctionDef> implements Referenceable
         }
         sb.append(") %}");
         functionContentsSegment.setHead(sb.toString());
+        // nest segments
+        var childSegment = getChild().toSegment();
+        childSegment.setPrintType(PrintType.Line);
+        functionContentsSegment.addChild(childSegment);
         functionContentsSegment.setTail("{% endmacro %}");
 
-        // nest segments
-        functionContentsSegment.addChild(getChild().toSegment());
         functionFileSegment.addChild(functionContentsSegment);
 
         return functionFileSegment;

@@ -20,13 +20,11 @@ public class OperandDefNode extends Leaf<OperandDef> {
 
     @Override
     public boolean isTable() {
-        // TODO
         return false;
     }
 
     @Override
     public boolean isSimpleValue() {
-        // TODO
         return true;
     }
 }
