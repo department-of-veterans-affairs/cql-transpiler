@@ -7,12 +7,17 @@ import java.util.Map;
 
 import org.hl7.elm.r1.FunctionDef;
 
+import gov.va.transpiler.jinja.node.ReferenceableNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.printing.Segment.PrintType;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
-public class FunctionDefNode extends Unary<FunctionDef> {
+public class FunctionDefNode extends Unary<FunctionDef> implements ReferenceableNode {
+
+    public static final String REFERENCE_TYPE = "FunctionDef";
 
     private List<OperandDefNode> operandDefList = new ArrayList<>();
     private Map<String, OperandDefNode> nameToOperandDefMap = new LinkedHashMap<>();
@@ -26,16 +31,27 @@ public class FunctionDefNode extends Unary<FunctionDef> {
     }
 
     @Override
-    public Segment toSegment() {
-        var functionFileSegment = new Segment(this);
-        functionFileSegment.setLocator(getCqlEquivalent().getLocator());
-        var functionContentsSegment = new Segment(getChild());
-        functionFileSegment.addSegmentToBody(functionContentsSegment);
+    public void addChild(TranspilerNode child) {
+        if (child instanceof OperandDefNode) {
+            operandDefList.add((OperandDefNode) child);
+            nameToOperandDefMap.put(getNameFromOperand((OperandDefNode) child), (OperandDefNode) child);
+        } else {
+            super.addChild(child);
+        }
+    }
 
-        // Create the macro definition
+    @Override
+    public Segment toSegment() {
+        var functionFileSegment = new Segment();
+        functionFileSegment.setLocator(getCqlEquivalent().getLocator());
+        functionFileSegment.setFileLocation(getTargetFileLocation());
+        functionFileSegment.setPrintType(PrintType.File);
+
+        // wrap function with macro definition
+        var functionContentsSegment = new Segment();
         var sb = new StringBuilder();
         sb.append("{% macro ");
-        sb.append(referenceIs());
+        sb.append(referenceName());
         sb.append(" (");
         boolean first = true;;
         for (var operand : operandDefList) {
@@ -48,32 +64,27 @@ public class FunctionDefNode extends Unary<FunctionDef> {
         }
         sb.append(") %}");
         functionContentsSegment.setHead(sb.toString());
-
-        // contents of function
-        functionContentsSegment.addSegmentToBody(getChild().toSegment());
-
-        // finish macro
         functionContentsSegment.setTail("{% endmacro %}");
+
+        // nest segments
+        functionContentsSegment.addChild(getChild().toSegment());
+        functionFileSegment.addChild(functionContentsSegment);
+
         return functionFileSegment;
     }
 
     @Override
-    public void addChild(TranspilerNode child) {
-        if (child instanceof OperandDefNode) {
-            operandDefList.add((OperandDefNode) child);
-            nameToOperandDefMap.put(getNameFromOperand((OperandDefNode) child), (OperandDefNode) child);
-        } else {
-            super.addChild(child);
-        }
+    public String referenceType() {
+        return REFERENCE_TYPE;
     }
 
     @Override
-    public String referenceIs() {
+    public String referenceName() {
         return getCqlEquivalent().getName();
     }
 
     @Override
-    public PrintType getPrintType() {
-        return PrintType.File;
+    public String getTargetFileLocation() {
+        return super.getTargetFileLocation() + Standards.FOLDER_SEPARATOR +  referenceName();
     }
 }

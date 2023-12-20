@@ -5,13 +5,6 @@ import gov.va.transpiler.jinja.state.State;
 
 public abstract class TranspilerNode {
 
-    public enum PrintType {
-        Folder,
-        File,
-        Line,
-        Inline
-    }
-
     private TranspilerNode parent;
 
     public TranspilerNode(State state) {
@@ -52,29 +45,12 @@ public abstract class TranspilerNode {
      */
     public abstract boolean isSimpleValue();
 
-    /* PRINTING */
-
-    /**
-     * @return How this node should be printed overall.
-     */
-    public PrintType getPrintType() {
-        return PrintType.Inline;
-    }
-
-    /**
-     * @return Where this node is located.
-     */
-    public String getScope() {
-        var sb = new StringBuilder();
-        // Get the parent's file path
-        if (getParent() != null) {
-            sb.append(getParent().getScope());
-        }
-        return sb.toString();
-    }
-
     /**
      * @return A segment to use to print this node.
      */
     public abstract Segment toSegment();
+
+    public String getTargetFileLocation() {
+        return getParent() == null ? "" : getParent().getTargetFileLocation();
+    }
 }

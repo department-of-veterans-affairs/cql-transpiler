@@ -23,7 +23,7 @@ public class RetrieveNode extends Leaf<Retrieve> {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment(this);
+        var segment = new Segment();
         segment.setHead("SELECT * FROM " + getCqlEquivalent().getDataType().getLocalPart());
         return segment;
     }

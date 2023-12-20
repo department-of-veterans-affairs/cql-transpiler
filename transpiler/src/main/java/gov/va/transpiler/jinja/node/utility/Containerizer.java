@@ -14,9 +14,9 @@ public class Containerizer {
      */
     public Segment containerizeTable(TranspilerNode child) {
         // "SELECT collect_list(struct(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (" + child.asOneLine() + ")"
-        var toListOfStructs = new Segment(child);
+        var toListOfStructs = new Segment();
         toListOfStructs.setHead("SELECT collect_list(struct(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (");
-        toListOfStructs.addSegmentToBody(child.toSegment());
+        toListOfStructs.addChild(child.toSegment());
         toListOfStructs.setTail(")");
         return toListOfStructs;
     }
@@ -26,10 +26,10 @@ public class Containerizer {
      * @return Child containerized from a simple node into a node that can be saved as a table.
      */
     public Segment containerizeSimpleValue(TranspilerNode child) {
-        var toAccessibleAsTable = new Segment(child);
+        var toAccessibleAsTable = new Segment();
         toAccessibleAsTable.setHead("SELECT ");
         toAccessibleAsTable.setTail(" " + Standards.SINGLE_VALUE_COLUMN_NAME);
-        toAccessibleAsTable.addSegmentToBody(child.toSegment());
+        toAccessibleAsTable.addChild(child.toSegment());
         return toAccessibleAsTable;
     }
 

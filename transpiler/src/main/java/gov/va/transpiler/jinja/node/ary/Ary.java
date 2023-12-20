@@ -37,33 +37,29 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
         return child.toSegment();
     }
 
-    public PrintType getPrintType() {
-        if (getChildren().size() > 3) {
-            return PrintType.Line;
-        }
-        return PrintType.Inline;
-    }
-
     protected Segment toSegmentWithJoinedChildren(String head, String tail, String childJoiner) {
-        var topLevel = new Segment(this);
+        var topLevel = new Segment();
         topLevel.setHead(head);
         boolean firstChild = true;
         boolean onlyChild = getChildren().size() == 1;
         if (getChildren().size() == 0) {
-            var emptySegment = new Segment(this);
+            var emptySegment = new Segment();
             emptySegment.setHead(EMPTY_TABLE);
-            topLevel.addSegmentToBody(emptySegment);
+            topLevel.addChild(emptySegment);
         } else {
             for (var child : getChildren()) {
                 Segment childSegment = childToSegment(child);
                 if (onlyChild) {
-                    topLevel.addSegmentToBody(childSegment);
+                    topLevel.addChild(childSegment);
                 } else {
-                    var elementContainer = new Segment(child);
-                    elementContainer.setHead(firstChild ? "(" : childJoiner + "(");
-                    elementContainer.setTail(")");
-                    elementContainer.addSegmentToBody(childSegment);
-                    topLevel.addSegmentToBody(elementContainer);
+                    var prefixSegment = new Segment();
+                    prefixSegment.setHead(firstChild ? "(" : childJoiner + "(");
+                    topLevel.addChild(prefixSegment);
+                    var postFixSegment = new Segment();
+                    postFixSegment.setTail(")");
+                    topLevel.addChild(postFixSegment);
+                    var elementContainer = child.toSegment();
+                    topLevel.addChild(elementContainer);
                 }
                 firstChild = false;
             }

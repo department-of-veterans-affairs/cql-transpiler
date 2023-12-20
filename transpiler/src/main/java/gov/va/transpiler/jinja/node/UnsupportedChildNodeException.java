@@ -6,15 +6,15 @@ package gov.va.transpiler.jinja.node;
 public class UnsupportedChildNodeException extends RuntimeException {
     
     private TranspilerNode parent;
-    private TranspilerNode unsupportedChild;
+    private TranspilerNode child;
 
-    public UnsupportedChildNodeException(TranspilerNode parent, TranspilerNode unsupportedChild) {
+    public UnsupportedChildNodeException(TranspilerNode parent, TranspilerNode child) {
         this.parent = parent;
-        this.unsupportedChild = unsupportedChild;
+        this.child = child;
     }
 
     @Override
     public String toString() {
-        return "Parent ["  + parent + "] does not support child [" + unsupportedChild + "].";
+        return "Parent TranspilerNode ["  + parent + "] does not support child [" + child + "].";
     }
 }

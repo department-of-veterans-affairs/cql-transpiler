@@ -8,6 +8,7 @@ import org.hl7.elm.r1.Library;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public class LibraryNode extends Ary<Library> {
@@ -38,20 +39,18 @@ public class LibraryNode extends Ary<Library> {
     }
 
     @Override
-    public PrintType getPrintType() {
-        return PrintType.Folder;
-    }
-
-    @Override
-    public String referenceIs() {
+    public String getTargetFileLocation() {
         var identifier = getCqlEquivalent().getIdentifier();
         return identifier.getId() == null ? "Anonymous Library" : identifier.getVersion() == null ? identifier.getId() : identifier.getId() + "_" + identifier.getVersion();
     }
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment(this);
-        getChildren().stream().forEach(child -> segment.addSegmentToBody(child.toSegment()));
+        var segment = new Segment();
+        segment.setPrintType(PrintType.Folder);
+        segment.setOriginalLibraryIdentifier(getCqlEquivalent().getIdentifier());
+        segment.setFileLocation(getTargetFileLocation());
+        getChildren().stream().map(TranspilerNode::toSegment).forEach(childSegment -> segment.addChild(childSegment));
         return segment;
     }
 }

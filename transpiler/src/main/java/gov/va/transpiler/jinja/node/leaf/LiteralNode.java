@@ -40,7 +40,7 @@ public class LiteralNode extends Leaf<Literal> {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment(this);
+        var segment = new Segment();
         var type = getTypeForLiteral();
         switch (type) {
             case Integer:

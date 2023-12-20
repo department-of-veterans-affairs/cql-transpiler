@@ -13,7 +13,7 @@ public class OperandDefNode extends Leaf<OperandDef> {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment(this);
+        var segment = new Segment();
         segment.setHead(getCqlEquivalent().getName());
         return segment;
     }

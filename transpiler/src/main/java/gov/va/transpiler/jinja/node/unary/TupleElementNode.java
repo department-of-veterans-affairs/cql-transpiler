@@ -13,9 +13,9 @@ public class TupleElementNode extends Unary<TupleElement> {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment(this);
+        var segment = new Segment();
         segment.setHead("(");
-        segment.addSegmentToBody(containerizer.childToSegmentContainerizing(getChild()));
+        segment.addChild(containerizer.childToSegmentContainerizing(getChild()));
         segment.setTail(") AS " + getCqlEquivalent().getName());
         return segment;
     }

@@ -22,23 +22,23 @@ public class PropertyNode extends Unary<Property> {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment(this);
+        var segment = new Segment();
         if (isColumnReference()) {
-            if (getScope() != null) {
+            if (getCqlEquivalent().getScope() != null) {
                 segment.setHead(getCqlEquivalent().getScope() + "." + getCqlEquivalent().getPath());
             } else {
-                segment.addSegmentToBody(getChild().toSegment());
+                segment.addChild(getChild().toSegment());
                 segment.setTail("." + getCqlEquivalent().getPath());
             }
         } else if (getChild().isTable()) {
             // decompress compressed child tables
             segment.setHead("SELECT col.* FROM (SELECT explode(*) FROM (SELECT " + Standards.SINGLE_VALUE_COLUMN_NAME + "." + getCqlEquivalent().getPath() + " FROM (");
-            segment.addSegmentToBody(getChild().toSegment());
+            segment.addChild(getChild().toSegment());
             segment.setTail(")))");
         } else {
             // Any child that can be referenced by property must be stored as a single-value table with a _val column
             segment.setHead("SELECT " + Standards.SINGLE_VALUE_COLUMN_NAME + "." + getCqlEquivalent().getPath() + " AS " + Standards.SINGLE_VALUE_COLUMN_NAME + " FROM (");
-            segment.addSegmentToBody(getChild().toSegment());
+            segment.addChild(getChild().toSegment());
             segment.setTail(")");
         }
         return segment;

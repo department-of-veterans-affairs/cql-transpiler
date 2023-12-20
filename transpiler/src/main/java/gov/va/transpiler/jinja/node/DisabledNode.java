@@ -19,7 +19,7 @@ public class DisabledNode extends TranspilerNode {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment(this);
+        var segment = new Segment();
         segment.setHead("<Disabled Node>");
         return segment;
     }
@@ -32,10 +32,5 @@ public class DisabledNode extends TranspilerNode {
     @Override
     public boolean isSimpleValue() {
         return false;
-    }
-
-    @Override
-    public PrintType getPrintType() {
-        return PrintType.Line;
     }
 }
