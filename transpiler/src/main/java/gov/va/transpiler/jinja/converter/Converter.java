@@ -2,6 +2,7 @@ package gov.va.transpiler.jinja.converter;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
+import org.hl7.elm.r1.Add;
 import org.hl7.elm.r1.AliasedQuerySource;
 import org.hl7.elm.r1.As;
 import org.hl7.elm.r1.ByExpression;
@@ -11,6 +12,7 @@ import org.hl7.elm.r1.Count;
 import org.hl7.elm.r1.DateFrom;
 import org.hl7.elm.r1.DateTime;
 import org.hl7.elm.r1.DifferenceBetween;
+import org.hl7.elm.r1.Divide;
 import org.hl7.elm.r1.End;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
@@ -39,6 +41,7 @@ import org.hl7.elm.r1.Query;
 import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ReturnClause;
 import org.hl7.elm.r1.Start;
+import org.hl7.elm.r1.Subtract;
 import org.hl7.elm.r1.ToDate;
 import org.hl7.elm.r1.ToDecimal;
 import org.hl7.elm.r1.Tuple;
@@ -53,7 +56,10 @@ import gov.va.transpiler.jinja.node.ary.FunctionRefNode;
 import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.ListNode;
 import gov.va.transpiler.jinja.node.ary.TupleNode;
+import gov.va.transpiler.jinja.node.binary.AddNode;
+import gov.va.transpiler.jinja.node.binary.DivideNode;
 import gov.va.transpiler.jinja.node.binary.MultiplyNode;
+import gov.va.transpiler.jinja.node.binary.SubtractNode;
 import gov.va.transpiler.jinja.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.leaf.LiteralNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
@@ -62,7 +68,9 @@ import gov.va.transpiler.jinja.node.leaf.RetrieveNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.unary.FunctionDefNode;
+import gov.va.transpiler.jinja.node.unary.NegateNode;
 import gov.va.transpiler.jinja.node.unary.PropertyNode;
+import gov.va.transpiler.jinja.node.unary.ToDecimalNode;
 import gov.va.transpiler.jinja.node.unary.TupleElementNode;
 import gov.va.transpiler.jinja.node.unsupported.AliasedQuerySourceNode;
 import gov.va.transpiler.jinja.node.unsupported.AsNode;
@@ -81,7 +89,6 @@ import gov.va.transpiler.jinja.node.unsupported.IncludeDefNode;
 import gov.va.transpiler.jinja.node.unsupported.IntervalNode;
 import gov.va.transpiler.jinja.node.unsupported.IntervalTypeSpecifierNode;
 import gov.va.transpiler.jinja.node.unsupported.NamedTypeSpecifierNode;
-import gov.va.transpiler.jinja.node.unsupported.NegateNode;
 import gov.va.transpiler.jinja.node.unsupported.NotNode;
 import gov.va.transpiler.jinja.node.unsupported.NullNode;
 import gov.va.transpiler.jinja.node.unsupported.ParameterDefNode;
@@ -90,7 +97,6 @@ import gov.va.transpiler.jinja.node.unsupported.QueryNode;
 import gov.va.transpiler.jinja.node.unsupported.ReturnClauseNode;
 import gov.va.transpiler.jinja.node.unsupported.StartNode;
 import gov.va.transpiler.jinja.node.unsupported.ToDateNode;
-import gov.va.transpiler.jinja.node.unsupported.ToDecimalNode;
 import gov.va.transpiler.jinja.node.unsupported.UnionNode;
 import gov.va.transpiler.jinja.node.unsupported.UnsupportedNode;
 import gov.va.transpiler.jinja.state.State;
@@ -122,61 +128,9 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
-    public TranspilerNode visitLibrary(Library element, State state) {
-        new LibraryNode(state, element);
-        return super.visitLibrary(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitExpressionDef(ExpressionDef element, State state) {
-        if (element instanceof FunctionDef) {
-            return super.visitExpressionDef((FunctionDef) element, state);
-        }
-        new ExpressionDefNode(state, element);
-        return super.visitExpressionDef(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitExpressionRef(ExpressionRef element, State state) {
-        new ExpressionRefNode(state, element);
-        return super.visitExpressionRef(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitFunctionDef(FunctionDef element, State state) {
-        new FunctionDefNode(state, element);
-        return super.visitFunctionDef(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitFunctionRef(FunctionRef element, State state) {
-        new FunctionRefNode(state, element);
-        return super.visitFunctionRef(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitMultiply(Multiply element, State state) {
-        new MultiplyNode(state, element);
-        return super.visitMultiply(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitOperandDef(OperandDef element, State state) {
-        new OperandDefNode(state, element);
-        return super.visitOperandDef(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitTypeSpecifier(TypeSpecifier element, State state) {
-        var current = new DisabledNode(state);
-        state.setCurrentNode(null);
-        return current;
-    }
-
-    @Override
-    public TranspilerNode visitLiteral(Literal element, State state) {
-        new LiteralNode(state, element);
-        return super.visitLiteral(element, state);
+    public TranspilerNode visitAdd(Add element, State state) {
+        new AddNode(state, element);
+        return super.visitAdd(element, state);
     }
 
     @Override
@@ -234,15 +188,48 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitDivide(Divide element, State state) {
+        new DivideNode(state, element);
+        return super.visitDivide(element, state);
+    }
+
+    @Override
     public TranspilerNode visitEnd(End element, State state) {
         new EndNode(state, element);
         return super.visitEnd(element, state);
     }
 
     @Override
+    public TranspilerNode visitExpressionDef(ExpressionDef element, State state) {
+        if (element instanceof FunctionDef) {
+            return super.visitExpressionDef((FunctionDef) element, state);
+        }
+        new ExpressionDefNode(state, element);
+        return super.visitExpressionDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitExpressionRef(ExpressionRef element, State state) {
+        new ExpressionRefNode(state, element);
+        return super.visitExpressionRef(element, state);
+    }
+
+    @Override
     public TranspilerNode visitFlatten(Flatten element, State state) {
         new FlattenNode(state, element);
         return super.visitFlatten(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitFunctionDef(FunctionDef element, State state) {
+        new FunctionDefNode(state, element);
+        return super.visitFunctionDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitFunctionRef(FunctionRef element, State state) {
+        new FunctionRefNode(state, element);
+        return super.visitFunctionRef(element, state);
     }
 
     @Override
@@ -276,9 +263,27 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitLibrary(Library element, State state) {
+        new LibraryNode(state, element);
+        return super.visitLibrary(element, state);
+    }
+
+    @Override
     public TranspilerNode visitList(List element, State state) {
         new ListNode(state, element);
         return super.visitList(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitLiteral(Literal element, State state) {
+        new LiteralNode(state, element);
+        return super.visitLiteral(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitMultiply(Multiply element, State state) {
+        new MultiplyNode(state, element);
+        return super.visitMultiply(element, state);
     }
 
     @Override
@@ -303,6 +308,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitNull(Null element, State state) {
         new NullNode(state, element);
         return super.visitNull(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitOperandDef(OperandDef element, State state) {
+        new OperandDefNode(state, element);
+        return super.visitOperandDef(element, state);
     }
 
     @Override
@@ -354,6 +365,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitSubtract(Subtract element, State state) {
+        new SubtractNode(state, element);
+        return super.visitSubtract(element, state);
+    }
+
+    @Override
     public TranspilerNode visitToDate(ToDate element, State state) {
         new ToDateNode(state, element);
         return super.visitToDate(element, state);
@@ -375,6 +392,13 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitTuple(Tuple element, State state) {
         new TupleNode(state, element);
         return super.visitTuple(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitTypeSpecifier(TypeSpecifier element, State state) {
+        var current = new DisabledNode(state);
+        state.setCurrentNode(null);
+        return current;
     }
 
     @Override
