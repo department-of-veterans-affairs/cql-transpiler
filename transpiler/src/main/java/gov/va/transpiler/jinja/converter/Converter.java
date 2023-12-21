@@ -25,6 +25,7 @@ import org.hl7.elm.r1.IntervalTypeSpecifier;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.List;
 import org.hl7.elm.r1.Literal;
+import org.hl7.elm.r1.Multiply;
 import org.hl7.elm.r1.NamedTypeSpecifier;
 import org.hl7.elm.r1.Negate;
 import org.hl7.elm.r1.Not;
@@ -52,6 +53,7 @@ import gov.va.transpiler.jinja.node.ary.FunctionRefNode;
 import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.ListNode;
 import gov.va.transpiler.jinja.node.ary.TupleNode;
+import gov.va.transpiler.jinja.node.binary.MultiplyNode;
 import gov.va.transpiler.jinja.node.leaf.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.leaf.LiteralNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
@@ -150,6 +152,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitFunctionRef(FunctionRef element, State state) {
         new FunctionRefNode(state, element);
         return super.visitFunctionRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitMultiply(Multiply element, State state) {
+        new MultiplyNode(state, element);
+        return super.visitMultiply(element, state);
     }
 
     @Override

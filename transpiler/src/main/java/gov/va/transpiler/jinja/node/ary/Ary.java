@@ -27,9 +27,9 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
 
     @Override
     public void addChild(TranspilerNode child) throws UnsupportedChildNodeException {
-    if (!(child instanceof DisabledNode)) {
-        children.add(child);
-    }
+        if (!(child instanceof DisabledNode)) {
+            children.add(child);
+        }
     }
 
     protected List<TranspilerNode> getChildren() {

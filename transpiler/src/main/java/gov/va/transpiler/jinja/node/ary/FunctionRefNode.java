@@ -41,6 +41,6 @@ public class FunctionRefNode extends Ary<FunctionRef> implements ReferenceNode {
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren("{{ " + ((FunctionDefNode) getReferenceTo()).getTargetFileLocation() + "(", ")}}", "(", ")", ", ", ",");
+        return toSegmentWithJoinedChildren("{{ " + ((FunctionDefNode) getReferenceTo()).getTargetFileLocation() + "(", ") }}", "(", ")", ", ", ",");
     }
 }
