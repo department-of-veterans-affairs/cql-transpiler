@@ -16,6 +16,7 @@ import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 import org.hl7.elm.r1.Flatten;
 import org.hl7.elm.r1.FunctionDef;
+import org.hl7.elm.r1.FunctionRef;
 import org.hl7.elm.r1.IdentifierRef;
 import org.hl7.elm.r1.If;
 import org.hl7.elm.r1.IncludeDef;
@@ -47,6 +48,7 @@ import org.hl7.elm.r1.UsingDef;
 
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.ary.FunctionRefNode;
 import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.ListNode;
 import gov.va.transpiler.jinja.node.ary.TupleNode;
@@ -142,6 +144,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitFunctionDef(FunctionDef element, State state) {
         new FunctionDefNode(state, element);
         return super.visitFunctionDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitFunctionRef(FunctionRef element, State state) {
+        new FunctionRefNode(state, element);
+        return super.visitFunctionRef(element, state);
     }
 
     @Override
