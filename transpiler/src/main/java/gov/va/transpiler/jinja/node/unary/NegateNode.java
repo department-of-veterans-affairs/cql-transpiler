@@ -14,8 +14,8 @@ public class NegateNode extends Unary<Negate> {
     @Override
     public Segment toSegment() {
         var segment = new Segment();
-        segment.setHead("(-");
-        segment.setTail(")");
+        segment.setHead("-");
+        segment.setTail("");
         segment.addChild(getChild().toSegment());
         return segment;
     }

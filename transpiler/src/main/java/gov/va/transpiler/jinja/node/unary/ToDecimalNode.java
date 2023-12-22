@@ -14,8 +14,7 @@ public class ToDecimalNode extends Unary<ToDecimal> {
     @Override
     public Segment toSegment() {
         var segment = new Segment();
-        segment.setHead("(0.0 + ");
-        segment.setTail(")");
+        segment.setHead("0.0 + ");
         segment.addChild(getChild().toSegment());
         return segment;
     }

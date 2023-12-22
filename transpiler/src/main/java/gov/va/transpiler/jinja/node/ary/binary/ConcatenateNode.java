@@ -31,21 +31,21 @@ public class ConcatenateNode extends Binary<Concatenate> {
         } else if (getLeft().isSimpleValue()) {
             var concatSegment = new Segment();
             concatSegment.setHead("SELECT concat(");
-            concatSegment.addChild(getLeft().toSegment());
+            concatSegment.addChild(childToSegment(getLeft()));
             concatSegment.setTail(", rightval) AS " + SINGLE_VALUE_COLUMN_NAME);
             var fromSegment = new Segment();
             fromSegment.setHead(" FROM (SELECT " + SINGLE_VALUE_COLUMN_NAME + " AS rightval FROM (");
-            fromSegment.addChild(getRight().toSegment());
+            fromSegment.addChild(childToSegment(getRight()));
             segment.addChild(concatSegment);
             segment.addChild(fromSegment);
         } else if (!getRight().isSimpleValue()) {
             var concatSegment = new Segment();
             concatSegment.setHead("SELECT concat(leftval, ");
-            concatSegment.addChild(getRight().toSegment());
+            concatSegment.addChild(childToSegment(getRight()));
             concatSegment.setTail(") AS " + SINGLE_VALUE_COLUMN_NAME);
             var fromSegment = new Segment();
             fromSegment.setHead(" FROM (SELECT " + SINGLE_VALUE_COLUMN_NAME + " AS leftval FROM (");
-            fromSegment.addChild(getLeft().toSegment());
+            fromSegment.addChild(childToSegment(getLeft()));
             segment.addChild(concatSegment);
             segment.addChild(fromSegment);
         } else {

@@ -41,9 +41,9 @@ public abstract class Binary<T extends Trackable> extends Ary<T> {
     protected Segment toSegmentWithJoinedChildren(String head, String tail, String childPrefix, String childPostfix, String childJoinerInline, String childJoinerLine) {
         var segment = new Segment();
         segment.setHead(head);
-        var leftSegment = getLeft().toSegment();
+        var leftSegment = childToSegment(getLeft());
         segment.addChild(leftSegment);
-        var rightSegment = getRight().toSegment();
+        var rightSegment = childToSegment(getRight());
         var joiner = new Segment();
         var split = !(leftSegment.getPrintType() == PrintType.Inline && rightSegment.getPrintType() == PrintType.Inline);
         joiner.setHead(split ? childJoinerLine : childJoinerInline);

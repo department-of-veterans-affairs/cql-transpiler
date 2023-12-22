@@ -18,7 +18,8 @@ public class Transpiler {
 
     public static void main(String[] args) throws IOException {
         String cql = ""
-        + "define a: 1 = 2\n"
+        + "define a: 2 + 3\n"
+        + "define b: a - 3\n"
             ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
