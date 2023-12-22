@@ -1,17 +1,17 @@
 package gov.va.transpiler.jinja.node.ary.binary;
 
-import org.hl7.elm.r1.Divide;
+import org.hl7.elm.r1.Equal;
 
 import gov.va.transpiler.jinja.state.State;
 
-public class DivideNode extends BinaryOperatorNode<Divide> {
+public class EqualNode extends BinaryOperatorNode<Equal> {
 
-    public DivideNode(State state, Divide cqlEquivalent) {
+    public EqualNode(State state, Equal cqlEquivalent) {
         super(state, cqlEquivalent);
     }
 
     @Override
     protected String getOperator() {
-        return "/";
+        return "=";
     }
 }

@@ -14,6 +14,7 @@ import org.hl7.elm.r1.DateTime;
 import org.hl7.elm.r1.DifferenceBetween;
 import org.hl7.elm.r1.Divide;
 import org.hl7.elm.r1.End;
+import org.hl7.elm.r1.Equal;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 import org.hl7.elm.r1.Flatten;
@@ -59,6 +60,7 @@ import gov.va.transpiler.jinja.node.ary.TupleNode;
 import gov.va.transpiler.jinja.node.ary.binary.AddNode;
 import gov.va.transpiler.jinja.node.ary.binary.ConcatenateNode;
 import gov.va.transpiler.jinja.node.ary.binary.DivideNode;
+import gov.va.transpiler.jinja.node.ary.binary.EqualNode;
 import gov.va.transpiler.jinja.node.ary.binary.MultiplyNode;
 import gov.va.transpiler.jinja.node.ary.binary.SubtractNode;
 import gov.va.transpiler.jinja.node.leaf.ExpressionRefNode;
@@ -197,6 +199,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitEnd(End element, State state) {
         new EndNode(state, element);
         return super.visitEnd(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitEqual(Equal element, State state) {
+        new EqualNode(state, element);
+        return super.visitEqual(element, state);
     }
 
     @Override

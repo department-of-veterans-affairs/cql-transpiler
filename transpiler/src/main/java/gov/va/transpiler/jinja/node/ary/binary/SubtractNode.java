@@ -12,6 +12,6 @@ public class SubtractNode extends BinaryOperatorNode<Subtract> {
 
     @Override
     protected String getOperator() {
-        return " -";
+        return "-";
     }
 }

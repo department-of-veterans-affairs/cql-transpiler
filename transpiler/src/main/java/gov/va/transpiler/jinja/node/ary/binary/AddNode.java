@@ -12,6 +12,6 @@ public class AddNode extends BinaryOperatorNode<Add> {
 
     @Override
     protected String getOperator() {
-        return " +";
+        return "+";
     }
 }

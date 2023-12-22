@@ -15,7 +15,7 @@ public abstract class BinaryOperatorNode<T extends BinaryExpression> extends Bin
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren("", "", "(", ")", getOperator(), getOperator() + " ");
+        return toSegmentWithJoinedChildren("", "", "(", ")", " " + getOperator() + " ", getOperator() + " ");
     }
 
     @Override

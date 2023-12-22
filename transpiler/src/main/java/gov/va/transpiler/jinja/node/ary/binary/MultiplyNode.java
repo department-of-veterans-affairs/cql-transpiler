@@ -12,6 +12,6 @@ public class MultiplyNode extends BinaryOperatorNode<Multiply> {
 
     @Override
     protected String getOperator() {
-        return " *";
+        return "*";
     }
 }
