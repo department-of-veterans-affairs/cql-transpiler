@@ -1,4 +1,4 @@
-package gov.va.transpiler.jinja.node.binary;
+package gov.va.transpiler.jinja.node.ary.binary;
 
 import org.hl7.elm.r1.Add;
 

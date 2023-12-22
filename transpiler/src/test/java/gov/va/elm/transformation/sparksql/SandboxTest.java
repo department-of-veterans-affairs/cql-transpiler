@@ -178,7 +178,6 @@ public class SandboxTest {
 
     @Test
     public void testFunction() {
-        // TODO: remove expression sorting by name from the compiler
         String cql = ""
             + "library Retrievals version '1.0'\n"
             + "define function a(val Integer):\n"
@@ -190,36 +189,6 @@ public class SandboxTest {
         for (String output : sparksql) {
             System.out.println(output);
         }
-    }
-
-    @Test
-    public void testInclude() {
-        String cql = ""
-            + "library Stuff version '1.0'\n"
-            + "include TestInclude version '1.0'\n"
-            + "define a: TestInclude.var + 1";
-            ;
-
-        var sparksql = processCQLToSparkSQL(cql);
-        for (String output : sparksql) {
-            System.out.println(output);
-        }
-    }
-
-    @Test
-    public void testDateTime() {
-        String cql = ""
-            + "library Retrievals version '1.0'\n"
-            + "using QUICK\n"
-            + "define testdate: " + DEFAULT_CQL_DATE_TIME + "\n"
-            ;
-
-        var sparksql = processCQLToSparkSQL(cql);
-        for (String output : sparksql) {
-            System.out.println(output);
-        }
-        // Dates are a MASSIVE can of worms. I'm just not going to worry about them for now.
-        throw new RuntimeException();
     }
 
     @Test
@@ -287,6 +256,23 @@ public class SandboxTest {
         for (String output : sparksql) {
             System.out.println(output);
         }
+    }
+
+
+    @Test
+    public void testDateTime() {
+        String cql = ""
+            + "library Retrievals version '1.0'\n"
+            + "using QUICK\n"
+            + "define testdate: " + DEFAULT_CQL_DATE_TIME + "\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+        // Dates are a MASSIVE can of worms. I'm just not going to worry about them for now.
+        throw new RuntimeException();
     }
 
     @Test
@@ -368,6 +354,20 @@ public class SandboxTest {
             + "library Retrievals version '1.0'\n"
             + "using QUICK\n"
             + "define a: [Encounter] union [Patient]\n"
+            ;
+
+        var sparksql = processCQLToSparkSQL(cql);
+        for (String output : sparksql) {
+            System.out.println(output);
+        }
+    }
+
+    @Test
+    public void testInclude() {
+        String cql = ""
+            + "library Stuff version '1.0'\n"
+            + "include TestInclude version '1.0'\n"
+            + "define a: TestInclude.var + 1";
             ;
 
         var sparksql = processCQLToSparkSQL(cql);
