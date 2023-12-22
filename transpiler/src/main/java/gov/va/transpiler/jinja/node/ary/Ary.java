@@ -40,6 +40,10 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
         return child.toSegment();
     }
 
+    protected boolean split() {
+        return getChildren().size() == SPLIT_ARY_CHILDREN_AT;
+    }
+
     protected Segment toSegmentWithJoinedChildren(String head, String tail, String childPrefix, String childPostfix, String childJoinerInline, String childJoinerLine) {
         var topLevel = new Segment();
         topLevel.setHead(head);
@@ -53,7 +57,7 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
                 topLevel.addChild(childToSegment(getChildren().get(0)));
                 break;
             default:
-                var split = getChildren().size() == SPLIT_ARY_CHILDREN_AT;
+                var split = split();
                 topLevel.setPrintType(split ? PrintType.Line : PrintType.Inline);
                 for (int i = 0; i < getChildren().size(); i++) {
                     // Prefix
