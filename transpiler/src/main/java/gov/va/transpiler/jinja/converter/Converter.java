@@ -3,8 +3,10 @@ package gov.va.transpiler.jinja.converter;
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.elm.r1.Add;
+import org.hl7.elm.r1.After;
 import org.hl7.elm.r1.AliasedQuerySource;
 import org.hl7.elm.r1.As;
+import org.hl7.elm.r1.Before;
 import org.hl7.elm.r1.ByExpression;
 import org.hl7.elm.r1.Concatenate;
 import org.hl7.elm.r1.ContextDef;
@@ -58,6 +60,8 @@ import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.ListNode;
 import gov.va.transpiler.jinja.node.ary.TupleNode;
 import gov.va.transpiler.jinja.node.ary.binary.AddNode;
+import gov.va.transpiler.jinja.node.ary.binary.AfterNode;
+import gov.va.transpiler.jinja.node.ary.binary.BeforeNode;
 import gov.va.transpiler.jinja.node.ary.binary.ConcatenateNode;
 import gov.va.transpiler.jinja.node.ary.binary.DivideNode;
 import gov.va.transpiler.jinja.node.ary.binary.EqualNode;
@@ -72,6 +76,7 @@ import gov.va.transpiler.jinja.node.leaf.QueryNode;
 import gov.va.transpiler.jinja.node.leaf.RetrieveNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.node.unary.AliasedQuerySourceNode;
+import gov.va.transpiler.jinja.node.unary.EndNode;
 import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.unary.FunctionDefNode;
 import gov.va.transpiler.jinja.node.unary.NegateNode;
@@ -85,7 +90,6 @@ import gov.va.transpiler.jinja.node.unsupported.ContextDefNode;
 import gov.va.transpiler.jinja.node.unsupported.CountNode;
 import gov.va.transpiler.jinja.node.unsupported.DateFromNode;
 import gov.va.transpiler.jinja.node.unsupported.DifferenceBetweenNode;
-import gov.va.transpiler.jinja.node.unsupported.EndNode;
 import gov.va.transpiler.jinja.node.unsupported.FlattenNode;
 import gov.va.transpiler.jinja.node.unsupported.IdentifierRefNode;
 import gov.va.transpiler.jinja.node.unsupported.IfNode;
@@ -136,6 +140,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitAfter(After element, State state) {
+        new AfterNode(state, element);
+        return super.visitAfter(element, state);
+    }
+
+    @Override
     public TranspilerNode visitAliasedQuerySource(AliasedQuerySource element, State state) {
         new AliasedQuerySourceNode(state, element);
         return super.visitAliasedQuerySource(element, state);
@@ -145,6 +155,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitAs(As element, State state) {
         new AsNode(state, element);
         return super.visitAs(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitBefore(Before element, State state) {
+        new BeforeNode(state, element);
+        return super.visitBefore(element, state);
     }
 
     @Override

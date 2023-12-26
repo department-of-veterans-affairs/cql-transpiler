@@ -20,9 +20,9 @@ public class Transpiler {
 
     public static void main(String[] args) throws IOException {
         String cql = ""
-            + "library Retrievals version '1.0'\n"
-            + "using QUICK\n"
-            + "define testdate: " + DEFAULT_CQL_DATE_TIME + "\n"
+        + "library Retrievals version '1.0'\n"
+        + "using QUICK\n"
+        + "define a: [Encounter] E where E.period ends after " + DEFAULT_CQL_DATE_TIME + "\n"
             ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
