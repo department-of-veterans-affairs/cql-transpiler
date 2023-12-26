@@ -1,5 +1,7 @@
 package gov.va.transpiler.jinja;
 
+import static gov.va.transpiler.jinja.standards.Standards.DEFAULT_CQL_DATE_TIME;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,8 +20,9 @@ public class Transpiler {
 
     public static void main(String[] args) throws IOException {
         String cql = ""
-            + "using FHIR version '4.0.1'\n"
-            + "define a: [Encounter] E return E.period\n"
+            + "library Retrievals version '1.0'\n"
+            + "using QUICK\n"
+            + "define testdate: " + DEFAULT_CQL_DATE_TIME + "\n"
             ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
