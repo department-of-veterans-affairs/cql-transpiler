@@ -1,13 +1,13 @@
 package gov.va.transpiler.jinja.node.unary;
 
-import org.hl7.elm.r1.End;
+import org.hl7.elm.r1.Start;
 
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
-public class EndNode extends Unary<End> {
+public class StartNode extends Unary<Start> {
 
-    public EndNode(State state, End t) {
+    public StartNode(State state, Start t) {
         super(state, t);
     }
 
@@ -15,9 +15,7 @@ public class EndNode extends Unary<End> {
     public Segment toSegment() {
         // TODO: support for reading start/end names from modelinfo
         var segment = new Segment();
-        segment.addChild(getChild().toSegment());
-        segment.setTail(".?end?");
+        segment.setHead(".?start?");
         return segment;
     }
-    
 }

@@ -62,9 +62,9 @@ public class DateTimeNode extends Leaf<DateTime> {
 
     @Override
     public Segment toSegment() {
-        // TODO
+        // TODO: support for date formats
         var segment = new Segment();
-        segment.setHead("<INSERT DATE HERE>");
+        segment.setHead("?INSERT DATE HERE?");
         return segment;
     }
 
