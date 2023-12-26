@@ -12,8 +12,9 @@ public class PropertyNode extends Unary<Property> {
         super(state, t);
     }
 
-    protected boolean isColumnReference() {
-        return  getCqlEquivalent().getScope() != null || (getChild() instanceof PropertyNode && ((PropertyNode) getChild()).isColumnReference());
+    @Override
+    public boolean isColumnReference() {
+        return getCqlEquivalent().getScope() != null || getChild().isColumnReference();
     }
 
     protected boolean mustDecompress() {

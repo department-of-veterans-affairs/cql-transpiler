@@ -1,7 +1,5 @@
 package gov.va.transpiler.jinja;
 
-import static gov.va.transpiler.jinja.standards.Standards.DEFAULT_CQL_DATE_TIME;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +20,7 @@ public class Transpiler {
         String cql = ""
         + "library Retrievals version '1.0'\n"
         + "using QUICK\n"
-        + "define a: [Encounter] E where E.period ends after " + DEFAULT_CQL_DATE_TIME + "\n"
-            ;
+        + "define a: [Encounter] E sort by status.value\n"            ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
         var compiler = new CqfCompiler(fileLibrarySourceProvider);

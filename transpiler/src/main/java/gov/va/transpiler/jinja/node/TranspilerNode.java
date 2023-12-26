@@ -46,6 +46,13 @@ public abstract class TranspilerNode {
     public abstract boolean isSimpleValue();
 
     /**
+     * @return Whether this represents a column reference.
+     */
+    public boolean isColumnReference() {
+        return false;
+    }
+
+    /**
      * @return A segment to use to print this node.
      */
     public abstract Segment toSegment();

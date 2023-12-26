@@ -43,6 +43,8 @@ import org.hl7.elm.r1.Property;
 import org.hl7.elm.r1.Query;
 import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ReturnClause;
+import org.hl7.elm.r1.SortByItem;
+import org.hl7.elm.r1.SortClause;
 import org.hl7.elm.r1.Start;
 import org.hl7.elm.r1.Subtract;
 import org.hl7.elm.r1.ToDate;
@@ -58,6 +60,7 @@ import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.ary.FunctionRefNode;
 import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.ListNode;
+import gov.va.transpiler.jinja.node.ary.SortClauseNode;
 import gov.va.transpiler.jinja.node.ary.TupleNode;
 import gov.va.transpiler.jinja.node.ary.binary.AddNode;
 import gov.va.transpiler.jinja.node.ary.binary.AfterNode;
@@ -69,6 +72,7 @@ import gov.va.transpiler.jinja.node.ary.binary.MultiplyNode;
 import gov.va.transpiler.jinja.node.ary.binary.SubtractNode;
 import gov.va.transpiler.jinja.node.leaf.DateTimeNode;
 import gov.va.transpiler.jinja.node.leaf.ExpressionRefNode;
+import gov.va.transpiler.jinja.node.leaf.IdentifierRefNode;
 import gov.va.transpiler.jinja.node.leaf.LiteralNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.node.leaf.OperandRefNode;
@@ -76,23 +80,23 @@ import gov.va.transpiler.jinja.node.leaf.QueryNode;
 import gov.va.transpiler.jinja.node.leaf.RetrieveNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.node.unary.AliasedQuerySourceNode;
+import gov.va.transpiler.jinja.node.unary.ByExpressionNode;
 import gov.va.transpiler.jinja.node.unary.EndNode;
 import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.unary.FunctionDefNode;
 import gov.va.transpiler.jinja.node.unary.NegateNode;
 import gov.va.transpiler.jinja.node.unary.PropertyNode;
 import gov.va.transpiler.jinja.node.unary.ReturnClauseNode;
+import gov.va.transpiler.jinja.node.unary.SortByItemNode;
 import gov.va.transpiler.jinja.node.unary.StartNode;
 import gov.va.transpiler.jinja.node.unary.ToDecimalNode;
 import gov.va.transpiler.jinja.node.unary.TupleElementNode;
 import gov.va.transpiler.jinja.node.unsupported.AsNode;
-import gov.va.transpiler.jinja.node.unsupported.ByExpressionNode;
 import gov.va.transpiler.jinja.node.unsupported.ContextDefNode;
 import gov.va.transpiler.jinja.node.unsupported.CountNode;
 import gov.va.transpiler.jinja.node.unsupported.DateFromNode;
 import gov.va.transpiler.jinja.node.unsupported.DifferenceBetweenNode;
 import gov.va.transpiler.jinja.node.unsupported.FlattenNode;
-import gov.va.transpiler.jinja.node.unsupported.IdentifierRefNode;
 import gov.va.transpiler.jinja.node.unsupported.IfNode;
 import gov.va.transpiler.jinja.node.unsupported.IncludeDefNode;
 import gov.va.transpiler.jinja.node.unsupported.IntervalNode;
@@ -386,6 +390,18 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitStart(Start element, State state) {
         new StartNode(state, element);
         return super.visitStart(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitSortByItem(SortByItem element, State state) {
+        new SortByItemNode(state, element);
+        return super.visitSortByItem(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitSortClause(SortClause element, State state) {
+        new SortClauseNode(state, element);
+        return super.visitSortClause(element, state);
     }
 
     @Override

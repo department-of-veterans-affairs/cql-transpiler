@@ -37,6 +37,11 @@ public abstract class Unary<T extends Trackable> extends CQLEquivalent<T> {
         return getChild().isTable();
     }
 
+    @Override
+    public boolean isColumnReference() {
+        return getChild().isColumnReference();
+    }
+
     protected TranspilerNode getChild() {
         return child;
     }
