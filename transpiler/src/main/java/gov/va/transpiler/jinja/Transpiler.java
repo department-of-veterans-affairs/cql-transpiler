@@ -20,10 +20,7 @@ public class Transpiler {
         String cql = ""
         + "library Retrievals version '1.0'\n"
         + "using QUICK\n"
-        + "context Patient\n"
-        + "define a: Count([Encounter])\n"
-        + "context Unfiltered\n"
-        + "define b: Count([Encounter])\n"
+        + "define a: [Encounter] union [Patient]\n"
            ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
