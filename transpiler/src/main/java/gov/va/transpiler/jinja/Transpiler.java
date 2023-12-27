@@ -20,7 +20,11 @@ public class Transpiler {
         String cql = ""
         + "library Retrievals version '1.0'\n"
         + "using QUICK\n"
-        + "define a: [Encounter] E sort by status.value\n"            ;
+        + "context Patient\n"
+        + "define a: Count([Encounter])\n"
+        + "context Unfiltered\n"
+        + "define b: Count([Encounter])\n"
+           ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
         var compiler = new CqfCompiler(fileLibrarySourceProvider);

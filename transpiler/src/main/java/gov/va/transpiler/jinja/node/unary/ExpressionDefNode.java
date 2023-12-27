@@ -11,9 +11,14 @@ import gov.va.transpiler.jinja.state.State;
 public class ExpressionDefNode extends Unary<ExpressionDef> implements ReferenceableNode {
 
     public static final String REFERENCE_TYPE = "ExpressionDef";
-
+    public static final String UNFILTERED_CONTEXT = "Unfiltered";
     public ExpressionDefNode(State state, ExpressionDef t) {
         super(state, t);
+        if (UNFILTERED_CONTEXT.equalsIgnoreCase(getCqlEquivalent().getContext())) {
+            state.setContext(null);
+        } else {
+            state.setContext(getCqlEquivalent().getContext());
+        }
     }
 
     @Override

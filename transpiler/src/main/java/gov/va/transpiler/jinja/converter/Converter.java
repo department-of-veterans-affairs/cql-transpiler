@@ -43,6 +43,7 @@ import org.hl7.elm.r1.Property;
 import org.hl7.elm.r1.Query;
 import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ReturnClause;
+import org.hl7.elm.r1.SingletonFrom;
 import org.hl7.elm.r1.SortByItem;
 import org.hl7.elm.r1.SortClause;
 import org.hl7.elm.r1.Start;
@@ -81,19 +82,19 @@ import gov.va.transpiler.jinja.node.leaf.RetrieveNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.node.unary.AliasedQuerySourceNode;
 import gov.va.transpiler.jinja.node.unary.ByExpressionNode;
+import gov.va.transpiler.jinja.node.unary.CountNode;
 import gov.va.transpiler.jinja.node.unary.EndNode;
 import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.unary.FunctionDefNode;
 import gov.va.transpiler.jinja.node.unary.NegateNode;
 import gov.va.transpiler.jinja.node.unary.PropertyNode;
 import gov.va.transpiler.jinja.node.unary.ReturnClauseNode;
+import gov.va.transpiler.jinja.node.unary.SingletonFromNode;
 import gov.va.transpiler.jinja.node.unary.SortByItemNode;
 import gov.va.transpiler.jinja.node.unary.StartNode;
 import gov.va.transpiler.jinja.node.unary.ToDecimalNode;
 import gov.va.transpiler.jinja.node.unary.TupleElementNode;
 import gov.va.transpiler.jinja.node.unsupported.AsNode;
-import gov.va.transpiler.jinja.node.unsupported.ContextDefNode;
-import gov.va.transpiler.jinja.node.unsupported.CountNode;
 import gov.va.transpiler.jinja.node.unsupported.DateFromNode;
 import gov.va.transpiler.jinja.node.unsupported.DifferenceBetweenNode;
 import gov.va.transpiler.jinja.node.unsupported.FlattenNode;
@@ -181,8 +182,9 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitContextDef(ContextDef element, State state) {
-        new ContextDefNode(state, element);
-        return super.visitContextDef(element, state);
+        var current = new DisabledNode(state);
+        state.setCurrentNode(null);
+        return current;
     }
 
     @Override
@@ -384,6 +386,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitReturnClause(ReturnClause element, State state) {
         new ReturnClauseNode(state, element);
         return super.visitReturnClause(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitSingletonFrom(SingletonFrom element, State state) {
+        new SingletonFromNode(state, element);
+        return super.visitSingletonFrom(element, state);
     }
 
     @Override

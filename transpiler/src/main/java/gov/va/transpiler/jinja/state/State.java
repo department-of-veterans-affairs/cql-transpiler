@@ -9,6 +9,7 @@ import gov.va.transpiler.jinja.node.TranspilerNode;
 
 public class State {
     private TranspilerNode currentNode = null;
+    private String context = null;
     private Map<String, Map<String, ReferenceableNode>> references = new LinkedHashMap<>();
 
     public TranspilerNode getCurrentNode() {
@@ -17,6 +18,14 @@ public class State {
 
     public void setCurrentNode(TranspilerNode currentNode) {
         this.currentNode = currentNode;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public void addReference(ReferenceableNode referenceableNode) {

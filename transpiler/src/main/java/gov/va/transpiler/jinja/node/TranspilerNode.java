@@ -60,4 +60,8 @@ public abstract class TranspilerNode {
     public String getTargetFileLocation() {
         return getParent() == null ? "" : getParent().getTargetFileLocation();
     }
+
+    public String contextToParam(String context) {
+        return "@" + context + ".id";
+    }
 }
