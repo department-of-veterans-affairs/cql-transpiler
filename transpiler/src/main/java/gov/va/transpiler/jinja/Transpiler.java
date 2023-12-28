@@ -18,12 +18,12 @@ public class Transpiler {
 
     public static void main(String[] args) throws IOException {
         String cql = ""
-        + "library Retrievals version '1.0'\n"
-        + "using QUICK\n"
-        + "define a: [Encounter] union [Patient]\n"
+        + "library Stuff version '1.0'\n"
+        + "include TestInclude version '1.0'\n"
+        + "define a: TestInclude.var + 1";
            ;
 
-        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./src/test/resources/cql");
+        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
 
         var libraryList = compiler.compile(cql);

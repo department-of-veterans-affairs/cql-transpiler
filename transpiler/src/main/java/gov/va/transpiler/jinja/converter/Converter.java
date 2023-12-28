@@ -100,7 +100,6 @@ import gov.va.transpiler.jinja.node.unsupported.DateFromNode;
 import gov.va.transpiler.jinja.node.unsupported.DifferenceBetweenNode;
 import gov.va.transpiler.jinja.node.unsupported.FlattenNode;
 import gov.va.transpiler.jinja.node.unsupported.IfNode;
-import gov.va.transpiler.jinja.node.unsupported.IncludeDefNode;
 import gov.va.transpiler.jinja.node.unsupported.IntervalNode;
 import gov.va.transpiler.jinja.node.unsupported.IntervalTypeSpecifierNode;
 import gov.va.transpiler.jinja.node.unsupported.NamedTypeSpecifierNode;
@@ -276,8 +275,9 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitIncludeDef(IncludeDef element, State state) {
-        new IncludeDefNode(state, element);
-        return super.visitIncludeDef(element, state);
+        var current = new DisabledNode(state);
+        state.setCurrentNode(null);
+        return current;
     }
 
     @Override
