@@ -26,12 +26,10 @@ import org.hl7.elm.r1.IdentifierRef;
 import org.hl7.elm.r1.If;
 import org.hl7.elm.r1.IncludeDef;
 import org.hl7.elm.r1.Interval;
-import org.hl7.elm.r1.IntervalTypeSpecifier;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.List;
 import org.hl7.elm.r1.Literal;
 import org.hl7.elm.r1.Multiply;
-import org.hl7.elm.r1.NamedTypeSpecifier;
 import org.hl7.elm.r1.Negate;
 import org.hl7.elm.r1.Not;
 import org.hl7.elm.r1.Null;
@@ -105,8 +103,6 @@ import gov.va.transpiler.jinja.node.unsupported.DifferenceBetweenNode;
 import gov.va.transpiler.jinja.node.unsupported.FlattenNode;
 import gov.va.transpiler.jinja.node.unsupported.IfNode;
 import gov.va.transpiler.jinja.node.unsupported.IntervalNode;
-import gov.va.transpiler.jinja.node.unsupported.IntervalTypeSpecifierNode;
-import gov.va.transpiler.jinja.node.unsupported.NamedTypeSpecifierNode;
 import gov.va.transpiler.jinja.node.unsupported.NotNode;
 import gov.va.transpiler.jinja.node.unsupported.NullNode;
 import gov.va.transpiler.jinja.node.unsupported.ParameterRefNode;
@@ -290,12 +286,6 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
-    public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {
-        new IntervalTypeSpecifierNode(state, element);
-        return super.visitIntervalTypeSpecifier(element, state);
-    }
-
-    @Override
     public TranspilerNode visitLibrary(Library element, State state) {
         new LibraryNode(state, element);
         return super.visitLibrary(element, state);
@@ -317,12 +307,6 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitMultiply(Multiply element, State state) {
         new MultiplyNode(state, element);
         return super.visitMultiply(element, state);
-    }
-
-    @Override
-    public TranspilerNode visitNamedTypeSpecifier(NamedTypeSpecifier element, State state) {
-        new NamedTypeSpecifierNode(state, element);
-        return super.visitNamedTypeSpecifier(element, state);
     }
 
     @Override
