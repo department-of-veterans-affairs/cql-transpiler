@@ -11,30 +11,25 @@ import gov.va.transpiler.jinja.state.State;
 
 public abstract class Binary<T extends Trackable> extends Ary<T> {
 
-    private TranspilerNode left;
-    private TranspilerNode right;
-
     public Binary(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
     }
 
     @Override
     public void addChild(TranspilerNode child) {
-        if (left == null) {
-            left = child;
-        } else if (right == null) {
-            right = child;
+        if (getChildren().size() < 2) {
+            getChildren().add(child);
         } else {
             throw new UnsupportedChildNodeException(this, child);
         }
     }
 
     protected TranspilerNode getLeft() {
-        return left;
+        return getChildren().get(0);
     }
 
     protected TranspilerNode getRight() {
-        return right;
+        return getChildren().get(1);
     }
 
     @Override
