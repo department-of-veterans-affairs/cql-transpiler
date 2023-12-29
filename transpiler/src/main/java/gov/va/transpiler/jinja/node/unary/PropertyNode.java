@@ -22,6 +22,16 @@ public class PropertyNode extends Unary<Property> {
     }
 
     @Override
+    public boolean isSimpleValue() {
+        return isColumnReference() ? false : super.isSimpleValue();
+    }
+
+    @Override
+    public boolean isTable() {
+        return isColumnReference() ? false : super.isTable();
+    }
+
+    @Override
     public Segment toSegment() {
         var segment = new Segment();
         if (isColumnReference()) {

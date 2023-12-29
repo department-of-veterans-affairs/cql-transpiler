@@ -55,12 +55,16 @@ import org.hl7.elm.r1.TupleElement;
 import org.hl7.elm.r1.TypeSpecifier;
 import org.hl7.elm.r1.Union;
 import org.hl7.elm.r1.UsingDef;
+import org.hl7.elm.r1.ValueSetDef;
+import org.hl7.elm.r1.ValueSetRef;
 
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.ary.FunctionRefNode;
 import gov.va.transpiler.jinja.node.ary.LibraryNode;
 import gov.va.transpiler.jinja.node.ary.ListNode;
+import gov.va.transpiler.jinja.node.ary.QueryNode;
+import gov.va.transpiler.jinja.node.ary.RetrieveNode;
 import gov.va.transpiler.jinja.node.ary.SortClauseNode;
 import gov.va.transpiler.jinja.node.ary.TupleNode;
 import gov.va.transpiler.jinja.node.ary.UnionNode;
@@ -78,9 +82,9 @@ import gov.va.transpiler.jinja.node.leaf.IdentifierRefNode;
 import gov.va.transpiler.jinja.node.leaf.LiteralNode;
 import gov.va.transpiler.jinja.node.leaf.OperandDefNode;
 import gov.va.transpiler.jinja.node.leaf.OperandRefNode;
-import gov.va.transpiler.jinja.node.leaf.QueryNode;
-import gov.va.transpiler.jinja.node.leaf.RetrieveNode;
 import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
+import gov.va.transpiler.jinja.node.leaf.ValueSetDefNode;
+import gov.va.transpiler.jinja.node.leaf.ValueSetRefNode;
 import gov.va.transpiler.jinja.node.unary.AliasedQuerySourceNode;
 import gov.va.transpiler.jinja.node.unary.AsNode;
 import gov.va.transpiler.jinja.node.unary.ByExpressionNode;
@@ -105,7 +109,6 @@ import gov.va.transpiler.jinja.node.unsupported.IntervalTypeSpecifierNode;
 import gov.va.transpiler.jinja.node.unsupported.NamedTypeSpecifierNode;
 import gov.va.transpiler.jinja.node.unsupported.NotNode;
 import gov.va.transpiler.jinja.node.unsupported.NullNode;
-import gov.va.transpiler.jinja.node.unsupported.ParameterDefNode;
 import gov.va.transpiler.jinja.node.unsupported.ParameterRefNode;
 import gov.va.transpiler.jinja.node.unsupported.ToDateNode;
 import gov.va.transpiler.jinja.node.unsupported.UnsupportedNode;
@@ -354,8 +357,9 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitParameterDef(ParameterDef element, State state) {
-        new ParameterDefNode(state, element);
-        return super.visitParameterDef(element, state);
+        var current = new DisabledNode(state);
+        state.setCurrentNode(null);
+        return current;
     }
 
     @Override
@@ -459,5 +463,17 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitUsingDef(UsingDef element, State state) {
         new UsingDefNode(state, element);
         return super.visitUsingDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitValueSetDef(ValueSetDef element, State state) {
+        new ValueSetDefNode(state, element);
+        return super.visitValueSetDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitValueSetRef(ValueSetRef element, State state) {
+        new ValueSetRefNode(state, element);
+        return super.visitValueSetRef(element, state);
     }
 }

@@ -18,10 +18,16 @@ public class Transpiler {
 
     public static void main(String[] args) throws IOException {
         String cql = ""
-        + "library Stuff version '1.0'\n"
-        + "include TestInclude version '1.0'\n"
-        + "define a: TestInclude.var + 1";
-           ;
+        + "library Retrievals version '1.0'\n"
+        + "using QDM version '5.6'\n"
+        + "include MATGlobalCommonFunctions version '7.0.000' called Global\n"
+        + "valueset \"Nonelective Inpatient Encounter\": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424'\n"
+        + "parameter \"Measurement Period\" Interval<DateTime>\n"
+        + "define \"Non Elective Inpatient Encounter\":\n"
+        + "  [\"Encounter, Performed\": \"Nonelective Inpatient Encounter\"] NonElectiveEncounter\n"
+        + "    where Global.\"LengthInDays\" ( NonElectiveEncounter.relevantPeriod ) <= 120\n"
+        + "      and NonElectiveEncounter.relevantPeriod ends during day of \"Measurement Period\"\n"
+       ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
