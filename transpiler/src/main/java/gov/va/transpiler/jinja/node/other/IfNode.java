@@ -48,12 +48,13 @@ public class IfNode extends CQLEquivalent<If> {
         segment.addChild(then.toSegment());
         segment.addChild(commaSegment);
         segment.addChild(otherwise.toSegment());
+        segment.setTail(")");
         return segment;
     }
 
     @Override
     public boolean isSimpleValue() {
-        return then.isSimpleValue();
+        return true;
     }
 
     @Override
