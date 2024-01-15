@@ -15,6 +15,7 @@ public class StartNode extends Unary<Start> {
     public Segment toSegment() {
         // TODO: support for reading start/end names from modelinfo
         var segment = new Segment();
+        segment.addChild(getChild().toSegment());
         segment.setHead(".?start?");
         return segment;
     }
