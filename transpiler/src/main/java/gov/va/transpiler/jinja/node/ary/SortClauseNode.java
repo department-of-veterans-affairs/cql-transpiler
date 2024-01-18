@@ -22,12 +22,7 @@ public class SortClauseNode extends Ary<SortClause> {
     }
 
     @Override
-    public boolean split() {
-        return false;
-    }
-
-    @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren("ORDER BY ","", "", "", ", ", ", ");
+        return toSegmentWithJoinedChildren("ORDER BY ","", "", "", ", ");
     }
 }

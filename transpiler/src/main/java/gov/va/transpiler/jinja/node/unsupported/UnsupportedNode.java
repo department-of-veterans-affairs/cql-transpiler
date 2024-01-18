@@ -27,6 +27,6 @@ public class UnsupportedNode extends Ary<Trackable> {
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren("Unsupported Node from type {" + getCqlEquivalent().getClass() + "} with children [", "]", "", "", ", ", ",");
+        return toSegmentWithJoinedChildren("{{ Unsupported_" + getCqlEquivalent().getClass() + "(", ") }}", "", "", ", ");
     }
 }

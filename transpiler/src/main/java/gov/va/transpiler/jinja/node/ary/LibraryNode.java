@@ -51,7 +51,7 @@ public class LibraryNode extends Ary<Library> {
     @Override
     public Segment toSegment() {
         var segment = new Segment();
-        segment.setPrintType(PrintType.Folder);
+        segment.setPrintType(PrintType.File);
         segment.setOriginalLibraryIdentifier(getCqlEquivalent().getIdentifier());
         segment.setFileLocation(getTargetFileLocation());
         getChildren().stream().map(TranspilerNode::toSegment).forEach(childSegment -> segment.addChild(childSegment));

@@ -28,20 +28,18 @@ public class ExpressionDefNode extends Unary<ExpressionDef> implements Reference
 
     @Override
     public Segment toSegment() {
-        var expressionFileSegment = new Segment();
-        expressionFileSegment.setPrintType(PrintType.File);
-        expressionFileSegment.setFileLocation(getTargetFileLocation());
-        expressionFileSegment.setLocator(getCqlEquivalent().getLocator());
-
         Segment expressionContentsSegment;
         if (getChild().isSimpleValue()) {
             expressionContentsSegment = containerizer.containerizeSimpleValue(getChild());
         } else {
             expressionContentsSegment = getChild().toSegment();
         }
-        expressionFileSegment.addChild(expressionContentsSegment);
+        expressionContentsSegment.setHead("{% macro " + referenceName() + "() %}");
+        expressionContentsSegment.setTail("{% endmacro %}");
+        expressionContentsSegment.setPrintType(PrintType.Line);
+        expressionContentsSegment.setLocator(getCqlEquivalent().getLocator());
 
-        return expressionFileSegment;
+        return expressionContentsSegment;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class ConcatenateNode extends Binary<Concatenate> {
     public Segment toSegment() {
         Segment segment = new Segment();
         if (isSimpleValue()) {
-            segment = toSegmentWithJoinedChildren("concat(",")","","",", ",", ");
+            segment = toSegmentWithJoinedChildren("concat(",")","","",", ");
         } else if (getLeft().isSimpleValue()) {
             var concatSegment = new Segment();
             concatSegment.setHead("SELECT concat(");
@@ -51,7 +51,6 @@ public class ConcatenateNode extends Binary<Concatenate> {
         } else {
             segment = toSegmentWithJoinedChildren("SELECT concat(leftval, rightval) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM ((SELECT " + SINGLE_VALUE_COLUMN_NAME + " AS leftval FROM ",
               "))))",null, null,
-               ") OUTER JOIN ((SELECT " + SINGLE_VALUE_COLUMN_NAME + " AS rightval FROM ",
                ") OUTER JOIN ((SELECT " + SINGLE_VALUE_COLUMN_NAME + " AS rightval FROM ");
         }
         return segment;

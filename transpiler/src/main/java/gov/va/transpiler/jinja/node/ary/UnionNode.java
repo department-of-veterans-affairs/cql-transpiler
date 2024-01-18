@@ -40,6 +40,6 @@ public class UnionNode extends Ary<Union> {
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren("", "", "(", ")", " UNION ", " UNION");
+        return toSegmentWithJoinedChildren("", "", "(", ")", " UNION ");
     }
 }

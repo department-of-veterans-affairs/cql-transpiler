@@ -38,10 +38,6 @@ public class FunctionDefNode extends Unary<FunctionDef> implements Referenceable
 
     @Override
     public Segment toSegment() {
-        var functionFileSegment = new Segment();
-        functionFileSegment.setLocator(getCqlEquivalent().getLocator());
-        functionFileSegment.setFileLocation(getTargetFileLocation());
-        functionFileSegment.setPrintType(PrintType.File);
 
         // wrap function with macro definition
         var functionContentsSegment = new Segment();
@@ -63,13 +59,12 @@ public class FunctionDefNode extends Unary<FunctionDef> implements Referenceable
         functionContentsSegment.setHead(sb.toString());
         // nest segments
         var childSegment = getChild().toSegment();
-        childSegment.setPrintType(PrintType.Line);
         functionContentsSegment.addChild(childSegment);
         functionContentsSegment.setTail("{% endmacro %}");
+        functionContentsSegment.setPrintType(PrintType.Inline);
+        functionContentsSegment.setLocator(getCqlEquivalent().getLocator());
 
-        functionFileSegment.addChild(functionContentsSegment);
-
-        return functionFileSegment;
+        return functionContentsSegment;
     }
 
     @Override

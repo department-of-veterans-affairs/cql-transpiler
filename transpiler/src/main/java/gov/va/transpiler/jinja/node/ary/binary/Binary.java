@@ -6,7 +6,6 @@ import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
 import gov.va.transpiler.jinja.node.ary.Ary;
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public abstract class Binary<T extends Trackable> extends Ary<T> {
@@ -33,15 +32,14 @@ public abstract class Binary<T extends Trackable> extends Ary<T> {
     }
 
     @Override
-    protected Segment toSegmentWithJoinedChildren(String head, String tail, String childPrefix, String childPostfix, String childJoinerInline, String childJoinerLine) {
+    protected Segment toSegmentWithJoinedChildren(String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
         var segment = new Segment();
         segment.setHead(head);
         var leftSegment = childToSegment(getLeft());
         segment.addChild(leftSegment);
         var rightSegment = childToSegment(getRight());
         var joiner = new Segment();
-        var split = !(leftSegment.getPrintType() == PrintType.Inline && rightSegment.getPrintType() == PrintType.Inline);
-        joiner.setHead(split ? childJoinerLine : childJoinerInline);
+        joiner.setHead(childJoinerInline);
         segment.addChild(joiner);
         segment.addChild(rightSegment);
         segment.setTail(tail);

@@ -7,7 +7,6 @@ import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.unary.AliasedQuerySourceNode;
 import gov.va.transpiler.jinja.node.unary.ReturnClauseNode;
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public class QueryNode extends Ary<Query> {
@@ -94,11 +93,8 @@ public class QueryNode extends Ary<Query> {
             var superSegment = new Segment();
             superSegment.addChild(segment);
             segment = superSegment;
-            segment.setPrintType(PrintType.Line);
             for (var child: getChildren()) {
-                var cseg = child.toSegment();
-                cseg.setPrintType(PrintType.Line);
-                segment.addChild(cseg);
+                segment.addChild(child.toSegment());
             }
         }
         return segment;

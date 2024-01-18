@@ -17,14 +17,6 @@ public class SegmentPrinter {
         this.contentRetriever = contentRetriever;
     }
 
-    protected String indentToLevel(int indentLevel) {
-        var sb = new StringBuilder();
-        for (var i = 0; i < indentLevel; i++) {
-            sb.append(Standards.INDENT);
-        }
-        return sb.toString();
-    }
-
     public void toFiles(Segment segment, String targetPath) throws IOException {
         switch (segment.getPrintType()) {
             case Folder:
@@ -35,7 +27,7 @@ public class SegmentPrinter {
                 break;
             case Line:
             case Inline:
-                toFiles(segment, targetPath, 0);
+                printTextSegment(segment, targetPath);
                 break;
             default:
                 throw new IOException("Unexpected Segment Type");
@@ -67,13 +59,36 @@ public class SegmentPrinter {
             file.createNewFile();
         }
 
+        for (var child : segment.getChildren()) {
+            toFiles(child, targetPath);
+        }
+    }
+
+    private void printTextSegment(Segment segment, String targetPath) throws FileNotFoundException, IOException {
+        var path = targetPath + segment.getFileLocation();
+        File file = new File(path);
+
         // Print the original CQL text if locators are specified
         if (PRINT_LOCATORS && segment.getLocator() != null) {
             printOriginalCQLToFile(file, segment);
         }
 
-        for (var child : segment.getChildren()) {
-            toFiles(child, targetPath);
+        // Print this segment's head
+        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+            outputStream.write(segment.getHead().getBytes());
+        }
+
+        // recursively print this item's children
+        for (var item : segment.getChildren()) {
+            toFiles(item, targetPath);
+        }
+
+        // Print this segment's tail
+        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+            outputStream.write(segment.getTail().getBytes());
+            if (segment.getPrintType() == PrintType.Line) {
+                outputStream.write(Standards.NEWLINE.getBytes());
+            }
         }
     }
 
@@ -91,34 +106,6 @@ public class SegmentPrinter {
             outputStream.write(Standards.NEWLINE.getBytes());
             outputStream.write("{% endcomment %}".getBytes());
             outputStream.write(Standards.NEWLINE.getBytes());
-        }
-    }
-
-    private void toFiles(Segment segment, String targetPath, int indentLevel) throws FileNotFoundException, IOException {
-        var path = targetPath + segment.getFileLocation();
-        File file = new File(path);
-
-        // Print this segment's head
-        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-            if (segment.getPrintType() == PrintType.Line) {
-                outputStream.write(Standards.NEWLINE.getBytes());
-                outputStream.write(indentToLevel(indentLevel).getBytes());
-            }
-            outputStream.write(segment.getHead().getBytes());
-        }
-
-        // recursively print this item's children
-        for (var item : segment.getChildren()) {
-            toFiles(item, targetPath, segment.getPrintType() == PrintType.Inline ? indentLevel : indentLevel + 1);
-        }
-
-        // Print this segment's tail
-        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-            if (segment.getPrintType() == PrintType.Line) {
-                outputStream.write(Standards.NEWLINE.getBytes());
-                outputStream.write(indentToLevel(indentLevel).getBytes());
-            }
-            outputStream.write(segment.getTail().getBytes());
         }
     }
 }

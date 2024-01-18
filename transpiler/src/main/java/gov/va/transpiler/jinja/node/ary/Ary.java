@@ -12,12 +12,9 @@ import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
 import gov.va.transpiler.jinja.node.unsupported.DisabledNode;
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
-
-    private static final int SPLIT_ARY_CHILDREN_AT = 3;
 
     private final List<TranspilerNode> children = new ArrayList<>();
 
@@ -40,11 +37,7 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
         return child.toSegment();
     }
 
-    protected boolean split() {
-        return getChildren().size() == SPLIT_ARY_CHILDREN_AT;
-    }
-
-    protected Segment toSegmentWithJoinedChildren(String head, String tail, String childPrefix, String childPostfix, String childJoinerInline, String childJoinerLine) {
+    protected Segment toSegmentWithJoinedChildren(String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
         var topLevel = new Segment();
         topLevel.setHead(head);
         switch(getChildren().size()) {
@@ -57,8 +50,6 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
                 topLevel.addChild(childToSegment(getChildren().get(0)));
                 break;
             default:
-                var split = split();
-                topLevel.setPrintType(split ? PrintType.Line : PrintType.Inline);
                 for (int i = 0; i < getChildren().size(); i++) {
                     // Prefix
                     var prefixSegment = new Segment();
@@ -71,7 +62,7 @@ public abstract class Ary<T extends Trackable> extends CQLEquivalent<T> {
                     // Postfix
                     var postfixSegment = new Segment();
                     boolean last = i == getChildren().size() - 1;
-                    postfixSegment.setHead(last ? childPostfix : childPostfix + (split ? childJoinerLine : childJoinerInline));
+                    postfixSegment.setHead(last ? childPostfix : childPostfix + (childJoinerInline));
                     topLevel.addChild(postfixSegment);
                 }
         }

@@ -25,7 +25,7 @@ public class DifferenceBetweenNode extends Binary<DifferenceBetween> {
     public Segment toSegment() {
         switch (getCqlEquivalent().getPrecision()) {
             case DAY:
-                return toSegmentWithJoinedChildren("datediff(", ")", "", "", ", ", ",");
+                return toSegmentWithJoinedChildren("datediff(", ")", "", "", ", ");
             default:
                 throw new UnsupportedOperationException("We don't current support precision of type " + getCqlEquivalent().getPrecision());
         }
