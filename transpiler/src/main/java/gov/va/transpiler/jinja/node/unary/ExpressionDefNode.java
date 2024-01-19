@@ -49,7 +49,7 @@ public class ExpressionDefNode extends Unary<ExpressionDef> implements Reference
 
     @Override
     public String referenceName() {
-        return getCqlEquivalent().getName();
+        return getCqlEquivalent().getName().replace(' ', '_');
     }
 
     @Override

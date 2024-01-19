@@ -74,7 +74,7 @@ public class FunctionDefNode extends Unary<FunctionDef> implements Referenceable
 
     @Override
     public String referenceName() {
-        return getCqlEquivalent().getName();
+        return getCqlEquivalent().getName().replace(' ', '_');
     }
 
     @Override

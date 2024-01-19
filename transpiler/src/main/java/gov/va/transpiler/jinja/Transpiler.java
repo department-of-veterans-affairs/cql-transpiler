@@ -30,6 +30,7 @@ public class Transpiler {
        ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
+        var jinjaTarget = "jinja/";
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
 
         var libraryList = compiler.compile(cql);
@@ -48,7 +49,7 @@ public class Transpiler {
 
         var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
         for (var mapped : convertedLibraries) {
-           segmentPrinter.toFiles(mapped.toSegment(), "./");
+           segmentPrinter.toFiles(mapped.toSegment(), jinjaTarget);
         }
     }
 }

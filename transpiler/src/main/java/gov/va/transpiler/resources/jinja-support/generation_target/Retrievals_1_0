@@ -1,0 +1,7 @@
+{% from "sparksql" import add %}
+{% from "sparksql" import literal %}
+
+{#
+    a: 1 + 2
+#}
+{% macro a() %}{{add(literal('Integer', '1'), literal('Integer', '2'))}}{% endmacro %}
