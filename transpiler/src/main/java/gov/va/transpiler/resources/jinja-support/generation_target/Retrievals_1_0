@@ -19,3 +19,13 @@
     d: {foo: c, bar: 1}
 #}
 {% macro d() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.compress(c()), 'bar': macros.encapsulate(macros.literal('Integer', '1'))}) %}{{ macros.struct(paramList, currentDict) }}{% endmacro %}
+
+{#
+    e: {}
+#}
+{% macro e() %}{{ macros.list([]) }}{% endmacro %}
+
+{#
+    f: {1, 2}
+#}
+{% macro f() %}{{ macros.list([macros.encapsulate(macros.literal('Integer', '1')), macros.encapsulate(macros.literal('Integer', 2))]) }}{% endmacro %}
