@@ -1,5 +1,0 @@
-{% macro literal(literalType, value) %}{% if literalType == 'Integer' %}{{value}}{% elif literalType == 'String' %}'{{value}}'{% else %}{{literalType}}::{{value}}{% endif %}{% endmacro %}
-{% macro add(left, right) %}{{left}} + {{right}}{% endmacro %}
-{% macro subtract(left, right) %}{{left}} - {{right}}{% endmacro %}
-{% macro multiply(left, right) %}{{left}} * {{right}}{% endmacro %}
-{% macro divide(left, right) %}{{left}} / {{right}}{% endmacro %}

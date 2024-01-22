@@ -1,7 +1,21 @@
-{% from "sparksql" import add %}
-{% from "sparksql" import literal %}
+{% import 'macros' as macros %}
 
 {#
     a: 1 + 2
 #}
-{% macro a() %}{{add(literal('Integer', '1'), literal('Integer', '2'))}}{% endmacro %}
+{% macro a() %}{{macros.add(macros.literal('Integer', '1'), macros.literal('Integer', '2'))}}{% endmacro %}
+
+{#
+    b: a
+#}
+{% macro b() %}{{ a() }}{% endmacro %}
+
+{#
+    c: [Patient]
+#}
+{% macro c() %}{{ macros.retrieve('QUICK', 'Patient') }}{% endmacro %}
+
+{#
+    d: {foo: c, bar: 1}
+#}
+{% macro d() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.compress(c()), 'bar': macros.encapsulate(macros.literal('Integer', '1'))}) %}{{ macros.struct(paramList, currentDict) }}{% endmacro %}
