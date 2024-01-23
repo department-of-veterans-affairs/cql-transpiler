@@ -1,31 +1,74 @@
 {% import 'macros' as macros %}
 
 {#
-    a: 1 + 2
+    define testLiteral: 1
 #}
-{% macro a() %}{{macros.add(macros.literal('Integer', '1'), macros.literal('Integer', '2'))}}{% endmacro %}
+{% macro testLiteral() %}{{ macros.literal('Integer', '1') }}{% endmacro %}
 
 {#
-    b: a
+    define testReference: a
 #}
-{% macro b() %}{{ a() }}{% endmacro %}
+{% macro testReference() %}{{ testLiteral() }}{% endmacro %}
 
 {#
-    c: [Patient]
+    define testRetrieve: [Patient]
 #}
-{% macro c() %}{{ macros.retrieve('QUICK', 'Patient') }}{% endmacro %}
+{% macro testRetrieve() %}{{ macros.retrieve('QUICK', 'Patient') }}{% endmacro %}
 
 {#
-    d: {foo: c, bar: 1}
+    define testStruct_WithCompression: {foo: c, bar: 1}
 #}
-{% macro d() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.compress(c()), 'bar': macros.encapsulate(macros.literal('Integer', '1'))}) %}{{ macros.struct(paramList, currentDict) }}{% endmacro %}
+{% macro testStruct_WithCompression() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.compress(testRetrieve()), 'bar': macros.encapsulate(macros.literal('Integer', '1'))}) %}{{ macros.struct(paramList, currentDict) }}{% endmacro %}
 
 {#
-    e: {}
+    define testEmptyList: {}
 #}
-{% macro e() %}{{ macros.list([]) }}{% endmacro %}
+{% macro testEmptyList() %}{{ macros.list([]) }}{% endmacro %}
 
 {#
-    f: {1, 2}
+    define testList: {1, 2}
 #}
-{% macro f() %}{{ macros.list([macros.encapsulate(macros.literal('Integer', '1')), macros.encapsulate(macros.literal('Integer', 2))]) }}{% endmacro %}
+{% macro testList() %}{{ macros.list([macros.encapsulate(macros.literal('Integer', '1')), macros.encapsulate(macros.literal('Integer', 2))]) }}{% endmacro %}
+
+{# TODO: #}
+{#
+    library Retrievals version '1.0'
+    using QUICK
+
+    define testListReference: testList[1]
+    define testStructReference: testStruct_WithCompression.foo
+    define TestNestedStruct: {baz: 1, foobar: testStruct_WithCompression}
+    define TestNestedStructReference: TestNestedStruct.foobar.bar
+    define function testFunction(val Integer):
+        2 * val
+    define testFunctionReference: testFunction(1)
+    define testConcatenate: '1' + '2'
+    define testMathOperations: (1 + 2 / -3 + 4) * 5 + a
+    define testQuery_returnColumnValue: [Encounter] E return E.period
+    define testDate: @2010-01-02T14:30:07.76
+    define testQuery_withWhere_withColumnReference: [Encounter] E where E.period ends after p
+    define testQuery_sortBy: [Encounter] E sort by status.value
+    define testQuery_returnColumnValueProperty: [Encounter] E return E.status.value
+    define testQuery_wherePropertyMatch: [Encounter] E where E.status.value = 'finished'
+    define testUnion: [Encounter] union [Patient]
+#}
+{#
+    library Retrievals version '1.0'
+    using QUICK
+    
+    context Patient
+    define testCount_patientContext: Count([Encounter])
+    context Unfiltered
+    define testCount_unfilteredContext: Count([Encounter])
+#}
+{#
+    library Retrievals version '1.0'
+    using QDM version '5.6'
+    include MATGlobalCommonFunctions version '7.0.000' called Global
+    valueset "Nonelective Inpatient Encounter": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424'
+    parameter "Measurement Period" Interval<DateTime>
+    define "Non Elective Inpatient Encounter":
+        ["Encounter, Performed": "Nonelective Inpatient Encounter"] NonElectiveEncounter
+            where Global."LengthInDays" ( NonElectiveEncounter.relevantPeriod ) <= 120
+            and NonElectiveEncounter.relevantPeriod ends during day of "Measurement Period"
+#}
