@@ -40,13 +40,16 @@
 #}
 {% macro testStructReference() %}SELECT foo from ({{ macros.decompress(testStructWithCompression) }}){% endmacro %}
 
+{#
+    define testNestedStruct: {baz: 1, foobar: testStruct_WithCompression}
+#}
+{% macro testNestedStruct() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': encapsulate(1), 'bar': testStruct_withCompression()}) %}{{ macros.struct(paramList, currentDict) }}{% endmacro %}
 
 {# TODO: #}
 {#
     library Retrievals version '1.0'
     using QUICK
     
-    define TestNestedStruct: {baz: 1, foobar: testStruct_WithCompression}
     define TestNestedStructReference: TestNestedStruct.foobar.bar
     define function testFunction(val Integer):
         2 * val
