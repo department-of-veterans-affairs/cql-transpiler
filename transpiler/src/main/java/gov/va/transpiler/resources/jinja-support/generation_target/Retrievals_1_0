@@ -18,7 +18,7 @@
 {#
     define testStruct_WithCompression: {foo: c, bar: 1}
 #}
-{% macro testStruct_WithCompression() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.compress(testRetrieve()), 'bar': macros.encapsulate(macros.literal('Integer', '1'))}) %}{{ macros.struct(paramList, currentDict) }}{% endmacro %}
+{% macro testStruct_WithCompression() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.compress('Unfiltered', testRetrieve()), 'bar': macros.encapsulate(macros.literal('Integer', '1'))}) %}{{ macros.struct(paramList, currentDict) }}{% endmacro %}
 
 {#
     define testEmptyList: {}
@@ -30,13 +30,22 @@
 #}
 {% macro testList() %}{{ macros.list([macros.encapsulate(macros.literal('Integer', '1')), macros.encapsulate(macros.literal('Integer', 2))]) }}{% endmacro %}
 
+{#
+    define testStructReference: testStruct_WithCompression.bar
+#}
+{% macro testStructReference() %}SELECT bar from ({{ testStructWithCompression() }}){% endmacro %}
+
+{#
+    define testStructReference_decompressing: testStruct_WithCompression.foo
+#}
+{% macro testStructReference() %}SELECT foo from ({{ macros.decompress(testStructWithCompression) }}){% endmacro %}
+
+
 {# TODO: #}
 {#
     library Retrievals version '1.0'
     using QUICK
-
-    define testListReference: testList[1]
-    define testStructReference: testStruct_WithCompression.foo
+    
     define TestNestedStruct: {baz: 1, foobar: testStruct_WithCompression}
     define TestNestedStructReference: TestNestedStruct.foobar.bar
     define function testFunction(val Integer):
