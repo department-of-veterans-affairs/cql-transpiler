@@ -1,0 +1,67 @@
+{# to implement macros for #}
+
+{#
+    define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral()
+#}
+{# note: this is missing a lot of 'to decimal' calls #}
+{% macro testMathOperations() %}{{ macros.add(macros.multiply(macros.add(macros.add(macros.literal('Integer', 1), macros.divide(macros.literal('Integer', '2'), macros.negate(macros.literal('Integer', 3)))), macros.literal('Integer', '4')), macros.literal('Integer', '5')), testLiteral()) }}{% endmacro %}
+
+{#
+    define testDate: @2010-01-02T14:30:07.76
+#}
+{% macro testQuery_returnColumnValue() %}{{ macros.date(macros.literal('Integer', '2010'), macros.literal('Integer', '01'), macros.literal('Integer', '02'), macros.literal('Integer', '14'), macros.literal('Integer', '30'), macros.literal('Integer', '7'), macros.literal('Integer', '76')) }}{% endmacro %}
+
+{#
+    define testQuery_returnColumnValue: [Encounter] E return E.period
+#}
+{% macro testQuery_returnColumnValue() %}{{ macros.query_alias_return('QUICK', 'Encounter', 'E', [macros.propertyOf('period', 'E')]) }}{% endmacro %}
+
+{#
+    define testQuery_withWhere: [Encounter] E where E.period ends after testDate
+#}
+{% macro testQuery_withWhere() %}{{ macros.query_alias_where('QUICK', 'Encounter', 'E', macros.where(macros.after(macros.propertyOf('period', 'E'), testDate()))) }}{% endmacro %}
+
+{#
+    define testQuery_sortBy: [Encounter] E sort by status.value
+#}
+{% macro testQuery_sortBy() %}{{ macros.query_alias_sortBy('QUICK', 'Encounter', 'E', macros.sortby(macros.propertyOf('value', 'status'))) }}{% endmacro %}
+
+{#
+    define testQuery_returnColumnValueProperty: [Encounter] E return E.status.value
+#}
+{% macro testQuery_returnColumnValueProperty() %}{{ macros.query_alias_return('QUICK', 'Encounter', 'E', [macros.propertyOf(macros.propertyOf('value', 'status'), 'E')]) }}{% endmacro %}
+
+{#
+    define testQuery_withWhere: [Encounter] E where E.period ends after testDate
+#}
+{% macro testQuery_wherePropertyMatch() %}{{ macros.query_alias_where('QUICK', 'Encounter', 'E', macros.where(macros.equals(macros.propertyOf('value', macros.propertyOf('status', 'E')), 'finished')))) }}{% endmacro %}
+
+{#
+    define testUnion: [Encounter] union [Patient]
+#}
+{% macro testUnion() %}{{ macros.union([macros.retrieve('QUICK', 'Encounter'), macros.retrieve('QUICK', 'Patient')]) }}{% endmacro %}
+
+{#
+    context Patient
+    define testCount_patientContext: Count([Encounter])
+#}
+{% macro testCount_patientContext() %}{{ macros.count('Patient', macros.retrieve('QUICK', 'Encounter')) }}{% endmacro %}
+
+{#
+    context Unfiltered
+    define testCount_unfilteredContext: Count([Encounter])
+#}
+{% macro testCount_unfilteredContext() %}{{ macros.count('Encounter', macros.retrieve('QUICK', 'Encounter')) }}{% endmacro %}
+
+{#
+    library Retrievals version '1.0'
+    using QDM version '5.6'
+    include MATGlobalCommonFunctions version '7.0.000' called Global
+    valueset "Nonelective Inpatient Encounter": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424'
+    parameter "Measurement Period" Interval<DateTime>
+    define "Non Elective Inpatient Encounter":
+        ["Encounter, Performed": "Nonelective Inpatient Encounter"] NonElectiveEncounter
+            where Global."LengthInDays" ( NonElectiveEncounter.relevantPeriod ) <= 120
+            and NonElectiveEncounter.relevantPeriod ends during day of "Measurement Period"
+#}
+{% macro Non_Elective_Inpatient_Encounter() %}{{  macros.query_source_alias_where('QDM', 'Encounter, Performed', 'Nonelective Inpatient Encounter', 'NonElectiveEncounter', macros.where(macros.and(macros.lessThan(Global.LengthInDays(macros.propertyOf('relevantPeriod', 'NonElectiveEncounter')), macros.literal('Integer', '120')), macros.and(macros.lessThan(macros.end('QDM', macros.propertyOf('relevantPeriod', 'NonElectiveEncounter')), macros.end('QDM', macros.parameterReference('Measurement Period'))), macros.greaterThan(macros.end('QDM', macros.propertyOf('relevantPeriod', 'NonElectiveEncounter')), macros.start('QDM', macros.parameterReference('Measurement Period'))))))) }}{% endmacro %}

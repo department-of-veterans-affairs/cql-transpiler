@@ -5,9 +5,11 @@
 {% macro divide(left, right) %}{{left}} / {{right}}{% endmacro %}
 {% macro retrieve(modeltype, model) %}SELECT * FROM {{ model }}{% endmacro %}
 {% macro encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
-{% macro struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first=true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS '{{ name }}'{% endfor %}){% endmacro %}
+{% macro struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first=true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS {{ name }}{% endfor %}){% endmacro %}
 {% macro emptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
 {% macro list(listOfItems) %}{% set ns = namespace(first=true) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ emptyTable() }}{% else %}({% for item in listOfItems %}{% if ns.first %}{% set ns.first = false %}{% else %} UNION {% endif %}{{ item }}{% endfor %}){% endif %}{% endmacro %}
 {% macro getIDFromContext(context) %}{{ context }}.id{% endmacro %}
 {% macro compress(context, toCompress)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCompress }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ getIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro decompress(toDecompress) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecompress }})){% endmacro %}
+{% macro propertyOf(property, of) %}SELECT {{ property }} FROM ({{ of }}){% endmacro %}
+{% macro concatenate(leftVal, leftIsSimple, rightVal, rightIsSimple)%}{% if leftIsSimple == true and rightIsSimple == true %}concat({{ leftVal }}, {{ rightVal }}){% elif leftIsSimple == false and rightIsSimple == true %}SELECT concat({{ leftVal }}, rightVal) AS _val FROM (SELECT _val AS rightVal FROM ({{ rightVal }})){% elif leftIsSimple == true and rightIsSimple == false %}SELECT concat(leftVal, {{ rightVal }}) AS _val FROM (SELECT _val AS leftVal FROM ({{ leftVal }})){% else %}SELECT concat(leftVal, rightVal) AS _val FROM ((SELECT _val AS leftVal FROM ({{ leftVal }})) OUT JOIN (SELECT _val AS rightVal FROM ({{ rightVal }}))){% endif %}{% endmacro %}
