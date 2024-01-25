@@ -66,6 +66,12 @@
 {% macro testFunctionReference() %}{{ testFunction(macros.literal('Integer', '1')) }}{% endmacro %}
 
 {#
-    define testConcatenate_simpleValues: '1' + '2'
+    define testConcatenate: '1' + '2'
 #}
-{% macro testConcatenate_simpleValues() %}{{ macros.concatenate(macros.literal('String', '1'), true, macros.literal('String', '2'), true) }}{% endmacro %}
+{% macro testConcatenate() %}{{ macros.concatenate(macros.literal('String', '1'), true, macros.literal('String', '2'), true) }}{% endmacro %}
+
+{#
+    define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral()
+#}
+{# note: this is missing a lot of 'to decimal' calls #}
+{% macro testMathOperations() %}{{ macros.add(macros.multiply(macros.add(macros.add(macros.literal('Integer', 1), macros.divide(macros.literal('Integer', '2'), macros.negate(macros.literal('Integer', 3)))), macros.literal('Integer', '4')), macros.literal('Integer', '5')), testLiteral()) }}{% endmacro %}

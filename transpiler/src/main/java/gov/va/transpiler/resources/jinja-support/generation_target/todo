@@ -1,12 +1,6 @@
 {# to implement macros for #}
 
 {#
-    define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral()
-#}
-{# note: this is missing a lot of 'to decimal' calls #}
-{% macro testMathOperations() %}{{ macros.add(macros.multiply(macros.add(macros.add(macros.literal('Integer', 1), macros.divide(macros.literal('Integer', '2'), macros.negate(macros.literal('Integer', 3)))), macros.literal('Integer', '4')), macros.literal('Integer', '5')), testLiteral()) }}{% endmacro %}
-
-{#
     define testDate: @2010-01-02T14:30:07.76
 #}
 {% macro testQuery_returnColumnValue() %}{{ macros.date(macros.literal('Integer', '2010'), macros.literal('Integer', '01'), macros.literal('Integer', '02'), macros.literal('Integer', '14'), macros.literal('Integer', '30'), macros.literal('Integer', '7'), macros.literal('Integer', '76')) }}{% endmacro %}

@@ -1,13 +1,14 @@
-{% macro literal(literalType, value) %}{% if literalType == 'Integer' %}{{value}}{% elif literalType == 'String' %}'{{value}}'{% else %}{{literalType}}::{{value}}{% endif %}{% endmacro %}
-{% macro add(left, right) %}{{left}} + {{right}}{% endmacro %}
-{% macro subtract(left, right) %}{{left}} - {{right}}{% endmacro %}
-{% macro multiply(left, right) %}{{left}} * {{right}}{% endmacro %}
-{% macro divide(left, right) %}{{left}} / {{right}}{% endmacro %}
+{% macro literal(literalType, value) %}{% if literalType == 'Integer' %}{{value}}{% elif literalType == 'String' %}'{{ value }}'{% else %}{{ literalType }}::{{ value }}{% endif %}{% endmacro %}
+{% macro add(left, right) %}({{left}} + {{ right }}){% endmacro %}
+{% macro subtract(left, right) %}({{ left }} - {{ right }}){% endmacro %}
+{% macro multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}
+{% macro divide(left, right) %}({{ left }} / {{ right }}){% endmacro %}
+{% macro negate(value) %}-{{ value }}{% endmacro %}
 {% macro retrieve(modeltype, model) %}SELECT * FROM {{ model }}{% endmacro %}
 {% macro encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
-{% macro struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first=true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS {{ name }}{% endfor %}){% endmacro %}
+{% macro struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first = true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS {{ name }}{% endfor %}){% endmacro %}
 {% macro emptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
-{% macro list(listOfItems) %}{% set ns = namespace(first=true) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ emptyTable() }}{% else %}({% for item in listOfItems %}{% if ns.first %}{% set ns.first = false %}{% else %} UNION {% endif %}{{ item }}{% endfor %}){% endif %}{% endmacro %}
+{% macro list(listOfItems) %}{% set ns = namespace(first = true) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ emptyTable() }}{% else %}({% for item in listOfItems %}{% if ns.first %}{% set ns.first = false %}{% else %} UNION {% endif %}{{ item }}{% endfor %}){% endif %}{% endmacro %}
 {% macro getIDFromContext(context) %}{{ context }}.id{% endmacro %}
 {% macro compress(context, toCompress)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCompress }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ getIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro decompress(toDecompress) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecompress }})){% endmacro %}
