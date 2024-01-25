@@ -48,12 +48,12 @@
 {#
     define testNestedStructReference: TestNestedStruct.foobar.bar
 #}
-{% macro testNestedStructReference() %}{{ macros.propertyOf('bar', macros.propertyOf('foobar', testNestedStruct())) }}{% endmacro %}
+{% macro testNestedStructReference() %}{{ macros.propertyOf(false, 'bar', macros.propertyOf(false, 'foobar', testNestedStruct())) }}{% endmacro %}
 
 {#
     define testNestedStructReferenceTable: TestNestedStruct.foobar.food
 #}
-{% macro testNestedStructReferenceTable() %}{{ macros.decompress(macros.propertyOf('foo', macros.propertyOf('foobar', testNestedStruct()))) }}{% endmacro %}
+{% macro testNestedStructReferenceTable() %}{{ macros.decompress(macros.propertyOf(false, 'foo', macros.propertyOf(false, 'foobar', testNestedStruct()))) }}{% endmacro %}
 
 {#
     define function testFunction(val Integer):
@@ -80,3 +80,8 @@
     define testDatetime: @2010-01-02T14:30:07.76
 #}
 {% macro testDatetime() %}{{ macros.datetime(macros.literal('Integer', '2010'), macros.literal('Integer', '01'), macros.literal('Integer', '02'), macros.literal('Integer', '14'), macros.literal('Integer', '30'), macros.literal('Integer', '7'), macros.literal('Integer', '76')) }}{% endmacro %}
+
+{#
+    define testQuery_returnColumnValue: [Encounter] E return E.period
+#}
+{% macro testQuery_returnColumnValue() %}{{ macros.query('QUICK', 'Encounter', 'E', false, [macros.propertyOf(true, 'period', 'E')], false, none, false, none) }}{% endmacro %}
