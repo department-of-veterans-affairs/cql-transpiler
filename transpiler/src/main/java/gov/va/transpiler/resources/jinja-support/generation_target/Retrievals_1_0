@@ -75,3 +75,8 @@
 #}
 {# note: this is missing a lot of 'to decimal' calls #}
 {% macro testMathOperations() %}{{ macros.add(macros.multiply(macros.add(macros.add(macros.literal('Integer', 1), macros.divide(macros.literal('Integer', '2'), macros.negate(macros.literal('Integer', 3)))), macros.literal('Integer', '4')), macros.literal('Integer', '5')), testLiteral()) }}{% endmacro %}
+
+{#
+    define testDatetime: @2010-01-02T14:30:07.76
+#}
+{% macro testDatetime() %}{{ macros.datetime(macros.literal('Integer', '2010'), macros.literal('Integer', '01'), macros.literal('Integer', '02'), macros.literal('Integer', '14'), macros.literal('Integer', '30'), macros.literal('Integer', '7'), macros.literal('Integer', '76')) }}{% endmacro %}
