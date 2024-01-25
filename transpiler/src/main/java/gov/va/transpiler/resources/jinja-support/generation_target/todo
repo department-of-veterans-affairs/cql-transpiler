@@ -3,22 +3,22 @@
 {#
     define testQuery_withWhere: [Encounter] E where E.period ends after testDate
 #}
-{% macro testQuery_withWhere() %}{{ macros.query_alias_where('QUICK', 'Encounter', 'E', macros.where(macros.after(macros.propertyOf('period', 'E'), testDatetime()))) }}{% endmacro %}
+{% macro testQuery_withWhere() %}{{ macros.query('QUICK', 'Encounter', 'E', macros.where(macros.after(macros.propertyOf('period', 'E'), testDatetime()))) }}{% endmacro %}
 
 {#
     define testQuery_sortBy: [Encounter] E sort by status.value
 #}
-{% macro testQuery_sortBy() %}{{ macros.query_alias_sortBy('QUICK', 'Encounter', 'E', macros.sortby(macros.propertyOf('value', 'status'))) }}{% endmacro %}
+{% macro testQuery_sortBy() %}{{ macros.query('QUICK', 'Encounter', 'E', macros.sortby(macros.propertyOf('value', 'status'))) }}{% endmacro %}
 
 {#
     define testQuery_returnColumnValueProperty: [Encounter] E return E.status.value
 #}
-{% macro testQuery_returnColumnValueProperty() %}{{ macros.query_alias_return('QUICK', 'Encounter', 'E', [macros.propertyOf(macros.propertyOf('value', 'status'), 'E')]) }}{% endmacro %}
+{% macro testQuery_returnColumnValueProperty() %}{{ macros.query('QUICK', 'Encounter', 'E', [macros.propertyOf(macros.propertyOf('value', 'status'), 'E')]) }}{% endmacro %}
 
 {#
     define testQuery_withWhere: [Encounter] E where E.period ends after testDate
 #}
-{% macro testQuery_wherePropertyMatch() %}{{ macros.query_alias_where('QUICK', 'Encounter', 'E', macros.where(macros.equals(macros.propertyOf('value', macros.propertyOf('status', 'E')), 'finished'))) }}{% endmacro %}
+{% macro testQuery_wherePropertyMatch() %}{{ macros.query('QUICK', 'Encounter', 'E', macros.where(macros.equals(macros.propertyOf('value', macros.propertyOf('status', 'E')), 'finished'))) }}{% endmacro %}
 
 {#
     define testUnion: [Encounter] union [Patient]

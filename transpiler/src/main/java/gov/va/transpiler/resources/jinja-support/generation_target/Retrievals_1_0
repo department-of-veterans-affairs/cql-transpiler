@@ -84,4 +84,4 @@
 {#
     define testQuery_returnColumnValue: [Encounter] E return E.period
 #}
-{% macro testQuery_returnColumnValue() %}{{ macros.query('QUICK', 'Encounter', 'E', false, [macros.propertyOf(true, 'period', 'E')], false, none, false, none) }}{% endmacro %}
+{% macro testQuery_returnColumnValue() %}{{ macros.query('QUICK', 'Encounter', 'E', false, [macros.propertyOf(true, 'period', 'E')], none, none) }}{% endmacro %}
