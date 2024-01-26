@@ -1,21 +1,5 @@
 {# to implement macros for #}
 
-{#
-    define testUnion: [Encounter] union [Patient]
-#}
-{% macro testUnion() %}{{ macros.union([macros.retrieve('QUICK', 'Encounter'), macros.retrieve('QUICK', 'Patient')]) }}{% endmacro %}
-
-{#
-    context Patient
-    define testCount_patientContext: Count([Encounter])
-#}
-{% macro testCount_patientContext() %}{{ macros.count('Patient', macros.retrieve('QUICK', 'Encounter')) }}{% endmacro %}
-
-{#
-    context Unfiltered
-    define testCount_unfilteredContext: Count([Encounter])
-#}
-{% macro testCount_unfilteredContext() %}{{ macros.count('Encounter', macros.retrieve('QUICK', 'Encounter')) }}{% endmacro %}
 
 {#
     library Retrievals version '1.0'

@@ -1,3 +1,4 @@
+{% macro listPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
 {% macro literal(literalType, value) %}{% if literalType == 'Integer' %}{{value}}{% elif literalType == 'String' %}'{{ value }}'{% else %}{{ literalType }}::{{ value }}{% endif %}{% endmacro %}
 {% macro add(left, right) %}({{left}} + {{ right }}){% endmacro %}
 {% macro subtract(left, right) %}({{ left }} - {{ right }}){% endmacro %}
@@ -8,16 +9,18 @@
 {% macro encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
 {% macro struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first = true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS {{ name }}{% endfor %}){% endmacro %}
 {% macro emptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
-{% macro list(listOfItems) %}{% set ns = namespace(first = true) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ emptyTable() }}{% else %}({% for item in listOfItems %}{% if ns.first %}{% set ns.first = false %}{% else %} UNION {% endif %}{{ item }}{% endfor %}){% endif %}{% endmacro %}
-{% macro getIDFromContext(context) %}{{ context }}.id{% endmacro %}
+{% macro union(listOfItemsToUnion) %}{{ listPrintingUtility(listOfItemsToUnion, ' UNION ') }}{% endmacro %}
+{% macro list(listOfItems) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ emptyTable() }}{% else %}{{ union(listOfItems) }}{% endif %}{% endmacro %}
+{% macro getIDFromContext(context) %}{{ context }}id{% endmacro %}
 {% macro compress(context, toCompress)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCompress }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ getIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro decompress(toDecompress) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecompress }})){% endmacro %}
 {% macro propertyOf(isColumnReference, property, of) %}{% if isColumnReference %}{{ of }}.{{ property }}{% else %}SELECT {{ property }} FROM ({{ of }}){% endif %}{% endmacro %}
 {% macro concatenate(leftVal, leftIsSimple, rightVal, rightIsSimple)%}{% if leftIsSimple == true and rightIsSimple == true %}concat({{ leftVal }}, {{ rightVal }}){% elif leftIsSimple == false and rightIsSimple == true %}SELECT concat({{ leftVal }}, rightVal) AS _val FROM (SELECT _val AS rightVal FROM ({{ rightVal }})){% elif leftIsSimple == true and rightIsSimple == false %}SELECT concat(leftVal, {{ rightVal }}) AS _val FROM (SELECT _val AS leftVal FROM ({{ leftVal }})){% else %}SELECT concat(leftVal, rightVal) AS _val FROM ((SELECT _val AS leftVal FROM ({{ leftVal }})) OUT JOIN (SELECT _val AS rightVal FROM ({{ rightVal }}))){% endif %}{% endmacro %}
 {% macro datetime(year, month, day, hour, minute, second, millisecond) %}<UNSUPPORTED PRIMITIVE TYPE: DATE [Y: {{ year }}, M: {{ month }}, D: {{ day }}, H: {{ hour }}, M: {{ minute }}, S: {{ second }}, MS: {{ millisecond }}]>{% endmacro %}
-{% macro query(modeltype, model, alias, returnAll, returnColumnList, where, sortByExpressionList) %}{% if returnAll == true %}SELECT * FROM {% else %}SELECT {% set ns = namespace(first = true) %}{% for column in returnColumnList %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ column }}{% endfor %} FROM {% endif %}({{ retrieve(modeltype, model) }} AS {{ alias }}){% if where != none %} WHERE ({{ where }}){% endif %}{% if sortByExpressionList != none %} SORT BY {% set ns = namespace(firstSortBy = true) %}{% for sortByExpression in sortByExpressionList %}{% if ns.firstSortBy %}{% set ns.firstSortBy = false %}{% else %}, {% endif %}{{ sortByExpression }}{% endfor %}{% endif %}{% endmacro %}
+{% macro query(modeltype, model, alias, returnColumnList, where, sortByExpressionList) %}{% if returnColumnList == none %}SELECT * FROM {% else %}SELECT {{ listPrintingUtility(returnColumnList, ', ') }} FROM {% endif %}({{ retrieve(modeltype, model) }} AS {{ alias }}){% if where != none %} WHERE ({{ where }}){% endif %}{% if sortByExpressionList != none %} SORT BY {{ listPrintingUtility(sortByExpressionList, ', ') }}{% endif %}{% endmacro %}
 {% macro greaterThan (left, right) %}{{ left }} > {{ right }}{% endmacro %}
 {% macro equals (left, right) %}{{ left }} = {{ right }}{% endmacro %}
 {% macro start(value) %}{{ propertyOf(true, 'start', value) }}{% endmacro%}
 {% macro end(value) %}{{ propertyOf(true, 'end', value) }}{% endmacro%}
-{% macro after (left, right) %}{{ greaterThan(start(left), end(right)) }}{% endmacro %}
+{% macro after(left, right) %}{{ greaterThan(start(left), end(right)) }}{% endmacro %}
+{% macro count(context, expressionIsTable, expression) %} SELECT count({% if expressionIsTable %}*{% else %}explode(*){% endif %}) FROM ({{ expression }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ getIDFromContext(context) }}{% endif %}{% endmacro%}

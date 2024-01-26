@@ -33,7 +33,7 @@ public class CountNode extends Unary<Count> {
             segment.addChild(getChild().toSegment());
             segment.setTail(")" + (getContext() == null ? "" : " GROUP BY " + contextToParam(getContext())));
         } else {
-            segment.setHead("SELECT count(explod(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (");
+            segment.setHead("SELECT count(explode(*)) AS " + SINGLE_VALUE_COLUMN_NAME + " FROM (");
             segment.addChild(getChild().toSegment());
             segment.setTail(") AS " + SINGLE_VALUE_COLUMN_NAME);
         }
