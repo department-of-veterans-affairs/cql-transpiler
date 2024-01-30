@@ -11,35 +11,21 @@ import gov.va.transpiler.jinja.state.State;
 public class ExpressionDefNode extends Unary<ExpressionDef> implements ReferenceableNode {
 
     public static final String REFERENCE_TYPE = "ExpressionDef";
-    public static final String UNFILTERED_CONTEXT = "Unfiltered";
+
     public ExpressionDefNode(State state, ExpressionDef t) {
         super(state, t);
-        if (UNFILTERED_CONTEXT.equalsIgnoreCase(getCqlEquivalent().getContext())) {
-            state.setContext(null);
-        } else {
-            state.setContext(getCqlEquivalent().getContext());
-        }
-    }
-
-    @Override
-    public boolean isSimpleValue() {
-        return false;
+        state.setContext(getCqlEquivalent().getContext());
     }
 
     @Override
     public Segment toSegment() {
-        Segment expressionContentsSegment;
-        if (getChild().isSimpleValue()) {
-            expressionContentsSegment = containerizer.containerizeSimpleValue(getChild());
-        } else {
-            expressionContentsSegment = getChild().toSegment();
-        }
-        expressionContentsSegment.setHead("{% macro " + referenceName() + "() %}");
-        expressionContentsSegment.setTail("{% endmacro %}");
-        expressionContentsSegment.setPrintType(PrintType.Line);
-        expressionContentsSegment.setLocator(getCqlEquivalent().getLocator());
-
-        return expressionContentsSegment;
+        var segment = new Segment();
+        segment.setHead("{% macro " + referenceName() + "() %}{{ ");
+        segment.addChild(getChild().toSegment());
+        segment.setTail(" }}{% endmacro %}");
+        segment.setPrintType(PrintType.Line);
+        segment.setLocator(getCqlEquivalent().getLocator());
+        return segment;
     }
 
     @Override

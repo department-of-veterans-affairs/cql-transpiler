@@ -2,13 +2,11 @@ package gov.va.transpiler.jinja.node;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
-import gov.va.transpiler.jinja.node.utility.Containerizer;
 import gov.va.transpiler.jinja.state.State;
 
 public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode {
 
     private T cqlEquivalent;
-    protected Containerizer containerizer = new Containerizer();
     private ReferenceableNode referenceTo;
 
     public CQLEquivalent(State state, T cqlEquivalent) {

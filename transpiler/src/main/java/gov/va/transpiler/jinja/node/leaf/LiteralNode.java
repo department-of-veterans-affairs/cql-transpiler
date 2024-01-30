@@ -3,6 +3,7 @@ package gov.va.transpiler.jinja.node.leaf;
 import org.hl7.elm.r1.Literal;
 
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class LiteralNode extends Leaf<Literal> {
@@ -15,17 +16,6 @@ public class LiteralNode extends Leaf<Literal> {
 
     public LiteralNode(State state, Literal t) {
         super(state, t);
-    }
-
-    public LiteralType getTypeForLiteral() {
-        switch (getCqlEquivalent().getResultType().toString()) {
-            case "System.Integer" :
-                return LiteralType.Integer;
-            case "System.String" :
-                return LiteralType.String;
-            default:
-        }
-        return LiteralType.Unsupported;
     }
 
     @Override
@@ -41,18 +31,7 @@ public class LiteralNode extends Leaf<Literal> {
     @Override
     public Segment toSegment() {
         var segment = new Segment();
-        var type = getTypeForLiteral();
-        switch (type) {
-            case Integer:
-                segment.setHead(getCqlEquivalent().getValue());
-                break;
-            case String:
-                segment.setHead("'" + getCqlEquivalent().getValue() + "'");
-                break;
-            default:
-                segment.setHead("Unsupported Literal Type");
-                break;
-        }
+        segment.setHead(Standards.MACRO_FILE_NAME + ".Literal('" + getCqlEquivalent().getValueType().getLocalPart() + "', '" + getCqlEquivalent().getValue() + "')");
         return segment;
     }
 }

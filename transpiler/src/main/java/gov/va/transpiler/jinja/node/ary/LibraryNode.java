@@ -10,6 +10,7 @@ import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
 import gov.va.transpiler.jinja.node.leaf.ValueSetDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class LibraryNode extends Ary<Library> {
@@ -54,6 +55,10 @@ public class LibraryNode extends Ary<Library> {
         segment.setPrintType(PrintType.File);
         segment.setOriginalLibraryIdentifier(getCqlEquivalent().getIdentifier());
         segment.setFileLocation(getTargetFileLocation());
+        var headerSegment = new Segment();
+        headerSegment.setPrintType(PrintType.Line);
+        headerSegment.setHead("{% import '" + Standards.MACRO_FILE_NAME + "' as " + Standards.MACRO_FILE_NAME +" %}");
+        segment.addChild(headerSegment);
         getChildren().stream().map(TranspilerNode::toSegment).forEach(childSegment -> segment.addChild(childSegment));
         return segment;
     }

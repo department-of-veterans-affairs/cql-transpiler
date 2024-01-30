@@ -8,6 +8,13 @@
             "type": "java",
             "name": "Transpiler",
             "request": "launch",
+            "mainClass": "gov.va.transpiler.sparkjinja.Transpiler",
+            "projectName": "transpiler"
+        },
+        {
+            "type": "java",
+            "name": "Transpiler",
+            "request": "launch",
             "mainClass": "gov.va.transpiler.jinja.Transpiler",
             "projectName": "transpiler"
         },
