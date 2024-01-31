@@ -3,9 +3,9 @@ package gov.va.transpiler.jinja.state;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import gov.va.transpiler.jinja.node.ReferenceNode;
-import gov.va.transpiler.jinja.node.ReferenceableNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
+import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 
 public class State {
     private TranspilerNode currentNode = null;

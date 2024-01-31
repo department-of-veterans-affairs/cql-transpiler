@@ -1,123 +1,98 @@
 {% import 'macros' as macros %}
-
 {#
     define testLiteral: 1
 #}
 {% macro testLiteral() %}{{ macros.Literal('Integer', '1') }}{% endmacro %}
-
 {#
-    define testReference: a
+    define testReference: testLiteral
 #}
 {% macro testReference() %}{{ testLiteral() }}{% endmacro %}
-
 {#
+    define testEmptyList: {}
+#}
+{% macro testEmptyList() %}{{ macros.List([]) }}{% endmacro %}
+{#
+    define testList: {1, 2}
+#}
+{% macro testList() %}{{ macros.List([macros.Encapsulate(macros.Literal('Integer', '1')), macros.Encapsulate(macros.Literal('Integer', 2))]) }}{% endmacro %}
+{#
+    define testStructReference: testStruct_withCompression.bar
+#}{#
     define testRetrieve: [Patient]
 #}
 {% macro testRetrieve() %}{{ macros.Retrieve('QUICK', 'Patient') }}{% endmacro %}
-
 {#
     define testStruct_withCompression: {foo: c, bar: 1}
 #}
 {% macro testStruct_withCompression() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.Compress('Unfiltered', testRetrieve()), 'bar': macros.Encapsulate(macros.Literal('Integer', '1'))}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
 
-{#
-    define testEmptyList: {}
-#}
-{% macro testEmptyList() %}{{ macros.List([]) }}{% endmacro %}
-
-{#
-    define testList: {1, 2}
-#}
-{% macro testList() %}{{ macros.List([macros.Encapsulate(macros.Literal('Integer', '1')), macros.Encapsulate(macros.Literal('Integer', 2))]) }}{% endmacro %}
-
-{#
-    define testStructReference: testStruct_withCompression.bar
-#}
 {% macro testStructReference() %}SELECT bar from ({{ testStruct_withCompression() }}){% endmacro %}
-
 {#
     define testStructReference_decompressing: testStruct_withCompression.foo
 #}
 {% macro testStructReference() %}SELECT foo from ({{ macros.Decompress(testStruct_withCompression()) }}){% endmacro %}
-
 {#
     define testNestedStruct: {baz: 1, foobar: testStruct_withCompression}
 #}
 {% macro testNestedStruct() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': macros.Encapsulate(1), 'foobar': testStruct_withCompression()}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
-
 {#
     define testNestedStructReference: TestNestedStruct.foobar.bar
 #}
 {% macro testNestedStructReference() %}{{ macros.PropertyOf(false, 'bar', macros.PropertyOf(false, 'foobar', testNestedStruct())) }}{% endmacro %}
-
 {#
     define testNestedStructReferenceTable: TestNestedStruct.foobar.food
 #}
 {% macro testNestedStructReferenceTable() %}{{ macros.Decompress(macros.PropertyOf(false, 'foo', macros.PropertyOf(false, 'foobar', testNestedStruct()))) }}{% endmacro %}
-
 {#
     define function testFunction(val Integer):
 #}
 {% macro testFunction(val) %}{{ macrosMultiply(macros.Literal('Integer', '2'), val) }}{% endmacro %}
-
 {#
     define testFunctionReference = testFunction(1):
 #}
 {% macro testFunctionReference() %}{{ testFunction(macros.Literal('Integer', '1')) }}{% endmacro %}
-
 {#
     define testConcatenate: '1' + '2'
 #}
 {% macro testConcatenate() %}{{ macros.Concatenate(macros.Literal('String', '1'), true, macros.Literal('String', '2'), true) }}{% endmacro %}
-
 {#
     define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral()
 #}
 {# note: this is missing a lot of 'to decimal' calls #}
 {% macro testMathOperations() %}{{ macros.Add(macros.Multiply(macros.Add(macros.add(macros.Literal('Integer', 1), macros.Divide(macros.Literal('Integer', '2'), macros.Negate(macros.Literal('Integer', 3)))), macros.Literal('Integer', '4')), macros.Literal('Integer', '5')), testLiteral()) }}{% endmacro %}
-
 {#
     define testDatetime: @2010-01-02T14:30:07.76
 #}
 {% macro testDatetime() %}{{ macros.Datetime(macros.Literal('Integer', '2010'), macros.Literal('Integer', '01'), macros.Literal('Integer', '02'), macros.Literal('Integer', '14'), macros.Literal('Integer', '30'), macros.Literal('Integer', '7'), macros.Literal('Integer', '76')) }}{% endmacro %}
-
 {#
     define testQuery_returnColumnValue: [Encounter] E return E.period
 #}
 {% macro testQuery_returnColumnValue() %}{{ macros.Query('QUICK', 'Encounter', 'E', [macros.PropertyOf(true, 'period', 'E')], none, none) }}{% endmacro %}
-
-
 {#
     define testQuery_withWhere: [Encounter] E where E.period ends after testDate
 #}
 {% macro testQuery_withWhere() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, macros.After(macros.PropertyOf(true, 'period', 'E'), testDatetime()), none) }}{% endmacro %}
-
 {#
     define testQuery_sortBy: [Encounter] E sort by status.value
 #}
 {% macro testQuery_withSortBy() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, none, [macros.PropertyOf(true, 'value', 'status')]) }}{% endmacro %}
-
 {#
     define testQuery_returnColumnValueProperty: [Encounter] E return E.status.value
 #}
 {% macro testQuery_returnColumnValueProperty() %}{{ macros.Query('QUICK', 'Encounter', 'E', [macros.PropertyOf(true, macros.PropertyOf(true, 'value', 'status'), 'E')], none, none) }}{% endmacro %}
-
 {#
     define testQuery_wherePropertyMatch: [Encounter] E where E.period.status = 'finished'
 #}
 {% macro testQuery_wherePropertyMatch() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, macros.Rquals(macros.PropertyOf(true, 'value', macros.PropertyOf(true, 'status', 'E')), 'finished'), none) }}{% endmacro %}
-
 {#
     define testUnion: [Encounter] union [Patient]
 #}
 {% macro testUnion() %}{{ macros.Union([macros.Retrieve('QUICK', 'Encounter'), macros.Retrieve('QUICK', 'Patient')]) }}{% endmacro %}
-
 {#
     context Patient
     define testCount_patientContext: Count([Encounter])
 #}
 {% macro testCount_patientContext() %}{{ macros.Count('Patient', true, macros.Retrieve('QUICK', 'Encounter')) }}{% endmacro %}
-
 {#
     context Unfiltered
     define testCount_unfilteredContext: Count([Encounter])

@@ -1,4 +1,4 @@
-package gov.va.transpiler.jinja.node;
+package gov.va.transpiler.jinja.node.utilityinterfaces;
 
 public interface ReferenceableNode {
     public String referenceType();

@@ -19,7 +19,8 @@ public class Transpiler {
     public static void main(String[] args) throws IOException {
         String cql = ""
         + "library Retrievals version '1.0'\n"
-        + "define a: 1 + 2"
+        + "define testLiteral: 1\n"
+        + "define testReference: testLiteral\n"
        ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");

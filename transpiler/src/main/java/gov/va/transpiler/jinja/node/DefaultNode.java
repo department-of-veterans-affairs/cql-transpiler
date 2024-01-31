@@ -1,13 +1,11 @@
-package gov.va.transpiler.jinja.node.unsupported;
+package gov.va.transpiler.jinja.node;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
-import gov.va.transpiler.jinja.node.CQLEquivalent;
-import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
+import gov.va.transpiler.jinja.node.unsupported.DisabledNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.PrintsChildrenInList;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.standards.Standards;
@@ -42,6 +40,6 @@ public class DefaultNode extends CQLEquivalent<Trackable> implements PrintsChild
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren(children, Standards.MACRO_FILE_NAME + "." + getCqlEquivalent().getClass().getName() + "(", ")", "", "", ", ");
+        return toSegmentWithJoinedChildren(children, Standards.MACRO_FILE_NAME + "." + getCqlEquivalent().getClass().getSimpleName() + "(", ")", "", "", ", ");
     }
 }

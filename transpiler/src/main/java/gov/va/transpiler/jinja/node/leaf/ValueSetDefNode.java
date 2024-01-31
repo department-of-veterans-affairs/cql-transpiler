@@ -2,7 +2,7 @@ package gov.va.transpiler.jinja.node.leaf;
 
 import org.hl7.elm.r1.ValueSetDef;
 
-import gov.va.transpiler.jinja.node.ReferenceableNode;
+import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 

@@ -2,6 +2,8 @@ package gov.va.transpiler.jinja.node;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
+import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
+import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 import gov.va.transpiler.jinja.state.State;
 
 public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode {
