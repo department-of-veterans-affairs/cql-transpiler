@@ -1,4 +1,4 @@
-library Retrievals version '1.0'
+library DemoMeasure version '1.0'
 
 using QDM version '5.6'
 include MATGlobalCommonFunctions version '7.0.000' called Global
