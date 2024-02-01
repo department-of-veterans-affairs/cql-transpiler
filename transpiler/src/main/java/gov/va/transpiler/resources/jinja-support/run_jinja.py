@@ -1,5 +1,5 @@
 from jinja2 import Environment, FileSystemLoader
-template_dir = "tempjinja"
+template_dir = "jinja"
 cql_to_jinja_source = "Retrievals_1_0"
 env = Environment(loader=FileSystemLoader(template_dir))
 template = env.get_template(cql_to_jinja_source)

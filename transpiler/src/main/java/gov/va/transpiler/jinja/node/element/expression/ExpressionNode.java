@@ -1,4 +1,4 @@
-package gov.va.transpiler.jinja.node.expression;
+package gov.va.transpiler.jinja.node.element.expression;
 
 import org.hl7.elm.r1.Expression;
 
@@ -9,15 +9,5 @@ public abstract class ExpressionNode<T extends Expression> extends CQLEquivalent
 
     public ExpressionNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
-    }
-
-    @Override
-    public boolean isSimpleValue() {
-        return true;
-    }
-
-    @Override
-    public boolean isTable() {
-        return false;
     }
 }

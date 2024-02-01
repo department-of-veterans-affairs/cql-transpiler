@@ -5,15 +5,16 @@ import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.elm.r1.*;
 
 import gov.va.transpiler.jinja.node.DefaultNode;
+import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.ary.LibraryNode;
-import gov.va.transpiler.jinja.node.expression.BinaryExpressionNode;
-import gov.va.transpiler.jinja.node.expression.ExpressionRefNode;
-import gov.va.transpiler.jinja.node.leaf.LiteralNode;
-import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
-import gov.va.transpiler.jinja.node.leaf.ValueSetDefNode;
-import gov.va.transpiler.jinja.node.unary.ExpressionDefNode;
-import gov.va.transpiler.jinja.node.unsupported.DisabledNode;
+import gov.va.transpiler.jinja.node.element.ExpressionDefNode;
+import gov.va.transpiler.jinja.node.element.LibraryNode;
+import gov.va.transpiler.jinja.node.element.UsingDefNode;
+import gov.va.transpiler.jinja.node.element.ValueSetDefNode;
+import gov.va.transpiler.jinja.node.element.expression.ExpressionRefNode;
+import gov.va.transpiler.jinja.node.element.expression.ListNode;
+import gov.va.transpiler.jinja.node.element.expression.LiteralNode;
+import gov.va.transpiler.jinja.node.element.expression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.state.State;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
@@ -26,7 +27,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         var current = state.getCurrentNode();
         if (current == null) {
             if (elm == null) {
-                current = new DisabledNode(state);
+                current = new DisabledNode(state, null);
             } else {
                 current = new DefaultNode(state, elm);
             }
@@ -59,9 +60,8 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitIncludeDef(IncludeDef element, State state) {
-        var current = new DisabledNode(state);
         state.setCurrentNode(null);
-        return current;
+        return super.visitIncludeDef(element, state);
     }
 
     @Override
@@ -77,10 +77,15 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitList(List element, State state) {
+        new ListNode(state, element);
+        return super.visitList(element, state);
+    }
+
+    @Override
     public TranspilerNode visitParameterDef(ParameterDef element, State state) {
-        var current = new DisabledNode(state);
         state.setCurrentNode(null);
-        return current;
+        return super.visitParameterDef(element, state);
     }
 
     @Override
@@ -91,9 +96,8 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitTypeSpecifier(TypeSpecifier element, State state) {
-        var current = new DisabledNode(state);
         state.setCurrentNode(null);
-        return current;
+        return super.visitTypeSpecifier(element, state);
     }
 
     @Override

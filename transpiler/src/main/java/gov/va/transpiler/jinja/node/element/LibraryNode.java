@@ -1,19 +1,18 @@
-package gov.va.transpiler.jinja.node.ary;
+package gov.va.transpiler.jinja.node.element;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hl7.elm.r1.Library;
 
+import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.leaf.UsingDefNode;
-import gov.va.transpiler.jinja.node.leaf.ValueSetDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
-public class LibraryNode extends Ary<Library> {
+public class LibraryNode extends CQLEquivalent<Library> {
 
     private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
     private List<ValueSetDefNode> valueSetDefNodeList = new ArrayList<>();
@@ -34,16 +33,6 @@ public class LibraryNode extends Ary<Library> {
     }
 
     @Override
-    public boolean isTable() {
-        return false;
-    }
-
-    @Override
-    public boolean isSimpleValue() {
-        return false;
-    }
-
-    @Override
     public String getTargetFileLocation() {
         var identifier = getCqlEquivalent().getIdentifier();
         return identifier.getId() == null ? "Anonymous Library" : identifier.getVersion() == null ? identifier.getId() : identifier.getId() + "_" + identifier.getVersion();
@@ -59,7 +48,9 @@ public class LibraryNode extends Ary<Library> {
         headerSegment.setPrintType(PrintType.Line);
         headerSegment.setHead("{% import '" + Standards.MACRO_FILE_NAME + "' as " + Standards.MACRO_FILE_NAME +" %}");
         segment.addChild(headerSegment);
-        getChildren().stream().map(TranspilerNode::toSegment).forEach(childSegment -> segment.addChild(childSegment));
+        for (var child: getChildren()) {
+            segment.addChild(childToSegment(child));
+        }
         return segment;
     }
 }

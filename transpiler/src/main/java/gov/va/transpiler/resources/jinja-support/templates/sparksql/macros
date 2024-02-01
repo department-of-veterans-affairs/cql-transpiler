@@ -10,10 +10,10 @@
 {% macro Struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first = true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS {{ name }}{% endfor %}){% endmacro %}
 {% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
 {% macro Union(listOfItemsToUnion) %}{{ ListPrintingUtility(listOfItemsToUnion, ' UNION ') }}{% endmacro %}
-{% macro List(listOfItems) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ union(listOfItems) }}{% endif %}{% endmacro %}
+{% macro List(listOfItems) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems) }}{% endif %}{% endmacro %}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
-{% macro Compress(context, toCompress)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCompress }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
-{% macro Decompress(toDecompress) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecompress }})){% endmacro %}
+{% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
+{% macro Decollect(toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
 {% macro PropertyOf(isColumnReference, property, of) %}{% if isColumnReference %}{{ of }}.{{ property }}{% else %}SELECT {{ property }} FROM ({{ of }}){% endif %}{% endmacro %}
 {% macro Concatenate(leftVal, leftIsSimple, rightVal, rightIsSimple)%}{% if leftIsSimple == true and rightIsSimple == true %}concat({{ leftVal }}, {{ rightVal }}){% elif leftIsSimple == false and rightIsSimple == true %}SELECT concat({{ leftVal }}, rightVal) AS _val FROM (SELECT _val AS rightVal FROM ({{ rightVal }})){% elif leftIsSimple == true and rightIsSimple == false %}SELECT concat(leftVal, {{ rightVal }}) AS _val FROM (SELECT _val AS leftVal FROM ({{ leftVal }})){% else %}SELECT concat(leftVal, rightVal) AS _val FROM ((SELECT _val AS leftVal FROM ({{ leftVal }})) OUT JOIN (SELECT _val AS rightVal FROM ({{ rightVal }}))){% endif %}{% endmacro %}
 {% macro Datetime(year, month, day, hour, minute, second, millisecond) %}<UNSUPPORTED PRIMITIVE TYPE: DATE [Y: {{ year }}, M: {{ month }}, D: {{ day }}, H: {{ hour }}, M: {{ minute }}, S: {{ second }}, MS: {{ millisecond }}]>{% endmacro %}
@@ -22,5 +22,5 @@
 {% macro Equals (left, right) %}{{ left }} = {{ right }}{% endmacro %}
 {% macro Start(value) %}{{ PropertyOf(true, 'start', value) }}{% endmacro%}
 {% macro End(value) %}{{ PropertyOf(true, 'end', value) }}{% endmacro%}
-{% macro After(left, right) %}{{ greaterThan(Start(left), End(right)) }}{% endmacro %}
+{% macro After(left, right) %}{{ GreaterThan(Start(left), End(right)) }}{% endmacro %}
 {% macro Count(context, expressionIsTable, expression) %} SELECT count({% if expressionIsTable %}*{% else %}explode(*){% endif %}) FROM ({{ expression }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}

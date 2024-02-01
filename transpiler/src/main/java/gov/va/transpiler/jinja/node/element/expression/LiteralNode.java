@@ -1,4 +1,4 @@
-package gov.va.transpiler.jinja.node.leaf;
+package gov.va.transpiler.jinja.node.element.expression;
 
 import org.hl7.elm.r1.Literal;
 
@@ -6,7 +6,7 @@ import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
-public class LiteralNode extends Leaf<Literal> {
+public class LiteralNode extends ExpressionNode<Literal> {
 
     public enum LiteralType {
         Unsupported,
@@ -19,13 +19,8 @@ public class LiteralNode extends Leaf<Literal> {
     }
 
     @Override
-    public boolean isTable() {
-        return false;
-    }
-
-    @Override
-    public boolean isSimpleValue() {
-        return true;
+    public int allowedNumberOfChildren() {
+        return 1;
     }
 
     @Override

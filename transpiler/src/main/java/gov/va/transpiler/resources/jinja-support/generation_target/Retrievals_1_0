@@ -16,25 +16,25 @@
 #}
 {% macro testList() %}{{ macros.List([macros.Encapsulate(macros.Literal('Integer', '1')), macros.Encapsulate(macros.Literal('Integer', 2))]) }}{% endmacro %}
 {#
-    define testStructReference: testStruct_withCompression.bar
-#}{#
     define testRetrieve: [Patient]
 #}
 {% macro testRetrieve() %}{{ macros.Retrieve('QUICK', 'Patient') }}{% endmacro %}
 {#
-    define testStruct_withCompression: {foo: c, bar: 1}
+    define testStruct_withCollection: {foo: c, bar: 1}
 #}
-{% macro testStruct_withCompression() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.Compress('Unfiltered', testRetrieve()), 'bar': macros.Encapsulate(macros.Literal('Integer', '1'))}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
-
-{% macro testStructReference() %}SELECT bar from ({{ testStruct_withCompression() }}){% endmacro %}
+{% macro testStruct_withCollection() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.Collect('Unfiltered', testRetrieve()), 'bar': macros.Encapsulate(macros.Literal('Integer', '1'))}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
 {#
-    define testStructReference_decompressing: testStruct_withCompression.foo
+    define testStructReference: testStruct_withCollection.bar
 #}
-{% macro testStructReference() %}SELECT foo from ({{ macros.Decompress(testStruct_withCompression()) }}){% endmacro %}
+{% macro testStructReference() %}{{ macros.PropertyOf(false, 'bar', testStruct_withCollection()) }}{% endmacro %}
 {#
-    define testNestedStruct: {baz: 1, foobar: testStruct_withCompression}
+    define testStructReference_decollecting: testStruct_withCollection.foo
 #}
-{% macro testNestedStruct() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': macros.Encapsulate(1), 'foobar': testStruct_withCompression()}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
+{% macro testStructReference_decollecting() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', testStruct_withCollection())) }}{% endmacro %}
+{#
+    define testNestedStruct: {baz: 1, foobar: testStruct_withCollection}
+#}
+{% macro testNestedStruct() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': macros.Encapsulate(1), 'foobar': testStruct_withCollection()}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
 {#
     define testNestedStructReference: TestNestedStruct.foobar.bar
 #}
@@ -42,11 +42,11 @@
 {#
     define testNestedStructReferenceTable: TestNestedStruct.foobar.food
 #}
-{% macro testNestedStructReferenceTable() %}{{ macros.Decompress(macros.PropertyOf(false, 'foo', macros.PropertyOf(false, 'foobar', testNestedStruct()))) }}{% endmacro %}
+{% macro testNestedStructReferenceTable() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', macros.PropertyOf(false, 'foobar', testNestedStruct()))) }}{% endmacro %}
 {#
     define function testFunction(val Integer):
 #}
-{% macro testFunction(val) %}{{ macrosMultiply(macros.Literal('Integer', '2'), val) }}{% endmacro %}
+{% macro testFunction(val) %}{{ macros.Multiply(macros.Literal('Integer', '2'), val) }}{% endmacro %}
 {#
     define testFunctionReference = testFunction(1):
 #}
@@ -59,7 +59,7 @@
     define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral()
 #}
 {# note: this is missing a lot of 'to decimal' calls #}
-{% macro testMathOperations() %}{{ macros.Add(macros.Multiply(macros.Add(macros.add(macros.Literal('Integer', 1), macros.Divide(macros.Literal('Integer', '2'), macros.Negate(macros.Literal('Integer', 3)))), macros.Literal('Integer', '4')), macros.Literal('Integer', '5')), testLiteral()) }}{% endmacro %}
+{% macro testMathOperations() %}{{ macros.Add(macros.Multiply(macros.Add(macros.Add(macros.Literal('Integer', 1), macros.Divide(macros.Literal('Integer', '2'), macros.Negate(macros.Literal('Integer', 3)))), macros.Literal('Integer', '4')), macros.Literal('Integer', '5')), testLiteral()) }}{% endmacro %}
 {#
     define testDatetime: @2010-01-02T14:30:07.76
 #}
@@ -83,7 +83,7 @@
 {#
     define testQuery_wherePropertyMatch: [Encounter] E where E.period.status = 'finished'
 #}
-{% macro testQuery_wherePropertyMatch() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, macros.Rquals(macros.PropertyOf(true, 'value', macros.PropertyOf(true, 'status', 'E')), 'finished'), none) }}{% endmacro %}
+{% macro testQuery_wherePropertyMatch() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, macros.Equals(macros.PropertyOf(true, 'value', macros.PropertyOf(true, 'status', 'E')), 'finished'), none) }}{% endmacro %}
 {#
     define testUnion: [Encounter] union [Patient]
 #}

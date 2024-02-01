@@ -21,7 +21,9 @@ public class Transpiler {
         + "library Retrievals version '1.0'\n"
         + "define testLiteral: 1\n"
         + "define testReference: testLiteral\n"
-       ;
+        + "define testEmptyList: {}\n"
+        + "define testList: {1, 2}\n"
+        ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
         var jinjaTarget = "jinja/";

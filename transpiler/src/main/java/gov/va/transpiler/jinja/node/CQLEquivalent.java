@@ -4,6 +4,7 @@ import org.cqframework.cql.elm.tracking.Trackable;
 
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode {
@@ -27,5 +28,10 @@ public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode 
 
     protected ReferenceableNode getReferenceTo() {
         return referenceTo;
+    }
+
+    @Override
+    public String getName() {
+        return Standards.MACRO_FILE_NAME + "." + getCqlEquivalent().getClass().getSimpleName();
     }
 }
