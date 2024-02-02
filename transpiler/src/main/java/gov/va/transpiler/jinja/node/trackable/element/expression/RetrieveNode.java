@@ -1,4 +1,4 @@
-package gov.va.transpiler.jinja.node.element.expression;
+package gov.va.transpiler.jinja.node.trackable.element.expression;
 
 import org.hl7.elm.r1.Retrieve;
 
@@ -14,6 +14,11 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
     @Override
     public int allowedNumberOfChildren() {
         return 2;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.TABLE;
     }
 
     @Override

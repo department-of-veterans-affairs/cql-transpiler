@@ -7,7 +7,8 @@
 {% macro Negate(value) %}-{{ value }}{% endmacro %}
 {% macro Retrieve(modeltype, valueset, model) %}SELECT * FROM {{ model }}{% endmacro %}
 {% macro Encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
-{% macro Struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first = true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS {{ name }}{% endfor %}){% endmacro %}
+{% macro TupleElement(name, value)%}{{ value }} AS {{ name }}{% endmacro %}
+{% macro Tuple(listOfTupleElements)%}SELECT struct(*) AS _val FROM {{ ListPrintingUtility(listOfTupleElements, ', ') }}{% endmacro %}
 {% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
 {% macro Union(listOfItemsToUnion) %}{{ ListPrintingUtility(listOfItemsToUnion, ' UNION ') }}{% endmacro %}
 {% macro List(listOfItems) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems) }}{% endif %}{% endmacro %}

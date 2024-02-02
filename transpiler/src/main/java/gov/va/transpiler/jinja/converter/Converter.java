@@ -7,15 +7,17 @@ import org.hl7.elm.r1.*;
 import gov.va.transpiler.jinja.node.DefaultNode;
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.element.ExpressionDefNode;
-import gov.va.transpiler.jinja.node.element.LibraryNode;
-import gov.va.transpiler.jinja.node.element.UsingDefNode;
-import gov.va.transpiler.jinja.node.element.ValueSetDefNode;
-import gov.va.transpiler.jinja.node.element.expression.ExpressionRefNode;
-import gov.va.transpiler.jinja.node.element.expression.ListNode;
-import gov.va.transpiler.jinja.node.element.expression.LiteralNode;
-import gov.va.transpiler.jinja.node.element.expression.RetrieveNode;
-import gov.va.transpiler.jinja.node.element.expression.binaryexpression.BinaryExpressionNode;
+import gov.va.transpiler.jinja.node.trackable.TupleElementNode;
+import gov.va.transpiler.jinja.node.trackable.element.ExpressionDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
+import gov.va.transpiler.jinja.node.trackable.element.UsingDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.state.State;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
@@ -99,6 +101,18 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitRetrieve(Retrieve element, State state) {
         new RetrieveNode(state, element);
         return super.visitRetrieve(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitTuple(Tuple element, State state) {
+        new TupleNode(state, element);
+        return super.visitTuple(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitTupleElement(TupleElement element, State state) {
+        new TupleElementNode(state, element);
+        return super.visitTupleElement(element, state);
     }
 
     @Override

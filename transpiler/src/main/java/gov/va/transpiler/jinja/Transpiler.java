@@ -20,11 +20,13 @@ public class Transpiler {
         String cql = ""
         + "library Retrievals version '1.0'\n"
         + "using QDM version '5.6'\n"
+        + "context Unfiltered\n"
         + "define testLiteral: 1\n"
         + "define testReference: testLiteral\n"
         + "define testEmptyList: {}\n"
         + "define testList: {1, 2}\n"
-        + "define testRetrieve: [\"Encounter, Performed\"]"
+        + "define testRetrieve: [\"Encounter, Performed\"]\n"
+        + "define testTuple_withCollection: {foo: testRetrieve, bar: 1}\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");

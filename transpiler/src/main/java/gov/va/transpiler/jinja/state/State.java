@@ -8,8 +8,10 @@ import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 
 public class State {
+
+    private static final String UNFILTERED_CONTEXT = "Unfiltered";
     private TranspilerNode currentNode = null;
-    private String context = null;
+    private String context = UNFILTERED_CONTEXT;
     private Map<String, Map<String, ReferenceableNode>> references = new LinkedHashMap<>();
 
     public TranspilerNode getCurrentNode() {
@@ -25,7 +27,7 @@ public class State {
     }
 
     public void setContext(String context) {
-        this.context = context;
+        this.context = context == null ? UNFILTERED_CONTEXT : context;
     }
 
     public void addReference(ReferenceableNode referenceableNode) {

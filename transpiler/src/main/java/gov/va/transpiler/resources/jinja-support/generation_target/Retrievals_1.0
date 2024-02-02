@@ -20,29 +20,29 @@
 #}
 {% macro testRetrieve() %}{{ macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed') }}{% endmacro %}
 {#
-    define testStruct_withCollection: {foo: c, bar: 1}
+    define testTuple_withCollection: {foo: testRetrieve, bar: 1}
 #}
-{% macro testStruct_withCollection() %}{% set paramList=['foo', 'bar'] %}{% set currentDict=({'foo': macros.Collect('Unfiltered', testRetrieve()), 'bar': macros.Encapsulate(macros.Literal('Integer', '1'))}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
+{% macro testTuple_withCollection() %}{{ macros.Tuple([macros.TupleElement('foo', macros.Collect('Unfiltered', testRetrieve())), macros.TupleElement('bar', macros.Encapsulate('1'))]) }}{% endmacro %}
 {#
-    define testStructReference: testStruct_withCollection.bar
+    define testTupleReference: testTuple_withCollection.bar
 #}
-{% macro testStructReference() %}{{ macros.PropertyOf(false, 'bar', testStruct_withCollection()) }}{% endmacro %}
+{% macro testTupleReference() %}{{ macros.PropertyOf(false, 'bar', testTuple_withCollection()) }}{% endmacro %}
 {#
-    define testStructReference_decollecting: testStruct_withCollection.foo
+    define testTupleReference_decollecting: testTuple_withCollection.foo
 #}
-{% macro testStructReference_decollecting() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', testStruct_withCollection())) }}{% endmacro %}
+{% macro testTupleReference_decollecting() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', testTuple_withCollection())) }}{% endmacro %}
 {#
-    define testNestedStruct: {baz: 1, foobar: testStruct_withCollection}
+    define testNestedTuple: {baz: 1, foobar: testTuple_withCollection}
 #}
-{% macro testNestedStruct() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': macros.Encapsulate(1), 'foobar': testStruct_withCollection()}) %}{{ macros.Struct(paramList, currentDict) }}{% endmacro %}
+{% macro testNestedTuple() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': macros.Encapsulate(1), 'foobar': testTuple_withCollection()}) %}{{ macros.Tuple(paramList, currentDict) }}{% endmacro %}
 {#
-    define testNestedStructReference: TestNestedStruct.foobar.bar
+    define testNestedTupleReference: TestNestedTuple.foobar.bar
 #}
-{% macro testNestedStructReference() %}{{ macros.PropertyOf(false, 'bar', macros.PropertyOf(false, 'foobar', testNestedStruct())) }}{% endmacro %}
+{% macro testNestedTupleReference() %}{{ macros.PropertyOf(false, 'bar', macros.PropertyOf(false, 'foobar', testNestedTuple())) }}{% endmacro %}
 {#
-    define testNestedStructReferenceTable: TestNestedStruct.foobar.food
+    define testNestedTupleReferenceTable: TestNestedTuple.foobar.food
 #}
-{% macro testNestedStructReferenceTable() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', macros.PropertyOf(false, 'foobar', testNestedStruct()))) }}{% endmacro %}
+{% macro testNestedTupleReferenceTable() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', macros.PropertyOf(false, 'foobar', testNestedTuple()))) }}{% endmacro %}
 {#
     define function testFunction(val Integer):
 #}

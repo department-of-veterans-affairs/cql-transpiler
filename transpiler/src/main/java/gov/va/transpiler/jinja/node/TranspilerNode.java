@@ -119,11 +119,14 @@ public class TranspilerNode {
         return child.toSegment();
     }
 
-    protected Segment childToSegmentCollectTable(TranspilerNode child) {
+    protected Segment childToSegmentCollectTable(String context, TranspilerNode child) {
         var collectSegment = new Segment();
         collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Collect(");
-        collectSegment.setTail(")");
+        var contextChild = new Segment();
+        contextChild.setHead("'" + context + "', ");
+        collectSegment.addChild(contextChild);
         collectSegment.addChild(child.toSegment());
+        collectSegment.setTail(")");
         return collectSegment;
     }
 
