@@ -5,7 +5,7 @@
 {% macro Multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}
 {% macro Divide(left, right) %}({{ left }} / {{ right }}){% endmacro %}
 {% macro Negate(value) %}-{{ value }}{% endmacro %}
-{% macro Retrieve(modeltype, model) %}SELECT * FROM {{ model }}{% endmacro %}
+{% macro Retrieve(modeltype, valueset, model) %}SELECT * FROM {{ model }}{% endmacro %}
 {% macro Encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
 {% macro Struct(listOfItemNames, dictionaryOfItems)%}{% set ns = namespace(first = true) %}SELECT struct(*) AS _val FROM ({% for name in listOfItemNames %}{% if ns.first %}{% set ns.first = false %}{% else %}, {% endif %}{{ dictionaryOfItems[name] }} AS {{ name }}{% endfor %}){% endmacro %}
 {% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
@@ -17,7 +17,7 @@
 {% macro PropertyOf(isColumnReference, property, of) %}{% if isColumnReference %}{{ of }}.{{ property }}{% else %}SELECT {{ property }} FROM ({{ of }}){% endif %}{% endmacro %}
 {% macro Concatenate(leftVal, leftIsSimple, rightVal, rightIsSimple)%}{% if leftIsSimple == true and rightIsSimple == true %}concat({{ leftVal }}, {{ rightVal }}){% elif leftIsSimple == false and rightIsSimple == true %}SELECT concat({{ leftVal }}, rightVal) AS _val FROM (SELECT _val AS rightVal FROM ({{ rightVal }})){% elif leftIsSimple == true and rightIsSimple == false %}SELECT concat(leftVal, {{ rightVal }}) AS _val FROM (SELECT _val AS leftVal FROM ({{ leftVal }})){% else %}SELECT concat(leftVal, rightVal) AS _val FROM ((SELECT _val AS leftVal FROM ({{ leftVal }})) OUT JOIN (SELECT _val AS rightVal FROM ({{ rightVal }}))){% endif %}{% endmacro %}
 {% macro Datetime(year, month, day, hour, minute, second, millisecond) %}<UNSUPPORTED PRIMITIVE TYPE: DATE [Y: {{ year }}, M: {{ month }}, D: {{ day }}, H: {{ hour }}, M: {{ minute }}, S: {{ second }}, MS: {{ millisecond }}]>{% endmacro %}
-{% macro Query(modeltype, model, alias, returnColumnList, where, sortByExpressionList) %}{% if returnColumnList == none %}SELECT * FROM {% else %}SELECT {{ ListPrintingUtility(returnColumnList, ', ') }} FROM {% endif %}({{ Retrieve(modeltype, model) }} AS {{ alias }}){% if where != none %} WHERE ({{ where }}){% endif %}{% if sortByExpressionList != none %} SORT BY {{ ListPrintingUtility(sortByExpressionList, ', ') }}{% endif %}{% endmacro %}
+{% macro Query(modeltype, valueset, model, alias, returnColumnList, where, sortByExpressionList) %}{% if returnColumnList == none %}SELECT * FROM {% else %}SELECT {{ ListPrintingUtility(returnColumnList, ', ') }} FROM {% endif %}({{ Retrieve(modeltype, valueset, model) }} AS {{ alias }}){% if where != none %} WHERE ({{ where }}){% endif %}{% if sortByExpressionList != none %} SORT BY {{ ListPrintingUtility(sortByExpressionList, ', ') }}{% endif %}{% endmacro %}
 {% macro GreaterThan (left, right) %}{{ left }} > {{ right }}{% endmacro %}
 {% macro Equals (left, right) %}{{ left }} = {{ right }}{% endmacro %}
 {% macro Start(value) %}{{ PropertyOf(true, 'start', value) }}{% endmacro%}

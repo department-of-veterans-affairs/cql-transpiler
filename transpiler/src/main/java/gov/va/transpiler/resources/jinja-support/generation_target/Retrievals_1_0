@@ -16,9 +16,9 @@
 #}
 {% macro testList() %}{{ macros.List([macros.Encapsulate(macros.Literal('Integer', '1')), macros.Encapsulate(macros.Literal('Integer', 2))]) }}{% endmacro %}
 {#
-    define testRetrieve: [Patient]
+    define testRetrieve: ["Encounter, Performed"]
 #}
-{% macro testRetrieve() %}{{ macros.Retrieve('QUICK', 'Patient') }}{% endmacro %}
+{% macro testRetrieve() %}{{ macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed') }}{% endmacro %}
 {#
     define testStruct_withCollection: {foo: c, bar: 1}
 #}
@@ -65,36 +65,36 @@
 #}
 {% macro testDatetime() %}{{ macros.Datetime(macros.Literal('Integer', '2010'), macros.Literal('Integer', '01'), macros.Literal('Integer', '02'), macros.Literal('Integer', '14'), macros.Literal('Integer', '30'), macros.Literal('Integer', '7'), macros.Literal('Integer', '76')) }}{% endmacro %}
 {#
-    define testQuery_returnColumnValue: [Encounter] E return E.period
+    define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.period
 #}
-{% macro testQuery_returnColumnValue() %}{{ macros.Query('QUICK', 'Encounter', 'E', [macros.PropertyOf(true, 'period', 'E')], none, none) }}{% endmacro %}
+{% macro testQuery_returnColumnValue() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.PropertyOf(true, 'period', 'E')], none, none) }}{% endmacro %}
 {#
-    define testQuery_withWhere: [Encounter] E where E.period ends after testDate
+    define testQuery_withWhere: ["Encounter, Performed"] E where E.period ends after testDate
 #}
-{% macro testQuery_withWhere() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, macros.After(macros.PropertyOf(true, 'period', 'E'), testDatetime()), none) }}{% endmacro %}
+{% macro testQuery_withWhere() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.After(macros.PropertyOf(true, 'period', 'E'), testDatetime()), none) }}{% endmacro %}
 {#
-    define testQuery_sortBy: [Encounter] E sort by status.value
+    define testQuery_sortBy: ["Encounter, Performed"] E sort by status.value
 #}
-{% macro testQuery_withSortBy() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, none, [macros.PropertyOf(true, 'value', 'status')]) }}{% endmacro %}
+{% macro testQuery_withSortBy() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, none, [macros.PropertyOf(true, 'value', 'status')]) }}{% endmacro %}
 {#
-    define testQuery_returnColumnValueProperty: [Encounter] E return E.status.value
+    define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.status.value
 #}
-{% macro testQuery_returnColumnValueProperty() %}{{ macros.Query('QUICK', 'Encounter', 'E', [macros.PropertyOf(true, macros.PropertyOf(true, 'value', 'status'), 'E')], none, none) }}{% endmacro %}
+{% macro testQuery_returnColumnValueProperty() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.PropertyOf(true, macros.PropertyOf(true, 'value', 'status'), 'E')], none, none) }}{% endmacro %}
 {#
-    define testQuery_wherePropertyMatch: [Encounter] E where E.period.status = 'finished'
+    define testQuery_wherePropertyMatch: ["Encounter, Performed"] E where E.period.status = 'finished'
 #}
-{% macro testQuery_wherePropertyMatch() %}{{ macros.Query('QUICK', 'Encounter', 'E', none, macros.Equals(macros.PropertyOf(true, 'value', macros.PropertyOf(true, 'status', 'E')), 'finished'), none) }}{% endmacro %}
+{% macro testQuery_wherePropertyMatch() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.Equals(macros.PropertyOf(true, 'value', macros.PropertyOf(true, 'status', 'E')), 'finished'), none) }}{% endmacro %}
 {#
-    define testUnion: [Encounter] union [Patient]
+    define testUnion: ["Encounter, Performed"] union [Patient]
 #}
-{% macro testUnion() %}{{ macros.Union([macros.Retrieve('QUICK', 'Encounter'), macros.Retrieve('QUICK', 'Patient')]) }}{% endmacro %}
+{% macro testUnion() %}{{ macros.Union([macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed'), macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'Patient')]) }}{% endmacro %}
 {#
     context Patient
-    define testCount_patientContext: Count([Encounter])
+    define testCount_patientContext: Count(["Encounter, Performed"])
 #}
-{% macro testCount_patientContext() %}{{ macros.Count('Patient', true, macros.Retrieve('QUICK', 'Encounter')) }}{% endmacro %}
+{% macro testCount_patientContext() %}{{ macros.Count('Patient', true, macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed')) }}{% endmacro %}
 {#
     context Unfiltered
-    define testCount_unfilteredContext: Count([Encounter])
+    define testCount_unfilteredContext: Count(["Encounter, Performed"])
 #}
-{% macro testCount_unfilteredContext() %}{{ macros.Count('Unfiltered', true, macros.Retrieve('QUICK', 'Encounter')) }}{% endmacro %}
+{% macro testCount_unfilteredContext() %}{{ macros.Count('Unfiltered', true, macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed')) }}{% endmacro %}

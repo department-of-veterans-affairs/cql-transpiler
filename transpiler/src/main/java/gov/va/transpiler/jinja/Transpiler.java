@@ -19,10 +19,12 @@ public class Transpiler {
     public static void main(String[] args) throws IOException {
         String cql = ""
         + "library Retrievals version '1.0'\n"
+        + "using QDM version '5.6'\n"
         + "define testLiteral: 1\n"
         + "define testReference: testLiteral\n"
         + "define testEmptyList: {}\n"
         + "define testList: {1, 2}\n"
+        + "define testRetrieve: [\"Encounter, Performed\"]"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
