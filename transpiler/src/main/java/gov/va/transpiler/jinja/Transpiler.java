@@ -27,7 +27,8 @@ public class Transpiler {
         + "define testList: {1, 2}\n"
         + "define testRetrieve: [\"Encounter, Performed\"]\n"
         + "define testTuple_withCollection: {foo: testRetrieve, bar: 1}\n"
-        + "define testTupleReference: testTuple_withCollection.bar"
+        + "define testTupleReference: testTuple_withCollection.bar\n"
+        + "define testTupleReference_decollecting: testTuple_withCollection.foo\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");

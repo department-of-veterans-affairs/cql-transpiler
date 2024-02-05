@@ -3,7 +3,6 @@ package gov.va.transpiler.jinja.node.trackable.element.expression;
 import org.hl7.elm.r1.Property;
 
 import gov.va.transpiler.jinja.state.State;
-import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.Segment;
 
 public class PropertyNode extends ExpressionNode<Property> {
@@ -32,15 +31,6 @@ public class PropertyNode extends ExpressionNode<Property> {
     }
 
     @Override
-    public Segment childToSegment(TranspilerNode child) {
-        if (child.getType() == Type.COLLECTED_TABLE) {
-            return childToSegmentDecollectTable(context, child);
-        } else {
-            return super.childToSegment(child);
-        }
-    }
-
-    @Override
     public Segment toSegment() {
         var segment = new Segment();
         segment.setHead(getName() + "(");
@@ -65,6 +55,6 @@ public class PropertyNode extends ExpressionNode<Property> {
             segment.addChild(childToSegment(getChild()));
         }
         segment.setTail(")");
-        return segment;
+        return getType() == Type.TABLE ? decollectSegment(context, segment) : segment;
     }
 }

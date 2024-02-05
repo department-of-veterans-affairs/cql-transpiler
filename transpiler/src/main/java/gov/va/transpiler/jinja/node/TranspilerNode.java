@@ -123,34 +123,45 @@ public class TranspilerNode {
         return child.toSegment();
     }
 
-    protected Segment childToSegmentCollectTable(String context, TranspilerNode child) {
+    protected Segment collectSegment(String context, Segment segment) {
         var collectSegment = new Segment();
         collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Collect(");
         var contextChild = new Segment();
         contextChild.setHead("'" + context + "', ");
         collectSegment.addChild(contextChild);
-        collectSegment.addChild(child.toSegment());
+        collectSegment.addChild(segment);
         collectSegment.setTail(")");
         return collectSegment;
     }
+    protected Segment childToSegmentCollectTable(String context, TranspilerNode child) {
+        return collectSegment(context, child.toSegment());
+    }
 
-    protected Segment childToSegmentDecollectTable(String context, TranspilerNode child) {
+    protected Segment decollectSegment(String context, Segment segment) {
         var collectSegment = new Segment();
         collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Decollect(");
         var contextChild = new Segment();
         contextChild.setHead("'" + context + "', ");
         collectSegment.addChild(contextChild);
-        collectSegment.addChild(child.toSegment());
+        collectSegment.addChild(segment);
         collectSegment.setTail(")");
         return collectSegment;
     }
 
+    protected Segment childToSegmentDecollectTable(String context, TranspilerNode child) {
+        return decollectSegment(context, child.toSegment());
+    }
+
+    protected Segment encapsulateSegment(Segment segment) {
+        var encapsulateSegment = new Segment();
+        encapsulateSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Encapsulate(");
+        encapsulateSegment.setTail(")");
+        encapsulateSegment.addChild(segment);
+        return encapsulateSegment;
+    }
+
     protected Segment childToSegmentEncapsulateSimple(TranspilerNode child) {
-        var collectSegment = new Segment();
-        collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Encapsulate(");
-        collectSegment.setTail(")");
-        collectSegment.addChild(child.toSegment());
-        return collectSegment;
+        return encapsulateSegment(child.toSegment());
     }
 
     public String getTargetFileLocation() {
