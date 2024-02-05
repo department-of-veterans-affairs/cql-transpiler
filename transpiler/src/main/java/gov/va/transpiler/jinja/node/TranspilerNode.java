@@ -61,15 +61,19 @@ public class TranspilerNode {
     }
 
     protected TranspilerNode getChild() {
-        return getChildren().get(0);
+        return getChildren().isEmpty() ? null : getChildren().get(0);
     }
 
     protected TranspilerNode getLeft() {
-        return getChildren().get(0);
+        return getChildren().isEmpty() ? null : getChildren().get(0);
     }
 
     protected TranspilerNode getRight() {
-        return getChildren().get(1);
+        return getChildren().isEmpty() ? null : getChildren().get(1);
+    }
+
+    public TranspilerNode getChildByReference(String nameOrIndex) {
+        return null;
     }
 
     public Type getType() {
@@ -122,6 +126,17 @@ public class TranspilerNode {
     protected Segment childToSegmentCollectTable(String context, TranspilerNode child) {
         var collectSegment = new Segment();
         collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Collect(");
+        var contextChild = new Segment();
+        contextChild.setHead("'" + context + "', ");
+        collectSegment.addChild(contextChild);
+        collectSegment.addChild(child.toSegment());
+        collectSegment.setTail(")");
+        return collectSegment;
+    }
+
+    protected Segment childToSegmentDecollectTable(String context, TranspilerNode child) {
+        var collectSegment = new Segment();
+        collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Decollect(");
         var contextChild = new Segment();
         contextChild.setHead("'" + context + "', ");
         collectSegment.addChild(contextChild);

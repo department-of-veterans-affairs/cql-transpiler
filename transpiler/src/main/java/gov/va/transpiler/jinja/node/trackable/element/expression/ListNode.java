@@ -16,6 +16,11 @@ public class ListNode extends ExpressionNode<List> {
     }
 
     @Override
+    public TranspilerNode getChildByReference(String nameOrIndex) {
+        return getChildren().get(Integer.parseInt(nameOrIndex));
+    }
+
+    @Override
     public Type getType() {
         return Type.ENCAPSULATED_SIMPLE;
     }

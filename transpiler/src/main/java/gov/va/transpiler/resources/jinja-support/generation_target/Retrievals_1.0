@@ -26,11 +26,11 @@
 {#
     define testTupleReference: testTuple_withCollection.bar
 #}
-{% macro testTupleReference() %}{{ macros.PropertyOf(false, 'bar', testTuple_withCollection()) }}{% endmacro %}
+{% macro testTupleReference() %}{{ macros.Property('ENCAPSULATED_SIMPLE', none, 'bar', testTuple_withCollection()) }}{% endmacro %}
 {#
     define testTupleReference_decollecting: testTuple_withCollection.foo
 #}
-{% macro testTupleReference_decollecting() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', testTuple_withCollection())) }}{% endmacro %}
+{% macro testTupleReference_decollecting() %}{{ macros.Decollect(macros.Property(false, 'foo', testTuple_withCollection())) }}{% endmacro %}
 {#
     define testNestedTuple: {baz: 1, foobar: testTuple_withCollection}
 #}
@@ -38,11 +38,11 @@
 {#
     define testNestedTupleReference: TestNestedTuple.foobar.bar
 #}
-{% macro testNestedTupleReference() %}{{ macros.PropertyOf(false, 'bar', macros.PropertyOf(false, 'foobar', testNestedTuple())) }}{% endmacro %}
+{% macro testNestedTupleReference() %}{{ macros.Property(false, 'bar', macros.Property(false, 'foobar', testNestedTuple())) }}{% endmacro %}
 {#
     define testNestedTupleReferenceTable: TestNestedTuple.foobar.food
 #}
-{% macro testNestedTupleReferenceTable() %}{{ macros.Decollect(macros.PropertyOf(false, 'foo', macros.PropertyOf(false, 'foobar', testNestedTuple()))) }}{% endmacro %}
+{% macro testNestedTupleReferenceTable() %}{{ macros.Decollect(macros.Property(false, 'foo', macros.Property(false, 'foobar', testNestedTuple()))) }}{% endmacro %}
 {#
     define function testFunction(val Integer):
 #}
@@ -67,23 +67,23 @@
 {#
     define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.period
 #}
-{% macro testQuery_returnColumnValue() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.PropertyOf(true, 'period', 'E')], none, none) }}{% endmacro %}
+{% macro testQuery_returnColumnValue() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.Property(true, 'period', 'E')], none, none) }}{% endmacro %}
 {#
     define testQuery_withWhere: ["Encounter, Performed"] E where E.period ends after testDate
 #}
-{% macro testQuery_withWhere() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.After(macros.PropertyOf(true, 'period', 'E'), testDatetime()), none) }}{% endmacro %}
+{% macro testQuery_withWhere() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.After(macros.Property(true, 'period', 'E'), testDatetime()), none) }}{% endmacro %}
 {#
     define testQuery_sortBy: ["Encounter, Performed"] E sort by status.value
 #}
-{% macro testQuery_withSortBy() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, none, [macros.PropertyOf(true, 'value', 'status')]) }}{% endmacro %}
+{% macro testQuery_withSortBy() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, none, [macros.Property(true, 'value', 'status')]) }}{% endmacro %}
 {#
     define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.status.value
 #}
-{% macro testQuery_returnColumnValueProperty() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.PropertyOf(true, macros.PropertyOf(true, 'value', 'status'), 'E')], none, none) }}{% endmacro %}
+{% macro testQuery_returnColumnValueProperty() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.Property(true, macros.Property(true, 'value', 'status'), 'E')], none, none) }}{% endmacro %}
 {#
     define testQuery_wherePropertyMatch: ["Encounter, Performed"] E where E.period.status = 'finished'
 #}
-{% macro testQuery_wherePropertyMatch() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.Equals(macros.PropertyOf(true, 'value', macros.PropertyOf(true, 'status', 'E')), 'finished'), none) }}{% endmacro %}
+{% macro testQuery_wherePropertyMatch() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.Equals(macros.Property(true, 'value', macros.Property(true, 'status', 'E')), 'finished'), none) }}{% endmacro %}
 {#
     define testUnion: ["Encounter, Performed"] union [Patient]
 #}

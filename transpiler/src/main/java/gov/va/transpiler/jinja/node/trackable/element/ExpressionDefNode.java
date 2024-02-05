@@ -3,6 +3,7 @@ package gov.va.transpiler.jinja.node.trackable.element;
 import org.hl7.elm.r1.ExpressionDef;
 
 import gov.va.transpiler.jinja.node.CQLEquivalent;
+import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
@@ -16,6 +17,11 @@ public class ExpressionDefNode extends CQLEquivalent<ExpressionDef> implements R
     public ExpressionDefNode(State state, ExpressionDef t) {
         super(state, t);
         state.setContext(getCqlEquivalent().getContext());
+    }
+
+    @Override
+    public TranspilerNode getChildByReference(String nameOrIndex) {
+        return getChild().getChildByReference(nameOrIndex);
     }
 
     @Override

@@ -15,6 +15,7 @@ import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.binaryexpression.BinaryExpressionNode;
@@ -95,6 +96,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitParameterDef(ParameterDef element, State state) {
         state.setCurrentNode(null);
         return super.visitParameterDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitProperty(Property element, State state) {
+        new PropertyNode(state, element);
+        return super.visitProperty(element, state);
     }
 
     @Override
