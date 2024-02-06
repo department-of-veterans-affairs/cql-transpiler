@@ -36,11 +36,11 @@
 #}
 {% macro testNestedTuple() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': macros.Encapsulate(1), 'foobar': testTuple_withCollection()}) %}{{ macros.Tuple(paramList, currentDict) }}{% endmacro %}
 {#
-    define testNestedTupleReference: TestNestedTuple.foobar.bar
+    define testNestedTupleReference: testNestedTuple.foobar.bar
 #}
 {% macro testNestedTupleReference() %}{{ macros.Property('ENCAPSULATED_SIMPLE', none, 'bar', macros.Property('ENCAPSULATED_SIMPLE', none, 'foobar', testNestedTuple())) }}{% endmacro %}
 {#
-    define testNestedTupleReferenceTable: TestNestedTuple.foobar.foo
+    define testNestedTupleReferenceTable: testNestedTuple.foobar.foo
 #}
 {% macro testNestedTupleReferenceTable() %}{{ macros.Decollect('Unfiltered', macros.Property('TABLE', none, 'foo', macros.Property('ENCAPSULATED_SIMPLE', none, 'foobar', testNestedTuple()))) }}{% endmacro %}
 {#

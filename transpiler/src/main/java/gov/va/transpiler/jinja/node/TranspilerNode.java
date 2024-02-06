@@ -73,7 +73,7 @@ public class TranspilerNode {
     }
 
     public TranspilerNode getChildByReference(String nameOrIndex) {
-        return null;
+        return getChild();
     }
 
     public Type getType() {
