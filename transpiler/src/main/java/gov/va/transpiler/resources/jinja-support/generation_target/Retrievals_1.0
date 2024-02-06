@@ -14,17 +14,17 @@
 {#
     define testList: {1, 2}
 #}
-{% macro testList() %}{{ macros.List([macros.Encapsulate(macros.Literal('Integer', '1')), macros.Encapsulate(macros.Literal('Integer', 2))]) }}{% endmacro %}
+{% macro testList() %}{{ macros.List([macros.Encapsulate(macros.Literal('Integer', '1')), macros.Encapsulate(macros.Literal('Integer', '2'))]) }}{% endmacro %}
 {#
     define testRetrieve: ["Encounter, Performed"]
 #}
-{% macro testRetrieve() %}{{ macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed') }}{% endmacro %}
+{% macro testRetrieve() %}{{ macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed') }}{% endmacro %}
 {#
     define testTuple_withCollection: {foo: testRetrieve, bar: 1}
 #}
-{% macro testTuple_withCollection() %}{{ macros.Tuple([macros.TupleElement('foo', macros.Collect('Unfiltered', testRetrieve())), macros.TupleElement('bar', macros.Encapsulate('1'))]) }}{% endmacro %}
+{% macro testTuple_withCollection() %}{{ macros.Tuple([macros.TupleElement('foo', macros.Collect('Unfiltered', testRetrieve())), macros.TupleElement('bar', macros.Encapsulate(macros.Literal('Integer', '1')))]) }}{% endmacro %}
 {#
-    define testTupleReference: testTuple_withCollection.bar
+	define testTupleReference: testTuple_withCollection.bar
 #}
 {% macro testTupleReference() %}{{ macros.Property('ENCAPSULATED_SIMPLE', none, 'bar', testTuple_withCollection()) }}{% endmacro %}
 {#
@@ -34,7 +34,7 @@
 {#
     define testNestedTuple: {baz: 1, foobar: testTuple_withCollection}
 #}
-{% macro testNestedTuple() %}{% set paramList=['baz', 'foobar'] %}{% set currentDict=({'baz': macros.Encapsulate(1), 'foobar': testTuple_withCollection()}) %}{{ macros.Tuple(paramList, currentDict) }}{% endmacro %}
+{% macro testNestedTuple() %}{{ macros.Tuple([macros.TupleElement('baz', macros.Encapsulate(macros.Literal('Integer', '1'))), macros.TupleElement('foobar', testTuple_withCollection())]) }}{% endmacro %}
 {#
     define testNestedTupleReference: testNestedTuple.foobar.bar
 #}
