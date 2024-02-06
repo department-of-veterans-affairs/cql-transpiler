@@ -138,14 +138,14 @@ public class TranspilerNode {
     }
 
     protected Segment decollectSegment(String context, Segment segment) {
-        var collectSegment = new Segment();
-        collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Decollect(");
+        var decollectSegment = new Segment();
+        decollectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Decollect(");
         var contextChild = new Segment();
         contextChild.setHead("'" + context + "', ");
-        collectSegment.addChild(contextChild);
-        collectSegment.addChild(segment);
-        collectSegment.setTail(")");
-        return collectSegment;
+        decollectSegment.addChild(contextChild);
+        decollectSegment.addChild(segment);
+        decollectSegment.setTail(")");
+        return decollectSegment;
     }
 
     protected Segment childToSegmentDecollectTable(String context, TranspilerNode child) {

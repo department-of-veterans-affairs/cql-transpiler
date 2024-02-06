@@ -17,7 +17,7 @@ public class TupleNode extends ExpressionNode<Tuple> {
     public TranspilerNode getChildByReference(String nameOrIndex) {
         for (var child : getChildren()) {
             if (nameOrIndex.equals(((TupleElementNode) child).getCqlEquivalent().getName())) {
-                return child;
+                return child.getChildByReference(nameOrIndex);
             }
         }
         return null;

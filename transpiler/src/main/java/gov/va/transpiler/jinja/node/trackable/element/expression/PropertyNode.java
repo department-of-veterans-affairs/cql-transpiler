@@ -21,9 +21,12 @@ public class PropertyNode extends ExpressionNode<Property> {
             return Type.COLUMN_REFERENCE;
         } else {
             var childType = getChild().getChildByReference(getCqlEquivalent().getPath()).getType();
-            if (childType == Type.ENCAPSULATED_SIMPLE) {
+            if (childType == Type.SIMPLE || childType == Type.ENCAPSULATED_SIMPLE) {
+                // Any simple node referenced by a Property will have been encapsulated by the point the property is called
                 return Type.ENCAPSULATED_SIMPLE;
-            } else if (childType == Type.COLLECTED_TABLE) {
+            } else if (childType == Type.TABLE || childType == Type.COLLECTED_TABLE) {
+                // Any table referenced by a Property will have been collected by the point the property is called
+                // ... and will then have to be decollected in this Property's toSegment function
                 return Type.TABLE;
             } else {
                 throw new RuntimeException("unhandled property node type");
