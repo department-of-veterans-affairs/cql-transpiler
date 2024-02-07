@@ -32,6 +32,9 @@ public class Transpiler {
         + "define testNestedTuple: {baz: 1, foobar: testTuple_withCollection}\n"
         + "define testNestedTupleReference: testNestedTuple.foobar.bar\n"
         + "define testNestedTupleReferenceTable: testNestedTuple.foobar.foo\n"
+        + "define function testFunction(val Integer):\n"
+        + "    2 * val\n"
+        + "define testFunctionReference: testFunction(1)"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");

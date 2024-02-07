@@ -45,10 +45,11 @@
 {% macro testNestedTupleReferenceTable() %}{{ macros.Decollect('Unfiltered', macros.Property('TABLE', none, 'foo', macros.Property('ENCAPSULATED_SIMPLE', none, 'foobar', testNestedTuple()))) }}{% endmacro %}
 {#
     define function testFunction(val Integer):
+        2 * val
 #}
 {% macro testFunction(val) %}{{ macros.Multiply(macros.Literal('Integer', '2'), val) }}{% endmacro %}
 {#
-    define testFunctionReference = testFunction(1):
+    define testFunctionReference = testFunction(1)
 #}
 {% macro testFunctionReference() %}{{ testFunction(macros.Literal('Integer', '1')) }}{% endmacro %}
 {#

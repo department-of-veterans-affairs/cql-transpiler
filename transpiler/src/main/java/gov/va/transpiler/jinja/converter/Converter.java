@@ -8,17 +8,22 @@ import gov.va.transpiler.jinja.node.DefaultNode;
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.TupleElementNode;
-import gov.va.transpiler.jinja.node.trackable.element.ExpressionDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.ContextDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
+import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.UsingDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.OperandRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.binaryexpression.BinaryExpressionNode;
+import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.typespecifier.NamedTypeSpecifierNode;
 import gov.va.transpiler.jinja.state.State;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
@@ -54,11 +59,17 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitContextDef(ContextDef element, State state) {
+        new ContextDefNode(state, element);
+        return super.visitContextDef(element, state);
+    }
+
+    @Override
     public TranspilerNode visitExpressionDef(ExpressionDef element, State state) {
         if (element instanceof FunctionDef) {
             return super.visitExpressionDef((FunctionDef) element, state);
         }
-        new ExpressionDefNode(state, element);
+        new ExpressionDefNode<ExpressionDef>(state, element);
         return super.visitExpressionDef(element, state);
     }
 
@@ -66,6 +77,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitExpressionRef(ExpressionRef element, State state) {
         new ExpressionRefNode(state, element);
         return super.visitExpressionRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitFunctionDef(FunctionDef element, State state) {
+        new FunctionDefNode(state, element);
+        return super.visitFunctionDef(element, state);
     }
 
     @Override
@@ -90,6 +107,18 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitList(List element, State state) {
         new ListNode(state, element);
         return super.visitList(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitOperandDef(OperandDef element, State state) {
+        new OperandDefNode(state, element);
+        return super.visitOperandDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitOperandRef(OperandRef element, State state) {
+        new OperandRefNode(state, element);
+        return super.visitOperandRef(element, state);
     }
 
     @Override
@@ -123,9 +152,9 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
-    public TranspilerNode visitTypeSpecifier(TypeSpecifier element, State state) {
-        state.setCurrentNode(null);
-        return super.visitTypeSpecifier(element, state);
+    public TranspilerNode visitNamedTypeSpecifier(NamedTypeSpecifier element, State state) {
+        new NamedTypeSpecifierNode(state, element);
+        return super.visitNamedTypeSpecifier(element, state);
     }
 
     @Override

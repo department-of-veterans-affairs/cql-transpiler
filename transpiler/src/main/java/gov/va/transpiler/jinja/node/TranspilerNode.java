@@ -18,7 +18,8 @@ public class TranspilerNode {
         ENCAPSULATED_SIMPLE,
         TABLE,
         COLLECTED_TABLE,
-        COLUMN_REFERENCE
+        COLUMN_REFERENCE,
+        LAZY_EVALUATION
     }
 
     private TranspilerNode parent;
@@ -81,14 +82,14 @@ public class TranspilerNode {
     }
 
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren(getChildren(), getName() + "(", ")", "", "", ",");
+        return toSegmentWithJoinedChildren(getChildren(), getName() + "(", ")", "", "", ", ");
     }
 
     protected String getName() {
         return "UnsupportedNode";
     }
 
-    protected Segment toSegmentWithJoinedChildren(List<TranspilerNode> children, String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
+    protected Segment toSegmentWithJoinedChildren(List<? extends TranspilerNode> children, String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
         var topLevel = new Segment();
         topLevel.setHead(head);
         switch(children.size()) {

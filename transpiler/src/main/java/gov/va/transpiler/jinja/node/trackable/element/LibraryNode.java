@@ -5,17 +5,17 @@ import java.util.List;
 
 import org.hl7.elm.r1.Library;
 
-import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
-public class LibraryNode extends CQLEquivalent<Library> {
+public class LibraryNode extends ElementNode<Library> {
 
     private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
     private List<ValueSetDefNode> valueSetDefNodeList = new ArrayList<>();
+    private List<ContextDefNode> contextDefNodeList = new ArrayList<>();
 
     public LibraryNode(State state, Library t) {
         super(state, t);
@@ -27,6 +27,8 @@ public class LibraryNode extends CQLEquivalent<Library> {
             usingDefNodeList.add((UsingDefNode) child);
         } else if (child instanceof ValueSetDefNode) {
             valueSetDefNodeList.add((ValueSetDefNode) child);
+        } else if (child instanceof ContextDefNode) {
+            contextDefNodeList.add((ContextDefNode) child);
         } else {
             super.addChild(child);
         }

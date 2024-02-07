@@ -2,12 +2,11 @@ package gov.va.transpiler.jinja.node.trackable;
 
 import org.hl7.elm.r1.TupleElement;
 
-import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
-public class TupleElementNode extends CQLEquivalent<TupleElement> {
+public class TupleElementNode extends TrackableNode<TupleElement> {
 
     private String context;
 
