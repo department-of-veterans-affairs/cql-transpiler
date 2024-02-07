@@ -34,7 +34,15 @@ public class Transpiler {
         + "define testNestedTupleReferenceTable: testNestedTuple.foobar.foo\n"
         + "define function testFunction(val Integer):\n"
         + "    2 * val\n"
-        + "define testFunctionReference: testFunction(1)"
+        + "define testFunctionReference: testFunction(1)\n"
+        + "define testConcatenate: '1' + '2'\n"
+        + "define testAdd: 1 + 2\n"
+        + "define sub: 1 * 2\n"
+        + "define mul: 1 - 2\n"
+        + "define div: 1.0 / 2.0\n"
+        //+ "define neg: - 1\n"
+        //+ "define testAddReff: 1 + 2 + testLiteral\n"
+        //+ "define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");

@@ -14,13 +14,15 @@ import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.UsingDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.FunctionRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.OperandRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.binaryexpression.BinaryExpressionNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.typespecifier.NamedTypeSpecifierNode;
@@ -53,15 +55,27 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
-    public TranspilerNode visitBinaryExpression(BinaryExpression element, State state) {
-        new BinaryExpressionNode<>(state, element);
-        return super.visitBinaryExpression(element, state);
+    public TranspilerNode visitAdd(Add element, State state) {
+        new BinaryExpressionNode<Add>(state, element);
+        return super.visitAdd(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitConcatenate(Concatenate element, State state) {
+        new NaryExpressionNode<Concatenate>(state, element);
+        return super.visitConcatenate(element, state);
     }
 
     @Override
     public TranspilerNode visitContextDef(ContextDef element, State state) {
         new ContextDefNode(state, element);
         return super.visitContextDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitDivide(Divide element, State state) {
+        new BinaryExpressionNode<Divide>(state, element);
+        return super.visitDivide(element, state);
     }
 
     @Override
@@ -86,6 +100,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitFunctionRef(FunctionRef element, State state) {
+        new FunctionRefNode(state, element);
+        return super.visitFunctionRef(element, state);
+    }
+
+    @Override
     public TranspilerNode visitIncludeDef(IncludeDef element, State state) {
         state.setCurrentNode(null);
         return super.visitIncludeDef(element, state);
@@ -107,6 +127,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitList(List element, State state) {
         new ListNode(state, element);
         return super.visitList(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitMultiply(Multiply element, State state) {
+        new BinaryExpressionNode<Multiply>(state, element);
+        return super.visitMultiply(element, state);
     }
 
     @Override
@@ -137,6 +163,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitRetrieve(Retrieve element, State state) {
         new RetrieveNode(state, element);
         return super.visitRetrieve(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitSubtract(Subtract element, State state) {
+        new BinaryExpressionNode<Subtract>(state, element);
+        return super.visitSubtract(element, state);
     }
 
     @Override

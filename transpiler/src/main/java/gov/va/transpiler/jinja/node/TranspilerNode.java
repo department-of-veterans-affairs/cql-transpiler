@@ -82,14 +82,33 @@ public class TranspilerNode {
     }
 
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren(getChildren(), getName() + "(", ")", "", "", ", ");
+        return joinChildren(getChildren(), getName() + "(", ")", "", "", ", ");
     }
 
     protected String getName() {
         return "UnsupportedNode";
     }
 
-    protected Segment toSegmentWithJoinedChildren(List<? extends TranspilerNode> children, String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
+    protected Segment joinSegments(List<Segment> segmentList, String head, String tail, String joiner) {
+        var topLevel = new Segment();
+        topLevel.setHead(head);
+        boolean first = true;
+        for (var segment: segmentList) {
+            if (first) {
+                first = false;
+            } else {
+                var joinSegment = new Segment();
+                joinSegment.setHead(joiner);
+                topLevel.addChild(joinSegment);
+            }
+
+            topLevel.addChild(segment);
+        }
+        topLevel.setTail(tail);
+        return topLevel;
+    }
+
+    protected Segment joinChildren(List<? extends TranspilerNode> children, String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
         var topLevel = new Segment();
         topLevel.setHead(head);
         switch(children.size()) {

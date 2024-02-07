@@ -30,6 +30,6 @@ public class TupleNode extends ExpressionNode<Tuple> {
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren(getChildren(), getName() + "([", "])", "", "", ", ");
+        return joinChildren(getChildren(), getName() + "([", "])", "", "", ", ");
     }
 }

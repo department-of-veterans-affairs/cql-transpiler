@@ -51,11 +51,11 @@
 {#
     define testFunctionReference = testFunction(1)
 #}
-{% macro testFunctionReference() %}{{ testFunction(macros.Literal('Integer', '1')) }}{% endmacro %}
+{% macro testFunctionReference() %}{{ testFunction(macros.Encapsulate(macros.Literal('Integer', '1'))) }}{% endmacro %}
 {#
     define testConcatenate: '1' + '2'
 #}
-{% macro testConcatenate() %}{{ macros.Concatenate(macros.Literal('String', '1'), true, macros.Literal('String', '2'), true) }}{% endmacro %}
+{% macro testConcatenate() %}{{ macros.Concatenate([macros.Literal('String', '1'), macros.Literal('String', '2')], ['SIMPLE', 'SIMPLE']) }}{% endmacro %}
 {#
     define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral()
 #}

@@ -17,6 +17,6 @@ public class DefaultNode extends CQLEquivalent<Trackable> {
 
     @Override
     public Segment toSegment() {
-        return toSegmentWithJoinedChildren(getChildren(), Standards.MACRO_FILE_NAME + "." + getCqlEquivalent().getClass().getSimpleName() + "(", ")", "", "", ", ");
+        return joinChildren(getChildren(), Standards.MACRO_FILE_NAME + "." + getCqlEquivalent().getClass().getSimpleName() + "(", ")", "", "", ", ");
     }
 }

@@ -25,10 +25,18 @@ public class Segment {
     private String tail;
 
     public Segment() {
-        printType = PrintType.Inline;
-        head = "";
+        this("", "", PrintType.Inline);
+    }
+
+    public Segment (String head) {
+        this(head, "", PrintType.Inline);
+    }
+
+    public Segment(String head, String tail, PrintType printType) {
+        this.printType = printType;
+        this.head = head;
         children = new ArrayList<>();
-        tail = "";
+        this.tail = tail;
     }
 
     public Segment getParent() {

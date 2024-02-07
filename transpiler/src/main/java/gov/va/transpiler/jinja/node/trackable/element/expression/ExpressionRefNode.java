@@ -1,5 +1,6 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
+import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 
 import gov.va.transpiler.jinja.state.State;
@@ -15,12 +16,12 @@ public class ExpressionRefNode extends ExpressionNode<ExpressionRef> implements 
 
     @Override
     public TranspilerNode getChildByReference(String nameOrIndex) {
-        return ((ExpressionDefNode) getReferenceTo()).getChildByReference(nameOrIndex);
+        return ((ExpressionDefNode<ExpressionDef>) getReferenceTo()).getChildByReference(nameOrIndex);
     }
 
     @Override
     public Type getType() {
-        return ((ExpressionDefNode) getReferenceTo()).getType();
+        return ((ExpressionDefNode<ExpressionDef>) getReferenceTo()).getType();
     }
 
     @Override

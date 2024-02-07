@@ -1,28 +1,45 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
-import org.hl7.elm.r1.List;
+import org.hl7.elm.r1.FunctionRef;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
+import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
-public class ListNode extends ExpressionNode<List> {
+public class FunctionRefNode extends ExpressionNode<FunctionRef> implements ReferenceNode {
 
     private String context;
 
-    public ListNode(State state, List cqlEquivalent) {
+    public FunctionRefNode(State state, FunctionRef cqlEquivalent) {
         super(state, cqlEquivalent);
         context = state.getContext();
     }
 
     @Override
+    public String referenceName() {
+        return getCqlEquivalent().getName();
+    }
+
+    @Override
+    public String referenceType() {
+        return FunctionDefNode.REFERENCE_TYPE;
+    }
+
+    @Override
     public TranspilerNode getChildByReference(String nameOrIndex) {
-        return getChildren().get(Integer.parseInt(nameOrIndex));
+        return ((FunctionDefNode) getReferenceTo()).getChildByReference(nameOrIndex);
     }
 
     @Override
     public Type getType() {
-        return Type.ENCAPSULATED_SIMPLE;
+        return ((FunctionDefNode) getReferenceTo()).getType();
+    }
+
+    @Override
+    public String getName() {
+        return referenceName();
     }
 
     @Override
@@ -34,10 +51,5 @@ public class ListNode extends ExpressionNode<List> {
         } else {
             return super.childToSegment(child);
         }
-    }
-
-    @Override
-    public Segment toSegment() {
-        return joinChildren(getChildren(), getName() + "([", "])", "", "", ", ");
     }
 }

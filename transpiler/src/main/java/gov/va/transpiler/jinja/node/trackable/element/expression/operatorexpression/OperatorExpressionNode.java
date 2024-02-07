@@ -1,4 +1,4 @@
-package gov.va.transpiler.jinja.node.trackable.element.expression.binaryexpression.operatorexpression;
+package gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression;
 
 import org.hl7.elm.r1.OperatorExpression;
 

@@ -37,7 +37,7 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
         enclosingSegment.setLocator(getCqlEquivalent().getLocator());
 
         // opening brackets to macro
-        var openMacro = toSegmentWithJoinedChildren(operandDefNodeList, "{% macro " + referenceName() + "(", ") %}", "", "", ", ");
+        var openMacro = joinChildren(operandDefNodeList, "{% macro " + referenceName() + "(", ") %}", "", "", ", ");
         enclosingSegment.addChild(openMacro);
 
         // inside of function
