@@ -59,12 +59,11 @@
 {#
     define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral()
 #}
-{# note: this is missing a lot of 'to decimal' calls #}
-{% macro testMathOperations() %}{{ macros.Add(macros.Multiply(macros.Add(macros.Add(macros.Literal('Integer', 1), macros.Divide(macros.Literal('Integer', '2'), macros.Negate(macros.Literal('Integer', 3)))), macros.Literal('Integer', '4')), macros.Literal('Integer', '5')), testLiteral()) }}{% endmacro %}
+{% macro testMathOperations() %}{{ macros.Add(macros.Multiply(macros.Add(macros.Add(macros.ToDecimal(macros.Literal('Integer', '1')), macros.Divide(macros.ToDecimal(macros.Literal('Integer', '2')), macros.ToDecimal(macros.Negate(macros.Literal('Integer', '3'))))), macros.ToDecimal(macros.Literal('Integer', '4'))), macros.ToDecimal(macros.Literal('Integer', '5'))), macros.ToDecimal(testLiteral())) }}{% endmacro %}
 {#
-    define testDatetime: @2010-01-02T14:30:07.76
+    define testDateTime: @2010-01-02T14:30:07.76
 #}
-{% macro testDatetime() %}{{ macros.Datetime(macros.Literal('Integer', '2010'), macros.Literal('Integer', '01'), macros.Literal('Integer', '02'), macros.Literal('Integer', '14'), macros.Literal('Integer', '30'), macros.Literal('Integer', '7'), macros.Literal('Integer', '76')) }}{% endmacro %}
+{% macro testDatetime() %}{{ macros.DateTime(macros.Literal('Integer', '2010'), macros.Literal('Integer', '1'), macros.Literal('Integer', '2'), macros.Literal('Integer', '14'), macros.Literal('Integer', '30'), macros.Literal('Integer', '7'), macros.Literal('Integer', '76')) }}{% endmacro %}
 {#
     define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.period
 #}

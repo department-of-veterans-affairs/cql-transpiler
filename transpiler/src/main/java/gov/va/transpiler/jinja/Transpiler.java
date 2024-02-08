@@ -37,6 +37,7 @@ public class Transpiler {
         + "define testFunctionReference: testFunction(1)\n"
         + "define testConcatenate: '1' + '2'\n"
         + "define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral\n"
+        + "define testDateTime: @2010-01-02T14:30:07.76\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
