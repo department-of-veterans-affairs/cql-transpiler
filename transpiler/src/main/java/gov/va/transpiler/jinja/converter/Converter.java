@@ -8,9 +8,12 @@ import gov.va.transpiler.jinja.node.DefaultNode;
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.TupleElementNode;
+import gov.va.transpiler.jinja.node.trackable.element.AliasedQuerySourceNode;
 import gov.va.transpiler.jinja.node.trackable.element.ContextDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
+import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.UsingDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
@@ -19,6 +22,7 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.OperandRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.QueryNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
@@ -58,6 +62,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitAdd(Add element, State state) {
         new BinaryExpressionNode<Add>(state, element);
         return super.visitAdd(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitAliasedQuerySource(AliasedQuerySource element, State state) {
+        new AliasedQuerySourceNode(state, element);
+        return super.visitAliasedQuerySource(element, state);
     }
 
     @Override
@@ -160,9 +170,27 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitQuery(Query element, State state) {
+        new QueryNode(state, element);
+        return super.visitQuery(element, state);
+    }
+
+    @Override
     public TranspilerNode visitRetrieve(Retrieve element, State state) {
         new RetrieveNode(state, element);
         return super.visitRetrieve(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitReturnClause(ReturnClause element, State state) {
+        new ReturnClauseNode(state, element);
+        return super.visitReturnClause(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitSortClause(SortClause element, State state) {
+        new SortClauseNode(state, element);
+        return super.visitSortClause(element, state);
     }
 
     @Override

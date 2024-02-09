@@ -38,6 +38,7 @@ public class Transpiler {
         + "define testConcatenate: '1' + '2'\n"
         + "define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral\n"
         + "define testDateTime: @2010-01-02T14:30:07.76\n"
+        + "define testQuery_returnColumnValue: [\"Encounter, Performed\"] E return E.relevantPeriod\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");

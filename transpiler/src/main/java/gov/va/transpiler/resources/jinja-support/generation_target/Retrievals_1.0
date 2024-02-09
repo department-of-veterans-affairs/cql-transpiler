@@ -67,7 +67,7 @@
 {#
     define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.period
 #}
-{% macro testQuery_returnColumnValue() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.Property("COLUMN_REFERENCE", 'period', 'E', none)], none, none) }}{% endmacro %}
+{% macro testQuery_returnColumnValue() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], [macros.ReturnClause(macros.Property('COLUMN_REFERENCE', 'E', 'relevantPeriod', none))], none, []) }}{% endmacro %}
 {#
     define testQuery_withWhere: ["Encounter, Performed"] E where E.period ends after testDate
 #}

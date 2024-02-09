@@ -15,10 +15,12 @@
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
-{% macro Property(type, scope, path, source) %}{% if type == 'COLUMN_REFERENCE' %}{% if source == none %}{{ scope }}{% else %}{{ source }}.{{ scope }}{% endif %}{% else %}SELECT {{ path }} FROM ({{ source }}){% endif %}{% endmacro %}
+{% macro Property(type, scope, path, source) %}{% if type == 'COLUMN_REFERENCE' %}{% if source != none %}{{ source }}.{{ path }}{% elif path != none %}{{ scope }}.{{ path }}{% else %}{{ scope }}{% endif %}{% else %}SELECT {{ path }} FROM ({{ source }}){% endif %}{% endmacro %}
 {% macro Concatenate(valList, valTypeList)%}CONCAT({{ ListPrintingUtility(valList, ', ') }}){% endmacro %}
-{% macro Datetime(year, month, day, hour, minute, second, millisecond) %}<UNSUPPORTED PRIMITIVE TYPE: DATE [Y: {{ year }}, M: {{ month }}, D: {{ day }}, H: {{ hour }}, M: {{ minute }}, S: {{ second }}, MS: {{ millisecond }}]>{% endmacro %}
-{% macro Query(modeltype, valueset, model, alias, returnColumnList, where, sortByExpressionList) %}{% if returnColumnList == none %}SELECT * FROM {% else %}SELECT {{ ListPrintingUtility(returnColumnList, ', ') }} FROM {% endif %}({{ Retrieve(modeltype, valueset, model) }} AS {{ alias }}){% if where != none %} WHERE ({{ where }}){% endif %}{% if sortByExpressionList != none %} SORT BY {{ ListPrintingUtility(sortByExpressionList, ', ') }}{% endif %}{% endmacro %}
+{% macro DateTime(year, month, day, hour, minute, second, millisecond) %}<UNSUPPORTED PRIMITIVE TYPE: DATE [Y: {{ year }}, M: {{ month }}, D: {{ day }}, H: {{ hour }}, M: {{ minute }}, S: {{ second }}, MS: {{ millisecond }}]>{% endmacro %}
+{% macro AliasedQuerySource(alias, source) %}{{ source }} AS {{ alias }}{% endmacro %}
+{% macro ReturnClause(val) %}{{ val }}{% endmacro %}
+{% macro Query(sourceList, returnList, where, sortClauseList) %}{% if returnList | length == 0 %}{{ ListPrintingUtility(sourceList, ", ") }}{% else %}SELECT {{ ListPrintingUtility(returnList, ', ') }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% endif %}{% if where != none %} WHERE ({{ where }}){% endif %}{% if sortClauseList | length != 0 %} SORT BY ({{ ListPrintingUtility(sortByExpressionList, ', ') }}){% endif %}{% endmacro %}
 {% macro GreaterThan (left, right) %}{{ left }} > {{ right }}{% endmacro %}
 {% macro Equals (left, right) %}{{ left }} = {{ right }}{% endmacro %}
 {% macro Start(value) %}{{ Property('COLUMN_REFERENCE', 'start', none, value) }}{% endmacro%}
