@@ -65,9 +65,21 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitAfter(After element, State state) {
+        new BinaryExpressionNode<After>(state, element);
+        return super.visitAfter(element, state);
+    }
+
+    @Override
     public TranspilerNode visitAliasedQuerySource(AliasedQuerySource element, State state) {
         new AliasedQuerySourceNode(state, element);
         return super.visitAliasedQuerySource(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitBefore(Before element, State state) {
+        new BinaryExpressionNode<Before>(state, element);
+        return super.visitBefore(element, state);
     }
 
     @Override

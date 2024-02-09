@@ -65,13 +65,13 @@
 #}
 {% macro testDatetime() %}{{ macros.DateTime(macros.Literal('Integer', '2010'), macros.Literal('Integer', '1'), macros.Literal('Integer', '2'), macros.Literal('Integer', '14'), macros.Literal('Integer', '30'), macros.Literal('Integer', '7'), macros.Literal('Integer', '76')) }}{% endmacro %}
 {#
-    define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.period
+    define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.relevantPeriod
 #}
 {% macro testQuery_returnColumnValue() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], [macros.ReturnClause(macros.Property('COLUMN_REFERENCE', 'E', 'relevantPeriod', none))], none, []) }}{% endmacro %}
 {#
-    define testQuery_withWhere: ["Encounter, Performed"] E where E.period ends after testDate
+    define testQuery_withWhere: ["Encounter, Performed"] E where E.relevantPeriod ends after testDateTime
 #}
-{% macro testQuery_withWhere() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.After(macros.Property("COLUMN_REFERENCE", 'period', 'E', none), testDatetime()), none) }}{% endmacro %}
+{% macro testQuery_withWhere() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], [], macros.After(macros.End(macros.Property('COLUMN_REFERENCE', 'E', 'relevantPeriod', none)), testDateTime()), []) }}{% endmacro %}
 {#
     define testQuery_sortBy: ["Encounter, Performed"] E sort by status.value
 #}
@@ -81,7 +81,7 @@
 #}
 {% macro testQuery_returnColumnValueProperty() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.Property("COLUMN_REFERENCE", macros.Property("COLUMN_REFERENCE", 'value', 'status', none), 'E', NONE)], none, none) }}{% endmacro %}
 {#
-    define testQuery_wherePropertyMatch: ["Encounter, Performed"] E where E.period.status = 'finished'
+    define testQuery_wherePropertyMatch: ["Encounter, Performed"] E where E.relevantPeriod.status = 'finished'
 #}
 {% macro testQuery_wherePropertyMatch() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.Equals(macros.Property("COLUMN_REFERENCE", 'E', macros.Property("COLUMN_REFERENCE", 'status', 'period', none)), 'finished'), none) }}{% endmacro %}
 {#

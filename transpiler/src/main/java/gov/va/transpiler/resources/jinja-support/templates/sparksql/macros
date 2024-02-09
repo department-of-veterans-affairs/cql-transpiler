@@ -22,9 +22,11 @@
 {% macro ReturnClause(val) %}{{ val }}{% endmacro %}
 {% macro Query(sourceList, returnList, where, sortClauseList) %}{% if returnList | length == 0 %}{{ ListPrintingUtility(sourceList, ", ") }}{% else %}SELECT {{ ListPrintingUtility(returnList, ', ') }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% endif %}{% if where != none %} WHERE ({{ where }}){% endif %}{% if sortClauseList | length != 0 %} SORT BY ({{ ListPrintingUtility(sortByExpressionList, ', ') }}){% endif %}{% endmacro %}
 {% macro GreaterThan (left, right) %}{{ left }} > {{ right }}{% endmacro %}
+{% macro LessThan (left, right) %}{{ left }} < {{ right }}{% endmacro %}
 {% macro Equals (left, right) %}{{ left }} = {{ right }}{% endmacro %}
 {% macro Start(value) %}{{ Property('COLUMN_REFERENCE', 'start', none, value) }}{% endmacro%}
 {% macro End(value) %}{{ Property('COLUMN_REFERENCE', 'end', none, value) }}{% endmacro%}
 {% macro After(left, right) %}{{ GreaterThan(Start(left), End(right)) }}{% endmacro %}
+{% macro Before(left, right) %}{{ LessThan(Start(left), End(right)) }}{% endmacro %}
 {% macro Count(context, expressionIsTable, expression) %} SELECT count({% if expressionIsTable %}*{% else %}explode(*){% endif %}) FROM ({{ expression }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
 {% macro ToDecimal(val) %}{{ val }}.0{% endmacro %}
