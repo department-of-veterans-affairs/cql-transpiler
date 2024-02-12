@@ -4,14 +4,14 @@
 {% macro Subtract(left, right) %}({{ left }} - {{ right }}){% endmacro %}
 {% macro Multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}
 {% macro Divide(left, right) %}({{ left }} / {{ right }}){% endmacro %}
-{% macro Negate(value) %}-{{ value }}{% endmacro %}
+{% macro Negate(value) %}(-{{ value }}){% endmacro %}
 {% macro Retrieve(modeltype, valueset, model) %}SELECT * FROM {{ model }}{% endmacro %}
 {% macro Encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
 {% macro TupleElement(name, value)%}{{ value }} AS {{ name }}{% endmacro %}
-{% macro Tuple(listOfTupleElements)%}SELECT struct(*) AS _val FROM {{ ListPrintingUtility(listOfTupleElements, ', ') }}{% endmacro %}
+{% macro Tuple(listOfTupleElements)%}SELECT struct(*) AS _val FROM ({{ ListPrintingUtility(listOfTupleElements, ', ') }}){% endmacro %}
 {% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
 {% macro Union(listOfItemsToUnion) %}{{ ListPrintingUtility(listOfItemsToUnion, ' UNION ') }}{% endmacro %}
-{% macro List(listOfItems) %}collect_list(_val) AS _val FROM {% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems) }}{% endif %}{% endmacro %}
+{% macro List(listOfItems) %}collect_list(_val) AS _val FROM ({% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems) }}{% endif %}){% endmacro %}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
@@ -21,12 +21,12 @@
 {% macro AliasedQuerySource(alias, source) %}{{ source }} AS {{ alias }}{% endmacro %}
 {% macro ReturnClause(val) %}{{ val }}{% endmacro %}
 {% macro Query(sourceList, returnList, where, sortClauseList) %}{% if returnList | length == 0 %}{{ ListPrintingUtility(sourceList, ", ") }}{% else %}SELECT {{ ListPrintingUtility(returnList, ', ') }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% endif %}{% if where != none %} WHERE ({{ where }}){% endif %}{% if sortClauseList | length != 0 %} SORT BY ({{ ListPrintingUtility(sortByExpressionList, ', ') }}){% endif %}{% endmacro %}
-{% macro GreaterThan (left, right) %}{{ left }} > {{ right }}{% endmacro %}
-{% macro LessThan (left, right) %}{{ left }} < {{ right }}{% endmacro %}
-{% macro Equals (left, right) %}{{ left }} = {{ right }}{% endmacro %}
+{% macro GreaterThan (left, right) %}({{ left }} > {{ right }}){% endmacro %}
+{% macro LessThan (left, right) %}({{ left }} < {{ right }}){% endmacro %}
+{% macro Equals (left, right) %}({{ left }} = {{ right }}){% endmacro %}
 {% macro Start(value) %}{{ Property('COLUMN_REFERENCE', 'start', none, value) }}{% endmacro%}
 {% macro End(value) %}{{ Property('COLUMN_REFERENCE', 'end', none, value) }}{% endmacro%}
 {% macro After(left, right) %}{{ GreaterThan(Start(left), End(right)) }}{% endmacro %}
 {% macro Before(left, right) %}{{ LessThan(Start(left), End(right)) }}{% endmacro %}
-{% macro Count(context, expressionIsTable, expression) %} SELECT count({% if expressionIsTable %}*{% else %}explode(*){% endif %}) FROM ({{ expression }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
-{% macro ToDecimal(val) %}{{ val }}.0{% endmacro %}
+{% macro Count(context, expr, from) %}{% if from == none || context == 'Unfiltered' %}count({{ expr }}){% else %}SELECT count({{ expr }}) FROM ({{ from }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
+{% macro ToDecimal(val) %}({{ Add(val, 0.0) }}){% endmacro %}

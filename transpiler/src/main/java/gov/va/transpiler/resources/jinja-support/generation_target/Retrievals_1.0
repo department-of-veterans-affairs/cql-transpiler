@@ -92,9 +92,9 @@
     context Patient
     define testCount_patientContext: Count(["Encounter, Performed"])
 #}
-{% macro testCount_patientContext() %}{{ macros.Count('Patient', true, macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed')) }}{% endmacro %}
+{% macro testCount_patientContext() %}{{ macros.Count('Patient', '*', macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed')) }}{% endmacro %}
 {#
     context Unfiltered
     define testCount_unfilteredContext: Count(["Encounter, Performed"])
 #}
-{% macro testCount_unfilteredContext() %}{{ macros.Count('Unfiltered', true, macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed')) }}{% endmacro %}
+{% macro testCount_unfilteredContext() %}{{ macros.Count('Unfiltered', macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed'), none) }}{% endmacro %}
