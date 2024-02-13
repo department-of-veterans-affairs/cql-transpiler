@@ -73,9 +73,9 @@
 #}
 {% macro testQuery_withWhere() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], [], macros.After(macros.End(macros.Property('COLUMN_REFERENCE', 'E', 'relevantPeriod', none)), testDateTime()), []) }}{% endmacro %}
 {#
-    define testQuery_sortBy: ["Encounter, Performed"] E sort by status.value
+    define testQuery_sortBy: ["Encounter, Performed"] E sort by start of relevantPeriod
 #}
-{% macro testQuery_withSortBy() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, none, [macros.Property("COLUMN_REFERENCE", 'value', 'status', none)]) }}{% endmacro %}
+{% macro testQuery_sortBy() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.Start(macros.IdentifierRef('relevantPeriod')))])) }}{% endmacro %}
 {#
     define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.status.value
 #}
