@@ -16,11 +16,6 @@ public class NaryExpressionNode<T extends NaryExpression> extends ExpressionNode
     }
 
     @Override
-    public Type getType() {
-        return Type.SIMPLE;
-    }
-
-    @Override
     public Segment toSegment() {
         var enclosingSegment = new Segment();
         enclosingSegment.setHead(getName() + "(");

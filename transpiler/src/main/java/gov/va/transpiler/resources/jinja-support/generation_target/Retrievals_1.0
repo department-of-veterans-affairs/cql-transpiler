@@ -61,6 +61,11 @@
 #}
 {% macro testMathOperations() %}{{ macros.Add(macros.Multiply(macros.Add(macros.Add(macros.ToDecimal(macros.Literal('Integer', '1')), macros.Divide(macros.ToDecimal(macros.Literal('Integer', '2')), macros.ToDecimal(macros.Negate(macros.Literal('Integer', '3'))))), macros.ToDecimal(macros.Literal('Integer', '4'))), macros.ToDecimal(macros.Literal('Integer', '5'))), macros.ToDecimal(testLiteral())) }}{% endmacro %}
 {#
+	// Retrievals lines [20:1-20:25]
+	define testBoolean: 1 = 2
+#}
+{% macro testBoolean() %}{{ macros.Equal(macros.Literal('Integer', '1'), macros.Literal('Integer', '2')) }}{% endmacro %}
+{#
     define testDateTime: @2010-01-02T14:30:07.76
 #}
 {% macro testDatetime() %}{{ macros.DateTime(macros.Literal('Integer', '2010'), macros.Literal('Integer', '1'), macros.Literal('Integer', '2'), macros.Literal('Integer', '14'), macros.Literal('Integer', '30'), macros.Literal('Integer', '7'), macros.Literal('Integer', '76')) }}{% endmacro %}
@@ -81,11 +86,7 @@
 #}
 {% macro testQuery_returnColumnValueProperty() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], macros.ReturnClause([macros.Property('COLUMN_REFERENCE', none, 'high', macros.Property('COLUMN_REFERENCE', 'E', 'relevantPeriod', none))]), none, none) }}{% endmacro %}
 {#
-    define testQuery_wherePropertyMatch: ["Encounter, Performed"] E where E.relevantPeriod.high = testDate
-#}
-{% macro testQuery_wherePropertyMatch() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.Equals(macros.Property("COLUMN_REFERENCE", 'E', macros.Property("COLUMN_REFERENCE", 'status', 'period', none)), 'finished'), none) }}{% endmacro %}
-{#
-    define testUnion: ["Encounter, Performed"] union [Patient]
+	define testUnion: ["Encounter, Performed"] union ["Encounter, Performed"]
 #}
 {% macro testUnion() %}{{ macros.Union([macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed'), macros.Retrieve('URN:HEALTHIT-GOV:QDM:V5_6', none, 'Patient')]) }}{% endmacro %}
 {#

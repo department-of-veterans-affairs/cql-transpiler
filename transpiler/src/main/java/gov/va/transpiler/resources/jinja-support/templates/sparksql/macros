@@ -5,6 +5,7 @@
 {% macro Multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}
 {% macro Divide(left, right) %}({{ left }} / {{ right }}){% endmacro %}
 {% macro Negate(value) %}(-{{ value }}){% endmacro %}
+{% macro Equal(left, right) %}({{left}} = {{ right }}){% endmacro %}
 {% macro Retrieve(modeltype, valueset, model) %}SELECT * FROM {{ model }}{% endmacro %}
 {% macro Encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
 {% macro TupleElement(name, value)%}{{ value }} AS {{ name }}{% endmacro %}

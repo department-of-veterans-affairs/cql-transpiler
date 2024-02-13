@@ -37,11 +37,17 @@ public class Transpiler {
         + "define testFunctionReference: testFunction(1)\n"
         + "define testConcatenate: '1' + '2'\n"
         + "define testMathOperations: (1 + 2 / -3 + 4) * 5 + testLiteral\n"
+        + "define testBoolean: 1 = 2\n"
         + "define testDateTime: @2010-01-02T14:30:07.76\n"
         + "define testQuery_returnColumnValue: [\"Encounter, Performed\"] E return E.relevantPeriod\n"
         + "define testQuery_withWhere: [\"Encounter, Performed\"] E where E.relevantPeriod ends after testDateTime\n"
         + "define testQuery_sortBy: [\"Encounter, Performed\"] E sort by start of relevantPeriod\n"
         + "define testQuery_returnColumnValueProperty: [\"Encounter, Performed\"] E return E.relevantPeriod.high\n"
+        + "define testUnion: [\"Encounter, Performed\"] union [\"Encounter, Performed\"]\n"
+        //+ "context Patient\n"
+        //+ "define testCount_patientContext: Count([\"Encounter, Performed\"])\n"
+        //+ "context Unfiltered\n"
+        //+ "define testCount_patientContext: Count([\"Encounter, Performed\"])\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
