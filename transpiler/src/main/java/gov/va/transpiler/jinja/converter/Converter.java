@@ -9,15 +9,20 @@ import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.TupleElementNode;
 import gov.va.transpiler.jinja.node.trackable.element.AliasedQuerySourceNode;
+import gov.va.transpiler.jinja.node.trackable.element.ByColumnNode;
+import gov.va.transpiler.jinja.node.trackable.element.ByDirectionNode;
+import gov.va.transpiler.jinja.node.trackable.element.ByExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.ContextDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
+import gov.va.transpiler.jinja.node.trackable.element.SortByItemNode;
 import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.UsingDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.FunctionRefNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.IdentifierRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.OperandRefNode;
@@ -83,6 +88,24 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitByColumn(ByColumn element, State state) {
+        new ByColumnNode(state, element);
+        return super.visitByColumn(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitByDirection(ByDirection element, State state) {
+        new ByDirectionNode(state, element);
+        return super.visitByDirection(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitByExpression(ByExpression element, State state) {
+        new ByExpressionNode(state, element);
+        return super.visitByExpression(element, state);
+    }
+
+    @Override
     public TranspilerNode visitConcatenate(Concatenate element, State state) {
         new NaryExpressionNode<Concatenate>(state, element);
         return super.visitConcatenate(element, state);
@@ -125,6 +148,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitFunctionRef(FunctionRef element, State state) {
         new FunctionRefNode(state, element);
         return super.visitFunctionRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitIdentifierRef(IdentifierRef element, State state) {
+        new IdentifierRefNode(state, element);
+        return super.visitIdentifierRef(element, state);
     }
 
     @Override
@@ -197,6 +226,19 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitReturnClause(ReturnClause element, State state) {
         new ReturnClauseNode(state, element);
         return super.visitReturnClause(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitSortByItem(SortByItem element, State state) {
+        if (element instanceof ByColumn) {
+            return visitByColumn((ByColumn) element, state);
+        } else if (element instanceof ByDirection) {
+            return visitByDirection((ByDirection) element, state);
+        } else if (element instanceof ByExpression) {
+            return visitByExpression((ByExpression) element, state);
+        }
+        new SortByItemNode<SortByItem>(state, element);
+        return super.visitSortByItem(element, state);
     }
 
     @Override

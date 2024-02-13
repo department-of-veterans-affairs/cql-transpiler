@@ -1,14 +1,9 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hl7.elm.r1.Expression;
 import org.hl7.elm.r1.Query;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
-import gov.va.transpiler.jinja.node.trackable.element.AliasedQuerySourceNode;
 import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
 import gov.va.transpiler.jinja.printing.Segment;
@@ -17,9 +12,9 @@ import gov.va.transpiler.jinja.state.State;
 
 public class QueryNode extends ExpressionNode<Query> {
 
-    public ExpressionNode where = null;
-    public List<ReturnClauseNode> returnClauseList = new ArrayList<>();
-    public List<SortClauseNode> sortClauseList = new ArrayList<>();
+    public ExpressionNode<?> where = null;
+    public ReturnClauseNode returnClause = null;
+    public SortClauseNode sortClause  = null;
 
     public QueryNode(State state, Query cqlEquivalent) {
         super(state, cqlEquivalent);
@@ -28,12 +23,20 @@ public class QueryNode extends ExpressionNode<Query> {
     @Override
     public void addChild(TranspilerNode child) {
         if(child instanceof ReturnClauseNode) {
-            returnClauseList.add((ReturnClauseNode) child);
+            if (returnClause == null) {
+                returnClause = (ReturnClauseNode) child;
+            } else {
+                throw new UnsupportedChildNodeException(this, child);
+            }
         } else if (child instanceof SortClauseNode) {
-            sortClauseList.add((SortClauseNode) child);
-        } else if (child instanceof ExpressionNode && ((ExpressionNode) child).getCqlEquivalent() == getCqlEquivalent().getWhere()) {
+            if (sortClause == null) {
+                sortClause = (SortClauseNode) child;
+            } else {
+                throw new UnsupportedChildNodeException(this, child);
+            }
+        } else if (child instanceof ExpressionNode && ((ExpressionNode<?>) child).getCqlEquivalent() == getCqlEquivalent().getWhere()) {
             if (where == null) {
-                where = (ExpressionNode) child;
+                where = (ExpressionNode<?>) child;
             } else {
                 throw new UnsupportedChildNodeException(this, child);
             }
@@ -57,7 +60,7 @@ public class QueryNode extends ExpressionNode<Query> {
         enclosingSegment.addChild(joinerSegment);
 
         // returnList
-        enclosingSegment.addChild(joinChildren(returnClauseList, "[","]", "", "", ", "));
+        enclosingSegment.addChild(returnClause == null ? new Segment("none") : returnClause.toSegment());
         enclosingSegment.addChild(joinerSegment);
 
         // where
@@ -65,7 +68,7 @@ public class QueryNode extends ExpressionNode<Query> {
         enclosingSegment.addChild(joinerSegment);
     
         // order by
-        enclosingSegment.addChild(joinChildren(sortClauseList, "[","]", "", "", ", "));
+        enclosingSegment.addChild(sortClause == null ? new Segment("none") : sortClause.toSegment());
 
         return enclosingSegment;
     }

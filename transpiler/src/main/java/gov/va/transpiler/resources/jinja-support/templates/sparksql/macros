@@ -19,8 +19,6 @@
 {% macro Concatenate(valList, valTypeList)%}concat({{ ListPrintingUtility(valList, ', ') }}){% endmacro %}
 {% macro DateTime(year, month, day, hour, minute, second, millisecond) %}<UNSUPPORTED PRIMITIVE TYPE: DATE [Y: {{ year }}, M: {{ month }}, D: {{ day }}, H: {{ hour }}, M: {{ minute }}, S: {{ second }}, MS: {{ millisecond }}]>{% endmacro %}
 {% macro AliasedQuerySource(alias, source) %}{{ source }} AS {{ alias }}{% endmacro %}
-{% macro ReturnClause(val) %}{{ val }}{% endmacro %}
-{% macro Query(sourceList, returnList, where, sortClauseList) %}{% if returnList|length == 0 %}{{ ListPrintingUtility(sourceList, ", ") }}{% else %}SELECT {{ ListPrintingUtility(returnList, ', ') }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% endif %}{% if where != none %} WHERE {{ where }} {% endif %}{% if sortClauseList|length != 0 %} SORT BY ({{ ListPrintingUtility(sortByExpressionList, ', ') }}){% endif %}{% endmacro %}
 {% macro GreaterThan (left, right) %}({{ left }} > {{ right }}){% endmacro %}
 {% macro LessThan (left, right) %}({{ left }} < {{ right }}){% endmacro %}
 {% macro Equals (left, right) %}({{ left }} = {{ right }}){% endmacro %}
@@ -30,3 +28,8 @@
 {% macro Before(left, right) %}{{ LessThan(left, Start(right)) }}{% endmacro %}
 {% macro Count(context, expr, from) %}{% if from == none or context == 'Unfiltered' %}count({{ expr }}){% else %}SELECT count({{ expr }}) FROM ({{ from }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
 {% macro ToDecimal(val) %}{{ Add(val, 0.0) }}{% endmacro %}
+{% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
+{% macro SortClause(sortByItemList) %}ORDER BY {{ ListPrintingUtility(sortByItemList, ", ") }}{% endmacro %}
+{% macro ByExpression(direction, expr) %}{{ expr }} {{ direction }}{% endmacro %}
+{% macro Query(sourceList, return, where, sortClause) %}SELECT {{ ReturnClause(return) }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} ORDER BY ({{ sortClause }}){% endif %}{% endmacro %}
+{% macro IdentifierRef(name) %}{{ name }}{% endmacro %}

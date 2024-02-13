@@ -40,9 +40,8 @@ public class Transpiler {
         + "define testDateTime: @2010-01-02T14:30:07.76\n"
         + "define testQuery_returnColumnValue: [\"Encounter, Performed\"] E return E.relevantPeriod\n"
         + "define testQuery_withWhere: [\"Encounter, Performed\"] E where E.relevantPeriod ends after testDateTime\n"
-        //+ "define testQuery_sortBy: [\"Encounter, Performed\"] E sort by status.value\n"
-        //+ "define testQuery_returnColumnValueProperty: [\"Encounter, Performed\"] E return E.status.value\n"
-        //+ "define testQuery_wherePropertyMatch: [\"Encounter, Performed\"] E where E.relevantPeriod.status = 'finished'\n"
+        + "define testQuery_sortBy: [\"Encounter, Performed\"] E sort by start of relevantPeriod\n"
+        + "define testQuery_returnColumnValueProperty: [\"Encounter, Performed\"] E return end of relevantPeriod\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
