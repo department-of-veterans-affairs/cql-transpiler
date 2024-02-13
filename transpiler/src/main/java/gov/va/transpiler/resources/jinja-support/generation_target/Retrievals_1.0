@@ -77,11 +77,11 @@
 #}
 {% macro testQuery_sortBy() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.Start(macros.IdentifierRef('relevantPeriod')))])) }}{% endmacro %}
 {#
-    define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.status.value
+    define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.relevantPeriod.high
 #}
-{% macro testQuery_returnColumnValueProperty() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', [macros.Property("COLUMN_REFERENCE", macros.Property("COLUMN_REFERENCE", 'value', 'status', none), 'E', NONE)], none, none) }}{% endmacro %}
+{% macro testQuery_returnColumnValueProperty() %}{{ macros.Query([macros.AliasedQuerySource('E', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed'))], macros.ReturnClause([macros.Property('COLUMN_REFERENCE', none, 'high', macros.Property('COLUMN_REFERENCE', 'E', 'relevantPeriod', none))]), none, none) }}{% endmacro %}
 {#
-    define testQuery_wherePropertyMatch: ["Encounter, Performed"] E where E.relevantPeriod.status = 'finished'
+    define testQuery_wherePropertyMatch: ["Encounter, Performed"] E where E.relevantPeriod.high = testDate
 #}
 {% macro testQuery_wherePropertyMatch() %}{{ macros.Query('URN:HEALTHIT-GOV:QDM:V5_6', none, 'PositiveEncounterPerformed', 'E', none, macros.Equals(macros.Property("COLUMN_REFERENCE", 'E', macros.Property("COLUMN_REFERENCE", 'status', 'period', none)), 'finished'), none) }}{% endmacro %}
 {#

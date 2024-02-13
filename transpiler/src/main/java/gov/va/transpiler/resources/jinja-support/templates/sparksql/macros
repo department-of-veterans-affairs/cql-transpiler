@@ -22,8 +22,8 @@
 {% macro GreaterThan (left, right) %}({{ left }} > {{ right }}){% endmacro %}
 {% macro LessThan (left, right) %}({{ left }} < {{ right }}){% endmacro %}
 {% macro Equals (left, right) %}({{ left }} = {{ right }}){% endmacro %}
-{% macro Start(value) %}{{ Property('COLUMN_REFERENCE', none, 'start', value) }}{% endmacro%}
-{% macro End(value) %}{{ Property('COLUMN_REFERENCE', none, 'end', value) }}{% endmacro%}
+{% macro Start(value) %}{{ Property('COLUMN_REFERENCE', none, 'low', value) }}{% endmacro%}
+{% macro End(value) %}{{ Property('COLUMN_REFERENCE', none, 'high', value) }}{% endmacro%}
 {% macro After(left, right) %}{{ GreaterThan(left, End(right)) }}{% endmacro %}
 {% macro Before(left, right) %}{{ LessThan(left, Start(right)) }}{% endmacro %}
 {% macro Count(context, expr, from) %}{% if from == none or context == 'Unfiltered' %}count({{ expr }}){% else %}SELECT count({{ expr }}) FROM ({{ from }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
@@ -31,5 +31,5 @@
 {% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
 {% macro SortClause(sortByItemList) %}ORDER BY {{ ListPrintingUtility(sortByItemList, ", ") }}{% endmacro %}
 {% macro ByExpression(direction, expr) %}{{ expr }} {{ direction }}{% endmacro %}
-{% macro Query(sourceList, return, where, sortClause) %}SELECT {{ ReturnClause(return) }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
+{% macro Query(sourceList, return, where, sortClause) %}SELECT {{ return }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
 {% macro IdentifierRef(name) %}{{ name }}{% endmacro %}
