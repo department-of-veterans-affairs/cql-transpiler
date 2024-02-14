@@ -44,10 +44,10 @@ public class Transpiler {
         + "define testQuery_sortBy: [\"Encounter, Performed\"] E sort by start of relevantPeriod\n"
         + "define testQuery_returnColumnValueProperty: [\"Encounter, Performed\"] E return E.relevantPeriod.high\n"
         + "define testUnion: [\"Encounter, Performed\"] union [\"Encounter, Performed\"]\n"
-        //+ "context Patient\n"
-        //+ "define testCount_patientContext: Count([\"Encounter, Performed\"])\n"
-        //+ "context Unfiltered\n"
-        //+ "define testCount_patientContext: Count([\"Encounter, Performed\"])\n"
+        + "context Patient\n"
+        + "define testCount_patientContext: Count([\"Encounter, Performed\"])\n"
+        + "context Unfiltered\n"
+        + "define testCount_patientContext_unfiltered: Count([\"Encounter, Performed\"])\n"
         ;
 
         var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");

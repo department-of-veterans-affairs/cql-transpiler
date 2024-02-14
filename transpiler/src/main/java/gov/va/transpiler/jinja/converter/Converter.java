@@ -30,6 +30,7 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.QueryNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.aggregateexpression.CountNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
@@ -116,6 +117,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitContextDef(ContextDef element, State state) {
         new ContextDefNode(state, element);
         return super.visitContextDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitCount(Count element, State state) {
+        new CountNode(state, element);
+        return super.visitCount(element, state);
     }
 
     @Override

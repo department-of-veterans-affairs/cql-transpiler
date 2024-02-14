@@ -27,7 +27,7 @@
 {% macro End(value) %}{{ Property('COLUMN_REFERENCE', none, 'high', value) }}{% endmacro%}
 {% macro After(left, right) %}{{ GreaterThan(left, End(right)) }}{% endmacro %}
 {% macro Before(left, right) %}{{ LessThan(left, Start(right)) }}{% endmacro %}
-{% macro Count(context, expr, from) %}{% if from == none or context == 'Unfiltered' %}count({{ expr }}){% else %}SELECT count({{ expr }}) FROM ({{ from }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
+{% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
 {% macro ToDecimal(val) %}{{ Add(val, 0.0) }}{% endmacro %}
 {% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
 {% macro SortClause(sortByItemList) %}ORDER BY {{ ListPrintingUtility(sortByItemList, ", ") }}{% endmacro %}
