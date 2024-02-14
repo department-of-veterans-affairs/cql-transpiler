@@ -11,8 +11,8 @@
 {% macro TupleElement(name, value)%}{{ value }} AS {{ name }}{% endmacro %}
 {% macro Tuple(listOfTupleElements)%}SELECT struct(*) AS _val FROM ({{ ListPrintingUtility(listOfTupleElements, ', ') }}){% endmacro %}
 {% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
-{% macro Union(listOfItemsToUnion) %}{{ ListPrintingUtility(listOfItemsToUnion, ' UNION ') }}{% endmacro %}
-{% macro List(listOfItems) %}SELECT collect_list(_val) AS _val FROM ({% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems) }}{% endif %}){% endmacro %}
+{% macro Union(valList, valTypeList) %}{{ ListPrintingUtility(valList, ' UNION ') }}{% endmacro %}
+{% macro List(listOfItems) %}SELECT collect_list(_val) AS _val FROM ({% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems, none) }}{% endif %}){% endmacro %}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
