@@ -13,6 +13,7 @@ import gov.va.transpiler.jinja.node.trackable.element.ByColumnNode;
 import gov.va.transpiler.jinja.node.trackable.element.ByDirectionNode;
 import gov.va.transpiler.jinja.node.trackable.element.ByExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.ContextDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.IncludeDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
@@ -36,6 +37,8 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpress
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.typespecifier.IntervalTypeSpecifierNode;
+import gov.va.transpiler.jinja.node.trackable.element.typespecifier.ListTypeSpecifierNode;
 import gov.va.transpiler.jinja.node.trackable.element.typespecifier.NamedTypeSpecifierNode;
 import gov.va.transpiler.jinja.state.State;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
@@ -63,6 +66,16 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         aggregate.addChild(nextResult);
         nextResult.setParent(aggregate);
         return aggregate;
+    }
+
+    @Override
+    public TranspilerNode visitElement(Element element, State state) {
+        try {
+            return super.visitElement(element, state);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -166,8 +179,14 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitIncludeDef(IncludeDef element, State state) {
-        state.setCurrentNode(null);
+        new IncludeDefNode(state, element);
         return super.visitIncludeDef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {
+        new IntervalTypeSpecifierNode(state, element);
+        return super.visitIntervalTypeSpecifier(element, state);
     }
 
     @Override
@@ -177,15 +196,21 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
-    public TranspilerNode visitLiteral(Literal element, State state) {
-        new LiteralNode(state, element);
-        return super.visitLiteral(element, state);
-    }
-
-    @Override
     public TranspilerNode visitList(List element, State state) {
         new ListNode(state, element);
         return super.visitList(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitListTypeSpecifier(ListTypeSpecifier element, State state) {
+        new ListTypeSpecifierNode(state, element);
+        return super.visitListTypeSpecifier(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitLiteral(Literal element, State state) {
+        new LiteralNode(state, element);
+        return super.visitLiteral(element, state);
     }
 
     @Override
