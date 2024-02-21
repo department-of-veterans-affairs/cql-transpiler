@@ -34,3 +34,8 @@
 {% macro ByExpression(direction, expr) %}{{ expr }} {{ direction }}{% endmacro %}
 {% macro Query(letList, sourceList, return, where, sortClause) %}SELECT {{ return }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
 {% macro IdentifierRef(name) %}{{ name }}{% endmacro %}
+{% macro And(left, right) %}({{ left }}) AND ({{ right }}){% endmacro %}
+{% macro LessOrEqual(left, right) %}({{ left }}) <= ({{ right }}){% endmacro %}
+{% macro In(left, right) %}({{ left }}) IN ({{ right }}){% endmacro %}
+{% macro DifferenceBetween(left, right) %}({{ left }}) - ({{ right }}){% endmacro %}
+{% macro ParameterRef(val) %}@{{ val }}{% endmacro %}

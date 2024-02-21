@@ -143,6 +143,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitDifferenceBetween(DifferenceBetween element, State state) {
+        new BinaryExpressionNode<DifferenceBetween>(state, element);
+        return super.visitDifferenceBetween(element, state);
+    }
+
+    @Override
     public TranspilerNode visitDivide(Divide element, State state) {
         new BinaryExpressionNode<Divide>(state, element);
         return super.visitDivide(element, state);
@@ -188,6 +194,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitIn(In element, State state) {
+        new BinaryExpressionNode<In>(state, element);
+        return super.visitIn(element, state);
+    }
+
+    @Override
     public TranspilerNode visitIncludeDef(IncludeDef element, State state) {
         new IncludeDefNode(state, element);
         return super.visitIncludeDef(element, state);
@@ -197,6 +209,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {
         new IntervalTypeSpecifierNode(state, element);
         return super.visitIntervalTypeSpecifier(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitLessOrEqual(LessOrEqual element, State state) {
+        new BinaryExpressionNode<LessOrEqual>(state, element);
+        return super.visitLessOrEqual(element, state);
     }
 
     @Override
