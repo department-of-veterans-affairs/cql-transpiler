@@ -11,10 +11,12 @@ import gov.va.transpiler.jinja.state.State;
 public class FunctionRefNode extends ExpressionNode<FunctionRef> implements ReferenceNode {
 
     private String context;
+    final String prefix;
 
     public FunctionRefNode(State state, FunctionRef cqlEquivalent) {
         super(state, cqlEquivalent);
         context = state.getContext();
+        prefix = state.getCurrentLibraryNode().getAliasForLibrary(state.getLibraryNodeForReference(getReferenceTo()));
     }
 
     @Override
@@ -51,5 +53,10 @@ public class FunctionRefNode extends ExpressionNode<FunctionRef> implements Refe
         } else {
             return super.childToSegment(child);
         }
+    }
+
+    @Override
+    public Segment toSegment() {
+        return joinChildren(getChildren(), (prefix == null ? "" : prefix + ".") + getName() + "(", ")", "", "", ", ");
     }
 }

@@ -6,11 +6,15 @@ import gov.va.transpiler.jinja.state.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
+import gov.va.transpiler.jinja.printing.Segment;
 
 public class ExpressionRefNode extends ExpressionNode<ExpressionRef> implements ReferenceNode {
 
+    final String prefix;
+
     public ExpressionRefNode(State state, ExpressionRef t) {
         super(state, t);
+        prefix = state.getCurrentLibraryNode().getAliasForLibrary(state.getLibraryNodeForReference(getReferenceTo()));
     }
 
     @Override
@@ -41,5 +45,10 @@ public class ExpressionRefNode extends ExpressionNode<ExpressionRef> implements 
     @Override
     public int allowedNumberOfChildren() {
         return 0;
+    }
+
+    @Override
+    public Segment toSegment() {
+        return new Segment((prefix == null ? "" : prefix + ".") + getName() + "()");
     }
 }

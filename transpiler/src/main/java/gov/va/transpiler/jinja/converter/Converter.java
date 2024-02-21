@@ -17,6 +17,7 @@ import gov.va.transpiler.jinja.node.trackable.element.IncludeDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.LetClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.ParameterDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.SortByItemNode;
 import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
@@ -248,7 +249,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitParameterDef(ParameterDef element, State state) {
-        state.setCurrentNode(null);
+        new ParameterDefNode(state, element);
         return super.visitParameterDef(element, state);
     }
 

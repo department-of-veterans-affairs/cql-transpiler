@@ -14,18 +14,22 @@ import gov.va.transpiler.jinja.state.State;
 public class LibraryNode extends ElementNode<Library> {
 
     private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
+    private List<IncludeDefNode> includeDefNodeList = new ArrayList<>();
     private List<ValueSetDefNode> valueSetDefNodeList = new ArrayList<>();
     private List<ContextDefNode> contextDefNodeList = new ArrayList<>();
     private List<ParameterDefNode> parameterDefNodeList = new ArrayList<>();
 
     public LibraryNode(State state, Library t) {
         super(state, t);
+        state.setCurrentLibraryAndAddToLibraryMap(this);
     }
 
     @Override
     public void addChild(TranspilerNode child) {
         if (child instanceof UsingDefNode) {
             usingDefNodeList.add((UsingDefNode) child);
+        } else if (child instanceof IncludeDefNode) {
+            includeDefNodeList.add((IncludeDefNode) child);
         } else if (child instanceof ValueSetDefNode) {
             valueSetDefNodeList.add((ValueSetDefNode) child);
         } else if (child instanceof ContextDefNode) {
@@ -37,13 +41,19 @@ public class LibraryNode extends ElementNode<Library> {
         }
     }
 
-    @Override
-    public String getTargetFileLocation() {
-        return libraryDetailsToTargetFileLocation(getCqlEquivalent().getIdentifier().getId(), getCqlEquivalent().getIdentifier().getVersion());
+    public String getAliasForLibrary(LibraryNode libraryNode) {
+        var optional = includeDefNodeList.stream().filter(includeDefNode -> includeDefNode.getReferencedLibrary() == libraryNode).findFirst();
+        if (optional.isPresent()) {
+            return optional.get().getAliasForReferencedLibrary();
+        } else {
+            // Returned when something in this library is being referenced by something else within this library
+            return null;
+        }
     }
 
-    public static String libraryDetailsToTargetFileLocation(String id, String version) {
-        return id == null ? "Anonymous Library" : version == null ? id : id + "_" + version;
+    @Override
+    public String getTargetFileLocation() {
+        return getCqlEquivalent().getIdentifier().getId() == null ? "Anonymous Library" : getCqlEquivalent().getIdentifier().getVersion() == null ? getCqlEquivalent().getIdentifier().getId() : getCqlEquivalent().getIdentifier().getId() + "_" + getCqlEquivalent().getIdentifier().getVersion();
     }
 
     @Override
@@ -56,6 +66,9 @@ public class LibraryNode extends ElementNode<Library> {
         headerSegment.setPrintType(PrintType.Line);
         headerSegment.setHead("{% import '" + Standards.MACRO_FILE_NAME + "' as " + Standards.MACRO_FILE_NAME +" %}");
         segment.addChild(headerSegment);
+        for (var child: includeDefNodeList) {
+            segment.addChild(childToSegment(child));
+        }
         for (var child: getChildren()) {
             segment.addChild(childToSegment(child));
         }
