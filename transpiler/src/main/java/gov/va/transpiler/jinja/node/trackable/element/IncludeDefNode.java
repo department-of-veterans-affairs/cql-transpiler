@@ -13,6 +13,6 @@ public class IncludeDefNode extends ElementNode<IncludeDef> {
 
     @Override
     public Segment toSegment() {
-        return new Segment("{% import '" + getCqlEquivalent().getLocalId() + " ' as " + "?" + " %}");
+        return new Segment("{% import '" + LibraryNode.libraryDetailsToTargetFileLocation(getCqlEquivalent().getLocalIdentifier(), getCqlEquivalent().getVersion()) + "' as " + getCqlEquivalent().getLocalIdentifier() + " %}");
     }
 }

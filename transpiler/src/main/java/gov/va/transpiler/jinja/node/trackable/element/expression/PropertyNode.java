@@ -19,6 +19,10 @@ public class PropertyNode extends ExpressionNode<Property> {
     public Type getType() {
         if (getChild() == null && getCqlEquivalent().getScope() != null || getChild().getType() == Type.COLUMN_REFERENCE) {
             return Type.COLUMN_REFERENCE;
+        } else if (getChild().getChildByReference(getCqlEquivalent().getPath()) == null) {
+            // Operator references can't have the types of their children evaluated until they're actually called by a function
+            // TODO: re-evaluate the whole type/encapsulation system so that jinja handles it instead of java
+            return Type.LAZY_EVALUATION;
         } else {
             var childType = getChild().getChildByReference(getCqlEquivalent().getPath()).getType();
             if (childType == Type.SIMPLE || childType == Type.ENCAPSULATED_SIMPLE) {

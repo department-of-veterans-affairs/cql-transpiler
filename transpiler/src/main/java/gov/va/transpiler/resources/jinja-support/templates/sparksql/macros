@@ -32,5 +32,5 @@
 {% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
 {% macro SortClause(sortByItemList) %}ORDER BY {{ ListPrintingUtility(sortByItemList, ", ") }}{% endmacro %}
 {% macro ByExpression(direction, expr) %}{{ expr }} {{ direction }}{% endmacro %}
-{% macro Query(sourceList, return, where, sortClause) %}SELECT {{ return }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
+{% macro Query(letList, sourceList, return, where, sortClause) %}SELECT {{ return }} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
 {% macro IdentifierRef(name) %}{{ name }}{% endmacro %}

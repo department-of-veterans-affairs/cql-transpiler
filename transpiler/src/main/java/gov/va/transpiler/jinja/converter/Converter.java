@@ -14,6 +14,7 @@ import gov.va.transpiler.jinja.node.trackable.element.ByDirectionNode;
 import gov.va.transpiler.jinja.node.trackable.element.ByExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.ContextDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.IncludeDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.LetClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
@@ -28,6 +29,7 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.OperandRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.QueryLetRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.QueryNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
@@ -35,6 +37,7 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.aggregateexpres
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.FlattenNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.typespecifier.IntervalTypeSpecifierNode;
@@ -160,6 +163,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitFlatten(Flatten element, State state) {
+        new FlattenNode(state, element);
+        return super.visitFlatten(element, state);
+    }
+
+    @Override
     public TranspilerNode visitFunctionDef(FunctionDef element, State state) {
         new FunctionDefNode(state, element);
         return super.visitFunctionDef(element, state);
@@ -187,6 +196,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {
         new IntervalTypeSpecifierNode(state, element);
         return super.visitIntervalTypeSpecifier(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitLetClause(LetClause element, State state) {
+        new LetClauseNode(state, element);
+        return super.visitLetClause(element, state);
     }
 
     @Override
@@ -239,8 +254,17 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitProperty(Property element, State state) {
+        if (element instanceof Search) {
+            return super.visitSearch((Search) element, state);
+        }
         new PropertyNode(state, element);
         return super.visitProperty(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitQueryLetRef(QueryLetRef element, State state) {
+        new QueryLetRefNode(state, element);
+        return super.visitQueryLetRef(element, state);
     }
 
     @Override

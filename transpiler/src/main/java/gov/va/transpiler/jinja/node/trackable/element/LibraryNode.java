@@ -16,6 +16,7 @@ public class LibraryNode extends ElementNode<Library> {
     private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
     private List<ValueSetDefNode> valueSetDefNodeList = new ArrayList<>();
     private List<ContextDefNode> contextDefNodeList = new ArrayList<>();
+    private List<ParameterDefNode> parameterDefNodeList = new ArrayList<>();
 
     public LibraryNode(State state, Library t) {
         super(state, t);
@@ -29,6 +30,8 @@ public class LibraryNode extends ElementNode<Library> {
             valueSetDefNodeList.add((ValueSetDefNode) child);
         } else if (child instanceof ContextDefNode) {
             contextDefNodeList.add((ContextDefNode) child);
+        } else if (child instanceof ParameterDefNode) {
+            parameterDefNodeList.add((ParameterDefNode) child);
         } else {
             super.addChild(child);
         }
@@ -36,8 +39,11 @@ public class LibraryNode extends ElementNode<Library> {
 
     @Override
     public String getTargetFileLocation() {
-        var identifier = getCqlEquivalent().getIdentifier();
-        return identifier.getId() == null ? "Anonymous Library" : identifier.getVersion() == null ? identifier.getId() : identifier.getId() + "_" + identifier.getVersion();
+        return libraryDetailsToTargetFileLocation(getCqlEquivalent().getIdentifier().getId(), getCqlEquivalent().getIdentifier().getVersion());
+    }
+
+    public static String libraryDetailsToTargetFileLocation(String id, String version) {
+        return id == null ? "Anonymous Library" : version == null ? id : id + "_" + version;
     }
 
     @Override
