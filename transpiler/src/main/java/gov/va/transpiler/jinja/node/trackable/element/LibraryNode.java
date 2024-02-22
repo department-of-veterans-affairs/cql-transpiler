@@ -6,6 +6,8 @@ import java.util.List;
 import org.hl7.elm.r1.Library;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.standards.Standards;
@@ -71,6 +73,9 @@ public class LibraryNode extends ElementNode<Library> {
         }
         for (var child: getChildren()) {
             segment.addChild(childToSegment(child));
+            if (child instanceof ExpressionDefNode && !(child instanceof FunctionDefNode)) {
+                segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).getCqlEquivalent().getName() + "() }}\n"));
+            }
         }
         return segment;
     }
