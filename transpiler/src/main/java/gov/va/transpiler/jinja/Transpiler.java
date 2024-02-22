@@ -1,6 +1,8 @@
 package gov.va.transpiler.jinja;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -17,27 +19,16 @@ import gov.va.transpiler.jinja.state.State;
 public class Transpiler {
 
     public static void main(String[] args) throws IOException {
-        String demoMeasureCQL = ""
-        + "library DemoMeasure version '1.0'\n"
-        + "using QDM version '5.6'\n"
-        + "include MATGlobalCommonFunctions version '7.0.000' called Global\n"
-        + "valueset \"Nonelective Inpatient Encounter\": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424'\n"
-        + "parameter \"Measurement Period\" Interval<DateTime>\n"
-        + "define \"Non Elective Inpatient Encounter\":\n"
-        + "    [\"Encounter, Performed\": \"Nonelective Inpatient Encounter\"] NonElectiveEncounter\n"
-        + "        where Global.\"LengthInDays\" (NonElectiveEncounter.relevantPeriod) <= 120\n"
-        + "        and NonElectiveEncounter.relevantPeriod ends during day of \"Measurement Period\""
-        ;
-        String hardPrintCQL = ""
-        + "library Including version '1.0'\n"
-        + "include Retrievals version '1.0'\n"
-        ;
-
-        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
-        var jinjaTarget = "jinja/";
+        var librarySource = "./resources/cql/";
+        var fileLibrarySourceProvider = new FileLibrarySourceProvider(librarySource);
+        var jinjaTarget = "jinja_output/";
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
 
-        var libraryList = compiler.compile(hardPrintCQL);
+        // read the contents of the file to text
+        var cqlLibraryToTranspile = "demo-measure.cql";
+        String cqlLibraryToTranspileAsText = Files.readString(Paths.get(librarySource + cqlLibraryToTranspile));
+
+        var libraryList = compiler.compile(cqlLibraryToTranspileAsText);
         // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them
         Collections.reverse(libraryList);
 
@@ -49,7 +40,7 @@ public class Transpiler {
             var outputNode = converter.convert(library, state);
             convertedLibraries.add(outputNode);
         }
-        var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, hardPrintCQL);
+        var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cqlLibraryToTranspileAsText);
 
         var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
         for (var mapped : convertedLibraries) {

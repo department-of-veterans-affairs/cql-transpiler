@@ -1,0 +1,11 @@
+{% import 'macros' as macros %}
+{% import 'MATGlobalCommonFunctions_7.0.000' as Global %}
+{#
+	// DemoMeasure lines [7:1-10:87]
+	define "Non Elective Inpatient Encounter":
+	    ["Encounter, Performed": "Nonelective Inpatient Encounter"] NonElectiveEncounter
+	        where Global."LengthInDays" (NonElectiveEncounter.relevantPeriod) <= 120
+	        and NonElectiveEncounter.relevantPeriod ends during day of "Measurement Period"
+#}
+{% macro Non_Elective_Inpatient_Encounter() %}{{ macros.Query([], [macros.AliasedQuerySource('NonElectiveEncounter', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.LessOrEqual(Global.LengthInDays(macros.Property('COLUMN_REFERENCE', 'NonElectiveEncounter', 'relevantPeriod', none)), macros.Literal('Integer', '120')), macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'NonElectiveEncounter', 'relevantPeriod', none)), macros.ParameterRef('Measurement Period')))], none, none, none) }}{% endmacro %}
+{{ Non Elective Inpatient Encounter() }}
