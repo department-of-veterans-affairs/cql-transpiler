@@ -66,7 +66,7 @@ public class LibraryNode extends ElementNode<Library> {
         segment.setFileLocation(getTargetFileLocation());
         var headerSegment = new Segment();
         headerSegment.setPrintType(PrintType.Line);
-        headerSegment.setHead("{% import '" + Standards.MACRO_FILE_NAME + "' as " + Standards.MACRO_FILE_NAME +" %}");
+        headerSegment.setHead("{% import '" + Standards.macroFileName() + "' as " + Standards.macroFileName() +" %}");
         segment.addChild(headerSegment);
         for (var child: includeDefNodeList) {
             segment.addChild(childToSegment(child));
@@ -74,7 +74,7 @@ public class LibraryNode extends ElementNode<Library> {
         for (var child: getChildren()) {
             segment.addChild(childToSegment(child));
             if (child instanceof ExpressionDefNode && !(child instanceof FunctionDefNode)) {
-                segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).getCqlEquivalent().getName() + "() }}\n"));
+                segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).referenceName() + "() }}\n"));
             }
         }
         return segment;

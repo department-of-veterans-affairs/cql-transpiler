@@ -1,4 +1,4 @@
-{% import 'macros' as macros %}
+{% import '_macros_sparksql' as _macros_sparksql %}
 {% import 'MATGlobalCommonFunctions_7.0.000' as Global %}
 {#
 	// DemoMeasure lines [7:1-10:87]
@@ -7,5 +7,5 @@
 	        where Global."LengthInDays" (NonElectiveEncounter.relevantPeriod) <= 120
 	        and NonElectiveEncounter.relevantPeriod ends during day of "Measurement Period"
 #}
-{% macro Non_Elective_Inpatient_Encounter() %}{{ macros.Query([], [macros.AliasedQuerySource('NonElectiveEncounter', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.LessOrEqual(Global.LengthInDays(macros.Property('COLUMN_REFERENCE', 'NonElectiveEncounter', 'relevantPeriod', none)), macros.Literal('Integer', '120')), macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'NonElectiveEncounter', 'relevantPeriod', none)), macros.ParameterRef('Measurement Period')))], none, none, none) }}{% endmacro %}
-{{ Non Elective Inpatient Encounter() }}
+{% macro Non_Elective_Inpatient_Encounter() %}{{ _macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('NonElectiveEncounter', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.LessOrEqual(Global.LengthInDays(_macros_sparksql.Property('COLUMN_REFERENCE', 'NonElectiveEncounter', 'relevantPeriod', none)), _macros_sparksql.Literal('Integer', '120')), _macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'NonElectiveEncounter', 'relevantPeriod', none)), _macros_sparksql.ParameterRef('Measurement Period')))], none, none, none) }}{% endmacro %}
+{{ Non_Elective_Inpatient_Encounter() }}

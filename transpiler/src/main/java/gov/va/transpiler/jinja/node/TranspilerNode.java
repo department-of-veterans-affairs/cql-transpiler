@@ -145,7 +145,7 @@ public class TranspilerNode {
 
     protected Segment collectSegment(String context, Segment segment) {
         var collectSegment = new Segment();
-        collectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Collect(");
+        collectSegment.setHead(Standards.macroFileName() + "." + "Collect(");
         var contextChild = new Segment();
         contextChild.setHead("'" + context + "', ");
         collectSegment.addChild(contextChild);
@@ -159,7 +159,7 @@ public class TranspilerNode {
 
     protected Segment decollectSegment(String context, Segment segment) {
         var decollectSegment = new Segment();
-        decollectSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Decollect(");
+        decollectSegment.setHead(Standards.macroFileName() + "." + "Decollect(");
         var contextChild = new Segment();
         contextChild.setHead("'" + context + "', ");
         decollectSegment.addChild(contextChild);
@@ -174,7 +174,7 @@ public class TranspilerNode {
 
     protected Segment encapsulateSegment(Segment segment) {
         var encapsulateSegment = new Segment();
-        encapsulateSegment.setHead(Standards.MACRO_FILE_NAME + "." + "Encapsulate(");
+        encapsulateSegment.setHead(Standards.macroFileName() + "." + "Encapsulate(");
         encapsulateSegment.setTail(")");
         encapsulateSegment.addChild(segment);
         return encapsulateSegment;

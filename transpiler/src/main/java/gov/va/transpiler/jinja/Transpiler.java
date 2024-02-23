@@ -14,15 +14,18 @@ import gov.va.transpiler.jinja.converter.Converter;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.CQLFileContentRetriever;
 import gov.va.transpiler.jinja.printing.SegmentPrinter;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class Transpiler {
 
     public static void main(String[] args) throws IOException {
-        var librarySource = "./resources/cql/";
+        var librarySource = "./test_cql/";
         var fileLibrarySourceProvider = new FileLibrarySourceProvider(librarySource);
         var jinjaTarget = "jinja_output/";
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
+        var target = "sparksql";
+        Standards.setTargetLanguage(target);
 
         // read the contents of the file to text
         var cqlLibraryToTranspile = "demo-measure.cql";

@@ -1,23 +1,23 @@
-{% import 'macros' as macros %}
+{% import '_macros_sparksql' as _macros_sparksql %}
 {#
 	// MATGlobalCommonFunctions lines [13:1-13:15]
 	context Patient
 #}
-{% macro Patient() %}{{ macros.SingletonFrom(macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'Patient')) }}{% endmacro %}
+{% macro Patient() %}{{ _macros_sparksql.SingletonFrom(_macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'Patient')) }}{% endmacro %}
 {{ Patient() }}
 {#
 	// MATGlobalCommonFunctions lines [15:1-16:56]
 	define "ED Encounter":
 	  ["Encounter, Performed": "Emergency Department Visit"]
 #}
-{% macro ED_Encounter() %}{{ macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed') }}{% endmacro %}
-{{ ED Encounter() }}
+{% macro ED_Encounter() %}{{ _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed') }}{% endmacro %}
+{{ ED_Encounter() }}
 {#
 	// MATGlobalCommonFunctions lines [32:1-33:60]
 	define function "LengthInDays"(Value Interval<DateTime> ):
 	  difference in days between start of Value and end of Value
 #}
-{% macro LengthInDays(Value) %}{{ macros.DifferenceBetween(macros.Start(Value), macros.End(Value)) }}{% endmacro %}
+{% macro LengthInDays(Value) %}{{ _macros_sparksql.DifferenceBetween(_macros_sparksql.Start(Value), _macros_sparksql.End(Value)) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [18:1-21:83]
 	define "Inpatient Encounter":
@@ -25,14 +25,14 @@
 	    where "LengthInDays"(EncounterInpatient.relevantPeriod)<= 120
 	      and EncounterInpatient.relevantPeriod ends during day of "Measurement Period"
 #}
-{% macro Inpatient_Encounter() %}{{ macros.Query([], [macros.AliasedQuerySource('EncounterInpatient', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.LessOrEqual(LengthInDays(macros.Property('COLUMN_REFERENCE', 'EncounterInpatient', 'relevantPeriod', none)), macros.Literal('Integer', '120')), macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'EncounterInpatient', 'relevantPeriod', none)), macros.ParameterRef('Measurement Period')))], none, none, none) }}{% endmacro %}
-{{ Inpatient Encounter() }}
+{% macro Inpatient_Encounter() %}{{ _macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('EncounterInpatient', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.LessOrEqual(LengthInDays(_macros_sparksql.Property('COLUMN_REFERENCE', 'EncounterInpatient', 'relevantPeriod', none)), _macros_sparksql.Literal('Integer', '120')), _macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'EncounterInpatient', 'relevantPeriod', none)), _macros_sparksql.ParameterRef('Measurement Period')))], none, none, none) }}{% endmacro %}
+{{ Inpatient_Encounter() }}
 {#
 	// MATGlobalCommonFunctions lines [28:1-29:62]
 	define function "ToDateInterval"(period Interval<DateTime> ):
 	  Interval[date from start of period, date from end of period]
 #}
-{% macro ToDateInterval(period) %}{{ macros.Interval(macros.DateFrom(macros.Start(period)), macros.DateFrom(macros.End(period))) }}{% endmacro %}
+{% macro ToDateInterval(period) %}{{ _macros_sparksql.Interval(_macros_sparksql.DateFrom(_macros_sparksql.Start(period)), _macros_sparksql.DateFrom(_macros_sparksql.End(period))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [36:1-44:71]
 	define function "HospitalizationLocations"(Encounter "Encounter, Performed" ):
@@ -45,7 +45,7 @@
 	  	return if EDVisit is null then Visit.facilityLocations 
 	  		else flatten { EDVisit.facilityLocations, Visit.facilityLocations }
 #}
-{% macro HospitalizationLocations(Encounter) %}{{ macros.Query([macros.LetClause(macros.Query([], [macros.AliasedQuerySource('LastED', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), macros.Interval(macros.Subtract(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), macros.Quantity()), macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), macros.Not(macros.IsNull(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.End(macros.IdentifierRef('relevantPeriod')))])))], [macros.AliasedQuerySource('Visit', Encounter)], macros.ReturnClause([macros.If(macros.IsNull(macros.QueryLetRef), macros.Property('COLUMN_REFERENCE', 'Visit', 'facilityLocations', none), macros.Flatten(macros.List([macros.Property('ENCAPSULATED_SIMPLE', none, 'facilityLocations', macros.QueryLetRef), macros.Property('COLUMN_REFERENCE', 'Visit', 'facilityLocations', none)])))]), none, none) }}{% endmacro %}
+{% macro HospitalizationLocations(Encounter) %}{{ _macros_sparksql.Query([_macros_sparksql.LetClause(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('LastED', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), _macros_sparksql.Interval(_macros_sparksql.Subtract(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), _macros_sparksql.Quantity()), _macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), _macros_sparksql.Not(_macros_sparksql.IsNull(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.End(_macros_sparksql.IdentifierRef('relevantPeriod')))])))], [_macros_sparksql.AliasedQuerySource('Visit', Encounter)], _macros_sparksql.ReturnClause([_macros_sparksql.If(_macros_sparksql.IsNull(_macros_sparksql.QueryLetRef), _macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'facilityLocations', none), _macros_sparksql.Flatten(_macros_sparksql.List([_macros_sparksql.Property('ENCAPSULATED_SIMPLE', none, 'facilityLocations', _macros_sparksql.QueryLetRef), _macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'facilityLocations', none)])))]), none, none) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [47:1-51:18]
 	define function "EmergencyDepartmentArrivalTime"(Encounter "Encounter, Performed" ):
@@ -54,7 +54,7 @@
 	  		sort by start of locationPeriod
 	  ).locationPeriod
 #}
-{% macro EmergencyDepartmentArrivalTime(Encounter) %}{{ macros.Start(macros.Decollect('Patient', macros.Property('TABLE', none, 'locationPeriod', macros.First(macros.Query([], [macros.AliasedQuerySource('HospitalLocation', HospitalizationLocations(Encounter)), macros.InValueSet(macros.Property('COLUMN_REFERENCE', 'HospitalLocation', 'code', none), macros.ValueSetRef())], none, none, macros.SortClause([macros.ByExpression('ASC', macros.Start(macros.IdentifierRef('locationPeriod')))])))))) }}{% endmacro %}
+{% macro EmergencyDepartmentArrivalTime(Encounter) %}{{ _macros_sparksql.Start(_macros_sparksql.Decollect('Patient', _macros_sparksql.Property('TABLE', none, 'locationPeriod', _macros_sparksql.First(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('HospitalLocation', HospitalizationLocations(Encounter)), _macros_sparksql.InValueSet(_macros_sparksql.Property('COLUMN_REFERENCE', 'HospitalLocation', 'code', none), _macros_sparksql.ValueSetRef())], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.Start(_macros_sparksql.IdentifierRef('locationPeriod')))])))))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [64:1-72:31]
 	define function "Hospitalization"(Encounter "Encounter, Performed" ):
@@ -67,13 +67,13 @@
 	  	return Interval[Coalesce(start of EDVisit.relevantPeriod, start of Visit.relevantPeriod), 
 	  	end of Visit.relevantPeriod]
 #}
-{% macro Hospitalization(Encounter) %}{{ macros.Query([macros.LetClause(macros.Query([], [macros.AliasedQuerySource('LastED', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), macros.Interval(macros.Subtract(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), macros.Quantity()), macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), macros.Not(macros.IsNull(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.End(macros.IdentifierRef('relevantPeriod')))])))], [macros.AliasedQuerySource('Visit', Encounter)], macros.ReturnClause([macros.Interval(macros.Coalesce(macros.Start(macros.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', macros.QueryLetRef)), macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none))), macros.End(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))]), none, none) }}{% endmacro %}
+{% macro Hospitalization(Encounter) %}{{ _macros_sparksql.Query([_macros_sparksql.LetClause(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('LastED', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), _macros_sparksql.Interval(_macros_sparksql.Subtract(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), _macros_sparksql.Quantity()), _macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), _macros_sparksql.Not(_macros_sparksql.IsNull(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.End(_macros_sparksql.IdentifierRef('relevantPeriod')))])))], [_macros_sparksql.AliasedQuerySource('Visit', Encounter)], _macros_sparksql.ReturnClause([_macros_sparksql.Interval(_macros_sparksql.Coalesce(_macros_sparksql.Start(_macros_sparksql.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', _macros_sparksql.QueryLetRef)), _macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none))), _macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))]), none, none) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [54:1-55:39]
 	define function "HospitalAdmissionTime"(Encounter "Encounter, Performed" ):
 	  start of "Hospitalization"(Encounter)
 #}
-{% macro HospitalAdmissionTime(Encounter) %}{{ macros.Start(Hospitalization(Encounter)) }}{% endmacro %}
+{% macro HospitalAdmissionTime(Encounter) %}{{ _macros_sparksql.Start(Hospitalization(Encounter)) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [58:1-61:18]
 	define function "HospitalArrivalTime"(Encounter "Encounter, Performed" ):
@@ -81,13 +81,13 @@
 	  		sort by start of locationPeriod
 	  ).locationPeriod
 #}
-{% macro HospitalArrivalTime(Encounter) %}{{ macros.Start(macros.Decollect('Patient', macros.Property('TABLE', none, 'locationPeriod', macros.First(macros.Query([], [macros.AliasedQuerySource('HospitalLocation', HospitalizationLocations(Encounter))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.Start(macros.IdentifierRef('locationPeriod')))])))))) }}{% endmacro %}
+{% macro HospitalArrivalTime(Encounter) %}{{ _macros_sparksql.Start(_macros_sparksql.Decollect('Patient', _macros_sparksql.Property('TABLE', none, 'locationPeriod', _macros_sparksql.First(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('HospitalLocation', HospitalizationLocations(Encounter))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.Start(_macros_sparksql.IdentifierRef('locationPeriod')))])))))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [75:1-76:44]
 	define function "HospitalizationLengthofStay"(Encounter "Encounter, Performed" ):
 	  LengthInDays("Hospitalization"(Encounter))
 #}
-{% macro HospitalizationLengthofStay(Encounter) %}{{ LengthInDays(macros.Collect('Patient', Hospitalization(Encounter))) }}{% endmacro %}
+{% macro HospitalizationLengthofStay(Encounter) %}{{ LengthInDays(_macros_sparksql.Collect('Patient', Hospitalization(Encounter))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [79:1-82:18]
 	define function "HospitalDepartureTime"(Encounter "Encounter, Performed" ):
@@ -95,13 +95,13 @@
 	  		sort by start of locationPeriod
 	  ).locationPeriod
 #}
-{% macro HospitalDepartureTime(Encounter) %}{{ macros.End(macros.Decollect('Patient', macros.Property('TABLE', none, 'locationPeriod', macros.Last(macros.Query([], [macros.AliasedQuerySource('HospitalLocation', HospitalizationLocations(Encounter))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.Start(macros.IdentifierRef('locationPeriod')))])))))) }}{% endmacro %}
+{% macro HospitalDepartureTime(Encounter) %}{{ _macros_sparksql.End(_macros_sparksql.Decollect('Patient', _macros_sparksql.Property('TABLE', none, 'locationPeriod', _macros_sparksql.Last(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('HospitalLocation', HospitalizationLocations(Encounter))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.Start(_macros_sparksql.IdentifierRef('locationPeriod')))])))))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [85:1-86:33]
 	define function "HospitalDischargeTime"(Encounter "Encounter, Performed" ):
 	  end of Encounter.relevantPeriod
 #}
-{% macro HospitalDischargeTime(Encounter) %}{{ macros.End(macros.Property('LAZY_EVALUATION', none, 'relevantPeriod', Encounter)) }}{% endmacro %}
+{% macro HospitalDischargeTime(Encounter) %}{{ _macros_sparksql.End(_macros_sparksql.Property('LAZY_EVALUATION', none, 'relevantPeriod', Encounter)) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [89:1-109:31]
 	define function "HospitalizationWithObservationAndOutpatientSurgeryService"(Encounter "Encounter, Performed" ):
@@ -126,7 +126,7 @@
 	  	return Interval[Coalesce(start of OutpatientSurgeryVisit.relevantPeriod, VisitStartWithED), 
 	  	end of Visit.relevantPeriod]
 #}
-{% macro HospitalizationWithObservationAndOutpatientSurgeryService(Encounter) %}{{ macros.Query([macros.LetClause(macros.Query([], [macros.AliasedQuerySource('LastObs', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'LastObs', 'relevantPeriod', none)), macros.Interval(macros.Subtract(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), macros.Quantity()), macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), macros.Not(macros.IsNull(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.End(macros.IdentifierRef('relevantPeriod')))]))), macros.LetClause(macros.Start(macros.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', macros.QueryLetRef)), macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none))), macros.LetClause(macros.Query([], [macros.AliasedQuerySource('LastED', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), macros.Interval(macros.Subtract(macros.QueryLetRef, macros.Quantity()), macros.QueryLetRef)), macros.Not(macros.IsNull(macros.QueryLetRef)))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.End(macros.IdentifierRef('relevantPeriod')))]))), macros.LetClause(macros.Start(macros.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', macros.QueryLetRef)), macros.QueryLetRef), macros.LetClause(macros.Query([], [macros.AliasedQuerySource('LastSurgeryOP', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'LastSurgeryOP', 'relevantPeriod', none)), macros.Interval(macros.Subtract(macros.QueryLetRef, macros.Quantity()), macros.QueryLetRef)), macros.Not(macros.IsNull(macros.QueryLetRef)))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.End(macros.IdentifierRef('relevantPeriod')))])))], [macros.AliasedQuerySource('Visit', Encounter)], macros.ReturnClause([macros.Interval(macros.Coalesce(macros.Start(macros.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', macros.QueryLetRef)), macros.QueryLetRef), macros.End(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))]), none, none) }}{% endmacro %}
+{% macro HospitalizationWithObservationAndOutpatientSurgeryService(Encounter) %}{{ _macros_sparksql.Query([_macros_sparksql.LetClause(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('LastObs', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'LastObs', 'relevantPeriod', none)), _macros_sparksql.Interval(_macros_sparksql.Subtract(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), _macros_sparksql.Quantity()), _macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), _macros_sparksql.Not(_macros_sparksql.IsNull(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.End(_macros_sparksql.IdentifierRef('relevantPeriod')))]))), _macros_sparksql.LetClause(_macros_sparksql.Start(_macros_sparksql.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', _macros_sparksql.QueryLetRef)), _macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none))), _macros_sparksql.LetClause(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('LastED', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), _macros_sparksql.Interval(_macros_sparksql.Subtract(_macros_sparksql.QueryLetRef, _macros_sparksql.Quantity()), _macros_sparksql.QueryLetRef)), _macros_sparksql.Not(_macros_sparksql.IsNull(_macros_sparksql.QueryLetRef)))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.End(_macros_sparksql.IdentifierRef('relevantPeriod')))]))), _macros_sparksql.LetClause(_macros_sparksql.Start(_macros_sparksql.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', _macros_sparksql.QueryLetRef)), _macros_sparksql.QueryLetRef), _macros_sparksql.LetClause(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('LastSurgeryOP', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'LastSurgeryOP', 'relevantPeriod', none)), _macros_sparksql.Interval(_macros_sparksql.Subtract(_macros_sparksql.QueryLetRef, _macros_sparksql.Quantity()), _macros_sparksql.QueryLetRef)), _macros_sparksql.Not(_macros_sparksql.IsNull(_macros_sparksql.QueryLetRef)))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.End(_macros_sparksql.IdentifierRef('relevantPeriod')))])))], [_macros_sparksql.AliasedQuerySource('Visit', Encounter)], _macros_sparksql.ReturnClause([_macros_sparksql.Interval(_macros_sparksql.Coalesce(_macros_sparksql.Start(_macros_sparksql.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', _macros_sparksql.QueryLetRef)), _macros_sparksql.QueryLetRef), _macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))]), none, none) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [112:1-126:31]
 	define function "HospitalizationWithObservation"(Encounter "Encounter, Performed" ):
@@ -145,13 +145,13 @@
 	  	return Interval[Coalesce(start of EDVisit.relevantPeriod, VisitStart), 
 	  	end of Visit.relevantPeriod]
 #}
-{% macro HospitalizationWithObservation(Encounter) %}{{ macros.Query([macros.LetClause(macros.Query([], [macros.AliasedQuerySource('LastObs', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'LastObs', 'relevantPeriod', none)), macros.Interval(macros.Subtract(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), macros.Quantity()), macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), macros.Not(macros.IsNull(macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.End(macros.IdentifierRef('relevantPeriod')))]))), macros.LetClause(macros.Start(macros.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', macros.QueryLetRef)), macros.Start(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none))), macros.LetClause(macros.Query([], [macros.AliasedQuerySource('LastED', macros.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), macros.And(macros.In(macros.End(macros.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), macros.Interval(macros.Subtract(macros.QueryLetRef, macros.Quantity()), macros.QueryLetRef)), macros.Not(macros.IsNull(macros.QueryLetRef)))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.End(macros.IdentifierRef('relevantPeriod')))])))], [macros.AliasedQuerySource('Visit', Encounter)], macros.ReturnClause([macros.Interval(macros.Coalesce(macros.Start(macros.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', macros.QueryLetRef)), macros.QueryLetRef), macros.End(macros.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))]), none, none) }}{% endmacro %}
+{% macro HospitalizationWithObservation(Encounter) %}{{ _macros_sparksql.Query([_macros_sparksql.LetClause(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('LastObs', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'LastObs', 'relevantPeriod', none)), _macros_sparksql.Interval(_macros_sparksql.Subtract(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)), _macros_sparksql.Quantity()), _macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))), _macros_sparksql.Not(_macros_sparksql.IsNull(_macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.End(_macros_sparksql.IdentifierRef('relevantPeriod')))]))), _macros_sparksql.LetClause(_macros_sparksql.Start(_macros_sparksql.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', _macros_sparksql.QueryLetRef)), _macros_sparksql.Start(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none))), _macros_sparksql.LetClause(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('LastED', _macros_sparksql.Retrieve('urn:healthit-gov:qdm:v5_6', none, 'PositiveEncounterPerformed')), _macros_sparksql.And(_macros_sparksql.In(_macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'LastED', 'relevantPeriod', none)), _macros_sparksql.Interval(_macros_sparksql.Subtract(_macros_sparksql.QueryLetRef, _macros_sparksql.Quantity()), _macros_sparksql.QueryLetRef)), _macros_sparksql.Not(_macros_sparksql.IsNull(_macros_sparksql.QueryLetRef)))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.End(_macros_sparksql.IdentifierRef('relevantPeriod')))])))], [_macros_sparksql.AliasedQuerySource('Visit', Encounter)], _macros_sparksql.ReturnClause([_macros_sparksql.Interval(_macros_sparksql.Coalesce(_macros_sparksql.Start(_macros_sparksql.Property('ENCAPSULATED_SIMPLE', none, 'relevantPeriod', _macros_sparksql.QueryLetRef)), _macros_sparksql.QueryLetRef), _macros_sparksql.End(_macros_sparksql.Property('COLUMN_REFERENCE', 'Visit', 'relevantPeriod', none)))]), none, none) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [129:1-130:61]
 	define function "HospitalizationWithObservationLengthofStay"(Encounter "Encounter, Performed" ):
 	  "LengthInDays"("HospitalizationWithObservation"(Encounter))
 #}
-{% macro HospitalizationWithObservationLengthofStay(Encounter) %}{{ LengthInDays(macros.Collect('Patient', HospitalizationWithObservation(Encounter))) }}{% endmacro %}
+{% macro HospitalizationWithObservationLengthofStay(Encounter) %}{{ LengthInDays(_macros_sparksql.Collect('Patient', HospitalizationWithObservation(Encounter))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [133:1-138:3]
 	define function "FirstInpatientIntensiveCareUnit"(Encounter "Encounter, Performed" ):
@@ -161,7 +161,7 @@
 	      sort by start of locationPeriod
 	  )
 #}
-{% macro FirstInpatientIntensiveCareUnit(Encounter) %}{{ macros.First(macros.Query([], [macros.AliasedQuerySource('HospitalLocation', macros.Property('LAZY_EVALUATION', none, 'facilityLocations', Encounter)), macros.And(macros.InValueSet(macros.Property('COLUMN_REFERENCE', 'HospitalLocation', 'code', none), macros.ValueSetRef()), macros.IncludedIn(macros.Property('COLUMN_REFERENCE', 'HospitalLocation', 'locationPeriod', none), macros.Property('LAZY_EVALUATION', none, 'relevantPeriod', Encounter)))], none, none, macros.SortClause([macros.ByExpression('ASC', macros.Start(macros.IdentifierRef('locationPeriod')))]))) }}{% endmacro %}
+{% macro FirstInpatientIntensiveCareUnit(Encounter) %}{{ _macros_sparksql.First(_macros_sparksql.Query([], [_macros_sparksql.AliasedQuerySource('HospitalLocation', _macros_sparksql.Property('LAZY_EVALUATION', none, 'facilityLocations', Encounter)), _macros_sparksql.And(_macros_sparksql.InValueSet(_macros_sparksql.Property('COLUMN_REFERENCE', 'HospitalLocation', 'code', none), _macros_sparksql.ValueSetRef()), _macros_sparksql.IncludedIn(_macros_sparksql.Property('COLUMN_REFERENCE', 'HospitalLocation', 'locationPeriod', none), _macros_sparksql.Property('LAZY_EVALUATION', none, 'relevantPeriod', Encounter)))], none, none, _macros_sparksql.SortClause([_macros_sparksql.ByExpression('ASC', _macros_sparksql.Start(_macros_sparksql.IdentifierRef('locationPeriod')))]))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [141:1-144:35]
 	define function "NormalizeInterval"(pointInTime DateTime, period Interval<DateTime> ):
@@ -169,7 +169,7 @@
 	    else if period is not null then period 
 	    else null as Interval<DateTime>
 #}
-{% macro NormalizeInterval(pointInTime, period) %}{{ macros.If(macros.Not(macros.IsNull(pointInTime)), macros.Interval(pointInTime, pointInTime), macros.If(macros.Not(macros.IsNull(period)), period, macros.As(macros.Null(), macros.IntervalTypeSpecifier(macros.NamedTypeSpecifier())))) }}{% endmacro %}
+{% macro NormalizeInterval(pointInTime, period) %}{{ _macros_sparksql.If(_macros_sparksql.Not(_macros_sparksql.IsNull(pointInTime)), _macros_sparksql.Interval(pointInTime, pointInTime), _macros_sparksql.If(_macros_sparksql.Not(_macros_sparksql.IsNull(period)), period, _macros_sparksql.As(_macros_sparksql.Null(), _macros_sparksql.IntervalTypeSpecifier(_macros_sparksql.NamedTypeSpecifier())))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [147:1-150:3]
 	define function "HasStart"(period Interval<DateTime> ):
@@ -177,7 +177,7 @@
 	      or start of period = minimum DateTime
 	  )
 #}
-{% macro HasStart(period) %}{{ macros.Not(macros.Or(macros.IsNull(macros.Start(period)), macros.Equal(macros.Start(period), macros.MinValue()))) }}{% endmacro %}
+{% macro HasStart(period) %}{{ _macros_sparksql.Not(_macros_sparksql.Or(_macros_sparksql.IsNull(_macros_sparksql.Start(period)), _macros_sparksql.Equal(_macros_sparksql.Start(period), _macros_sparksql.MinValue()))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [153:1-158:3]
 	define function "HasEnd"(period Interval<DateTime> ):
@@ -187,7 +187,7 @@
 	      end of period = maximum DateTime
 	  )
 #}
-{% macro HasEnd(period) %}{{ macros.Not(macros.Or(macros.IsNull(macros.End(period)), macros.Equal(macros.End(period), macros.MaxValue()))) }}{% endmacro %}
+{% macro HasEnd(period) %}{{ _macros_sparksql.Not(_macros_sparksql.Or(_macros_sparksql.IsNull(_macros_sparksql.End(period)), _macros_sparksql.Equal(_macros_sparksql.End(period), _macros_sparksql.MaxValue()))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [161:1-164:24]
 	define function "Latest"(period Interval<DateTime> ):
@@ -195,7 +195,7 @@
 	  end of period 
 	    else start of period
 #}
-{% macro Latest(period) %}{{ macros.If(HasEnd(period), macros.End(period), macros.Start(period)) }}{% endmacro %}
+{% macro Latest(period) %}{{ _macros_sparksql.If(HasEnd(period), _macros_sparksql.End(period), _macros_sparksql.Start(period)) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [167:1-170:15]
 	define function "Earliest"(period Interval<DateTime> ):
@@ -203,16 +203,16 @@
 	    else 
 	  end of period
 #}
-{% macro Earliest(period) %}{{ macros.If(HasStart(period), macros.Start(period), macros.End(period)) }}{% endmacro %}
+{% macro Earliest(period) %}{{ _macros_sparksql.If(HasStart(period), _macros_sparksql.Start(period), _macros_sparksql.End(period)) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [173:1-174:48]
 	define function "LatestOf"(pointInTime DateTime, period Interval<DateTime> ):
 	  Latest(NormalizeInterval(pointInTime, period))
 #}
-{% macro LatestOf(pointInTime, period) %}{{ Latest(macros.Encapsulate(NormalizeInterval(pointInTime, period))) }}{% endmacro %}
+{% macro LatestOf(pointInTime, period) %}{{ Latest(_macros_sparksql.Encapsulate(NormalizeInterval(pointInTime, period))) }}{% endmacro %}
 {#
 	// MATGlobalCommonFunctions lines [177:1-178:50]
 	define function "EarliestOf"(pointInTime DateTime, period Interval<DateTime> ):
 	  Earliest(NormalizeInterval(pointInTime, period))
 #}
-{% macro EarliestOf(pointInTime, period) %}{{ Earliest(macros.Encapsulate(NormalizeInterval(pointInTime, period))) }}{% endmacro %}
+{% macro EarliestOf(pointInTime, period) %}{{ Earliest(_macros_sparksql.Encapsulate(NormalizeInterval(pointInTime, period))) }}{% endmacro %}

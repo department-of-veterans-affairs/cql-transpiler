@@ -3,7 +3,6 @@ package gov.va.transpiler.jinja.node.trackable.element.expression;
 import org.hl7.elm.r1.Literal;
 
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class LiteralNode extends ExpressionNode<Literal> {
@@ -25,8 +24,6 @@ public class LiteralNode extends ExpressionNode<Literal> {
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment();
-        segment.setHead(Standards.MACRO_FILE_NAME + ".Literal('" + getCqlEquivalent().getValueType().getLocalPart() + "', '" + getCqlEquivalent().getValue() + "')");
-        return segment;
+        return new Segment(getName() + "('" + getCqlEquivalent().getValueType().getLocalPart() + "', '" + getCqlEquivalent().getValue() + "')");
     }
 }
