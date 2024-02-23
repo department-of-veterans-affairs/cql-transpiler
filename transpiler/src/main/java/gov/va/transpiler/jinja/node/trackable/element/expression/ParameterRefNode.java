@@ -18,6 +18,6 @@ public class ParameterRefNode extends ExpressionNode<ParameterRef> {
 
     @Override
     public Segment toSegment() {
-        return new Segment(getName() + "('" + getCqlEquivalent().getName() + "')");
+        return new Segment(getName() + "('" + getCqlEquivalent().getName().replace(" ", "_") + "')");
     }
 }

@@ -35,8 +35,9 @@
 {% macro Query(letList, sourceList, return, where, sortClause) %}SELECT {% if return == none %}*{% else %}{{ return }}{% endif %} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
 {% macro IdentifierRef(name) %}{{ name }}{% endmacro %}
 {% macro And(left, right) %}({{ left }}) AND ({{ right }}){% endmacro %}
+{% macro Or(left, right) %}({{ left }}) OR ({{ right }}){% endmacro %}
 {% macro LessOrEqual(left, right) %}({{ left }}) <= ({{ right }}){% endmacro %}
 {% macro In(left, right) %}({{ left }}) IN ({{ right }}){% endmacro %}
-{% macro DifferenceBetween(left, right) %}({{ left }}) - ({{ right }}){% endmacro %}
+{% macro DifferenceBetween(left, right) %}({{ right }}) - ({{ left }}){% endmacro %}
 {% macro ParameterRef(val) %}@{{ val }}{% endmacro %}
 {% macro SingletonFrom(val) %}{{ val }}{% endmacro %}

@@ -36,6 +36,7 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.QueryNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.aggregateexpression.CountNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.InValueSetNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
@@ -99,6 +100,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitAliasedQuerySource(AliasedQuerySource element, State state) {
         new AliasedQuerySourceNode(state, element);
         return super.visitAliasedQuerySource(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitAnd(And element, State state) {
+        new BinaryExpressionNode<And>(state, element);
+        return super.visitAnd(element, state);
     }
 
     @Override
@@ -201,6 +208,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitInValueSet(InValueSet element, State state) {
+        new InValueSetNode(state, element);
+        return super.visitInValueSet(element, state);
+    }
+
+    @Override
     public TranspilerNode visitIncludeDef(IncludeDef element, State state) {
         new IncludeDefNode(state, element);
         return super.visitIncludeDef(element, state);
@@ -264,6 +277,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitOperandRef(OperandRef element, State state) {
         new OperandRefNode(state, element);
         return super.visitOperandRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitOr(Or element, State state) {
+        new BinaryExpressionNode<Or>(state, element);
+        return super.visitOr(element, state);
     }
 
     @Override
