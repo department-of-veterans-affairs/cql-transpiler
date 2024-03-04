@@ -1,30 +1,20 @@
-{# To be set in macros file: #}
-{% macro Literal(literalType, value) %}
-    {% if literalType == 'Integer' %}
-        {{ value }}
-    {% elif literalType == 'String' %}
-        '{{ value }}'{% else %}{{ literalType }}::{{ value }}
-    {% endif %}
-{% endmacro %}
+{% import '_macros_sparksql' as _macros_sparksql %}
 
-{% macro LiteralEncapsulationTypeForState(state) %}
-    'SIMPLE'
-{% endmacro %}
-{% set LiteralInfo = namespace() %}
-{% set LiteralInfo.encapsulationTypeForState = LiteralEncapsulationTypeForState %}
+{# To be set in macros file: #}
+{% set LiteralType = 'SIMPLE' %}
 
 {% macro coerce(originalType, targetType, context, expression) %}
-    {% if targetType = 'ENCAPSULATED' %}
-        {% if originalType = 'SIMPLE' %}
-            {{ macros.Encapsulate(expression) }}
-        {% elif originalType = 'TABLE' %}
-            {{ macros.Collect(context, expression) }}
+    {% if targetType == 'ENCAPSULATED' %}
+        {% if originalType == 'SIMPLE' %}
+            {{ _macros_sparksql.Encapsulate(expression) }}
+        {% elif originalType == 'TABLE' %}
+            {{ _macros_sparksql.Collect(context, expression) }}
         {% else %}
             {{ expression }}
         {% endif %}
-    {% elif targetType = 'TABLE' %}
-        {% if originalType = 'ENCAPSULATED' %}
-            {{ macros.Decollect(context, expression) }}
+    {% elif targetType == 'TABLE' %}
+        {% if originalType == 'ENCAPSULATED' %}
+            {{ _macros_sparksql.Decollect(context, expression) }}
         {% else %}
             {{ expression }}
         {% endif %}
@@ -33,26 +23,26 @@
     {% endif %}
 {% endmacro %}
 
-{% macro expressionDef(state, context, expression, expressionInfo) %}
-    {% if state = none OR state.coercionPairMap = none %}
+{% macro expressionDef(state, context, expression, expressionResultType) %}
+    {% if (state == none) or (state.coercionDict == none) %}
         {{ expression }}
     {% else %}
-        {{ coerce(expressionInfo.encapsulationTypeForState(state), state.coercionPairMap.get(expressionInfo.encapsulationTypeForState(state)), context, expression) }}
+        {{ coerce(expressionResultType, state.coercionDict.get(expressionResultType), context, expression) }}
     {% endif %}
 {% endmacro %}
 
 {# To be put in library file #}
-{% set state = namespace() %}
-{% set state.coercionPairMap = none %}
 
 {% macro testExpr(state, context) %}
-    {{ expressionDef(state, context, Literal('Integer', 1), LiteralInfo) }}
+    {{ expressionDef(state, context, _macros_sparksql.Literal('Integer', 1), LiteralType) }}
 {% endmacro %}
 
 {# testing #}
+{% set state = namespace() %}
 {# 1 #}
-{{ textExpr(state, none )}}
+{% set state.coercionDict = none %}
+{{ testExpr(state, none )}}
 
 {# SELECT 1 _val #}
-{% set state.coercionPairMap = {'SIMPLE':'ENCAPSULATED', 'TABLE':'ENCAPSULATED'} %}
-{{ textExpr(state, none )}}
+{% set state.coercionDict = {'SIMPLE':'ENCAPSULATED', 'TABLE':'ENCAPSULATED'} %}
+{{ testExpr(state, none )}}
