@@ -1,5 +1,5 @@
 {% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
-{% macro Literal(literalType, value) %}{% if literalType == 'Integer' %}{{value}}{% elif literalType == 'String' %}'{{ value }}'{% else %}{{ literalType }}::{{ value }}{% endif %}{% endmacro %}
+{% macro Literal(literalType, value) %}{% if literalType == 'Integer' %}{{ value }}{% elif literalType == 'String' %}'{{ value }}'{% else %}{{ literalType }}::{{ value }}{% endif %}{% endmacro %}
 {% macro Add(left, right) %}({{left}} + {{ right }}){% endmacro %}
 {% macro Subtract(left, right) %}({{ left }} - {{ right }}){% endmacro %}
 {% macro Multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}

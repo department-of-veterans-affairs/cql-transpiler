@@ -1,0 +1,58 @@
+# To be set in macros file:
+{% macro Literal(literalType, value) %}
+    {% if literalType == 'Integer' %}
+        {{ value }}
+    {% elif literalType == 'String' %}
+        '{{ value }}'{% else %}{{ literalType }}::{{ value }}
+    {% endif %}
+{% endmacro %}
+
+{% macro LiteralEncapsulationTypeForState(state) %}
+    'SIMPLE'
+{% endmacro %}
+{% set LiteralInfo = namespace() %}
+{% set LiteralInfo.encapsulationTypeForState = LiteralEncapsulationTypeForState %}
+
+{% macro coerce(originalType, targetType, context, expression) %}
+    {% if targetType = 'ENCAPSULATED'%}
+        {% if originalType = 'SIMPLE' %}
+            {{ macros.Encapsulate(expression) }}
+        {% elif originalType = 'TABLE' %}
+            {{ macros.Collect(context, expression) }}
+        {% else %}
+            {{ expression }}
+        {% endif %}
+    {% elif targetType = 'TABLE' %}
+        {% if originalType = 'ENCAPSULATED'%}
+            {{ macros.Decollect(context, expression) }}
+        {% else %}
+            {{ expression }}
+        {% endif %}
+    {% else %}
+        {{ expression }}
+    {% endif %}
+{% endmacro %}
+
+{% macro expressionDef(state, context, expression, expressionInfo) %}
+    {% if state = none OR state.coercionPairMap = none %}
+        {{ expression }}
+    {% else %}
+        {{ coerce(expressionInfo.expressionType(state), state.coercionPairMap.get(expressionInfo.expressionType(state)), context, expression) }}
+    {% endif %}
+{% endmacro %}
+
+# to be put in library file
+{% set state = namespace() %}
+{% set state.coercionPairMap = none %}
+
+{% macro testExpr(state, context) %}
+    {{ expressionDef(state, context, Literal('Integer', 1), LiteralInfo) }}
+{% endmacro %}
+
+# testing
+# 1
+{{ textExpr(state, none )}}
+
+# SELECT 1 _val
+{% set state.coercionPairMap = {'SIMPLE':'ENCAPSULATED', 'TABLE':'ENCAPSULATED'} %}
+{{ textExpr(state, none )}}
