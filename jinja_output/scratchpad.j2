@@ -1,4 +1,4 @@
-# To be set in macros file:
+{# To be set in macros file: #}
 {% macro Literal(literalType, value) %}
     {% if literalType == 'Integer' %}
         {{ value }}
@@ -14,7 +14,7 @@
 {% set LiteralInfo.encapsulationTypeForState = LiteralEncapsulationTypeForState %}
 
 {% macro coerce(originalType, targetType, context, expression) %}
-    {% if targetType = 'ENCAPSULATED'%}
+    {% if targetType = 'ENCAPSULATED' %}
         {% if originalType = 'SIMPLE' %}
             {{ macros.Encapsulate(expression) }}
         {% elif originalType = 'TABLE' %}
@@ -23,7 +23,7 @@
             {{ expression }}
         {% endif %}
     {% elif targetType = 'TABLE' %}
-        {% if originalType = 'ENCAPSULATED'%}
+        {% if originalType = 'ENCAPSULATED' %}
             {{ macros.Decollect(context, expression) }}
         {% else %}
             {{ expression }}
@@ -37,11 +37,11 @@
     {% if state = none OR state.coercionPairMap = none %}
         {{ expression }}
     {% else %}
-        {{ coerce(expressionInfo.expressionType(state), state.coercionPairMap.get(expressionInfo.expressionType(state)), context, expression) }}
+        {{ coerce(expressionInfo.encapsulationTypeForState(state), state.coercionPairMap.get(expressionInfo.encapsulationTypeForState(state)), context, expression) }}
     {% endif %}
 {% endmacro %}
 
-# to be put in library file
+{# To be put in library file #}
 {% set state = namespace() %}
 {% set state.coercionPairMap = none %}
 
@@ -49,10 +49,10 @@
     {{ expressionDef(state, context, Literal('Integer', 1), LiteralInfo) }}
 {% endmacro %}
 
-# testing
-# 1
+{# testing #}
+{# 1 #}
 {{ textExpr(state, none )}}
 
-# SELECT 1 _val
+{# SELECT 1 _val #}
 {% set state.coercionPairMap = {'SIMPLE':'ENCAPSULATED', 'TABLE':'ENCAPSULATED'} %}
 {{ textExpr(state, none )}}
