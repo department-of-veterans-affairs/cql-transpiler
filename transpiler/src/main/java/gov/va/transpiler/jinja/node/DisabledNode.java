@@ -11,7 +11,7 @@ public class DisabledNode extends CQLEquivalent<Trackable> {
     }
 
     @Override
-    public Type getType() {
-        return Type.DISABLED;
+    public boolean isEnabled() {
+        return false;
     }
 }

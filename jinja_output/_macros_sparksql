@@ -1,5 +1,37 @@
+{# UTILITY AND HELPER FUNCTIONS #}
+
+{# Utility function to get the column a context should be grouped by #}
+{% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
+
+{# Utility function for printing lists #}
 {% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
-{% macro Literal(literalType, value) %}{% if literalType == 'Integer' %}{{ value }}{% elif literalType == 'String' %}'{{ value }}'{% else %}{{ literalType }}::{{ value }}{% endif %}{% endmacro %}
+
+{# Utility functions for dataType conversions #}
+{% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
+{% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
+{% macro coerce(originalType, targetType, state, arguments) %}{% if targetType == 'ENCAPSULATED' %}{% if originalType == 'SIMPLE' %}{{ _macros_sparksql.Encapsulate(arguments['class'].print(state, arguments)) }}{% elif originalType == 'TABLE' %}{{ _macros_sparksql.Collect(context, arguments['class'].print(state, arguments)) }}{% else %}{{ expression }}{% endif %}{% elif targetType == 'TABLE' %}{% if originalType == 'ENCAPSULATED' %}{{ _macros_sparksql.Decollect(context, arguments['class'].print(state, arguments)) }}{% else %}{{ arguments['class'].print(state, arguments) }}{% endif %}{% else %}{{ arguments['class'].print(state, arguments) }}{% endif %}{% endmacro %}
+{% macro printCoercingIfApplicable(state, arguments) %}{% if (state != none) and (state.coercionInstructions != none) and (state.coercionInstructions[arguments['class'].dataType] != none) %}{{ coerce(arguments['class'].dataType, state.coercionInstructions[arguments['class'].dataType], state, arguments) }}{% else %}{{ class.print(state, arguments) }}{% endif %}{% endmacro %}
+
+{# Namespace that handles printing operators #}
+{% set OperatorHandler = namespace() %}
+{% set OperatorHandler.print = printCoercingIfApplicable %}
+
+{# OPERATOR IMPLEMENTATIONS #}
+
+{# Literal operator #}
+{% set Literal = namespace() %}
+{% set Literal.dataType = 'SIMPLE' %}
+{% macro printLiteral(state, arguments) %}{% if arguments['type'] == 'Integer' %}{{ arguments['value'] }}{% elif arguments['type'] == 'String' %}'{{ arguments['value'] }}'{% else %}{{ arguments['type'] }}::{{ arguments['value'] }}{% endif %}{% endmacro %}
+{% set Literal.print = printLiteral %}
+
+{# ExpressionDef operator #}
+{% set ExpressionDef = namespace() %}
+{% set ExpressionDef.dataType = 'INHERITED' %}
+{% macro printExpressionDef(state, arguments) %}{% if state.context == none and arguments['context'] != none %}{% set state.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(state, arguments['value'])}}{% endmacro %}
+{% set ExpressionDef.print = printExpressionDef %}
+
+{# OBSOLETE OPERATOR IMPLEMENTATIONS #}
+
 {% macro Add(left, right) %}({{left}} + {{ right }}){% endmacro %}
 {% macro Subtract(left, right) %}({{ left }} - {{ right }}){% endmacro %}
 {% macro Multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}
@@ -13,9 +45,6 @@
 {% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
 {% macro Union(valList, valTypeList) %}{{ ListPrintingUtility(valList, ' UNION ') }}{% endmacro %}
 {% macro List(listOfItems) %}SELECT collect_list(_val) AS _val FROM ({% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems, none) }}{% endif %}){% endmacro %}
-{% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
-{% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
-{% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
 {% macro Property(type, scope, path, source) %}{% if type == 'COLUMN_REFERENCE' %}{% if source != none %}{{ source }}.{{ path }}{% elif path != none %}{{ scope }}.{{ path }}{% else %}{{ scope }}{% endif %}{% else %}SELECT {{ path }} FROM ({{ source }}){% endif %}{% endmacro %}
 {% macro Concatenate(valList, valTypeList)%}concat({{ ListPrintingUtility(valList, ', ') }}){% endmacro %}
 {% macro DateTime(year, month, day, hour, minute, second, millisecond) %}{{ year }}-{{ month }}-{{ day }} {{ hour }}:{{ minute }}:{{ second }}.{{ millisecond }}{% endmacro %}

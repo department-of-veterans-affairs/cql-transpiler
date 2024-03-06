@@ -2,25 +2,17 @@ package gov.va.transpiler.jinja.node;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.standards.Standards;
+import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public class TranspilerNode {
 
-
     protected static final int UNLIMITED_CHILDREN = -1;
-    protected enum Type {
-        DISABLED,
-        SIMPLE,
-        ENCAPSULATED_SIMPLE,
-        TABLE,
-        COLLECTED_TABLE,
-        COLUMN_REFERENCE,
-        LAZY_EVALUATION
-    }
 
     private TranspilerNode parent;
     private List<TranspilerNode> children = new ArrayList<>();
@@ -47,8 +39,12 @@ public class TranspilerNode {
         return UNLIMITED_CHILDREN;
     }
 
+    protected boolean isEnabled() {
+        return true;
+    }
+
     public void addChild(TranspilerNode child) throws UnsupportedChildNodeException {
-        if (child.getType() != Type.DISABLED) {
+        if (child.isEnabled()) {
             if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || getChildren().size() < allowedNumberOfChildren()) {
                 children.add(child);
             } else {
@@ -75,14 +71,6 @@ public class TranspilerNode {
 
     public TranspilerNode getChildByReference(String nameOrIndex) {
         return getChild();
-    }
-
-    public Type getType() {
-        return Type.SIMPLE;
-    }
-
-    public Segment toSegment() {
-        return joinChildren(getChildren(), getName() + "(", ")", "", "", ", ");
     }
 
     protected String getName() {
@@ -115,7 +103,7 @@ public class TranspilerNode {
             case 0:
                 break;
             case 1:
-                topLevel.addChild(childToSegment(children.get(0)));
+                topLevel.addChild(children.get(0).toSegment());
                 break;
             default:
                 for (int i = 0; i < children.size(); i++) {
@@ -125,7 +113,7 @@ public class TranspilerNode {
                     topLevel.addChild(prefixSegment);
 
                     // Child
-                    topLevel.addChild(childToSegment(children.get(i)));
+                    topLevel.addChild(children.get(i).toSegment());
 
                     // Postfix
                     var postfixSegment = new Segment();
@@ -139,49 +127,29 @@ public class TranspilerNode {
         return topLevel;
     }
 
-    protected Segment childToSegment(TranspilerNode child) {
-        return child.toSegment();
+    protected Segment argumentToSegment(String name, String value) {
+        return new Segment("'" + name + "': '" + value + "'");
     }
 
-    protected Segment collectSegment(String context, Segment segment) {
-        var collectSegment = new Segment();
-        collectSegment.setHead(Standards.macroFileName() + "." + "Collect(");
-        var contextChild = new Segment();
-        contextChild.setHead("'" + context + "', ");
-        collectSegment.addChild(contextChild);
-        collectSegment.addChild(segment);
-        collectSegment.setTail(")");
-        return collectSegment;
-    }
-    protected Segment childToSegmentCollectTable(String context, TranspilerNode child) {
-        return collectSegment(context, child.toSegment());
+    protected Map<String, String> getStringArgumentMap() {
+        Map<String, String> argumentMap = new LinkedHashMap<>();
+        argumentMap.put("name", getName());
+        return argumentMap;
     }
 
-    protected Segment decollectSegment(String context, Segment segment) {
-        var decollectSegment = new Segment();
-        decollectSegment.setHead(Standards.macroFileName() + "." + "Decollect(");
-        var contextChild = new Segment();
-        contextChild.setHead("'" + context + "', ");
-        decollectSegment.addChild(contextChild);
-        decollectSegment.addChild(segment);
-        decollectSegment.setTail(")");
-        return decollectSegment;
+    protected List<Segment> getArgumentList(Map<String, String> stringArgumentMap, List<TranspilerNode> children) {
+        List<Segment> argumentList = new ArrayList<>();
+        for (var entry : stringArgumentMap.entrySet()) {
+            argumentList.add(argumentToSegment(entry.getKey(), entry.getValue()));
+        }
+        var valuesSegment = new Segment("'values': [", "]", PrintType.Inline);
+        valuesSegment.addChild(joinChildren(children, "", "", "", "", ", "));
+        argumentList.add(valuesSegment);
+        return argumentList;
     }
 
-    protected Segment childToSegmentDecollectTable(String context, TranspilerNode child) {
-        return decollectSegment(context, child.toSegment());
-    }
-
-    protected Segment encapsulateSegment(Segment segment) {
-        var encapsulateSegment = new Segment();
-        encapsulateSegment.setHead(Standards.macroFileName() + "." + "Encapsulate(");
-        encapsulateSegment.setTail(")");
-        encapsulateSegment.addChild(segment);
-        return encapsulateSegment;
-    }
-
-    protected Segment childToSegmentEncapsulateSimple(TranspilerNode child) {
-        return encapsulateSegment(child.toSegment());
+    public Segment toSegment() {
+        return joinSegments(getArgumentList(getStringArgumentMap(), getChildren()), "{", "}", ", ");
     }
 
     public String getTargetFileLocation() {

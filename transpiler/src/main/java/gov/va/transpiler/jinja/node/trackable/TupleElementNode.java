@@ -1,9 +1,9 @@
 package gov.va.transpiler.jinja.node.trackable;
 
+import java.util.Map;
+
 import org.hl7.elm.r1.TupleElement;
 
-import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
 public class TupleElementNode extends TrackableNode<TupleElement> {
@@ -21,31 +21,9 @@ public class TupleElementNode extends TrackableNode<TupleElement> {
     }
 
     @Override
-    public Type getType() {
-        return getChild().getType() == Type.TABLE ? Type.COLLECTED_TABLE : Type.ENCAPSULATED_SIMPLE;
-    }
-
-    @Override
-    public Segment childToSegment(TranspilerNode child) {
-        if (child.getType() == Type.TABLE) {
-            return childToSegmentCollectTable(context, child);
-        } else if (child.getType() == Type.SIMPLE) {
-            return childToSegmentEncapsulateSimple(child);
-        } else {
-            return super.childToSegment(child);
-        }
-    }
-
-    @Override
-    public Segment toSegment() {
-        var segment = new Segment();
-        segment.setHead(getName() + "(");
-        var nameSegment = new Segment();
-        nameSegment.setHead("'" + getCqlEquivalent().getName() + "'");
-        nameSegment.setTail(", ");
-        segment.addChild(nameSegment);
-        segment.addChild(childToSegment(getChild()));
-        segment.setTail(")");
-        return segment;
+    protected Map<String, String> getStringArgumentMap() {
+        var map = super.getStringArgumentMap();
+        map.put("context", context);
+        return map;
     }
 }

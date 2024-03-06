@@ -25,11 +25,6 @@ public class LetClauseNode extends ElementNode<LetClause> implements Referenceab
     }
 
     @Override
-    public Type getType() {
-        return getChild().getType();
-    }
-
-    @Override
     public TranspilerNode getChildByReference(String nameOrIndex) {
         return getChild().getChildByReference(nameOrIndex);
     }

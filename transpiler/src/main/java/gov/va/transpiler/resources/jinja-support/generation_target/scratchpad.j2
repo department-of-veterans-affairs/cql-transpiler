@@ -30,27 +30,27 @@
 {% macro coerce(originalType, targetType, state, arguments) %}
     {% if targetType == 'ENCAPSULATED' %}
         {% if originalType == 'SIMPLE' %}
-            {{ _macros_sparksql.Encapsulate(arguments['class'].print(state, arguments)) }}
+            {{ _macros_sparksql.Encapsulate(arguments['operator'].print(state, arguments)) }}
         {% elif originalType == 'TABLE' %}
-            {{ _macros_sparksql.Collect(context, arguments['class'].print(state, arguments)) }}
+            {{ _macros_sparksql.Collect(context, arguments['operator'].print(state, arguments)) }}
         {% else %}
             {{ expression }}
         {% endif %}
     {% elif targetType == 'TABLE' %}
         {% if originalType == 'ENCAPSULATED' %}
-            {{ _macros_sparksql.Decollect(context, arguments['class'].print(state, arguments)) }}
+            {{ _macros_sparksql.Decollect(context, arguments['operator'].print(state, arguments)) }}
         {% else %}
-            {{ arguments['class'].print(state, arguments) }}
+            {{ arguments['operator'].print(state, arguments) }}
         {% endif %}
     {% else %}
-        {{ arguments['class'].print(state, arguments) }}
+        {{ arguments['operator'].print(state, arguments) }}
     {% endif %}
 {% endmacro %}
 {% macro printCoercingIfApplicable(state, arguments) %}
-    {% if (state != none) and (state.coercionInstructions != none) and (state.coercionInstructions[arguments['class'].dataType] != none) %}
-        {{ coerce(arguments['class'].dataType, state.coercionInstructions[arguments['class'].dataType], state, arguments) }}
+    {% if (state != none) and (state.coercionInstructions != none) and (state.coercionInstructions[arguments['operator'].dataType] != none) %}
+        {{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}
     {% else %}
-        {{ class.print(state, arguments) }}
+        {{ arguments['operator'].print(state, arguments) }}
     {% endif %}
 {% endmacro %}
 
@@ -82,7 +82,7 @@
 
 {# define testExpr: 1#}
 {% macro testExpr(state) %}
-    {{ OperatorHandler.print(state, { 'class': ExpressionDef, 'context':'Unfiltered', 'name':'testExpr', 'value':{'class': Literal, 'type':'Integer', 'value':1} } ) }}
+    {{ OperatorHandler.print(state, { 'operator': ExpressionDef, 'context':'Unfiltered', 'name':'testExpr', 'value':{ 'operator': Literal, 'type':'Integer', 'value':1 } } ) }}
 {% endmacro %}
 
 {# TESTING #}
