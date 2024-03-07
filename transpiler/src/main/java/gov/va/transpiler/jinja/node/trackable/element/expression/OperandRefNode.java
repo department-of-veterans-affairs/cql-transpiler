@@ -14,11 +14,6 @@ public class OperandRefNode extends ExpressionNode<OperandRef> {
     }
 
     @Override
-    public Type getType() {
-        return Type.ENCAPSULATED_SIMPLE;
-    }
-
-    @Override
     public Segment toSegment() {
         var segment = new Segment();
         segment.setHead(getCqlEquivalent().getName());

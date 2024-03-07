@@ -10,5 +10,4 @@ public class UnaryExpressionNode<T extends UnaryExpression> extends OperatorExpr
     public UnaryExpressionNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
 }

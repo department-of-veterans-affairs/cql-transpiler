@@ -9,10 +9,4 @@ public class UnionNode extends NaryExpressionNode<Union> {
     public UnionNode(State state, Union cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-
-    @Override
-    public Type getType() {
-        return Type.TABLE;
-    }
-    
 }

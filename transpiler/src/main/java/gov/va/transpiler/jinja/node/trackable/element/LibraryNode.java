@@ -69,10 +69,10 @@ public class LibraryNode extends ElementNode<Library> {
         headerSegment.setHead("{% import '" + Standards.macroFileName() + "' as " + Standards.macroFileName() +" %}");
         segment.addChild(headerSegment);
         for (var child: includeDefNodeList) {
-            segment.addChild(childToSegment(child));
+            segment.addChild(child.toSegment());
         }
         for (var child: getChildren()) {
-            segment.addChild(childToSegment(child));
+            segment.addChild(child.toSegment());
             if (child instanceof ExpressionDefNode && !(child instanceof FunctionDefNode)) {
                 segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).referenceName() + "() }}\n"));
             }

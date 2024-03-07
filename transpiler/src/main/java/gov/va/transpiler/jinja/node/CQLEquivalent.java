@@ -31,7 +31,7 @@ public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode 
     }
 
     @Override
-    public String getName() {
+    public String getOperator() {
         return Standards.macroFileName() + "." + getCqlEquivalent().getClass().getSimpleName();
     }
 }

@@ -82,7 +82,7 @@
 
 {# define testExpr: 1#}
 {% macro testExpr(state) %}
-    {{ OperatorHandler.print(state, { 'operator': ExpressionDef, 'context':'Unfiltered', 'name':'testExpr', 'value':{ 'operator': Literal, 'type':'Integer', 'value':1 } } ) }}
+    {{ OperatorHandler.print(state, { 'operator': ExpressionDef, 'context':'Unfiltered', 'name':'testExpr', 'values':[{ 'operator': Literal, 'type':'Integer', 'value':1 }] } ) }}
 {% endmacro %}
 
 {# TESTING #}

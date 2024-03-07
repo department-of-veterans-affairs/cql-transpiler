@@ -23,11 +23,6 @@ public class ExpressionRefNode extends ExpressionNode<ExpressionRef> implements 
     }
 
     @Override
-    public Type getType() {
-        return ((ExpressionDefNode<?>) getReferenceTo()).getType();
-    }
-
-    @Override
     public String referenceName() {
         return getCqlEquivalent().getName();
     }
@@ -38,17 +33,12 @@ public class ExpressionRefNode extends ExpressionNode<ExpressionRef> implements 
     }
 
     @Override
-    public String getName() {
-        return referenceName();
-    }
-
-    @Override
     public int allowedNumberOfChildren() {
         return 0;
     }
 
     @Override
     public Segment toSegment() {
-        return new Segment((prefix == null ? "" : prefix + ".") + getName() + "()");
+        return new Segment((prefix == null ? "" : prefix + ".") + referenceName() + "(state)");
     }
 }

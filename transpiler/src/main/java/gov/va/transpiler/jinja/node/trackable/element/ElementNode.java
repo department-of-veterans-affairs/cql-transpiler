@@ -10,5 +10,4 @@ public class ElementNode<T extends Element> extends TrackableNode<T> {
     public ElementNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
 }

@@ -10,12 +10,10 @@ import gov.va.transpiler.jinja.state.State;
 
 public class FunctionRefNode extends ExpressionNode<FunctionRef> implements ReferenceNode {
 
-    private String context;
     final String prefix;
 
     public FunctionRefNode(State state, FunctionRef cqlEquivalent) {
         super(state, cqlEquivalent);
-        context = state.getContext();
         prefix = state.getCurrentLibraryNode().getAliasForLibrary(state.getLibraryNodeForReference(getReferenceTo()));
     }
 
@@ -35,28 +33,7 @@ public class FunctionRefNode extends ExpressionNode<FunctionRef> implements Refe
     }
 
     @Override
-    public Type getType() {
-        return ((FunctionDefNode) getReferenceTo()).getType();
-    }
-
-    @Override
-    public String getName() {
-        return referenceName();
-    }
-
-    @Override
-    public Segment childToSegment(TranspilerNode child) {
-        if (child.getType() == Type.TABLE) {
-            return childToSegmentCollectTable(context, child);
-        } else if (child.getType() == Type.SIMPLE) {
-            return childToSegmentEncapsulateSimple(child);
-        } else {
-            return super.childToSegment(child);
-        }
-    }
-
-    @Override
     public Segment toSegment() {
-        return joinChildren(getChildren(), (prefix == null ? "" : prefix + ".") + getName() + "(", ")", "", "", ", ");
+        return joinChildren(getChildren(), (prefix == null ? "" : prefix + ".") + referenceName() + "(state, ", ")", "", "", ", ");
     }
 }

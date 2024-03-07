@@ -41,36 +41,23 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
 
     @Override
     public Segment toSegment() {
-        var enclosingSegment = new Segment();
+        var enclosingSegment = new Segment("");
         enclosingSegment.setPrintType(PrintType.Line);
         enclosingSegment.setLocator(getCqlEquivalent().getLocator());
-
-        // opening brackets to macro
-        var openMacro = joinChildren(operandDefNodeList, "{% macro " + referenceName() + "(", ") %}", "", "", ", ");
-        enclosingSegment.addChild(openMacro);
-
-        // inside of function
-        var internal = new Segment();
-        internal.setHead("{{ ");
-        internal.addChild(childToSegment(getChild()));
-        internal.setTail(" }}");
-        enclosingSegment.addChild(internal);
-
-        // closing brackets to macro
-        var closeMacro = new Segment();
-        closeMacro.setHead("{% endmacro %}");
-        enclosingSegment.addChild(closeMacro);
-
+        // macro start segment - including function parameters so they can be referenced by children
+        var macroStart = joinChildren(operandDefNodeList, "{% macro " + referenceName() + "(state, ", ") %}", "", "", ", ");
+        enclosingSegment.addChild(macroStart);
+        // macro middle - wrap the dictionary representation of this object in a macro block for calling
+        var macroMiddle = new Segment("{{ OperatorHandler.print(state, ", ") }}", PrintType.Inline);
+        macroMiddle.addChild(super.toSegment());
+        // macro end segment
+        var macroEnd = new Segment("{% endmacro %}");
+        enclosingSegment.addChild(macroEnd);
         return enclosingSegment;
     }
 
     @Override
     public String referenceType() {
         return REFERENCE_TYPE;
-    }
-
-    @Override
-    public Type getType() {
-        return getChild().getType();
     }
 }

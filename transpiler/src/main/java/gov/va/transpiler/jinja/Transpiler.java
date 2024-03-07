@@ -28,7 +28,7 @@ public class Transpiler {
         Standards.setTargetLanguage(target);
 
         // read the contents of the file to text
-        var cqlLibraryToTranspile = "demo-measure.cql";
+        var cqlLibraryToTranspile = "retrievals.cql";
         String cqlLibraryToTranspileAsText = Files.readString(Paths.get(librarySource + cqlLibraryToTranspile));
 
         var libraryList = compiler.compile(cqlLibraryToTranspileAsText);

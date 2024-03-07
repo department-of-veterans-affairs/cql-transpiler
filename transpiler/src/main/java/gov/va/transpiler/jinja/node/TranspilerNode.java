@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public class TranspilerNode {
@@ -73,8 +72,8 @@ public class TranspilerNode {
         return getChild();
     }
 
-    protected String getName() {
-        return "UnsupportedNode";
+    protected String getOperator() {
+        return "UnsupportedOperator";
     }
 
     protected Segment joinSegments(List<Segment> segmentList, String head, String tail, String joiner) {
@@ -128,28 +127,41 @@ public class TranspilerNode {
     }
 
     protected Segment argumentToSegment(String name, String value) {
-        return new Segment("'" + name + "': '" + value + "'");
+        return new Segment(name + ": " + value);
     }
 
-    protected Map<String, String> getStringArgumentMap() {
+    protected Map<String, String> getSimpleArgumentMap() {
         Map<String, String> argumentMap = new LinkedHashMap<>();
-        argumentMap.put("name", getName());
+        argumentMap.put("'operator'", getOperator());
         return argumentMap;
     }
 
-    protected List<Segment> getArgumentList(Map<String, String> stringArgumentMap, List<TranspilerNode> children) {
+    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
+        Map<String, List<TranspilerNode>> complexArgumentMap = new LinkedHashMap<>();
+        complexArgumentMap.put("'children'", getChildren());
+        return complexArgumentMap;
+    }
+
+    protected List<Segment> getArgumentList(Map<String, String> simpleArgumentMap, Map<String, List<TranspilerNode>> complexArgumentMap) {
         List<Segment> argumentList = new ArrayList<>();
-        for (var entry : stringArgumentMap.entrySet()) {
+
+        // Render simple arguments as jinja dictionary entries
+        for (var entry : simpleArgumentMap.entrySet()) {
             argumentList.add(argumentToSegment(entry.getKey(), entry.getValue()));
         }
-        var valuesSegment = new Segment("'values': [", "]", PrintType.Inline);
-        valuesSegment.addChild(joinChildren(children, "", "", "", "", ", "));
-        argumentList.add(valuesSegment);
+
+        // Render complex arguments as jinja dictionary entries
+        for (var entry: complexArgumentMap.entrySet()) {
+            var complexArgumentSegment = new Segment(entry.getKey() + ": ");
+            complexArgumentSegment.addChild(joinChildren(entry.getValue(), "[", "]", "", "", ", "));
+            argumentList.add(complexArgumentSegment);
+        }
+
         return argumentList;
     }
 
     public Segment toSegment() {
-        return joinSegments(getArgumentList(getStringArgumentMap(), getChildren()), "{", "}", ", ");
+        return joinSegments(getArgumentList(getSimpleArgumentMap(), getComplexArgumentMap()), "{", "}", ", ");
     }
 
     public String getTargetFileLocation() {

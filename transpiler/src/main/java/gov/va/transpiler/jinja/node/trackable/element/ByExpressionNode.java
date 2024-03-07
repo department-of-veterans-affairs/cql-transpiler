@@ -1,9 +1,9 @@
 package gov.va.transpiler.jinja.node.trackable.element;
 
+import java.util.Map;
+
 import org.hl7.elm.r1.ByExpression;
 
-import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public class ByExpressionNode extends SortByItemNode<ByExpression> {
@@ -13,10 +13,9 @@ public class ByExpressionNode extends SortByItemNode<ByExpression> {
     }
 
     @Override
-    public Segment toSegment() {
-        var segment = new Segment(getName() + "(", ")", PrintType.Inline);
-        segment.addChild(new Segment(getCqlEquivalent().getDirection() == null ? "none, " : "'" + getCqlEquivalent().getDirection().name() + "', "));
-        segment.addChild(getChild().toSegment());
-        return segment;
+    protected Map<String, String> getSimpleArgumentMap() {
+        var map = super.getSimpleArgumentMap();
+        map.put("'direction'", getCqlEquivalent().getDirection() == null ? "none" : "'" + getCqlEquivalent().getDirection().name() + "'");
+        return map;
     }
 }

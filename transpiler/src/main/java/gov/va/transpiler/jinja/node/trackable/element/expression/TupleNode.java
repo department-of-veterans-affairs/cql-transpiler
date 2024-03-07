@@ -4,7 +4,6 @@ import org.hl7.elm.r1.Tuple;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.TupleElementNode;
-import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
 public class TupleNode extends ExpressionNode<Tuple> {
@@ -21,15 +20,5 @@ public class TupleNode extends ExpressionNode<Tuple> {
             }
         }
         return null;
-    }
-
-    @Override
-    public Type getType() {
-        return Type.ENCAPSULATED_SIMPLE;
-    }
-
-    @Override
-    public Segment toSegment() {
-        return joinChildren(getChildren(), getName() + "([", "])", "", "", ", ");
     }
 }

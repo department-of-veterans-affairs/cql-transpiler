@@ -9,5 +9,4 @@ public class ByDirectionNode extends SortByItemNode<ByDirection> {
     public ByDirectionNode(State state, ByDirection cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
 }

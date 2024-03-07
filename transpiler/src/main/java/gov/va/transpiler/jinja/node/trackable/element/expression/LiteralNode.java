@@ -1,8 +1,9 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
+import java.util.Map;
+
 import org.hl7.elm.r1.Literal;
 
-import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
 public class LiteralNode extends ExpressionNode<Literal> {
@@ -23,7 +24,10 @@ public class LiteralNode extends ExpressionNode<Literal> {
     }
 
     @Override
-    public Segment toSegment() {
-        return new Segment(getName() + "('" + getCqlEquivalent().getValueType().getLocalPart() + "', '" + getCqlEquivalent().getValue() + "')");
+    public Map<String, String> getSimpleArgumentMap() {
+        var map = super.getSimpleArgumentMap();
+        map.put("'type'", "'" + getCqlEquivalent().getValueType().getLocalPart() + "'");
+        map.put("'value'", "'" + getCqlEquivalent().getValue() + "'");
+        return map;
     }
 }

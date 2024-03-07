@@ -1,9 +1,9 @@
 package gov.va.transpiler.jinja.node.trackable.element;
 
+import java.util.Map;
+
 import org.hl7.elm.r1.AliasedQuerySource;
 
-import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.state.State;
 
 public class AliasedQuerySourceNode extends ElementNode<AliasedQuerySource> {
@@ -13,10 +13,9 @@ public class AliasedQuerySourceNode extends ElementNode<AliasedQuerySource> {
     }
 
     @Override
-    public Segment toSegment() {
-        var segment = new Segment(getName() + "(", ")", PrintType.Inline);
-        segment.addChild(new Segment("'" + getCqlEquivalent().getAlias() + "', "));
-        segment.addChild(getChild().toSegment());
-        return segment;
+    protected Map<String, String> getSimpleArgumentMap() {
+        var map = super.getSimpleArgumentMap();
+        map.put("'alias'", "'" + getCqlEquivalent().getAlias() + "'");
+        return map;
     }
 }

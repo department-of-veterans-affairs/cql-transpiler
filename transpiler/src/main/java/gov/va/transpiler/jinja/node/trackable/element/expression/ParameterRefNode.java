@@ -1,8 +1,9 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
+import java.util.Map;
+
 import org.hl7.elm.r1.ParameterRef;
 
-import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
 public class ParameterRefNode extends ExpressionNode<ParameterRef> {
@@ -10,14 +11,11 @@ public class ParameterRefNode extends ExpressionNode<ParameterRef> {
     public ParameterRefNode(State state, ParameterRef cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-
     @Override
-    public Type getType() {
-        return Type.LAZY_EVALUATION;
+    protected Map<String, String> getSimpleArgumentMap() {
+        var map = super.getSimpleArgumentMap();
+        map.put("'name'", "'" + getCqlEquivalent().getName().replace(" ", "_") + "'");
+        return map;
     }
-
-    @Override
-    public Segment toSegment() {
-        return new Segment(getName() + "('" + getCqlEquivalent().getName().replace(" ", "_") + "')");
-    }
+    
 }

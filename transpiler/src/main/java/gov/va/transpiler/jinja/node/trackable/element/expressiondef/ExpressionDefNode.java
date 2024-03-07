@@ -1,5 +1,7 @@
 package gov.va.transpiler.jinja.node.trackable.element.expressiondef;
 
+import java.util.Map;
+
 import org.hl7.elm.r1.ExpressionDef;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
@@ -30,11 +32,18 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     }
 
     @Override
+    protected Map<String, String> getSimpleArgumentMap() {
+        var map = super.getSimpleArgumentMap();
+        map.put("'context'", "'" + getCqlEquivalent().getContext() + "'");
+        map.put("'name'", "'" + getCqlEquivalent().getName() + "'");
+        return map;
+    }
+
+    @Override
     public Segment toSegment() {
-        var segment = new Segment();
-        segment.setHead("{% macro " + referenceName() + "() %}{{ ");
-        segment.addChild(getChild().toSegment());
-        segment.setTail(" }}{% endmacro %}");
+        // Wrap the dictionary representation of this object in a macro block for calling
+        var segment = new Segment("{% macro " + referenceName() + "(state) %}{{ OperatorHandler.print(state, ", ") }}{% endmacro %}", PrintType.Inline);
+        segment.addChild(super.toSegment());
         segment.setPrintType(PrintType.Line);
         segment.setLocator(getCqlEquivalent().getLocator());
         return segment;
@@ -53,10 +62,5 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     @Override
     public String getTargetFileLocation() {
         return super.getTargetFileLocation() + Standards.FOLDER_SEPARATOR +  referenceName();
-    }
-
-    @Override
-    public Type getType() {
-        return getChild().getType();
     }
 }

@@ -9,5 +9,4 @@ public class ByColumnNode extends SortByItemNode<ByColumn> {
     public ByColumnNode(State state, ByColumn cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-
 }
