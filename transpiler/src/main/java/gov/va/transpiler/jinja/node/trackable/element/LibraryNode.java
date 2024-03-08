@@ -74,7 +74,7 @@ public class LibraryNode extends ElementNode<Library> {
         for (var child: getChildren()) {
             segment.addChild(child.toSegment());
             if (child instanceof ExpressionDefNode && !(child instanceof FunctionDefNode)) {
-                segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).referenceName() + "() }}\n"));
+                segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).referenceName() + "(none) }}\n"));
             }
         }
         return segment;

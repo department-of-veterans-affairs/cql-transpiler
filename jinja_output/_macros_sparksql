@@ -9,8 +9,8 @@
 {# Utility functions for dataType conversions #}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
-{% macro coerce(originalType, targetType, state, arguments) %}{% if targetType == 'ENCAPSULATED' %}{% if originalType == 'SIMPLE' %}{{ _macros_sparksql.Encapsulate(arguments['class'].print(state, arguments)) }}{% elif originalType == 'TABLE' %}{{ _macros_sparksql.Collect(context, arguments['class'].print(state, arguments)) }}{% else %}{{ expression }}{% endif %}{% elif targetType == 'TABLE' %}{% if originalType == 'ENCAPSULATED' %}{{ _macros_sparksql.Decollect(context, arguments['class'].print(state, arguments)) }}{% else %}{{ arguments['class'].print(state, arguments) }}{% endif %}{% else %}{{ arguments['class'].print(state, arguments) }}{% endif %}{% endmacro %}
-{% macro printCoercingIfApplicable(state, arguments) %}{% if (state != none) and (state.coercionInstructions != none) and (state.coercionInstructions[arguments['class'].dataType] != none) %}{{ coerce(arguments['class'].dataType, state.coercionInstructions[arguments['class'].dataType], state, arguments) }}{% else %}{{ class.print(state, arguments) }}{% endif %}{% endmacro %}
+{% macro coerce(originalType, targetType, state, arguments) %}{% if targetType == 'ENCAPSULATED' %}{% if originalType == 'SIMPLE' %}{{ _macros_sparksql.Encapsulate(arguments['operator'].print(state, arguments)) }}{% elif originalType == 'TABLE' %}{{ _macros_sparksql.Collect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ expression }}{% endif %}{% elif targetType == 'TABLE' %}{% if originalType == 'ENCAPSULATED' %}{{ _macros_sparksql.Decollect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
+{% macro printCoercingIfApplicable(state, arguments) %}{% if (state != none) and (state.coercionInstructions != none) and (state.coercionInstructions[arguments['operator'].dataType] != none) %}{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
 
 {# Namespace that handles printing operators #}
 {% set OperatorHandler = namespace() %}
@@ -27,7 +27,7 @@
 {# ExpressionDef operator #}
 {% set ExpressionDef = namespace() %}
 {% set ExpressionDef.dataType = 'INHERITED' %}
-{% macro printExpressionDef(state, arguments) %}{% if state.context == none and arguments['context'] != none %}{% set state.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(state, arguments['value'])}}{% endmacro %}
+{% macro printExpressionDef(state, arguments) %}{% if state.context == none and arguments['context'] != none %}{% set state.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(state, arguments['children'][0])}}{% endmacro %}
 {% set ExpressionDef.print = printExpressionDef %}
 
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}

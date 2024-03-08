@@ -42,7 +42,7 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     @Override
     public Segment toSegment() {
         // Wrap the dictionary representation of this object in a macro block for calling
-        var segment = new Segment("{% macro " + referenceName() + "(state) %}{{ OperatorHandler.print(state, ", ") }}{% endmacro %}", PrintType.Inline);
+        var segment = new Segment("{% macro " + referenceName() + "(state) %}{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}{% endmacro %}", PrintType.Inline);
         segment.addChild(super.toSegment());
         segment.setPrintType(PrintType.Line);
         segment.setLocator(getCqlEquivalent().getLocator());
