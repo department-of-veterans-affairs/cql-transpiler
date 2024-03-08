@@ -3,8 +3,12 @@
 {# Utility function to get the column a context should be grouped by #}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
 
-{# Utility function for printing lists #}
+{# Standards #}
+{% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
+
+{# Utility functions for printing lists #}
 {% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
+{% macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ OperatorHandler.print(state, item) }}{% endfor %}{% endmacro %}
 
 {# Utility functions for dataType conversions #}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
@@ -49,6 +53,12 @@
 {% macro printLiteral(state, arguments) %}{% if arguments['type'] == 'Integer' %}{{ arguments['value'] }}{% elif arguments['type'] == 'String' %}'{{ arguments['value'] }}'{% else %}{{ arguments['type'] }}::{{ arguments['value'] }}{% endif %}{% endmacro %}
 {% set Literal.print = printLiteral %}
 
+{# List operator #}
+{% set List = namespace() %}
+{% set List.dataType = 'ENCAPSULATED' %}
+{% macro printList(state, arguments) %}SELECT collect_list(_val) AS _val FROM ({% if arguments['children']|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(state, arguments) }}{% endif %}){% endmacro %}
+{% set List.print = printList %}
+
 {# Multiply operator #}
 {% set Multiply = namespace() %}
 {% set Multiply.dataType = 'SIMPLE' %}
@@ -61,6 +71,12 @@
 {% macro printSubtract(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0]) }} - {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set Subtract.print = printSubtract %}
 
+{# Union operator #}
+{% set Union = namespace() %}
+{% set Union.dataType = 'ENCAPSULATED' %}
+{% macro printUnion(state, arguments) %}{% set unionState = namespace() %}{% set unionState.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}{{ ArgumentListPrintingUtility(unionState, argument['children'], ' UNION') }}{% endmacro %}
+{% set Union.print = printUnion %}
+
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
 
 {% macro Negate(value) %}(-{{ value }}){% endmacro %}
@@ -69,9 +85,6 @@
 {% macro Encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
 {% macro TupleElement(name, value)%}{{ value }} AS {{ name }}{% endmacro %}
 {% macro Tuple(listOfTupleElements)%}SELECT struct(*) AS _val FROM ({{ ListPrintingUtility(listOfTupleElements, ', ') }}){% endmacro %}
-{% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
-{% macro Union(valList, valTypeList) %}{{ ListPrintingUtility(valList, ' UNION ') }}{% endmacro %}
-{% macro List(listOfItems) %}SELECT collect_list(_val) AS _val FROM ({% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems, none) }}{% endif %}){% endmacro %}
 {% macro Property(type, scope, path, source) %}{% if type == 'COLUMN_REFERENCE' %}{% if source != none %}{{ source }}.{{ path }}{% elif path != none %}{{ scope }}.{{ path }}{% else %}{{ scope }}{% endif %}{% else %}SELECT {{ path }} FROM ({{ source }}){% endif %}{% endmacro %}
 {% macro Concatenate(valList, valTypeList)%}concat({{ ListPrintingUtility(valList, ', ') }}){% endmacro %}
 {% macro DateTime(year, month, day, hour, minute, second, millisecond) %}{{ year }}-{{ month }}-{{ day }} {{ hour }}:{{ minute }}:{{ second }}.{{ millisecond }}{% endmacro %}

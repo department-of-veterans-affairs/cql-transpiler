@@ -11,3 +11,9 @@
 #}
 {% macro testReference(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testReference', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testLiteral, 'children': []}]}) }}{% endmacro %}
 {{ testReference(none) }}
+{#
+	// Retrievals lines [6:1-6:24]
+	define testEmptyList: {}
+#}
+{% macro testEmptyList(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testEmptyList', 'children': [{'operator': _macros_sparksql.List, 'children': []}]}) }}{% endmacro %}
+{{ testEmptyList(none) }}
