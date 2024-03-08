@@ -18,24 +18,51 @@
 
 {# OPERATOR IMPLEMENTATIONS #}
 
+{# Add operator #}
+{% set Add = namespace() %}
+{% set Add.dataType = 'SIMPLE' %}
+{% macro printAdd(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} + {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Add.print = printAdd %}
+
+{# Divide operator #}
+{% set Divide = namespace() %}
+{% set Divide.dataType = 'SIMPLE' %}
+{% macro printDivide(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} / {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Divide.print = printDivide %}
+{# OBSOLETE OPERATOR IMPLEMENTATIONS #}
+
+{# ExpressionDef operator #}
+{% set ExpressionDef = namespace() %}
+{% set ExpressionDef.dataType = 'INHERITED' %}
+{% macro printExpressionDef(state, arguments) %}{% if state.context == none and arguments['context'] != none %}{% set state.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set ExpressionDef.print = printExpressionDef %}
+
+{# ExpressionRef operator #}
+{% set ExpressionRef = namespace() %}
+{% set ExpressionRef.dataType = 'INHERITED' %}
+{% macro printExpressionRef(state, arguments) %}{{ arguments['reference'](state) }}{% endmacro %}
+{% set ExpressionRef.print = printExpressionRef %}
+
 {# Literal operator #}
 {% set Literal = namespace() %}
 {% set Literal.dataType = 'SIMPLE' %}
 {% macro printLiteral(state, arguments) %}{% if arguments['type'] == 'Integer' %}{{ arguments['value'] }}{% elif arguments['type'] == 'String' %}'{{ arguments['value'] }}'{% else %}{{ arguments['type'] }}::{{ arguments['value'] }}{% endif %}{% endmacro %}
 {% set Literal.print = printLiteral %}
 
-{# ExpressionDef operator #}
-{% set ExpressionDef = namespace() %}
-{% set ExpressionDef.dataType = 'INHERITED' %}
-{% macro printExpressionDef(state, arguments) %}{% if state.context == none and arguments['context'] != none %}{% set state.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(state, arguments['children'][0])}}{% endmacro %}
-{% set ExpressionDef.print = printExpressionDef %}
+{# Multiply operator #}
+{% set Multiply = namespace() %}
+{% set Multiply.dataType = 'SIMPLE' %}
+{% macro printMultiply(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0]) }} * {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Multiply.print = printMultiply %}
+
+{# Subtract operator #}
+{% set Subtract = namespace() %}
+{% set Subtract.dataType = 'SIMPLE' %}
+{% macro printSubtract(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0]) }} - {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Subtract.print = printSubtract %}
 
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
 
-{% macro Add(left, right) %}({{left}} + {{ right }}){% endmacro %}
-{% macro Subtract(left, right) %}({{ left }} - {{ right }}){% endmacro %}
-{% macro Multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}
-{% macro Divide(left, right) %}({{ left }} / {{ right }}){% endmacro %}
 {% macro Negate(value) %}(-{{ value }}){% endmacro %}
 {% macro Equal(left, right) %}({{left}} = {{ right }}){% endmacro %}
 {% macro Retrieve(modeltype, valueset, model) %}SELECT * FROM {{ model }}{% endmacro %}

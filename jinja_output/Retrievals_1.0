@@ -5,3 +5,9 @@
 #}
 {% macro testLiteral(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testLiteral', 'children': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '1', 'children': []}]}) }}{% endmacro %}
 {{ testLiteral(none) }}
+{#
+	// Retrievals lines [5:1-5:33]
+	define testReference: testLiteral
+#}
+{% macro testReference(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testReference', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testLiteral, 'children': []}]}) }}{% endmacro %}
+{{ testReference(none) }}
