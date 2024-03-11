@@ -76,7 +76,7 @@
 	define function testFunction(val Integer):
 	    2 * val
 #}
-{% macro testFunction(state, val) %}{% endmacro %}
+{% macro testFunction(state, val) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.FunctionDef, 'context': 'Unfiltered', 'name': 'testFunction', 'children': [{'operator': _macros_sparksql.Multiply, 'children': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '2', 'children': []}, val]}]}) }}{% endmacro %}
 {#
 	// Retrievals lines [18:1-18:45]
 	define testFunctionReference: testFunction(1)
