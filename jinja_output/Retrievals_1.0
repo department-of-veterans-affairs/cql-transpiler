@@ -35,3 +35,9 @@
 #}
 {% macro testTuple_withCollection(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testTuple_withCollection', 'children': [{'operator': _macros_sparksql.Tuple, 'children': [{'operator': _macros_sparksql.TupleElement, 'name': 'foo', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testRetrieve, 'children': []}]}, {'operator': _macros_sparksql.TupleElement, 'name': 'bar', 'children': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '1', 'children': []}]}]}]}) }}{% endmacro %}
 {{ testTuple_withCollection(none) }}
+{#
+	// Retrievals lines [10:1-10:55]
+	define testTupleReference: testTuple_withCollection.bar
+#}
+{% macro testTupleReference(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testTupleReference', 'children': [{'operator': _macros_sparksql.Property, 'scope': none, 'path': 'bar', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testTuple_withCollection, 'children': []}]}]}) }}{% endmacro %}
+{{ testTupleReference(none) }}
