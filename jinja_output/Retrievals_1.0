@@ -17,3 +17,21 @@
 #}
 {% macro testEmptyList(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testEmptyList', 'children': [{'operator': _macros_sparksql.List, 'children': []}]}) }}{% endmacro %}
 {{ testEmptyList(none) }}
+{#
+	// Retrievals lines [7:1-7:23]
+	define testList: {1, 2}
+#}
+{% macro testList(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testList', 'children': [{'operator': _macros_sparksql.List, 'children': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '1', 'children': []}, {'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '2', 'children': []}]}]}) }}{% endmacro %}
+{{ testList(none) }}
+{#
+	// Retrievals lines [8:1-8:45]
+	define testRetrieve: ["Encounter, Performed"]
+#}
+{% macro testRetrieve(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testRetrieve', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}) }}{% endmacro %}
+{{ testRetrieve(none) }}
+{#
+	// Retrievals lines [9:1-9:60]
+	define testTuple_withCollection: {foo: testRetrieve, bar: 1}
+#}
+{% macro testTuple_withCollection(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testTuple_withCollection', 'children': [{'operator': _macros_sparksql.Tuple, 'children': [{'operator': _macros_sparksql.TupleElement, 'name': 'foo', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testRetrieve, 'children': []}]}, {'operator': _macros_sparksql.TupleElement, 'name': 'bar', 'children': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '1', 'children': []}]}]}]}) }}{% endmacro %}
+{{ testTuple_withCollection(none) }}
