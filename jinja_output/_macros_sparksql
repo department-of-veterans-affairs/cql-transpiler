@@ -82,6 +82,12 @@
 {% macro printLessThanOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} <= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set LessThanOrEqual.print = printLessThanOrEqual %}
 
+{# List operator #}
+{% set List = namespace() %}
+{% set List.dataType = 'ENCAPSULATED' %}
+{% macro printList(state, arguments) %}SELECT collect_list(_val) AS _val FROM ({% if arguments['children']|length == 0 %}{{ EmptyTable() }}{% else %}{% set listState = namespace() %}{% set listState.context = state.context %}{% set listState.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}{{ ArgumentListPrintingUtility(listState, arguments['children'], ' UNION ') }}{% endif %}){% endmacro %}
+{% set List.print = printList %}
+
 {# Literal operator #}
 {% set Literal = namespace() %}
 {% set Literal.dataType = 'SIMPLE' %}
@@ -108,9 +114,9 @@
 
 {# Property operator #}
 {% set Property = namespace() %}
-{% set Property.dataType = 'INHERITED' %}
+{% set Property.dataType = 'ENCAPSULATED' %}
 {% macro printPropertyOfDataStructure(path, state, dataStructure) %}SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}{% endmacro %}
-{% macro printProperty(state, arguments) %}{% if state.columnProperty %}{% if arguments['children'] != none %}.{{ arguments['path'] }}{% elif arguments['path'] != none %}{{ arguments['scope'] }}.{{ arguments['path'] }}{% else %}{{ arguments['scope'] }}{% endif %}{% else %}{% set propertyState = namespace() %}{% set propertyState.context = state.context %}{% set propertyState.coercionInstructions = {} %}{{ Decollect(context, printPropertyOfDataStructure(arguments['path'], propertyState, arguments['children'][0])) }}{% endif %}{% endmacro %}
+{% macro printProperty(state, arguments) %}{% if state.columnProperty %}{% if arguments['children'] != none %}.{{ arguments['path'] }}{% elif arguments['path'] != none %}{{ arguments['scope'] }}.{{ arguments['path'] }}{% else %}{{ arguments['scope'] }}{% endif %}{% else %}{% set propertyState = namespace() %}{% set propertyState.context = state.context %}{% set propertyState.coercionInstructions = {} %}{{ printPropertyOfDataStructure(arguments['path'], propertyState, arguments['children'][0]) }}{% endif %}{% endmacro %}
 {% set Property.print = printProperty %}
 
 {# Retrieve operator #}
@@ -139,17 +145,9 @@
 
 {# Union operator #}
 {% set Union = namespace() %}
-{% set Union.dataType = 'UNKNOWN' %}
-{% macro printUnion(state, arguments) %}{% set unionState = namespace() %}{% set unionState.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}{{ ArgumentListPrintingUtility(unionState, arguments['children'], ' UNION ') }}{% endmacro %}
+{% set Union.dataType = 'TABLE' %}
+{% macro printUnion(state, arguments) %}{% set unionState = namespace() %}{% set unionState.context = state.context %}{% set unionState.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(unionState, arguments['children'], ' UNION ') }}{% endmacro %}
 {% set Union.print = printUnion %}
-
-{# Operator Implementations with Dependencies #}
-
-{# List operator - Dependencies[Union] #}
-{% set List = namespace() %}
-{% set List.dataType = 'ENCAPSULATED' %}
-{% macro printList(state, arguments) %}SELECT collect_list(_val) AS _val FROM ({% if arguments['children']|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union.print(state, arguments) }}{% endif %}){% endmacro %}
-{% set List.print = printList %}
 
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
 

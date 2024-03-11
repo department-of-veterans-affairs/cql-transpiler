@@ -8,7 +8,8 @@ define testList: {1, 2}
 define testRetrieve: ["Encounter, Performed"]
 define testTuple_withCollection: {foo: testRetrieve, bar: 1}
 define testTupleReference: testTuple_withCollection.bar
-define testTupleReference_decollecting: testTuple_withCollection.foo
+define testUnion: ["Encounter, Performed"] union ["Encounter, Performed"]
+define testUnionOfTableAndTupleReference: testRetrieve union testTuple_withCollection.foo
 define testNestedTuple: {baz: 1, foobar: testTuple_withCollection}
 define testNestedTupleReference: testNestedTuple.foobar.bar
 define testNestedTupleReferenceTable: testNestedTuple.foobar.foo
@@ -23,7 +24,6 @@ define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.relevant
 define testQuery_withWhere: ["Encounter, Performed"] E where E.relevantPeriod ends after testDateTime
 define testQuery_sortBy: ["Encounter, Performed"] E sort by start of relevantPeriod
 define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.relevantPeriod.high
-define testUnion: ["Encounter, Performed"] union ["Encounter, Performed"]
 context Patient
 define testCount_patientContext: Count(["Encounter, Performed"])
 context Unfiltered

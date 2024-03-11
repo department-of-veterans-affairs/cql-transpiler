@@ -41,3 +41,19 @@
 #}
 {% macro testTupleReference(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testTupleReference', 'children': [{'operator': _macros_sparksql.Property, 'scope': none, 'path': 'bar', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testTuple_withCollection, 'children': []}]}]}) }}{% endmacro %}
 {{ testTupleReference(none) }}
+{#
+	// Retrievals lines [11:1-11:73]
+	define testUnion: ["Encounter, Performed"] union ["Encounter, Performed"]
+#}
+{% macro testUnion(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testUnion', 'children': [{'operator': _macros_sparksql.Union, 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}, {'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}]}) }}{% endmacro %}
+{{ testUnion(none) }}
+{#
+	// Retrievals lines [12:1-12:89]
+	define testUnionOfTableAndTupleReference: testRetrieve union testTuple_withCollection.foo
+#}
+{% macro testUnionOfTableAndTupleReference(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testUnionOfTableAndTupleReference', 'children': [{'operator': _macros_sparksql.Union, 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testRetrieve, 'children': []}, {'operator': _macros_sparksql.Property, 'scope': none, 'path': 'foo', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testTuple_withCollection, 'children': []}]}]}]}) }}{% endmacro %}
+{{ testUnionOfTableAndTupleReference(none) }}
+{#
+	// Retrievals lines [13:1-13:66]
+	define testNestedTuple: {baz: 1, foobar: testTuple_withCollection}
+#}
