@@ -104,17 +104,7 @@
 {# ExpressionDef operator #}
 {% set ExpressionDef = namespace() %}
 {% set ExpressionDef.dataType = 'INHERITED' %}
-{% macro printExpressionDef(state, arguments) %}
-    {% set internalState = state %}
-    {% if internalState == none %}{% set internalState = namespace() %}{% endif %}
-    {{ InitState(internalState) }}
-    {% set previousContext = internalState.context %}
-    {% if previousContext == none and arguments['context'] != none %}
-        {% set internalState.context = arguments['context'] %}
-    {% endif %}
-    {{ OperatorHandler.print(internalState, arguments['children'][0]) }}
-    {% set internalState.context = previousContext %}
-{% endmacro %}
+{% macro printExpressionDef(state, arguments) %}{% set internalState = state %}{% if internalState == none %}{% set internalState = namespace() %}{% endif %}{{ InitState(internalState) }}{% set previousContext = internalState.context %}{% if previousContext == none and arguments['context'] != none %}{% set internalState.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(internalState, arguments['children'][0]) }}{% set internalState.context = previousContext %}{% endmacro %}
 {% set ExpressionDef.print = printExpressionDef %}
 
 {# ExpressionRef operator #}
@@ -156,17 +146,7 @@
 {# List operator #}
 {% set List = namespace() %}
 {% set List.dataType = 'ENCAPSULATED' %}
-{% macro printList(state, arguments) %}
-    SELECT collect_list(_val) AS _val FROM (
-        {% if arguments['children']|length == 0 %}
-            {{ EmptyTable() }}
-        {% else %}
-            {% set previousCoercionInstructions = state.coercionInstructions %}
-            {% set state.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}
-            {{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}
-            {% set state.coercionInstructions = previousCoercionInstructions %}
-        {% endif %})
-{% endmacro %}
+{% macro printList(state, arguments) %}SELECT collect_list(_val) AS _val FROM ({% if arguments['children']|length == 0 %}{{ EmptyTable() }}{% else %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endif %}){% endmacro %}
 {% set List.print = printList %}
 
 {# Literal operator #}
@@ -197,14 +177,7 @@
 {% set Property = namespace() %}
 {% set Property.dataType = 'ENCAPSULATED' %}
 {% macro printPropertyOfDataStructure(path, state, dataStructure) %}SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}{% endmacro %}
-{% macro printProperty(state, arguments) %}
-    {% if state.columnProperty %}{% if arguments['children'] != none %}.{{ arguments['path'] }}{% elif arguments['path'] != none %}{{ arguments['scope'] }}.{{ arguments['path'] }}{% else %}{{ arguments['scope'] }}{% endif %}{% else %}
-        {% set previousCoercionInstructions = state.coercionInstructions %}
-        {% set state.coercionInstructions = {} %}
-        {{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
-        {% set state.coercionInstructions = previousCoercionInstructions %}
-    {% endif %}
-{% endmacro %}
+{% macro printProperty(state, arguments) %}{% if state.columnProperty %}{% if arguments['children'] != none %}.{{ arguments['path'] }}{% elif arguments['path'] != none %}{{ arguments['scope'] }}.{{ arguments['path'] }}{% else %}{{ arguments['scope'] }}{% endif %}{% else %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = {} %}{{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endif %}{% endmacro %}
 {% set Property.print = printProperty %}
 
 {# Retrieve operator #}
@@ -228,23 +201,13 @@
 {# TupleElement operator #}
 {% set TupleElement = namespace() %}
 {% set TupleElement.dataType = 'ENCAPSULATED' %}
-{% macro printTupleElement(state, arguments) %}
-    {% set previousCoercionInstructions = state.coercionInstructions %}
-    {% set state.coercionInstructions = { 'TABLE': 'ENCAPSULATED', 'SIMPLE': 'ENCAPSULATED' } %}
-    {{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['name'] }}
-    {% set state.coercionInstructions = previousCoercionInstructions %}
-{% endmacro %}
+{% macro printTupleElement(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'TABLE': 'ENCAPSULATED', 'SIMPLE': 'ENCAPSULATED' } %}{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['name'] }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
 {% set TupleElement.print = printTupleElement %}
 
 {# Union operator #}
 {% set Union = namespace() %}
 {% set Union.dataType = 'TABLE' %}
-{% macro printUnion(state, arguments) %}
-    {% set previousCoercionInstructions = state.coercionInstructions %}
-    {% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}
-    {{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}
-    {% set state.coercionInstructions = previousCoercionInstructions %}
-{% endmacro %}
+{% macro printUnion(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
 {% set Union.print = printUnion %}
 
 {# Operators with dependencies #}
