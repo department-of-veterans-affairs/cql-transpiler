@@ -23,6 +23,7 @@ import gov.va.transpiler.jinja.node.trackable.element.SortByItemNode;
 import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.UsingDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.DateTimeNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.FunctionRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.IdentifierRefNode;
@@ -148,6 +149,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitCount(Count element, State state) {
         new CountNode(state, element);
         return super.visitCount(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitDateTime(DateTime element, State state) {
+        new DateTimeNode(state, element);
+        return super.visitDateTime(element, state);
     }
 
     @Override

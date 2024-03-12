@@ -79,7 +79,7 @@ concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {# DateTime operator #}
 {% set DateTime = namespace() %}
 {% set DateTime.dataType = 'SIMPLE' %}
-{% macro printDateTime(state, arguments) %}{{ arguments['year'] }}-{{ arguments['month'] }}-{{ arguments['day'] }} {{ arguments['hour'] }}:{{ arguments['minute'] }}:{{ arguments['second'] }}.{{ arguments['millisecond'] }}{% endmacro %}
+{% macro printDateTime(state, arguments) %}{{ OperatorHandler.print(state, arguments['year'][0]) }}-{{ OperatorHandler.print(state, arguments['month'][0]) }}-{{ OperatorHandler.print(state, arguments['day'][0]) }}T{{ OperatorHandler.print(state, arguments['hour'][0]) }}:{{ OperatorHandler.print(state, arguments['minute'][0]) }}:{{ OperatorHandler.print(state, arguments['second'][0]) }}.{{ OperatorHandler.print(state, arguments['millisecond'][0]) }}Z{% endmacro %}
 {% set DateTime.print = printDateTime %}
 
 {# DifferenceBetween operator #}
