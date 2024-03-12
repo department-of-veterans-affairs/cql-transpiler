@@ -71,7 +71,9 @@
 {# Concatenate operator #}
 {% set Concatenate = namespace() %}
 {% set Concatenate.dataType = 'SIMPLE' %}
-{% macro printConcatenate(state, arguments) %}concat({{ ArgumentListPrintingUtility(state, arguments['children'][0], ", ") }}){% endmacro %}
+{%- macro printConcatenate(state, arguments) %}
+concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
+{%- endmacro %}
 {% set Concatenate.print = printConcatenate %}
 
 {# DateTime operator #}
@@ -222,6 +224,12 @@
 {% macro printSubtract(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0]) }} - {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set Subtract.print = printSubtract %}
 
+{# ToDecimal operator #}
+{% set ToDecimal = namespace() %}
+{% set ToDecimal.dataType = 'SIMPLE' %}
+{% macro printToDecimal(state, arguments) %}(0.0 + {{ OperatorHandler.print(state, arguments['children'][0]) }}){% endmacro %}
+{% set ToDecimal.print = printToDecimal %}
+
 {# Tuple operator #}
 {% set Tuple = namespace() %}
 {% set Tuple.dataType = 'ENCAPSULATED' %}
@@ -265,7 +273,6 @@
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
 
 {% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
-{% macro ToDecimal(val) %}{{ Add(val, 0.0) }}{% endmacro %}
 {% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
 {% macro SortClause(sortByItemList) %}ORDER BY {{ ListPrintingUtility(sortByItemList, ", ") }}{% endmacro %}
 {% macro ByExpression(direction, expr) %}{{ expr }} {{ direction }}{% endmacro %}
