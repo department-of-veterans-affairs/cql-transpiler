@@ -1,4 +1,22 @@
+{# Magic variables #}
+#jinja2: trim_blocks:False
+
+{# DOCUMENTATION #}
+{#
+    State contains the following scoped variables:
+        coercionInstructions - Dictionary<String, String>
+        context - String
+        columnProperty - Boolean
+        functionArguments - Dictionary<String, Dictionary<String, ?>
+
+    Whenever one of these variables are set, the following standard should be performed:
+    {% set previousVariableName = state.variableName %}{% set state.variableName = newValue %}{{ function(state) }}{% set state.variableName = previousVariableName %}
+#}
+
 {# UTILITY AND HELPER FUNCTIONS #}
+
+{# initializes state #}
+{% macro InitState(state) %}{% set state.coercionInstructions = {} %}{% set state.context = none %}{% set state.columnProperty = false %}{% set state.functionArguments = {} %}{% endmacro %}
 
 {# Utility function to get the column a context should be grouped by #}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
@@ -15,7 +33,7 @@
 {% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
 {% macro Encapsulate(context, toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
 {% macro coerce(originalType, targetType, state, arguments) %}{% if targetType == 'ENCAPSULATED' %}{% if originalType == 'SIMPLE' %}{{ Encapsulate(context, arguments['operator'].print(state, arguments)) }}{% elif originalType == 'TABLE' %}{{ Collect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ expression }}{% endif %}{% elif targetType == 'TABLE' %}{% if originalType == 'ENCAPSULATED' %}{{ Decollect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
-{% macro printCoercingIfApplicable(state, arguments) %}{% if (state != none) and (state.coercionInstructions != none) and (state.coercionInstructions[arguments['operator'].dataType] != none) %}{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
+{% macro printCoercingIfApplicable(state, arguments) %}{% if state != none and state.coercionInstructions != none and state.coercionInstructions[arguments['operator'].dataType] != none %}{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
 
 {# Namespace that handles printing operators #}
 {% set OperatorHandler = namespace() %}
@@ -77,12 +95,6 @@
 {% macro printDivide(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} / {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set Divide.print = printDivide %}
 
-{# End operator #}
-{% set End = namespace() %}
-{% set End.dataType = Property.dataType %}
-{% macro printEnd(state, arguments) %}{% set endArguments = namespace() %}{% set endArguments.path = 'low' %}{% set endArguments.children = arguments.children %}{% set endArguments.scope = none %}{% set endArguments.operator = Property %}{{ OperatorHandler.print(state, endArguments) }}{% endmacro %}
-{% set End.print = printEnd %}
-
 {# Equal operator #}
 {% set Equal = namespace() %}
 {% set Equal.dataType = 'SIMPLE' %}
@@ -92,7 +104,17 @@
 {# ExpressionDef operator #}
 {% set ExpressionDef = namespace() %}
 {% set ExpressionDef.dataType = 'INHERITED' %}
-{% macro printExpressionDef(state, arguments) %}{% if state.context == none and arguments['context'] != none %}{% set state.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% macro printExpressionDef(state, arguments) %}
+    {% set internalState = state %}
+    {% if internalState == none %}{% set internalState = namespace() %}{% endif %}
+    {{ InitState(internalState) }}
+    {% set previousContext = internalState.context %}
+    {% if previousContext == none and arguments['context'] != none %}
+        {% set internalState.context = arguments['context'] %}
+    {% endif %}
+    {{ OperatorHandler.print(internalState, arguments['children'][0]) }}
+    {% set internalState.context = previousContext %}
+{% endmacro %}
 {% set ExpressionDef.print = printExpressionDef %}
 
 {# ExpressionRef operator #}
@@ -134,7 +156,17 @@
 {# List operator #}
 {% set List = namespace() %}
 {% set List.dataType = 'ENCAPSULATED' %}
-{% macro printList(state, arguments) %}SELECT collect_list(_val) AS _val FROM ({% if arguments['children']|length == 0 %}{{ EmptyTable() }}{% else %}{% set listState = namespace() %}{% set listState.context = state.context %}{% set listState.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}{{ ArgumentListPrintingUtility(listState, arguments['children'], ' UNION ') }}{% endif %}){% endmacro %}
+{% macro printList(state, arguments) %}
+    SELECT collect_list(_val) AS _val FROM (
+        {% if arguments['children']|length == 0 %}
+            {{ EmptyTable() }}
+        {% else %}
+            {% set previousCoercionInstructions = state.coercionInstructions %}
+            {% set state.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}
+            {{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}
+            {% set state.coercionInstructions = previousCoercionInstructions %}
+        {% endif %})
+{% endmacro %}
 {% set List.print = printList %}
 
 {# Literal operator #}
@@ -165,7 +197,14 @@
 {% set Property = namespace() %}
 {% set Property.dataType = 'ENCAPSULATED' %}
 {% macro printPropertyOfDataStructure(path, state, dataStructure) %}SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}{% endmacro %}
-{% macro printProperty(state, arguments) %}{% if state.columnProperty %}{% if arguments['children'] != none %}.{{ arguments['path'] }}{% elif arguments['path'] != none %}{{ arguments['scope'] }}.{{ arguments['path'] }}{% else %}{{ arguments['scope'] }}{% endif %}{% else %}{% set propertyState = namespace() %}{% set propertyState.context = state.context %}{% set propertyState.coercionInstructions = {} %}{{ printPropertyOfDataStructure(arguments['path'], propertyState, arguments['children'][0]) }}{% endif %}{% endmacro %}
+{% macro printProperty(state, arguments) %}
+    {% if state.columnProperty %}{% if arguments['children'] != none %}.{{ arguments['path'] }}{% elif arguments['path'] != none %}{{ arguments['scope'] }}.{{ arguments['path'] }}{% else %}{{ arguments['scope'] }}{% endif %}{% else %}
+        {% set previousCoercionInstructions = state.coercionInstructions %}
+        {% set state.coercionInstructions = {} %}
+        {{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
+        {% set state.coercionInstructions = previousCoercionInstructions %}
+    {% endif %}
+{% endmacro %}
 {% set Property.print = printProperty %}
 
 {# Retrieve operator #}
@@ -173,12 +212,6 @@
 {% set Retrieve.dataType = 'TABLE' %}
 {% macro printRetrieve(state, arguments) %}SELECT * FROM {{ arguments['templateId'] }}{% endmacro %}
 {% set Retrieve.print = printRetrieve %}
-
-{# Start operator #}
-{% set Start = namespace() %}
-{% set Start.dataType = Property.dataType %}
-{% macro printStart(state, arguments) %}{% set startArguments = namespace() %}{% set startArguments.path = 'low' %}{% set startArguments.children = arguments.children %}{% set startArguments.scope = none %}{% set startArguments.operator = Property %}{{ OperatorHandler.print(state, startArguments) }}{% endmacro %}
-{% set Start.print = printStart %}
 
 {# Subtract operator #}
 {% set Subtract = namespace() %}
@@ -195,17 +228,66 @@
 {# TupleElement operator #}
 {% set TupleElement = namespace() %}
 {% set TupleElement.dataType = 'ENCAPSULATED' %}
-{% macro printTupleElement(state, arguments) %}{% set tupleElementState = namespace() %}{% set tupleElementState.context = state.context %}{% set tupleElementState.coercionInstructions = { 'TABLE': 'ENCAPSULATED', 'SIMPLE': 'ENCAPSULATED' } %}{{ OperatorHandler.print(tupleElementState, arguments['children'][0]) }} AS {{ arguments['name'] }}{% endmacro %}
+{% macro printTupleElement(state, arguments) %}
+    {% set previousCoercionInstructions = state.coercionInstructions %}
+    {% set state.coercionInstructions = { 'TABLE': 'ENCAPSULATED', 'SIMPLE': 'ENCAPSULATED' } %}
+    {{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['name'] }}
+    {% set state.coercionInstructions = previousCoercionInstructions %}
+{% endmacro %}
 {% set TupleElement.print = printTupleElement %}
 
 {# Union operator #}
 {% set Union = namespace() %}
 {% set Union.dataType = 'TABLE' %}
-{% macro printUnion(state, arguments) %}{% set unionState = namespace() %}{% set unionState.context = state.context %}{% set unionState.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(unionState, arguments['children'], ' UNION ') }}{% endmacro %}
+{% macro printUnion(state, arguments) %}
+    {% set previousCoercionInstructions = state.coercionInstructions %}
+    {% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}
+    {{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}
+    {% set state.coercionInstructions = previousCoercionInstructions %}
+{% endmacro %}
 {% set Union.print = printUnion %}
 
+{# Operators with dependencies #}
+
+{# End operator - dependencies: [Property] #}
+{% set End = namespace() %}
+{% set End.dataType = Property.dataType %}
+{% macro printEnd(state, arguments) %}{% set endArguments = namespace() %}{% set endArguments.path = 'low' %}{% set endArguments.children = arguments.children %}{% set endArguments.scope = none %}{% set endArguments.operator = Property %}{{ OperatorHandler.print(state, endArguments) }}{% endmacro %}
+{% set End.print = printEnd %}
+
+{# Start operator - dependencies: [Property] #}
+{% set Start = namespace() %}
+{% set Start.dataType = Property.dataType %}
+{% macro printStart(state, arguments) %}{% set startArguments = namespace() %}{% set startArguments.path = 'low' %}{% set startArguments.children = arguments.children %}{% set startArguments.scope = none %}{% set startArguments.operator = Property %}{{ OperatorHandler.print(state, startArguments) }}{% endmacro %}
+{% set Start.print = printStart %}
+
+{#
+    Operators not to be printed:
+
+    OperandDef
+    TypeSpecifier
+    NamedTypeSpecifiers
+#}
 
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
+{# TODO: function stuff #}
+{# OperandRef operator #}
+{% set OperandRef = namespace() %}
+{% set OperandRef.dataType = 'INHERITED' %}
+{# {% macro printOperandRef(state, arguments) %}{{ OperatorHandler.print(state, state.operands[arguments['name']]) }}{% endmacro %} #}
+{# {% set OperandRef.print = printOperandRef %} #}
+
+{# FunctionDef operator #}
+{% set FunctionDef = namespace() %}
+{% set FunctionDef.dataType = 'INHERITED' %}
+{# {% macro printFunctionDef(state, arguments) %}{% set previousFunctionArguments = state.functionArguments %}{% set newFunctionArguments = args %}{% for item in previousFunctionArguments %}{% set newFunctionArguments.append(item) %}{% endfor %}{% set state.functionArguments = newFunctionArguments %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% set state.functionArguments = previousFunctionArguments %}{% endmacro %} #}
+{# {% set FunctionDef.print = printFunctionDef %} #}
+
+{# FunctionRef operator #}
+{% set FunctionRef = namespace() %}
+{% set FunctionRef.dataType = 'INHERITED' %}
+{# {% macro printFunctionRef(state, arguments) %}{{ arguments['reference'](state, arguments['children']) }}{% endmacro %} #}
+{# {% set FunctionRef.print = printFunctionRef %} #}
 
 {% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
 {% macro ToDecimal(val) %}{{ Add(val, 0.0) }}{% endmacro %}

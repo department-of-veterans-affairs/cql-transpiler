@@ -71,15 +71,3 @@
 #}
 {% macro testNestedTupleReferenceTable(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testNestedTupleReferenceTable', 'children': [{'operator': _macros_sparksql.Property, 'scope': none, 'path': 'foo', 'children': [{'operator': _macros_sparksql.Property, 'scope': none, 'path': 'foobar', 'children': [{'operator': _macros_sparksql.ExpressionRef, 'reference': testNestedTuple, 'children': []}]}]}]}) }}{% endmacro %}
 {{ testNestedTupleReferenceTable(none) }}
-{#
-	// Retrievals lines [16:1-17:11]
-	define function testFunction(val Integer):
-	    2 * val
-#}
-{% macro testFunction(state, val) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.FunctionDef, 'context': 'Unfiltered', 'name': 'testFunction', 'children': [{'operator': _macros_sparksql.Multiply, 'children': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '2', 'children': []}, val]}]}) }}{% endmacro %}
-{#
-	// Retrievals lines [18:1-18:45]
-	define testFunctionReference: testFunction(1)
-#}
-{% macro testFunctionReference(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testFunctionReference', 'children': [testFunction(state, {'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '1', 'children': []})]}) }}{% endmacro %}
-{{ testFunctionReference(none) }}

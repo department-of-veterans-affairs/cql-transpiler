@@ -1,11 +1,12 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
+import java.util.Map;
+
 import org.hl7.elm.r1.FunctionRef;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
-import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
 public class FunctionRefNode extends ExpressionNode<FunctionRef> implements ReferenceNode {
@@ -33,7 +34,9 @@ public class FunctionRefNode extends ExpressionNode<FunctionRef> implements Refe
     }
 
     @Override
-    public Segment toSegment() {
-        return joinChildren(getChildren(), (prefix == null ? "" : prefix + ".") + referenceName() + "(state, ", ")", "", "", ", ");
+    protected Map<String, String> getSimpleArgumentMap() {
+        var map = super.getSimpleArgumentMap();
+        map.put("'reference'", (prefix == null ? "" : prefix + ".") + referenceName());
+        return map;
     }
 }

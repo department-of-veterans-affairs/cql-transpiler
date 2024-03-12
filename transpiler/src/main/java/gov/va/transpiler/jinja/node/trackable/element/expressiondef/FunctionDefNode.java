@@ -2,6 +2,7 @@ package gov.va.transpiler.jinja.node.trackable.element.expressiondef;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.elm.r1.FunctionDef;
 
@@ -18,7 +19,7 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
 
     public static final String REFERENCE_TYPE = "FunctionDef";
 
-    public List<OperandDefNode> operandDefNodeList = new ArrayList<>();
+    public List<TranspilerNode> operandDefNodeList = new ArrayList<>();
     public TypeSpecifierNode<?> typeSpecifierNode;
 
     public FunctionDefNode(State state, FunctionDef cqlEquivalent) {
@@ -41,12 +42,19 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
     }
 
     @Override
+    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
+        var map = super.getComplexArgumentMap();
+        map.put("'operators'", operandDefNodeList);
+        return map;
+    }
+
+    @Override
     public Segment toSegment() {
         var enclosingSegment = new Segment("");
         enclosingSegment.setPrintType(PrintType.Line);
         enclosingSegment.setLocator(getCqlEquivalent().getLocator());
-        // macro start segment - including function parameters so they can be referenced by children
-        var macroStart = joinChildren(operandDefNodeList, "{% macro " + referenceName() + "(state, ", ") %}", "", "", ", ");
+        // macro start segment
+        var macroStart = new Segment("{% macro " + referenceName() + "(state, args) %}");
         enclosingSegment.addChild(macroStart);
         // macro middle - wrap the dictionary representation of this object in a macro block for calling
         var macroMiddle = new Segment("{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}", PrintType.Inline);
