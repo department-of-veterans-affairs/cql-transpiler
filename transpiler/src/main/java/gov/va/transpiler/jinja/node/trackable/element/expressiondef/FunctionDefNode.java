@@ -54,7 +54,7 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
         enclosingSegment.setPrintType(PrintType.Line);
         enclosingSegment.setLocator(getCqlEquivalent().getLocator());
         // macro start segment
-        var macroStart = new Segment("{% macro " + referenceName() + "(state, args) %}");
+        var macroStart = new Segment("{% macro " + referenceName() + "(state) %}");
         enclosingSegment.addChild(macroStart);
         // macro middle - wrap the dictionary representation of this object in a macro block for calling
         var macroMiddle = new Segment("{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}", PrintType.Inline);

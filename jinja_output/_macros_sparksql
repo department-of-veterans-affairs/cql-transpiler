@@ -1,6 +1,3 @@
-{# Magic variables #}
-#jinja2: trim_blocks:False
-
 {# DOCUMENTATION #}
 {#
     State contains the following scoped variables:
@@ -113,6 +110,31 @@
 {% macro printExpressionRef(state, arguments) %}{{ arguments['reference'](state) }}{% endmacro %}
 {% set ExpressionRef.print = printExpressionRef %}
 
+{# FunctionDef operator #}
+{% set FunctionDef = namespace() %}
+{% set FunctionDef.dataType = 'INHERITED' %}
+{%- macro printFunctionDef(state, arguments) %}
+{%- set previousOperandsMatchedToFunctionArguments = state.operandsMatchedToFunctionArguments %}
+{%- set state.operandsMatchedToFunctionArguments = {} %}
+{% for item in state.functionArguments %}
+{%- do state.operandsMatchedToFunctionArguments.update({ arguments.operators[loop.index - 1].name: item }) %}
+{%- endfor %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{%- set state.operandsMatchedToFunctionArguments = previousOperandsMatchedToFunctionArguments %}
+{%- endmacro %}
+{% set FunctionDef.print = printFunctionDef %}
+
+{# FunctionRef operator #}
+{% set FunctionRef = namespace() %}
+{% set FunctionRef.dataType = 'INHERITED' %}
+{%- macro printFunctionRef(state, arguments) %}
+{%- set previousFunctionArguments = state.functionArguments %}
+{%- set state.functionArguments = arguments['children'] %}
+{{ arguments['reference'](state) }}
+{%- set state.functionArguments = previousFunctionArguments %}
+{%- endmacro %}
+{% set FunctionRef.print = printFunctionRef %}
+
 {# GreaterThan operator #}
 {% set GreaterThan = namespace() %}
 {% set GreaterThan.dataType = 'SIMPLE' %}
@@ -166,6 +188,14 @@
 {% set Negate.dataType = 'SIMPLE' %}
 {% macro printNegate(state, arguments) %}-{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
 {% set Negate.print = printNegate %}
+
+{# OperandRef operator #}
+{% set OperandRef = namespace() %}
+{% set OperandRef.dataType = 'INHERITED' %}
+{%- macro printOperandRef(state, arguments) %}
+{{ OperatorHandler.print(state, state.operandsMatchedToFunctionArguments[arguments['reference']]) }}
+{%- endmacro %}
+{% set OperandRef.print = printOperandRef %}
 
 {# Or operator #}
 {% set Or = namespace() %}
@@ -233,24 +263,6 @@
 #}
 
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
-{# TODO: function stuff #}
-{# OperandRef operator #}
-{% set OperandRef = namespace() %}
-{% set OperandRef.dataType = 'INHERITED' %}
-{# {% macro printOperandRef(state, arguments) %}{{ OperatorHandler.print(state, state.operands[arguments['name']]) }}{% endmacro %} #}
-{# {% set OperandRef.print = printOperandRef %} #}
-
-{# FunctionDef operator #}
-{% set FunctionDef = namespace() %}
-{% set FunctionDef.dataType = 'INHERITED' %}
-{# {% macro printFunctionDef(state, arguments) %}{% set previousFunctionArguments = state.functionArguments %}{% set newFunctionArguments = args %}{% for item in previousFunctionArguments %}{% set newFunctionArguments.append(item) %}{% endfor %}{% set state.functionArguments = newFunctionArguments %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% set state.functionArguments = previousFunctionArguments %}{% endmacro %} #}
-{# {% set FunctionDef.print = printFunctionDef %} #}
-
-{# FunctionRef operator #}
-{% set FunctionRef = namespace() %}
-{% set FunctionRef.dataType = 'INHERITED' %}
-{# {% macro printFunctionRef(state, arguments) %}{{ arguments['reference'](state, arguments['children']) }}{% endmacro %} #}
-{# {% set FunctionRef.print = printFunctionRef %} #}
 
 {% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
 {% macro ToDecimal(val) %}{{ Add(val, 0.0) }}{% endmacro %}
