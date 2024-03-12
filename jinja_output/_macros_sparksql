@@ -7,7 +7,8 @@
 {% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
 
 {# Utility functions for printing lists #}
-{% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}{% macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfArgumentsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ OperatorHandler.print(state, item) }}{% endfor %}{% endmacro %}
+{% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
+{% macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfArgumentsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ OperatorHandler.print(state, item) }}{% endfor %}{% endmacro %}
 
 {# Utility functions for dataType conversions #}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
@@ -28,11 +29,41 @@
 {% macro printAdd(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} + {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set Add.print = printAdd %}
 
+{# After operator #}
+{% set After = namespace() %}
+{% set After.dataType = 'SIMPLE' %}
+{% macro printAfter(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set After.print = printAfter %}
+
+{# AliasedQuerySource operator #}
+{% set AliasedQuerySource = namespace() %}
+{% set AliasedQuerySource.dataType = 'SIMPLE' %}
+{% macro printAliasedQuerySource(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['alias'] }} {% endmacro %}
+{% set AliasedQuerySource.print = printAliasedQuerySource %}
+
 {# And operator #}
 {% set And = namespace() %}
 {% set And.dataType = 'SIMPLE' %}
 {% macro printAnd(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} AND {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set And.print = printAnd %}
+
+{# Before operator #}
+{% set Before = namespace() %}
+{% set Before.dataType = 'SIMPLE' %}
+{% macro printBefore(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Before.print = printBefore %}
+
+{# Concatenate operator #}
+{% set Concatenate = namespace() %}
+{% set Concatenate.dataType = 'SIMPLE' %}
+{% macro printConcatenate(state, arguments) %}concat({{ ArgumentListPrintingUtility(state, arguments['children'][0], ", ") }}){% endmacro %}
+{% set Concatenate.print = printConcatenate %}
+
+{# DateTime operator #}
+{% set DateTime = namespace() %}
+{% set DateTime.dataType = 'SIMPLE' %}
+{% macro printDateTime(state, arguments) %}{{ arguments['year'] }}-{{ arguments['month'] }}-{{ arguments['day'] }} {{ arguments['hour'] }}:{{ arguments['minute'] }}:{{ arguments['second'] }}.{{ arguments['millisecond'] }}{% endmacro %}
+{% set DateTime.print = printDateTime %}
 
 {# DifferenceBetween operator #}
 {% set DifferenceBetween = namespace() %}
@@ -45,6 +76,12 @@
 {% set Divide.dataType = 'SIMPLE' %}
 {% macro printDivide(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} / {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set Divide.print = printDivide %}
+
+{# End operator #}
+{% set End = namespace() %}
+{% set End.dataType = Property.dataType %}
+{% macro printEnd(state, arguments) %}{% set endArguments = namespace() %}{% set endArguments.path = 'low' %}{% set endArguments.children = arguments.children %}{% set endArguments.scope = none %}{% set endArguments.operator = Property %}{{ OperatorHandler.print(state, endArguments) }}{% endmacro %}
+{% set End.print = printEnd %}
 
 {# Equal operator #}
 {% set Equal = namespace() %}
@@ -70,11 +107,23 @@
 {% macro printGreaterThan(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set GreaterThan.print = printGreaterThan %}
 
+{# GreaterThanOrEqual operator #}
+{% set GreaterThanOrEqual = namespace() %}
+{% set GreaterThanOrEqual.dataType = 'SIMPLE' %}
+{% macro printGreaterThanOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} >= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set GreaterThanOrEqual.print = printGreaterThanOrEqual %}
+
 {# In operator #}
 {% set In = namespace() %}
 {% set In.dataType = 'SIMPLE' %}
 {% macro printIn(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} In {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set In.print = printIn %}
+
+{# LessThan operator #}
+{% set LessThan = namespace() %}
+{% set LessThan.dataType = 'SIMPLE' %}
+{% macro printLessThan(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set LessThan.print = printLessThan %}
 
 {# LessThanOrEqual operator #}
 {% set LessThanOrEqual = namespace() %}
@@ -125,6 +174,12 @@
 {% macro printRetrieve(state, arguments) %}SELECT * FROM {{ arguments['templateId'] }}{% endmacro %}
 {% set Retrieve.print = printRetrieve %}
 
+{# Start operator #}
+{% set Start = namespace() %}
+{% set Start.dataType = Property.dataType %}
+{% macro printStart(state, arguments) %}{% set startArguments = namespace() %}{% set startArguments.path = 'low' %}{% set startArguments.children = arguments.children %}{% set startArguments.scope = none %}{% set startArguments.operator = Property %}{{ OperatorHandler.print(state, startArguments) }}{% endmacro %}
+{% set Start.print = printStart %}
+
 {# Subtract operator #}
 {% set Subtract = namespace() %}
 {% set Subtract.dataType = 'SIMPLE' %}
@@ -149,17 +204,9 @@
 {% macro printUnion(state, arguments) %}{% set unionState = namespace() %}{% set unionState.context = state.context %}{% set unionState.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(unionState, arguments['children'], ' UNION ') }}{% endmacro %}
 {% set Union.print = printUnion %}
 
+
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
 
-{% macro Concatenate(valList, valTypeList)%}concat({{ ListPrintingUtility(valList, ', ') }}){% endmacro %}
-{% macro DateTime(year, month, day, hour, minute, second, millisecond) %}{{ year }}-{{ month }}-{{ day }} {{ hour }}:{{ minute }}:{{ second }}.{{ millisecond }}{% endmacro %}
-{% macro AliasedQuerySource(alias, source) %}{{ source }} AS {{ alias }}{% endmacro %}
-{% macro LessThan (left, right) %}({{ left }} < {{ right }}){% endmacro %}
-{% macro Equals (left, right) %}({{ left }} = {{ right }}){% endmacro %}
-{% macro Start(value) %}{{ Property('COLUMN_REFERENCE', none, 'low', value) }}{% endmacro%}
-{% macro End(value) %}{{ Property('COLUMN_REFERENCE', none, 'high', value) }}{% endmacro%}
-{% macro After(left, right) %}{{ GreaterThan(left, right) }}{% endmacro %}
-{% macro Before(left, right) %}{{ LessThan(left, right) }}{% endmacro %}
 {% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
 {% macro ToDecimal(val) %}{{ Add(val, 0.0) }}{% endmacro %}
 {% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
@@ -169,3 +216,9 @@
 {% macro IdentifierRef(name) %}{{ name }}{% endmacro %}
 {% macro ParameterRef(val) %}@{{ val }}{% endmacro %}
 {% macro SingletonFrom(val) %}{{ val }}{% endmacro %}
+
+{# Default operator #}
+{% set Default = namespace() %}
+{% set Default.dataType = 'SIMPLE' %}
+{% macro printDefault(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set Default.print = printDefault %}
