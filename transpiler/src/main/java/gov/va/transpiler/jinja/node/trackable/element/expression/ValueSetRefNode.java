@@ -2,25 +2,25 @@ package gov.va.transpiler.jinja.node.trackable.element.expression;
 
 import java.util.Map;
 
-import org.hl7.elm.r1.ExpressionRef;
+import org.hl7.elm.r1.ValueSetRef;
 
-import gov.va.transpiler.jinja.state.State;
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
+import gov.va.transpiler.jinja.state.State;
 
-public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T> implements ReferenceNode {
+public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements ReferenceNode {
 
     final String prefix;
 
-    public ExpressionRefNode(State state, T cqlEquivalent) {
+    public ValueSetRefNode(State state, ValueSetRef cqlEquivalent) {
         super(state, cqlEquivalent);
         prefix = state.getCurrentLibraryNode().getAliasForLibrary(state.getLibraryNodeForReference(getReferenceTo()));
     }
 
     @Override
     public TranspilerNode getChildByReference(String nameOrIndex) {
-        return ((ExpressionDefNode<?>) getReferenceTo()).getChildByReference(nameOrIndex);
+        return ((ValueSetDefNode) getReferenceTo()).getChildByReference(nameOrIndex);
     }
 
     @Override
@@ -30,12 +30,7 @@ public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T
 
     @Override
     public String referenceType() {
-        return ExpressionDefNode.REFERENCE_TYPE;
-    }
-
-    @Override
-    public int allowedNumberOfChildren() {
-        return 0;
+        return ValueSetDefNode.REFERENCE_TYPE;
     }
 
     @Override

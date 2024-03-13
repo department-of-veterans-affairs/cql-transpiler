@@ -1,100 +1,16 @@
 {% import '_macros_sparksql' as _macros_sparksql %}
 {% import 'MATGlobalCommonFunctions_7.0.000' as Global %}
 {#
+	// DemoMeasure lines [5:1-5:87]
+	valueset "Nonelective Inpatient Encounter": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424'
+#}
+{% set Nonelective_Inpatient_Encounter = 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424' %}
+{#
 	// DemoMeasure lines [7:1-10:87]
 	define "Non Elective Inpatient Encounter":
 	    ["Encounter, Performed": "Nonelective Inpatient Encounter"] NonElectiveEncounter
 	        where Global."LengthInDays" (NonElectiveEncounter.relevantPeriod) <= 120
 	        and NonElectiveEncounter.relevantPeriod ends during day of "Measurement Period"
 #}
-{%- macro Non_Elective_Inpatient_Encounter(state) %}
-{{
-	_macros_sparksql.OperatorHandler.print(
-		state,
-		{
-			'operator': _macros_sparksql.ExpressionDef,
-			'context': 'Patient',
-			'name': 'Non Elective Inpatient Encounter',
-			'children': [
-				{
-					'operator': _macros_sparksql.Query,
-					'children': [
-						{
-							'operator': _macros_sparksql.AliasedQuerySource,
-							'alias': 'NonElectiveEncounter',
-							'children': [
-								{
-									'operator': _macros_sparksql.Retrieve,
-									'modelType': 'urn:healthit-gov:qdm:v5_6',
-									'valueSet': none, 'templateId': 'PositiveEncounterPerformed',
-									'children': [
-										{
-											'operator': _macros_sparksql.ValueSetRef,
-											'children': []
-										}
-									]
-								}
-							]
-						}
-					],
-					'where': [
-						{
-							'operator': _macros_sparksql.And,
-							'children': [
-								{
-									'operator': _macros_sparksql.LessOrEqual,
-									'children': [
-										{
-											'operator': _macros_sparksql.FunctionRef,
-											'reference': Global.LengthInDays,
-											'children': [
-												{
-													'operator': _macros_sparksql.Property,
-													'scope': 'NonElectiveEncounter',
-													'path': 'relevantPeriod',
-													'children': []
-												}
-											]
-										},
-										{
-											'operator': _macros_sparksql.Literal,
-											'type': 'Integer',
-											'value': '120',
-											'children': []
-										}
-									]
-								},
-								{
-									'operator': _macros_sparksql.In,
-									'children': [
-										{
-											'operator': _macros_sparksql.End,
-											'children': [
-												{
-													'operator': _macros_sparksql.Property,
-													'scope': 'NonElectiveEncounter',
-													'path': 'relevantPeriod',
-													'children': []
-												}
-											]
-										},
-										{
-											'operator': _macros_sparksql.ParameterRef,
-											'name': 'Measurement_Period',
-											'children': []
-										}
-									]
-								}
-							]
-						}
-					],
-					'returnClause': [],
-					'sortClause': [],
-					'letClause': []
-				}
-			]
-		}
-	)
-}}
-{%- endmacro %}
+{% macro Non_Elective_Inpatient_Encounter(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'Non Elective Inpatient Encounter', 'children': [{'operator': _macros_sparksql.Query, 'children': [{'operator': _macros_sparksql.AliasedQuerySource, 'alias': 'NonElectiveEncounter', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'PositiveEncounterPerformed', 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': Nonelective_Inpatient_Encounter, 'children': []}]}]}], 'where': [{'operator': _macros_sparksql.And, 'children': [{'operator': _macros_sparksql.LessOrEqual, 'children': [{'operator': _macros_sparksql.FunctionRef, 'reference': Global.LengthInDays, 'children': [{'operator': _macros_sparksql.Property, 'scope': 'NonElectiveEncounter', 'path': 'relevantPeriod', 'children': []}]}, {'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '120', 'children': []}]}, {'operator': _macros_sparksql.In, 'children': [{'operator': _macros_sparksql.End, 'children': [{'operator': _macros_sparksql.Property, 'scope': 'NonElectiveEncounter', 'path': 'relevantPeriod', 'children': []}]}, {'operator': _macros_sparksql.ParameterRef, 'name': 'Measurement_Period', 'children': []}]}]}], 'returnClause': [], 'sortClause': [], 'letClause': []}]}) }}{% endmacro %}
 {{ Non_Elective_Inpatient_Encounter(none) }}

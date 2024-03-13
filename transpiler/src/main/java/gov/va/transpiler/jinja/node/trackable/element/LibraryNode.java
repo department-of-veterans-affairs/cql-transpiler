@@ -17,7 +17,6 @@ public class LibraryNode extends ElementNode<Library> {
 
     private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
     private List<IncludeDefNode> includeDefNodeList = new ArrayList<>();
-    private List<ValueSetDefNode> valueSetDefNodeList = new ArrayList<>();
     private List<ContextDefNode> contextDefNodeList = new ArrayList<>();
     private List<ParameterDefNode> parameterDefNodeList = new ArrayList<>();
 
@@ -32,8 +31,6 @@ public class LibraryNode extends ElementNode<Library> {
             usingDefNodeList.add((UsingDefNode) child);
         } else if (child instanceof IncludeDefNode) {
             includeDefNodeList.add((IncludeDefNode) child);
-        } else if (child instanceof ValueSetDefNode) {
-            valueSetDefNodeList.add((ValueSetDefNode) child);
         } else if (child instanceof ContextDefNode) {
             contextDefNodeList.add((ContextDefNode) child);
         } else if (child instanceof ParameterDefNode) {

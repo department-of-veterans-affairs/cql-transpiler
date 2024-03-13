@@ -1,12 +1,18 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.hl7.elm.r1.Retrieve;
 
+import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
 import gov.va.transpiler.jinja.state.State;
 
 public class RetrieveNode extends ExpressionNode<Retrieve> {
+
+    public List<TranspilerNode> valueSetRefList = new ArrayList<>();
 
     public RetrieveNode(State state, Retrieve cqlEquivalent) {
         super(state, cqlEquivalent);
@@ -14,15 +20,34 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
 
     @Override
     public int allowedNumberOfChildren() {
-        return 2;
+        return 1;
+    }
+
+    @Override
+    public void addChild(TranspilerNode child) {
+        if(child instanceof ValueSetRefNode) {
+            if (valueSetRefList.isEmpty()) {
+                valueSetRefList.add(child);
+            } else {
+                throw new UnsupportedChildNodeException(this, child);
+            }
+        } else {
+            super.addChild(child);
+        }
     }
 
     @Override
     protected Map<String, String> getSimpleArgumentMap() {
         var map = super.getSimpleArgumentMap();
         map.put("'modelType'", "'" + getCqlEquivalent().getDataType().getNamespaceURI() + "'");
-        map.put("'valueSet'", getCqlEquivalent().getValueSetProperty() == null ? "none" : "'" + getCqlEquivalent().getValueSetProperty() + "'");
         map.put("'templateId'", "'" + getCqlEquivalent().getTemplateId() + "'");
+        return map;
+    }
+
+    @Override
+    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
+        var map = super.getComplexArgumentMap();
+        map.put("'valueSet'", valueSetRefList);
         return map;
     }
 }
