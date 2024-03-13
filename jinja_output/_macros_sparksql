@@ -184,11 +184,11 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {% macro printGreaterThan(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set GreaterThan.print = printGreaterThan %}
 
-{# GreaterThanOrEqual operator #}
-{% set GreaterThanOrEqual = namespace() %}
-{% set GreaterThanOrEqual.dataType = 'SIMPLE' %}
-{% macro printGreaterThanOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} >= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
-{% set GreaterThanOrEqual.print = printGreaterThanOrEqual %}
+{# GreaterOrEqual operator #}
+{% set GreaterOrEqual = namespace() %}
+{% set GreaterOrEqual.dataType = 'SIMPLE' %}
+{% macro printGreaterOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} >= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set GreaterOrEqual.print = printGreaterOrEqual %}
 
 {# IdentifierRef operator #}
 {% set IdentifierRef = namespace() %}
@@ -208,11 +208,11 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {% macro printLessThan(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set LessThan.print = printLessThan %}
 
-{# LessThanOrEqual operator #}
-{% set LessThanOrEqual = namespace() %}
-{% set LessThanOrEqual.dataType = 'SIMPLE' %}
-{% macro printLessThanOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} <= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
-{% set LessThanOrEqual.print = printLessThanOrEqual %}
+{# LessOrEqual operator #}
+{% set LessOrEqual = namespace() %}
+{% set LessOrEqual.dataType = 'SIMPLE' %}
+{% macro printLessOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} <= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set LessOrEqual.print = printLessOrEqual %}
 
 {# List operator #}
 {% set List = namespace() %}
