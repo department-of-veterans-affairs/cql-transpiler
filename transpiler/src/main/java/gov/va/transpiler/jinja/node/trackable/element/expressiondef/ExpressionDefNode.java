@@ -45,12 +45,17 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
 
     @Override
     public Segment toSegment() {
-        // Wrap the dictionary representation of this object in a macro block for calling
-        var segment = new Segment("{% macro " + referenceName() + "(state) %}{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}{% endmacro %}", PrintType.Inline);
-        segment.addChild(nodeToDictionarySegment());
-        segment.setPrintType(PrintType.Line);
-        segment.setLocator(getCqlEquivalent().getLocator());
-        return segment;
+        var enclosingSegment = new Segment("");
+        enclosingSegment.setPrintType(PrintType.Line);
+        enclosingSegment.setLocator(getCqlEquivalent().getLocator());
+        // macro segment
+        var macro = new Segment("{% macro " + referenceName() + "(state) %}", "{% endmacro %}", PrintType.Inline);
+        enclosingSegment.addChild(macro);
+        // internal segment - wrap the dictionary representation of this object
+        var internal = new Segment("{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}", PrintType.Inline);
+        internal.addChild(nodeToDictionarySegment());
+        macro.addChild(internal);
+        return enclosingSegment;
     }
 
     @Override

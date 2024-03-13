@@ -36,8 +36,32 @@
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
 {% macro Encapsulate(context, toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
-{% macro coerce(originalType, targetType, state, arguments) %}{% if targetType == 'ENCAPSULATED' %}{% if originalType == 'SIMPLE' %}{{ Encapsulate(context, arguments['operator'].print(state, arguments)) }}{% elif originalType == 'TABLE' %}{{ Collect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ expression }}{% endif %}{% elif targetType == 'TABLE' %}{% if originalType == 'ENCAPSULATED' %}{{ Decollect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
-{% macro printCoercingIfApplicable(state, arguments) %}{% if state != none and state.coercionInstructions != none and state.coercionInstructions[arguments['operator'].dataType] != none %}{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
+{%- macro coerce(originalType, targetType, state, arguments) %}
+{%- if targetType == 'ENCAPSULATED' %}
+{%- if originalType == 'SIMPLE' %}
+{{ Encapsulate(context, arguments['operator'].print(state, arguments)) }}
+{%- elif originalType == 'TABLE' %}
+{{ Collect(context, arguments['operator'].print(state, arguments)) }}
+{%- else %}
+{{ expression }}
+{%- endif %}
+{%- elif targetType == 'TABLE' %}
+{%- if originalType == 'ENCAPSULATED' %}
+{{ Decollect(context, arguments['operator'].print(state, arguments)) }}
+{%- else %}
+{{ arguments['operator'].print(state, arguments) }}
+{%- endif %}
+{%- else %}
+{{ arguments['operator'].print(state, arguments) }}
+{%- endif %}
+{%- endmacro %}
+{%- macro printCoercingIfApplicable(state, arguments) %}
+{%- if state != none and state.coercionInstructions != none and state.coercionInstructions[arguments['operator'].dataType] != none %}
+{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}
+{%- else %}
+{{ arguments['operator'].print(state, arguments) }}
+{%- endif %}
+{%- endmacro %}
 
 {# Namespace that handles printing operators #}
 {% set OperatorHandler = namespace() %}
@@ -199,7 +223,7 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {# In operator #}
 {% set In = namespace() %}
 {% set In.dataType = 'SIMPLE' %}
-{% macro printIn(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} In {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% macro printIn(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} IN {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set In.print = printIn %}
 
 {# LessThan operator #}
@@ -303,7 +327,7 @@ SELECT
 {%- endif %}
  FROM ({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {%- if arguments['where']|length > 0 %}
- WHERE {{ ArgumentListPrintingUtility(state, arguments['where'], " AND ") }}
+ WHERE {{ OperatorHandler.print(state, arguments['where'][0]) }}
 {%- endif %}
 {%- if arguments['sortClause']|length > 0 %}
  {{ OperatorHandler.print(state, arguments['sortClause'][0]) }}
@@ -400,7 +424,9 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {# ParameterRef operator #}
 {% set ParameterRef = namespace() %}
 {% set ParameterRef.dataType = 'SIMPLE' %}
-{% macro printParameterRef(state, arguments) %}@{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{%- macro printParameterRef(state, arguments) %}
+@{{ arguments['name'] }}
+{%- endmacro %}
 {% set ParameterRef.print = printParameterRef %}
 
 {# SingletonFrom operator #}

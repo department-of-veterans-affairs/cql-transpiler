@@ -10,9 +10,6 @@ import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.typespecifier.TypeSpecifierNode;
-import gov.va.transpiler.jinja.printing.Segment;
-import gov.va.transpiler.jinja.printing.Segment.PrintType;
-import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
@@ -46,24 +43,6 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
         var map = super.getComplexArgumentMap();
         map.put("'operators'", operandDefNodeList);
         return map;
-    }
-
-    @Override
-    public Segment toSegment() {
-        var enclosingSegment = new Segment("");
-        enclosingSegment.setPrintType(PrintType.Line);
-        enclosingSegment.setLocator(getCqlEquivalent().getLocator());
-        // macro start segment
-        var macroStart = new Segment("{% macro " + referenceName() + "(state) %}");
-        enclosingSegment.addChild(macroStart);
-        // macro middle - wrap the dictionary representation of this object in a macro block for calling
-        var macroMiddle = new Segment("{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}", PrintType.Inline);
-        macroMiddle.addChild(nodeToDictionarySegment());
-        enclosingSegment.addChild(macroMiddle);
-        // macro end segment
-        var macroEnd = new Segment("{% endmacro %}");
-        enclosingSegment.addChild(macroEnd);
-        return enclosingSegment;
     }
 
     @Override
