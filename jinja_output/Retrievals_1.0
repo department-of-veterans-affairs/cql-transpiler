@@ -131,3 +131,21 @@
 #}
 {% macro testQuery_returnColumnValueProperty(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testQuery_returnColumnValueProperty', 'children': [{'operator': _macros_sparksql.Query, 'children': [{'operator': _macros_sparksql.AliasedQuerySource, 'alias': 'E', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}], 'where': [], 'returnClause': [{'operator': _macros_sparksql.ReturnClause, 'children': [{'operator': _macros_sparksql.Property, 'scope': none, 'path': 'high', 'children': [{'operator': _macros_sparksql.Property, 'scope': 'E', 'path': 'relevantPeriod', 'children': []}]}]}], 'sortClause': [], 'letClause': []}]}) }}{% endmacro %}
 {{ testQuery_returnColumnValueProperty(none) }}
+{#
+	// Retrievals lines [27:1-27:15]
+	context Patient
+#}
+{% macro Patient(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'Patient', 'children': [{'operator': _macros_sparksql.SingletonFrom, 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'Patient', 'children': []}]}]}) }}{% endmacro %}
+{{ Patient(none) }}
+{#
+	// Retrievals lines [28:1-28:64]
+	define testCount_patientContext: Count(["Encounter, Performed"])
+#}
+{% macro testCount_patientContext(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'testCount_patientContext', 'children': [{'operator': _macros_sparksql.Count, 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}]}) }}{% endmacro %}
+{{ testCount_patientContext(none) }}
+{#
+	// Retrievals lines [30:1-30:67]
+	define testCount_unfilteredContext: Count(["Encounter, Performed"])
+#}
+{% macro testCount_unfilteredContext(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testCount_unfilteredContext', 'children': [{'operator': _macros_sparksql.Count, 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}]}) }}{% endmacro %}
+{{ testCount_unfilteredContext(none) }}

@@ -3,7 +3,7 @@
     State contains the following scoped variables:
         coercionInstructions - Dictionary<String, String>
         context - String
-        columnProperty - Boolean
+        insideQuery - Boolean
         functionArguments - Dictionary<String, Dictionary<String, ?>
 
     Whenever one of these variables are set, the following standard should be performed:
@@ -20,7 +20,7 @@
 {# UTILITY AND HELPER FUNCTIONS #}
 
 {# initializes state #}
-{% macro InitState(state) %}{% set state.coercionInstructions = {} %}{% set state.context = none %}{% set state.columnProperty = false %}{% set state.functionArguments = {} %}{% endmacro %}
+{% macro InitState(state) %}{% set state.coercionInstructions = {} %}{% set state.context = none %}{% set state.insideQuery = false %}{% set state.functionArguments = {} %}{% endmacro %}
 
 {# Utility function to get the column a context should be grouped by #}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
@@ -92,6 +92,18 @@
 concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {%- endmacro %}
 {% set Concatenate.print = printConcatenate %}
+
+{# Count operator #}
+{% set Count = namespace() %}
+{% set Count.dataType = 'TABLE' %}
+{%- macro printCount(state, arguments) %}
+{%- if state.context == 'Unfiltered' %}
+SELECT count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }})
+{%- else %}
+SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }}) GROUP BY {{ GetIDFromContext(state.context) }}
+{%- endif %}
+{%- endmacro %}
+{% set Count.print = printCount %}
 
 {# DateTime operator #}
 {% set DateTime = namespace() %}
@@ -257,7 +269,7 @@ SELECT collect_list(_val) AS _val FROM (
 SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {%- endmacro %}
 {%- macro printProperty(state, arguments) %}
-{%- if state.columnProperty %}
+{%- if state.insideQuery %}
 {%- if arguments['children']|length > 0 %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }}.{{ arguments['path'] }}
 {%- elif arguments['path'] != none %}
@@ -277,7 +289,7 @@ SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {% set Query = namespace() %}
 {% set Query.dataType = 'TABLE' %}
 {%- macro printQuery(state, arguments) %}
-{%- set state.columnProperty = true %}
+{%- set state.insideQuery = true %}
 {%- set previousCoercionInstructions = state.coercionInstructions %}
 {%- set state.coercionInstructions = {} %}
 {%- if arguments['letClause']|length > 0 %}
@@ -297,14 +309,16 @@ SELECT
  {{ OperatorHandler.print(state, arguments['sortClause'][0]) }}
 {%- endif %}
 {%- set state.coercionInstructions = previousCoercionInstructions %}
-{%- set state.columnProperty = false %}
+{%- set state.insideQuery = false %}
 {%- endmacro %}
 {% set Query.print = printQuery %}
 
 {# Retrieve operator #}
 {% set Retrieve = namespace() %}
 {% set Retrieve.dataType = 'TABLE' %}
-{% macro printRetrieve(state, arguments) %}SELECT * FROM {{ arguments['templateId'] }}{% endmacro %}
+{%- macro printRetrieve(state, arguments) %}
+SELECT * FROM {{ arguments['templateId'] }}
+{%- endmacro %}
 {% set Retrieve.print = printRetrieve %}
 
 {# ReturnClause operator #}
@@ -395,11 +409,20 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% macro printSingletonFrom(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
 {% set SingletonFrom.print = printSingletonFrom %}
 
-{# OBSOLETE OPERATOR IMPLEMENTATIONS #}
-{% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
+{# OPERATOR TEMPLATES #}
 
-{# Default operator #}
-{% set Default = namespace() %}
-{% set Default.dataType = 'SIMPLE' %}
-{% macro printDefault(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
-{% set Default.print = printDefault %}
+{# SingletonDefault operator #}
+{% set SingletonDefault = namespace() %}
+{% set SingletonDefault.dataType = 'SIMPLE' %}
+{%- macro printSingletonDefault(state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{%- endmacro %}
+{% set SingletonDefault.print = printSingletonDefault %}
+
+{# ChildrenListPrinting operator #}
+{% set ChildrenListPrinting = namespace() %}
+{% set ChildrenListPrinting.dataType = 'SIMPLE' %}
+{%- macro printChildrenListPrinting(state, arguments) %}
+{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+{%- endmacro %}
+{% set ChildrenListPrinting.print = printChildrenListPrinting %}

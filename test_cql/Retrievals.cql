@@ -27,4 +27,4 @@ define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.
 context Patient
 define testCount_patientContext: Count(["Encounter, Performed"])
 context Unfiltered
-define testCount_patientContext_unfiltered: Count(["Encounter, Performed"])
+define testCount_unfilteredContext: Count(["Encounter, Performed"])
