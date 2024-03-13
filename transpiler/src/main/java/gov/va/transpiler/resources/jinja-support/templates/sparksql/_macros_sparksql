@@ -1,16 +1,43 @@
+{# DOCUMENTATION #}
+{#
+    State contains the following scoped variables:
+        coercionInstructions - Dictionary<String, String>
+        context - String
+        columnProperty - Boolean
+        functionArguments - Dictionary<String, Dictionary<String, ?>
+
+    Whenever one of these variables are set, the following standard should be performed:
+    {% set previousVariableName = state.variableName %}{% set state.variableName = newValue %}{{ function(state) }}{% set state.variableName = previousVariableName %}
+
+    Potential data types:
+        SIMPLE
+        ENCAPSULATED
+        TABLE
+        INHERITED
+        UNKNOWN
+#}
+
 {# UTILITY AND HELPER FUNCTIONS #}
+
+{# initializes state #}
+{% macro InitState(state) %}{% set state.coercionInstructions = {} %}{% set state.context = none %}{% set state.columnProperty = false %}{% set state.functionArguments = {} %}{% endmacro %}
 
 {# Utility function to get the column a context should be grouped by #}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
 
-{# Utility function for printing lists #}
+{# Standards #}
+{% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
+
+{# Utility functions for printing lists #}
 {% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
+{% macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfArgumentsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ OperatorHandler.print(state, item) }}{% endfor %}{% endmacro %}
 
 {# Utility functions for dataType conversions #}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
 {% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
-{% macro coerce(originalType, targetType, state, arguments) %}{% if targetType == 'ENCAPSULATED' %}{% if originalType == 'SIMPLE' %}{{ _macros_sparksql.Encapsulate(arguments['operator'].print(state, arguments)) }}{% elif originalType == 'TABLE' %}{{ _macros_sparksql.Collect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ expression }}{% endif %}{% elif targetType == 'TABLE' %}{% if originalType == 'ENCAPSULATED' %}{{ _macros_sparksql.Decollect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
-{% macro printCoercingIfApplicable(state, arguments) %}{% if (state != none) and (state.coercionInstructions != none) and (state.coercionInstructions[arguments['operator'].dataType] != none) %}{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
+{% macro Encapsulate(context, toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
+{% macro coerce(originalType, targetType, state, arguments) %}{% if targetType == 'ENCAPSULATED' %}{% if originalType == 'SIMPLE' %}{{ Encapsulate(context, arguments['operator'].print(state, arguments)) }}{% elif originalType == 'TABLE' %}{{ Collect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ expression }}{% endif %}{% elif targetType == 'TABLE' %}{% if originalType == 'ENCAPSULATED' %}{{ Decollect(context, arguments['operator'].print(state, arguments)) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
+{% macro printCoercingIfApplicable(state, arguments) %}{% if state != none and state.coercionInstructions != none and state.coercionInstructions[arguments['operator'].dataType] != none %}{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}{% else %}{{ arguments['operator'].print(state, arguments) }}{% endif %}{% endmacro %}
 
 {# Namespace that handles printing operators #}
 {% set OperatorHandler = namespace() %}
@@ -18,55 +45,361 @@
 
 {# OPERATOR IMPLEMENTATIONS #}
 
+{# Add operator #}
+{% set Add = namespace() %}
+{% set Add.dataType = 'SIMPLE' %}
+{% macro printAdd(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} + {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Add.print = printAdd %}
+
+{# After operator #}
+{% set After = namespace() %}
+{% set After.dataType = 'SIMPLE' %}
+{% macro printAfter(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set After.print = printAfter %}
+
+{# AliasedQuerySource operator #}
+{% set AliasedQuerySource = namespace() %}
+{% set AliasedQuerySource.dataType = 'SIMPLE' %}
+{%- macro printAliasedQuerySource(state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['alias'] }}
+{%- endmacro %}
+{% set AliasedQuerySource.print = printAliasedQuerySource %}
+
+{# And operator #}
+{% set And = namespace() %}
+{% set And.dataType = 'SIMPLE' %}
+{% macro printAnd(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} AND {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set And.print = printAnd %}
+
+{# Before operator #}
+{% set Before = namespace() %}
+{% set Before.dataType = 'SIMPLE' %}
+{% macro printBefore(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Before.print = printBefore %}
+
+{# ByExpression operator #}
+{% set ByExpression = namespace() %}
+{% set ByExpression.dataType = 'UNKNOWN' %}
+{%- macro printByExpression(state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }} {{ arguments['direction'] }}
+{%- endmacro %}
+{% set ByExpression.print = printByExpression %}
+
+{# Concatenate operator #}
+{% set Concatenate = namespace() %}
+{% set Concatenate.dataType = 'SIMPLE' %}
+{%- macro printConcatenate(state, arguments) %}
+concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
+{%- endmacro %}
+{% set Concatenate.print = printConcatenate %}
+
+{# DateTime operator #}
+{% set DateTime = namespace() %}
+{% set DateTime.dataType = 'SIMPLE' %}
+{% macro printDateTime(state, arguments) %}{{ OperatorHandler.print(state, arguments['year'][0]) }}-{{ OperatorHandler.print(state, arguments['month'][0]) }}-{{ OperatorHandler.print(state, arguments['day'][0]) }}T{{ OperatorHandler.print(state, arguments['hour'][0]) }}:{{ OperatorHandler.print(state, arguments['minute'][0]) }}:{{ OperatorHandler.print(state, arguments['second'][0]) }}.{{ OperatorHandler.print(state, arguments['millisecond'][0]) }}Z{% endmacro %}
+{% set DateTime.print = printDateTime %}
+
+{# DifferenceBetween operator #}
+{% set DifferenceBetween = namespace() %}
+{% set DifferenceBetween.dataType = 'SIMPLE' %}
+{% macro printDifferenceBetween(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][1])}} - {{ OperatorHandler.print(state, arguments['children'][0]) }}){% endmacro %}
+{% set DifferenceBetween.print = printDifferenceBetween %}
+
+{# Divide operator #}
+{% set Divide = namespace() %}
+{% set Divide.dataType = 'SIMPLE' %}
+{% macro printDivide(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} / {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Divide.print = printDivide %}
+
+{# Equal operator #}
+{% set Equal = namespace() %}
+{% set Equal.dataType = 'SIMPLE' %}
+{% macro printEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} = {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Equal.print = printEqual %}
+
+{# ExpressionDef operator #}
+{% set ExpressionDef = namespace() %}
+{% set ExpressionDef.dataType = 'INHERITED' %}
+{%- macro printExpressionDef(state, arguments) %}
+{%- set internalState = state %}
+{%- if internalState == none %}
+{%- set internalState = namespace() %}
+{%- endif %}
+{%- do InitState(internalState) %}
+{%- set previousContext = internalState.context %}
+{%- if previousContext == none and arguments['context'] != none %}
+{%- set internalState.context = arguments['context'] %}
+{%- endif %}
+{{ OperatorHandler.print(internalState, arguments['children'][0]) }}
+{%- set internalState.context = previousContext %}
+{%- endmacro %}
+{% set ExpressionDef.print = printExpressionDef %}
+
+{# ExpressionRef operator #}
+{% set ExpressionRef = namespace() %}
+{% set ExpressionRef.dataType = 'INHERITED' %}
+{% macro printExpressionRef(state, arguments) %}{{ arguments['reference'](state) }}{% endmacro %}
+{% set ExpressionRef.print = printExpressionRef %}
+
+{# FunctionDef operator #}
+{% set FunctionDef = namespace() %}
+{% set FunctionDef.dataType = 'INHERITED' %}
+{%- macro printFunctionDef(state, arguments) %}
+{%- set previousOperandsMatchedToFunctionArguments = state.operandsMatchedToFunctionArguments %}
+{%- set state.operandsMatchedToFunctionArguments = {} %}
+{% for item in state.functionArguments %}
+{%- do state.operandsMatchedToFunctionArguments.update({ arguments.operators[loop.index - 1].name: item }) %}
+{%- endfor %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{%- set state.operandsMatchedToFunctionArguments = previousOperandsMatchedToFunctionArguments %}
+{%- endmacro %}
+{% set FunctionDef.print = printFunctionDef %}
+
+{# FunctionRef operator #}
+{% set FunctionRef = namespace() %}
+{% set FunctionRef.dataType = 'INHERITED' %}
+{%- macro printFunctionRef(state, arguments) %}
+{%- set previousFunctionArguments = state.functionArguments %}
+{%- set state.functionArguments = arguments['children'] %}
+{{ arguments['reference'](state) }}
+{%- set state.functionArguments = previousFunctionArguments %}
+{%- endmacro %}
+{% set FunctionRef.print = printFunctionRef %}
+
+{# GreaterThan operator #}
+{% set GreaterThan = namespace() %}
+{% set GreaterThan.dataType = 'SIMPLE' %}
+{% macro printGreaterThan(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set GreaterThan.print = printGreaterThan %}
+
+{# GreaterThanOrEqual operator #}
+{% set GreaterThanOrEqual = namespace() %}
+{% set GreaterThanOrEqual.dataType = 'SIMPLE' %}
+{% macro printGreaterThanOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} >= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set GreaterThanOrEqual.print = printGreaterThanOrEqual %}
+
+{# IdentifierRef operator #}
+{% set IdentifierRef = namespace() %}
+{% set IdentifierRef.dataType = 'SIMPLE' %}
+{% macro printIdentifierRef(state, arguments) %}{{ arguments['name'] }}{% endmacro %}
+{% set IdentifierRef.print = printIdentifierRef %}
+
+{# In operator #}
+{% set In = namespace() %}
+{% set In.dataType = 'SIMPLE' %}
+{% macro printIn(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} In {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set In.print = printIn %}
+
+{# LessThan operator #}
+{% set LessThan = namespace() %}
+{% set LessThan.dataType = 'SIMPLE' %}
+{% macro printLessThan(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set LessThan.print = printLessThan %}
+
+{# LessThanOrEqual operator #}
+{% set LessThanOrEqual = namespace() %}
+{% set LessThanOrEqual.dataType = 'SIMPLE' %}
+{% macro printLessThanOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} <= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set LessThanOrEqual.print = printLessThanOrEqual %}
+
+{# List operator #}
+{% set List = namespace() %}
+{% set List.dataType = 'ENCAPSULATED' %}
+{%- macro printList(state, arguments) %}
+SELECT collect_list(_val) AS _val FROM (
+{%- if arguments['children']|length == 0 %}
+{{ EmptyTable() }}
+{%- else %}
+{%- set previousCoercionInstructions = state.coercionInstructions %}
+{%- set state.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}
+{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- endif %})
+{%- endmacro %}
+{% set List.print = printList %}
+
 {# Literal operator #}
 {% set Literal = namespace() %}
 {% set Literal.dataType = 'SIMPLE' %}
 {% macro printLiteral(state, arguments) %}{% if arguments['type'] == 'Integer' %}{{ arguments['value'] }}{% elif arguments['type'] == 'String' %}'{{ arguments['value'] }}'{% else %}{{ arguments['type'] }}::{{ arguments['value'] }}{% endif %}{% endmacro %}
 {% set Literal.print = printLiteral %}
 
-{# ExpressionDef operator #}
-{% set ExpressionDef = namespace() %}
-{% set ExpressionDef.dataType = 'INHERITED' %}
-{% macro printExpressionDef(state, arguments) %}{% if state.context == none and arguments['context'] != none %}{% set state.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(state, arguments['children'][0])}}{% endmacro %}
-{% set ExpressionDef.print = printExpressionDef %}
+{# Multiply operator #}
+{% set Multiply = namespace() %}
+{% set Multiply.dataType = 'SIMPLE' %}
+{% macro printMultiply(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0]) }} * {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Multiply.print = printMultiply %}
+
+{# Negate operator #}
+{% set Negate = namespace() %}
+{% set Negate.dataType = 'SIMPLE' %}
+{% macro printNegate(state, arguments) %}-{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set Negate.print = printNegate %}
+
+{# OperandRef operator #}
+{% set OperandRef = namespace() %}
+{% set OperandRef.dataType = 'INHERITED' %}
+{%- macro printOperandRef(state, arguments) %}
+{{ OperatorHandler.print(state, state.operandsMatchedToFunctionArguments[arguments['reference']]) }}
+{%- endmacro %}
+{% set OperandRef.print = printOperandRef %}
+
+{# Or operator #}
+{% set Or = namespace() %}
+{% set Or.dataType = 'SIMPLE' %}
+{% macro printOr(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} OR {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Or.print = printOr %}
+
+{# Property operator #}
+{% set Property = namespace() %}
+{% set Property.dataType = 'ENCAPSULATED' %}
+{%- macro printPropertyOfDataStructure(path, state, dataStructure) %}
+SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
+{%- endmacro %}
+{%- macro printProperty(state, arguments) %}
+{%- if state.columnProperty %}
+{%- if arguments['children']|length > 0 %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}.{{ arguments['path'] }}
+{%- elif arguments['path'] != none %}
+{{ arguments['scope'] }}.{{ arguments['path'] }}
+{%- else %}{{ arguments['scope'] }}
+{%- endif %}
+{%- else %}
+{%- set previousCoercionInstructions = state.coercionInstructions %}
+{%- set state.coercionInstructions = {} %}
+{{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- endif %}
+{%- endmacro %}
+{% set Property.print = printProperty %}
+
+{# Query operator #}
+{% set Query = namespace() %}
+{% set Query.dataType = 'TABLE' %}
+{%- macro printQuery(state, arguments) %}
+{%- set state.columnProperty = true %}
+{%- set previousCoercionInstructions = state.coercionInstructions %}
+{%- set state.coercionInstructions = {} %}
+{%- if arguments['letClause']|length > 0 %}
+LET {{ ArgumentListPrintingUtility(state, arguments['letClause'], ", ") }} 
+{% endif %}
+SELECT
+{%- if arguments['returnClause']|length == 0 %}
+ *
+{%- else %}
+ {{ OperatorHandler.print(state, arguments['returnClause'][0]) }} 
+{%- endif %}
+ FROM ({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
+{%- if arguments['where']|length > 0 %}
+ WHERE {{ ArgumentListPrintingUtility(state, arguments['where'], " AND ") }}
+{%- endif %}
+{%- if arguments['sortClause']|length > 0 %}
+ {{ OperatorHandler.print(state, arguments['sortClause'][0]) }}
+{%- endif %}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- set state.columnProperty = false %}
+{%- endmacro %}
+{% set Query.print = printQuery %}
+
+{# Retrieve operator #}
+{% set Retrieve = namespace() %}
+{% set Retrieve.dataType = 'TABLE' %}
+{% macro printRetrieve(state, arguments) %}SELECT * FROM {{ arguments['templateId'] }}{% endmacro %}
+{% set Retrieve.print = printRetrieve %}
+
+{# ReturnClause operator #}
+{% set ReturnClause = namespace() %}
+{% set ReturnClause.dataType = 'UNKNOWN' %}
+{%- macro printReturnClause(state, arguments) %}
+{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+{%- endmacro %}
+{% set ReturnClause.print = printReturnClause %}
+
+{# SortClause operator #}
+{% set SortClause = namespace() %}
+{% set SortClause.dataType = 'UNKNOWN' %}
+{%- macro printSortClause(state, arguments) %}
+ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+{%- endmacro %}
+{% set SortClause.print = printSortClause %}
+
+{# Subtract operator #}
+{% set Subtract = namespace() %}
+{% set Subtract.dataType = 'SIMPLE' %}
+{% macro printSubtract(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0]) }} - {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
+{% set Subtract.print = printSubtract %}
+
+{# ToDecimal operator #}
+{% set ToDecimal = namespace() %}
+{% set ToDecimal.dataType = 'SIMPLE' %}
+{% macro printToDecimal(state, arguments) %}(0.0 + {{ OperatorHandler.print(state, arguments['children'][0]) }}){% endmacro %}
+{% set ToDecimal.print = printToDecimal %}
+
+{# Tuple operator #}
+{% set Tuple = namespace() %}
+{% set Tuple.dataType = 'ENCAPSULATED' %}
+{% macro printTuple(state, arguments) %}SELECT struct(*) from ({{ ArgumentListPrintingUtility(state, arguments['children'], ', ') }}){% endmacro %}
+{% set Tuple.print = printTuple %}
+
+{# TupleElement operator #}
+{% set TupleElement = namespace() %}
+{% set TupleElement.dataType = 'ENCAPSULATED' %}
+{% macro printTupleElement(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'TABLE': 'ENCAPSULATED', 'SIMPLE': 'ENCAPSULATED' } %}{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['name'] }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
+{% set TupleElement.print = printTupleElement %}
+
+{# Union operator #}
+{% set Union = namespace() %}
+{% set Union.dataType = 'TABLE' %}
+{% macro printUnion(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
+{% set Union.print = printUnion %}
+
+{# OPERATORS WITH DEPENDENCIES #}
+
+{# End operator - dependencies: [Property] #}
+{% set End = namespace() %}
+{% set End.dataType = Property.dataType %}
+{%- macro printEnd(state, arguments) %}
+{%- set endArguments = namespace() %}
+{%- set endArguments.path = 'high' %}
+{%- set endArguments.children = arguments.children %}
+{%- set endArguments.scope = none %}
+{%- set endArguments.operator = Property %}
+{{ OperatorHandler.print(state, endArguments) }}
+{%- endmacro %}
+{% set End.print = printEnd %}
+
+{# Start operator - dependencies: [Property] #}
+{% set Start = namespace() %}
+{% set Start.dataType = Property.dataType %}
+{%- macro printStart(state, arguments) %}
+{%- set startArguments = namespace() %}
+{%- set startArguments.path = 'low' %}
+{%- set startArguments.children = arguments.children %}
+{%- set startArguments.scope = none %}
+{%- set startArguments.operator = Property %}
+{{ OperatorHandler.print(state, startArguments) }}
+{%- endmacro %}
+{% set Start.print = printStart %}
+
+{# UNTESTED OPERATORS #}
+
+{# ParameterRef operator #}
+{% set ParameterRef = namespace() %}
+{% set ParameterRef.dataType = 'SIMPLE' %}
+{% macro printParameterRef(state, arguments) %}@{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set ParameterRef.print = printParameterRef %}
+
+{# SingletonFrom operator #}
+{% set SingletonFrom = namespace() %}
+{% set SingletonFrom.dataType = 'SIMPLE' %}
+{% macro printSingletonFrom(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set SingletonFrom.print = printSingletonFrom %}
 
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
-
-{% macro Add(left, right) %}({{left}} + {{ right }}){% endmacro %}
-{% macro Subtract(left, right) %}({{ left }} - {{ right }}){% endmacro %}
-{% macro Multiply(left, right) %}({{ left }} * {{ right }}){% endmacro %}
-{% macro Divide(left, right) %}({{ left }} / {{ right }}){% endmacro %}
-{% macro Negate(value) %}(-{{ value }}){% endmacro %}
-{% macro Equal(left, right) %}({{left}} = {{ right }}){% endmacro %}
-{% macro Retrieve(modeltype, valueset, model) %}SELECT * FROM {{ model }}{% endmacro %}
-{% macro Encapsulate(toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
-{% macro TupleElement(name, value)%}{{ value }} AS {{ name }}{% endmacro %}
-{% macro Tuple(listOfTupleElements)%}SELECT struct(*) AS _val FROM ({{ ListPrintingUtility(listOfTupleElements, ', ') }}){% endmacro %}
-{% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
-{% macro Union(valList, valTypeList) %}{{ ListPrintingUtility(valList, ' UNION ') }}{% endmacro %}
-{% macro List(listOfItems) %}SELECT collect_list(_val) AS _val FROM ({% if listOfItems|length == 0 %}{{ EmptyTable() }}{% else %}{{ Union(listOfItems, none) }}{% endif %}){% endmacro %}
-{% macro Property(type, scope, path, source) %}{% if type == 'COLUMN_REFERENCE' %}{% if source != none %}{{ source }}.{{ path }}{% elif path != none %}{{ scope }}.{{ path }}{% else %}{{ scope }}{% endif %}{% else %}SELECT {{ path }} FROM ({{ source }}){% endif %}{% endmacro %}
-{% macro Concatenate(valList, valTypeList)%}concat({{ ListPrintingUtility(valList, ', ') }}){% endmacro %}
-{% macro DateTime(year, month, day, hour, minute, second, millisecond) %}{{ year }}-{{ month }}-{{ day }} {{ hour }}:{{ minute }}:{{ second }}.{{ millisecond }}{% endmacro %}
-{% macro AliasedQuerySource(alias, source) %}{{ source }} AS {{ alias }}{% endmacro %}
-{% macro GreaterThan (left, right) %}({{ left }} > {{ right }}){% endmacro %}
-{% macro LessThan (left, right) %}({{ left }} < {{ right }}){% endmacro %}
-{% macro Equals (left, right) %}({{ left }} = {{ right }}){% endmacro %}
-{% macro Start(value) %}{{ Property('COLUMN_REFERENCE', none, 'low', value) }}{% endmacro%}
-{% macro End(value) %}{{ Property('COLUMN_REFERENCE', none, 'high', value) }}{% endmacro%}
-{% macro After(left, right) %}{{ GreaterThan(left, right) }}{% endmacro %}
-{% macro Before(left, right) %}{{ LessThan(left, right) }}{% endmacro %}
 {% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
-{% macro ToDecimal(val) %}{{ Add(val, 0.0) }}{% endmacro %}
-{% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
-{% macro SortClause(sortByItemList) %}ORDER BY {{ ListPrintingUtility(sortByItemList, ", ") }}{% endmacro %}
-{% macro ByExpression(direction, expr) %}{{ expr }} {{ direction }}{% endmacro %}
-{% macro Query(letList, sourceList, return, where, sortClause) %}SELECT {% if return == none %}*{% else %}{{ return }}{% endif %} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
-{% macro IdentifierRef(name) %}{{ name }}{% endmacro %}
-{% macro And(left, right) %}({{ left }}) AND ({{ right }}){% endmacro %}
-{% macro Or(left, right) %}({{ left }}) OR ({{ right }}){% endmacro %}
-{% macro LessOrEqual(left, right) %}({{ left }}) <= ({{ right }}){% endmacro %}
-{% macro In(left, right) %}({{ left }}) IN ({{ right }}){% endmacro %}
-{% macro DifferenceBetween(left, right) %}({{ right }}) - ({{ left }}){% endmacro %}
-{% macro ParameterRef(val) %}@{{ val }}{% endmacro %}
-{% macro SingletonFrom(val) %}{{ val }}{% endmacro %}
+
+{# Default operator #}
+{% set Default = namespace() %}
+{% set Default.dataType = 'SIMPLE' %}
+{% macro printDefault(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set Default.print = printDefault %}
