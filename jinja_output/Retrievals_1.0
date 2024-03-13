@@ -107,3 +107,27 @@
 #}
 {% macro testDateTime(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testDateTime', 'children': [{'operator': _macros_sparksql.DateTime, 'children': [], 'year': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '2010', 'children': []}], 'month': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '1', 'children': []}], 'day': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '2', 'children': []}], 'hour': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '14', 'children': []}], 'minute': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '30', 'children': []}], 'second': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '7', 'children': []}], 'millisecond': [{'operator': _macros_sparksql.Literal, 'type': 'Integer', 'value': '76', 'children': []}], 'timezoneOffset': []}]}) }}{% endmacro %}
 {{ testDateTime(none) }}
+{#
+	// Retrievals lines [23:1-23:86]
+	define testQuery_returnColumnValue: ["Encounter, Performed"] E return E.relevantPeriod
+#}
+{% macro testQuery_returnColumnValue(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testQuery_returnColumnValue', 'children': [{'operator': _macros_sparksql.Query, 'children': [{'operator': _macros_sparksql.AliasedQuerySource, 'alias': 'E', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}], 'where': [], 'returnClause': [{'operator': _macros_sparksql.ReturnClause, 'children': [{'operator': _macros_sparksql.Property, 'scope': 'E', 'path': 'relevantPeriod', 'children': []}]}], 'sortClause': [], 'letClause': []}]}) }}{% endmacro %}
+{{ testQuery_returnColumnValue(none) }}
+{#
+	// Retrievals lines [24:1-24:101]
+	define testQuery_withWhere: ["Encounter, Performed"] E where E.relevantPeriod ends after testDateTime
+#}
+{% macro testQuery_withWhere(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testQuery_withWhere', 'children': [{'operator': _macros_sparksql.Query, 'children': [{'operator': _macros_sparksql.AliasedQuerySource, 'alias': 'E', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}], 'where': [{'operator': _macros_sparksql.After, 'children': [{'operator': _macros_sparksql.End, 'children': [{'operator': _macros_sparksql.Property, 'scope': 'E', 'path': 'relevantPeriod', 'children': []}]}, {'operator': _macros_sparksql.ExpressionRef, 'reference': testDateTime, 'children': []}]}], 'returnClause': [], 'sortClause': [], 'letClause': []}]}) }}{% endmacro %}
+{{ testQuery_withWhere(none) }}
+{#
+	// Retrievals lines [25:1-25:83]
+	define testQuery_sortBy: ["Encounter, Performed"] E sort by start of relevantPeriod
+#}
+{% macro testQuery_sortBy(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testQuery_sortBy', 'children': [{'operator': _macros_sparksql.Query, 'children': [{'operator': _macros_sparksql.AliasedQuerySource, 'alias': 'E', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}], 'where': [], 'returnClause': [], 'sortClause': [{'operator': _macros_sparksql.SortClause, 'children': [{'operator': _macros_sparksql.ByExpression, 'direction': 'ASC', 'children': [{'operator': _macros_sparksql.Start, 'children': [{'operator': _macros_sparksql.IdentifierRef, 'name': 'relevantPeriod', 'children': []}]}]}]}], 'letClause': []}]}) }}{% endmacro %}
+{{ testQuery_sortBy(none) }}
+{#
+	// Retrievals lines [26:1-26:99]
+	define testQuery_returnColumnValueProperty: ["Encounter, Performed"] E return E.relevantPeriod.high
+#}
+{% macro testQuery_returnColumnValueProperty(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Unfiltered', 'name': 'testQuery_returnColumnValueProperty', 'children': [{'operator': _macros_sparksql.Query, 'children': [{'operator': _macros_sparksql.AliasedQuerySource, 'alias': 'E', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'valueSet': none, 'templateId': 'PositiveEncounterPerformed', 'children': []}]}], 'where': [], 'returnClause': [{'operator': _macros_sparksql.ReturnClause, 'children': [{'operator': _macros_sparksql.Property, 'scope': none, 'path': 'high', 'children': [{'operator': _macros_sparksql.Property, 'scope': 'E', 'path': 'relevantPeriod', 'children': []}]}]}], 'sortClause': [], 'letClause': []}]}) }}{% endmacro %}
+{{ testQuery_returnColumnValueProperty(none) }}

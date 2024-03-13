@@ -8,6 +8,13 @@
 
     Whenever one of these variables are set, the following standard should be performed:
     {% set previousVariableName = state.variableName %}{% set state.variableName = newValue %}{{ function(state) }}{% set state.variableName = previousVariableName %}
+
+    Potential data types:
+        SIMPLE
+        ENCAPSULATED
+        TABLE
+        INHERITED
+        UNKNOWN
 #}
 
 {# UTILITY AND HELPER FUNCTIONS #}
@@ -53,7 +60,9 @@
 {# AliasedQuerySource operator #}
 {% set AliasedQuerySource = namespace() %}
 {% set AliasedQuerySource.dataType = 'SIMPLE' %}
-{% macro printAliasedQuerySource(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['alias'] }} {% endmacro %}
+{%- macro printAliasedQuerySource(state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['alias'] }}
+{%- endmacro %}
 {% set AliasedQuerySource.print = printAliasedQuerySource %}
 
 {# And operator #}
@@ -67,6 +76,14 @@
 {% set Before.dataType = 'SIMPLE' %}
 {% macro printBefore(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set Before.print = printBefore %}
+
+{# ByExpression operator #}
+{% set ByExpression = namespace() %}
+{% set ByExpression.dataType = 'UNKNOWN' %}
+{%- macro printByExpression(state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }} {{ arguments['direction'] }}
+{%- endmacro %}
+{% set ByExpression.print = printByExpression %}
 
 {# Concatenate operator #}
 {% set Concatenate = namespace() %}
@@ -103,7 +120,19 @@ concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {# ExpressionDef operator #}
 {% set ExpressionDef = namespace() %}
 {% set ExpressionDef.dataType = 'INHERITED' %}
-{% macro printExpressionDef(state, arguments) %}{% set internalState = state %}{% if internalState == none %}{% set internalState = namespace() %}{% endif %}{{ InitState(internalState) }}{% set previousContext = internalState.context %}{% if previousContext == none and arguments['context'] != none %}{% set internalState.context = arguments['context'] %}{% endif %}{{ OperatorHandler.print(internalState, arguments['children'][0]) }}{% set internalState.context = previousContext %}{% endmacro %}
+{%- macro printExpressionDef(state, arguments) %}
+{%- set internalState = state %}
+{%- if internalState == none %}
+{%- set internalState = namespace() %}
+{%- endif %}
+{%- do InitState(internalState) %}
+{%- set previousContext = internalState.context %}
+{%- if previousContext == none and arguments['context'] != none %}
+{%- set internalState.context = arguments['context'] %}
+{%- endif %}
+{{ OperatorHandler.print(internalState, arguments['children'][0]) }}
+{%- set internalState.context = previousContext %}
+{%- endmacro %}
 {% set ExpressionDef.print = printExpressionDef %}
 
 {# ExpressionRef operator #}
@@ -149,6 +178,12 @@ concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {% macro printGreaterThanOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} >= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set GreaterThanOrEqual.print = printGreaterThanOrEqual %}
 
+{# IdentifierRef operator #}
+{% set IdentifierRef = namespace() %}
+{% set IdentifierRef.dataType = 'SIMPLE' %}
+{% macro printIdentifierRef(state, arguments) %}{{ arguments['name'] }}{% endmacro %}
+{% set IdentifierRef.print = printIdentifierRef %}
+
 {# In operator #}
 {% set In = namespace() %}
 {% set In.dataType = 'SIMPLE' %}
@@ -170,7 +205,17 @@ concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {# List operator #}
 {% set List = namespace() %}
 {% set List.dataType = 'ENCAPSULATED' %}
-{% macro printList(state, arguments) %}SELECT collect_list(_val) AS _val FROM ({% if arguments['children']|length == 0 %}{{ EmptyTable() }}{% else %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endif %}){% endmacro %}
+{%- macro printList(state, arguments) %}
+SELECT collect_list(_val) AS _val FROM (
+{%- if arguments['children']|length == 0 %}
+{{ EmptyTable() }}
+{%- else %}
+{%- set previousCoercionInstructions = state.coercionInstructions %}
+{%- set state.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}
+{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- endif %})
+{%- endmacro %}
 {% set List.print = printList %}
 
 {# Literal operator #}
@@ -208,15 +253,75 @@ concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {# Property operator #}
 {% set Property = namespace() %}
 {% set Property.dataType = 'ENCAPSULATED' %}
-{% macro printPropertyOfDataStructure(path, state, dataStructure) %}SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}{% endmacro %}
-{% macro printProperty(state, arguments) %}{% if state.columnProperty %}{% if arguments['children'] != none %}.{{ arguments['path'] }}{% elif arguments['path'] != none %}{{ arguments['scope'] }}.{{ arguments['path'] }}{% else %}{{ arguments['scope'] }}{% endif %}{% else %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = {} %}{{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endif %}{% endmacro %}
+{%- macro printPropertyOfDataStructure(path, state, dataStructure) %}
+SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
+{%- endmacro %}
+{%- macro printProperty(state, arguments) %}
+{%- if state.columnProperty %}
+{%- if arguments['children']|length > 0 %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}.{{ arguments['path'] }}
+{%- elif arguments['path'] != none %}
+{{ arguments['scope'] }}.{{ arguments['path'] }}
+{%- else %}{{ arguments['scope'] }}
+{%- endif %}
+{%- else %}
+{%- set previousCoercionInstructions = state.coercionInstructions %}
+{%- set state.coercionInstructions = {} %}
+{{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- endif %}
+{%- endmacro %}
 {% set Property.print = printProperty %}
+
+{# Query operator #}
+{% set Query = namespace() %}
+{% set Query.dataType = 'TABLE' %}
+{%- macro printQuery(state, arguments) %}
+{%- set state.columnProperty = true %}
+{%- set previousCoercionInstructions = state.coercionInstructions %}
+{%- set state.coercionInstructions = {} %}
+{%- if arguments['letClause']|length > 0 %}
+LET {{ ArgumentListPrintingUtility(state, arguments['letClause'], ", ") }} 
+{% endif %}
+SELECT
+{%- if arguments['returnClause']|length == 0 %}
+ *
+{%- else %}
+ {{ OperatorHandler.print(state, arguments['returnClause'][0]) }} 
+{%- endif %}
+ FROM ({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
+{%- if arguments['where']|length > 0 %}
+ WHERE {{ ArgumentListPrintingUtility(state, arguments['where'], " AND ") }}
+{%- endif %}
+{%- if arguments['sortClause']|length > 0 %}
+ {{ OperatorHandler.print(state, arguments['sortClause'][0]) }}
+{%- endif %}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- set state.columnProperty = false %}
+{%- endmacro %}
+{% set Query.print = printQuery %}
 
 {# Retrieve operator #}
 {% set Retrieve = namespace() %}
 {% set Retrieve.dataType = 'TABLE' %}
 {% macro printRetrieve(state, arguments) %}SELECT * FROM {{ arguments['templateId'] }}{% endmacro %}
 {% set Retrieve.print = printRetrieve %}
+
+{# ReturnClause operator #}
+{% set ReturnClause = namespace() %}
+{% set ReturnClause.dataType = 'UNKNOWN' %}
+{%- macro printReturnClause(state, arguments) %}
+{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+{%- endmacro %}
+{% set ReturnClause.print = printReturnClause %}
+
+{# SortClause operator #}
+{% set SortClause = namespace() %}
+{% set SortClause.dataType = 'UNKNOWN' %}
+{%- macro printSortClause(state, arguments) %}
+ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+{%- endmacro %}
+{% set SortClause.print = printSortClause %}
 
 {# Subtract operator #}
 {% set Subtract = namespace() %}
@@ -248,38 +353,50 @@ concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {% macro printUnion(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
 {% set Union.print = printUnion %}
 
-{# Operators with dependencies #}
+{# OPERATORS WITH DEPENDENCIES #}
 
 {# End operator - dependencies: [Property] #}
 {% set End = namespace() %}
 {% set End.dataType = Property.dataType %}
-{% macro printEnd(state, arguments) %}{% set endArguments = namespace() %}{% set endArguments.path = 'low' %}{% set endArguments.children = arguments.children %}{% set endArguments.scope = none %}{% set endArguments.operator = Property %}{{ OperatorHandler.print(state, endArguments) }}{% endmacro %}
+{%- macro printEnd(state, arguments) %}
+{%- set endArguments = namespace() %}
+{%- set endArguments.path = 'high' %}
+{%- set endArguments.children = arguments.children %}
+{%- set endArguments.scope = none %}
+{%- set endArguments.operator = Property %}
+{{ OperatorHandler.print(state, endArguments) }}
+{%- endmacro %}
 {% set End.print = printEnd %}
 
 {# Start operator - dependencies: [Property] #}
 {% set Start = namespace() %}
 {% set Start.dataType = Property.dataType %}
-{% macro printStart(state, arguments) %}{% set startArguments = namespace() %}{% set startArguments.path = 'low' %}{% set startArguments.children = arguments.children %}{% set startArguments.scope = none %}{% set startArguments.operator = Property %}{{ OperatorHandler.print(state, startArguments) }}{% endmacro %}
+{%- macro printStart(state, arguments) %}
+{%- set startArguments = namespace() %}
+{%- set startArguments.path = 'low' %}
+{%- set startArguments.children = arguments.children %}
+{%- set startArguments.scope = none %}
+{%- set startArguments.operator = Property %}
+{{ OperatorHandler.print(state, startArguments) }}
+{%- endmacro %}
 {% set Start.print = printStart %}
 
-{#
-    Operators not to be printed:
+{# UNTESTED OPERATORS #}
 
-    OperandDef
-    TypeSpecifier
-    NamedTypeSpecifiers
-#}
+{# ParameterRef operator #}
+{% set ParameterRef = namespace() %}
+{% set ParameterRef.dataType = 'SIMPLE' %}
+{% macro printParameterRef(state, arguments) %}@{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set ParameterRef.print = printParameterRef %}
+
+{# SingletonFrom operator #}
+{% set SingletonFrom = namespace() %}
+{% set SingletonFrom.dataType = 'SIMPLE' %}
+{% macro printSingletonFrom(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
+{% set SingletonFrom.print = printSingletonFrom %}
 
 {# OBSOLETE OPERATOR IMPLEMENTATIONS #}
-
 {% macro Count(context, val) %}{% if context == 'Unfiltered' %}SELECT count({{ val }}) _val{% else %}SELECT count(*) AS _val FROM ({{ val }}) GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro%}
-{% macro ReturnClause(returnList) %}{{ val }}{% if returnList == none %}*{% else %}{{ ListPrintingUtility(returnList, ", ") }}{% endif %}{% endmacro %}
-{% macro SortClause(sortByItemList) %}ORDER BY {{ ListPrintingUtility(sortByItemList, ", ") }}{% endmacro %}
-{% macro ByExpression(direction, expr) %}{{ expr }} {{ direction }}{% endmacro %}
-{% macro Query(letList, sourceList, return, where, sortClause) %}SELECT {% if return == none %}*{% else %}{{ return }}{% endif %} FROM ({{ ListPrintingUtility(sourceList, ", ") }}){% if where != none %} WHERE {{ where }} {% endif %}{% if sortClause != none %} {{ sortClause }}{% endif %}{% endmacro %}
-{% macro IdentifierRef(name) %}{{ name }}{% endmacro %}
-{% macro ParameterRef(val) %}@{{ val }}{% endmacro %}
-{% macro SingletonFrom(val) %}{{ val }}{% endmacro %}
 
 {# Default operator #}
 {% set Default = namespace() %}
