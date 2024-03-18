@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.hl7.elm.r1.Library;
 
@@ -33,7 +32,6 @@ public class Transpiler {
 
         var libraryList = compiler.compile(cqlLibraryToTranspileAsText);
         // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them
-        Collections.reverse(libraryList);
 
         // Transform the AST into Jinja Scripts
         var converter = new Converter();        

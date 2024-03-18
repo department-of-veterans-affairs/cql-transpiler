@@ -6,5 +6,4 @@ dependencies {
     implementation "info.cqframework:model-jackson:${cqfVersion}"
     implementation "info.cqframework:quick:${cqfVersion}"
     implementation "info.cqframework:qdm:${cqfVersion}"
-    implementation "org.fhir:ucum:${ucumVersion}"
 }

@@ -5,6 +5,7 @@ public class Standards {
     public static final String NEWLINE = "\n";
     public static final String FOLDER_SEPARATOR = "/";
     public static final String SINGLE_VALUE_COLUMN_NAME = "_val";
+    public static final String DEFAULT_OPERATOR = "Default";
     private static final String MACRO_FILE_PREFIX = "_macros_";
 
     private static String targetLanguage;

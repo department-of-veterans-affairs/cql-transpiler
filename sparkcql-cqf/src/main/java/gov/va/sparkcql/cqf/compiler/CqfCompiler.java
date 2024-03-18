@@ -10,8 +10,6 @@ import java.util.stream.Stream;
 
 import gov.va.sparkcql.cqf.domain.CqlSource;
 import org.cqframework.cql.cql2elm.*;
-import org.fhir.ucum.UcumEssenceService;
-import org.fhir.ucum.UcumException;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
 
@@ -67,21 +65,14 @@ public class CqfCompiler {
     private List<Library> compileIdentifiedLibraries() {
         var callSite = callScopedCqlSources.stream().map(cs -> execCompile(cs.getSource())).collect(Collectors.toList());
         var transitive = transitiveDependencies.stream().map(cs -> execCompile(cs.getSource())).collect(Collectors.toList());
-        var allDependencies = new ArrayList<Library>(callSite);
-        allDependencies.addAll(transitive);
+        var allDependencies = new ArrayList<Library>(transitive);
+        allDependencies.addAll(callSite);
         return allDependencies;
     }
 
     private Library execCompile(String cqlText) {
         this.transitiveDependencies = new ArrayList<CqlSource>();
         LibrarySourceProvider librarySourceProvider = new CallScopedLibrarySourceProvider(this.callScopedCqlSources, this.librarySourceProvider, this.transitiveDependencies);
-        UcumEssenceService ucumService = null;
-
-        try {
-            ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
-        } catch (UcumException e) {
-            // Default to no service
-        }
 
         var modelManager = new ModelManager();
         var libraryManager = new LibraryManager(modelManager);
