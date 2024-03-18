@@ -76,7 +76,7 @@
 {% set Default = namespace() %}
 {% set Default.dataType = 'UNKNOWN' %}
 {%- macro printDefault(state, arguments) %}
-/* Unsupported operator: {{ arguments['unsupportedOperator'] }} with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/ 
+/* Unsupported operator: <{{ arguments['unsupportedOperator'] }}> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/ 
 {%- endmacro %}
 {% set Default.print = printDefault %}
 
@@ -459,6 +459,44 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set SingletonFrom.dataType = 'SIMPLE' %}
 {% macro printSingletonFrom(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
 {% set SingletonFrom.print = printSingletonFrom %}
+
+{# NONPRINTING OPERATORS #}
+{#
+    Some varieties of operator have no SQL equivalent, but may be printed in debug text or inside comments
+#}
+
+{# TypeSpecifier operator #}
+{% set TypeSpecifier = namespace() %}
+{% set TypeSpecifier.dataType = 'UNKNOWN' %}
+{%- macro printTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <TypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set TypeSpecifier.print = printTypeSpecifier %}
+
+{# IntervalTypeSpecifier operator #}
+{% set IntervalTypeSpecifier = namespace() %}
+{% set IntervalTypeSpecifier.dataType = 'SIMPLE' %}
+{%- macro printIntervalTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <IntervalTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set IntervalTypeSpecifier.print = printIntervalTypeSpecifier %}
+
+{# ListTypeSpecifier operator #}
+{% set ListTypeSpecifier = namespace() %}
+{% set ListTypeSpecifier.dataType = 'SIMPLE' %}
+{%- macro printListTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <ListTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set ListTypeSpecifier.print = printListTypeSpecifier %}
+
+{# NamedTypeSpecifier operator #}
+{% set NamedTypeSpecifier = namespace() %}
+{% set NamedTypeSpecifier.dataType = 'SIMPLE' %}
+{%- macro printNamedTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <NamedTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set NamedTypeSpecifier.print = printNamedTypeSpecifier %}
+
 
 {# OPERATOR TEMPLATES #}
 
