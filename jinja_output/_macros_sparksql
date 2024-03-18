@@ -20,7 +20,12 @@
 {# UTILITY AND HELPER FUNCTIONS #}
 
 {# initializes state #}
-{% macro InitState(state) %}{% set state.coercionInstructions = {} %}{% set state.context = none %}{% set state.insideQuery = false %}{% set state.functionArguments = {} %}{% endmacro %}
+{% macro InitState(state) %}
+{% set state.coercionInstructions = {} %}
+{% set state.context = none %}
+{% set state.insideQuery = false %}
+{% set state.functionArguments = {} %}
+{% endmacro %}
 
 {# Utility function to get the column a context should be grouped by #}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
@@ -69,9 +74,9 @@
 
 {# Default operator - printed by java transpiler for operators it doesn't support yet #}
 {% set Default = namespace() %}
-{% set Default.dataType = 'SIMPLE' %}
+{% set Default.dataType = 'UNKNOWN' %}
 {%- macro printDefault(state, arguments) %}
-/* Unsupported operator: {{ arguments['unsupportedOperator'] }} with children:[*/{{ OperatorHandler.print(state, arguments['children'][0]) }}/*]*/
+/* Unsupported operator: {{ arguments['unsupportedOperator'] }} with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/ 
 {%- endmacro %}
 {% set Default.print = printDefault %}
 
