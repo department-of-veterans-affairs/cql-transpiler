@@ -14,6 +14,7 @@
         ENCAPSULATED
         TABLE
         INHERITED
+        STATEMENT
         UNKNOWN
 #}
 
@@ -35,7 +36,17 @@
 
 {# Utility functions for printing lists #}
 {% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
-{% macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfArgumentsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ OperatorHandler.print(state, item) }}{% endfor %}{% endmacro %}
+{%- macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}
+{%- set ns = namespace(first = true) %}
+{%- for item in listOfArgumentsToPrint %}
+{%- if ns.first %}
+{%- set ns.first = false %}
+{%- else %}
+{{ joiner }}
+{%- endif %}
+{{ OperatorHandler.print(state, item) }}
+{%- endfor %}
+{%- endmacro %}
 
 {# Utility functions for dataType conversions #}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
@@ -312,18 +323,19 @@ SELECT collect_list(_val) AS _val FROM (
 SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {%- endmacro %}
 {%- macro printProperty(state, arguments) %}
-{%- if state.insideQuery %}
 {%- if arguments['children']|length > 0 %}
+{%- if state.insideQuery %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }}.{{ arguments['path'] }}
-{%- elif arguments['path'] != none %}
-{{ arguments['scope'] }}.{{ arguments['path'] }}
-{%- else %}{{ arguments['scope'] }}
-{%- endif %}
 {%- else %}
 {%- set previousCoercionInstructions = state.coercionInstructions %}
 {%- set state.coercionInstructions = {} %}
 {{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
 {%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- endif %}
+{%- elif arguments['path'] != none %}
+{{ arguments['scope'] }}.{{ arguments['path'] }}
+{%- else %}
+{{ arguments['scope'] }}
 {%- endif %}
 {%- endmacro %}
 {% set Property.print = printProperty %}
@@ -460,6 +472,12 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% macro printSingletonFrom(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
 {% set SingletonFrom.print = printSingletonFrom %}
 
+{# With operator #}
+{% set With = namespace() %}
+{% set With.dataType = 'STATEMENT' %}
+{% macro printWith(state, arguments) %}WITH {{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorHandler.print(state, arguments['children'][1]) }}{% endmacro %}
+{% set With.print = printWith %}
+
 {# NONPRINTING OPERATORS #}
 {#
     Some varieties of operator have no SQL equivalent, but may be printed in debug text or inside comments
@@ -467,7 +485,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 
 {# TypeSpecifier operator #}
 {% set TypeSpecifier = namespace() %}
-{% set TypeSpecifier.dataType = 'UNKNOWN' %}
+{% set TypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printTypeSpecifier(state, arguments) %}
 /* Unsupported operator: <TypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
@@ -475,7 +493,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 
 {# IntervalTypeSpecifier operator #}
 {% set IntervalTypeSpecifier = namespace() %}
-{% set IntervalTypeSpecifier.dataType = 'SIMPLE' %}
+{% set IntervalTypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printIntervalTypeSpecifier(state, arguments) %}
 /* Unsupported operator: <IntervalTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
@@ -483,7 +501,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 
 {# ListTypeSpecifier operator #}
 {% set ListTypeSpecifier = namespace() %}
-{% set ListTypeSpecifier.dataType = 'SIMPLE' %}
+{% set ListTypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printListTypeSpecifier(state, arguments) %}
 /* Unsupported operator: <ListTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
@@ -491,7 +509,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 
 {# NamedTypeSpecifier operator #}
 {% set NamedTypeSpecifier = namespace() %}
-{% set NamedTypeSpecifier.dataType = 'SIMPLE' %}
+{% set NamedTypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printNamedTypeSpecifier(state, arguments) %}
 /* Unsupported operator: <NamedTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
