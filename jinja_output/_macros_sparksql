@@ -1,25 +1,3 @@
-{# DOCUMENTATION #}
-{#
-    State contains the following scoped variables:
-        coercionInstructions - Dictionary<String, String>
-        context - String
-        insideQuery - Boolean
-        functionArguments - Dictionary<String, Dictionary<String, ?>
-
-    Whenever one of these variables are set, the following standard should be performed:
-    {% set previousVariableName = state.variableName %}{% set state.variableName = newValue %}{{ function(state) }}{% set state.variableName = previousVariableName %}
-
-    Potential data types:
-        SIMPLE
-        ENCAPSULATED
-        TABLE
-        INHERITED
-        STATEMENT
-        UNKNOWN
-#}
-
-{# UTILITY AND HELPER FUNCTIONS #}
-
 {# initializes state #}
 {% macro InitState(state) %}
 {% set state.coercionInstructions = {} %}
@@ -270,7 +248,7 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 
 {# LetClause operator #}
 {% set LetClause = namespace() %}
-{% set LetClause.dataType = 'STATEMENT' %}
+{% set LetClause.dataType = 'INHERITED' %}
 {%- macro printLetClause(state, arguments) %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }}
 {%- endmacro %}
@@ -524,6 +502,15 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set NamedTypeSpecifier.print = printNamedTypeSpecifier %}
 
 {# OPERATOR TEMPLATES #}
+
+{# QueryLetRef operator #}
+{% set QueryLetRef = namespace() %}
+{% set QueryLetRef.dataType = 'SIMPLE' %}
+{%- macro printQueryLetRef(state, arguments) %}
+{% set letDataType = arguments['referenceTo'][]%}
+{{ arguments['referenceName'] }}
+{%- endmacro %}
+{% set QueryLetRef.print = printQueryLetRef %}
 
 {# SingletonDefault operator #}
 {% set SingletonDefault = namespace() %}

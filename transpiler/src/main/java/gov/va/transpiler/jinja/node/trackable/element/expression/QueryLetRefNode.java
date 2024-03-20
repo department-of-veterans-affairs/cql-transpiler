@@ -1,5 +1,9 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.hl7.elm.r1.QueryLetRef;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
@@ -26,5 +30,19 @@ public class QueryLetRefNode extends ExpressionNode<QueryLetRef> implements Refe
     @Override
     public TranspilerNode getChildByReference(String nameOrIndex) {
         return ((LetClauseNode) getReferenceTo()).getChildByReference(nameOrIndex);
+    }
+
+    @Override
+    protected Map<String, String> getSimpleArgumentMap() {
+        var map = super.getSimpleArgumentMap();
+        map.put("'referenceName'", "'" + referenceName() + "'");
+        return map;
+    }
+
+    @Override
+    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
+        var map = super.getComplexArgumentMap();
+        map.put("'referenceValue'", Collections.singletonList((LetClauseNode) getReferenceTo()));
+        return map;
     }
 }
