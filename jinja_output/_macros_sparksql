@@ -268,6 +268,14 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {% macro printLessOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} <= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set LessOrEqual.print = printLessOrEqual %}
 
+{# LetClause operator #}
+{% set LetClause = namespace() %}
+{% set LetClause.dataType = 'STATEMENT' %}
+{%- macro printLetClause(state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{%- endmacro %}
+{% set LetClause.print = printLetClause %}
+
 {# List operator #}
 {% set List = namespace() %}
 {% set List.dataType = 'ENCAPSULATED' %}
@@ -514,7 +522,6 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 /* Unsupported operator: <NamedTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
 {% set NamedTypeSpecifier.print = printNamedTypeSpecifier %}
-
 
 {# OPERATOR TEMPLATES #}
 

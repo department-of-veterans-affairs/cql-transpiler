@@ -14,13 +14,19 @@
         ENCAPSULATED
         TABLE
         INHERITED
+        STATEMENT
         UNKNOWN
 #}
 
 {# UTILITY AND HELPER FUNCTIONS #}
 
 {# initializes state #}
-{% macro InitState(state) %}{% set state.coercionInstructions = {} %}{% set state.context = none %}{% set state.insideQuery = false %}{% set state.functionArguments = {} %}{% endmacro %}
+{% macro InitState(state) %}
+{% set state.coercionInstructions = {} %}
+{% set state.context = none %}
+{% set state.insideQuery = false %}
+{% set state.functionArguments = {} %}
+{% endmacro %}
 
 {# Utility function to get the column a context should be grouped by #}
 {% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
@@ -30,7 +36,17 @@
 
 {# Utility functions for printing lists #}
 {% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
-{% macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfArgumentsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ OperatorHandler.print(state, item) }}{% endfor %}{% endmacro %}
+{%- macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}
+{%- set ns = namespace(first = true) %}
+{%- for item in listOfArgumentsToPrint %}
+{%- if ns.first %}
+{%- set ns.first = false %}
+{%- else %}
+{{ joiner }}
+{%- endif %}
+{{ OperatorHandler.print(state, item) }}
+{%- endfor %}
+{%- endmacro %}
 
 {# Utility functions for dataType conversions #}
 {% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
@@ -66,6 +82,14 @@
 {# Namespace that handles printing operators #}
 {% set OperatorHandler = namespace() %}
 {% set OperatorHandler.print = printCoercingIfApplicable %}
+
+{# Default operator - printed by java transpiler for operators it doesn't support yet #}
+{% set Default = namespace() %}
+{% set Default.dataType = 'UNKNOWN' %}
+{%- macro printDefault(state, arguments) %}
+/* Unsupported operator: <{{ arguments['unsupportedOperator'] }}> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/ 
+{%- endmacro %}
+{% set Default.print = printDefault %}
 
 {# OPERATOR IMPLEMENTATIONS #}
 
@@ -226,6 +250,12 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {% macro printIn(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} IN {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set In.print = printIn %}
 
+{# InValueSet operator #}
+{% set InValueSet = namespace() %}
+{% set InValueSet.dataType = 'SIMPLE' %}
+{% macro printInValueSet(state, arguments) %}/* Unsupported Node: InValueSet for item [{{ OperatorHandler.print(state, arguments['children'][0])}}] in value set: [{{ OperatorHandler.print(state, arguments['children'][1]) }}]*/{% endmacro %}
+{% set InValueSet.print = printInValueSet %}
+
 {# LessThan operator #}
 {% set LessThan = namespace() %}
 {% set LessThan.dataType = 'SIMPLE' %}
@@ -237,6 +267,14 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {% set LessOrEqual.dataType = 'SIMPLE' %}
 {% macro printLessOrEqual(state, arguments) %}({{ OperatorHandler.print(state, arguments['children'][0])}} <= {{ OperatorHandler.print(state, arguments['children'][1]) }}){% endmacro %}
 {% set LessOrEqual.print = printLessOrEqual %}
+
+{# LetClause operator #}
+{% set LetClause = namespace() %}
+{% set LetClause.dataType = 'STATEMENT' %}
+{%- macro printLetClause(state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{%- endmacro %}
+{% set LetClause.print = printLetClause %}
 
 {# List operator #}
 {% set List = namespace() %}
@@ -293,18 +331,19 @@ SELECT collect_list(_val) AS _val FROM (
 SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {%- endmacro %}
 {%- macro printProperty(state, arguments) %}
-{%- if state.insideQuery %}
 {%- if arguments['children']|length > 0 %}
+{%- if state.insideQuery %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }}.{{ arguments['path'] }}
-{%- elif arguments['path'] != none %}
-{{ arguments['scope'] }}.{{ arguments['path'] }}
-{%- else %}{{ arguments['scope'] }}
-{%- endif %}
 {%- else %}
 {%- set previousCoercionInstructions = state.coercionInstructions %}
 {%- set state.coercionInstructions = {} %}
 {{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
 {%- set state.coercionInstructions = previousCoercionInstructions %}
+{%- endif %}
+{%- elif arguments['path'] != none %}
+{{ arguments['scope'] }}.{{ arguments['path'] }}
+{%- else %}
+{{ arguments['scope'] }}
 {%- endif %}
 {%- endmacro %}
 {% set Property.print = printProperty %}
@@ -391,6 +430,12 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% macro printUnion(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
 {% set Union.print = printUnion %}
 
+{# ValueSetRef operator #}
+{% set ValueSetRef = namespace() %}
+{% set ValueSetRef.dataType = 'SIMPLE' %}
+{% macro printValueSetRef(state, arguments) %}{{ arguments['reference'] }}{% endmacro %}
+{% set ValueSetRef.print = printValueSetRef %}
+
 {# OPERATORS WITH DEPENDENCIES #}
 
 {# End operator - dependencies: [Property] #}
@@ -434,6 +479,49 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set SingletonFrom.dataType = 'SIMPLE' %}
 {% macro printSingletonFrom(state, arguments) %}{{ OperatorHandler.print(state, arguments['children'][0]) }}{% endmacro %}
 {% set SingletonFrom.print = printSingletonFrom %}
+
+{# With operator #}
+{% set With = namespace() %}
+{% set With.dataType = 'STATEMENT' %}
+{% macro printWith(state, arguments) %}WITH {{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorHandler.print(state, arguments['children'][1]) }}{% endmacro %}
+{% set With.print = printWith %}
+
+{# NONPRINTING OPERATORS #}
+{#
+    Some varieties of operator have no SQL equivalent, but may be printed in debug text or inside comments
+#}
+
+{# TypeSpecifier operator #}
+{% set TypeSpecifier = namespace() %}
+{% set TypeSpecifier.dataType = 'STATEMENT' %}
+{%- macro printTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <TypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set TypeSpecifier.print = printTypeSpecifier %}
+
+{# IntervalTypeSpecifier operator #}
+{% set IntervalTypeSpecifier = namespace() %}
+{% set IntervalTypeSpecifier.dataType = 'STATEMENT' %}
+{%- macro printIntervalTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <IntervalTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set IntervalTypeSpecifier.print = printIntervalTypeSpecifier %}
+
+{# ListTypeSpecifier operator #}
+{% set ListTypeSpecifier = namespace() %}
+{% set ListTypeSpecifier.dataType = 'STATEMENT' %}
+{%- macro printListTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <ListTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set ListTypeSpecifier.print = printListTypeSpecifier %}
+
+{# NamedTypeSpecifier operator #}
+{% set NamedTypeSpecifier = namespace() %}
+{% set NamedTypeSpecifier.dataType = 'STATEMENT' %}
+{%- macro printNamedTypeSpecifier(state, arguments) %}
+/* Unsupported operator: <NamedTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+{%- endmacro %}
+{% set NamedTypeSpecifier.print = printNamedTypeSpecifier %}
 
 {# OPERATOR TEMPLATES #}
 
