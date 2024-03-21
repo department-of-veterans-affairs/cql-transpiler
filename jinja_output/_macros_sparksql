@@ -1,20 +1,205 @@
-{# initializes state #}
-{% macro InitState(state) %}
-{% set state.coercionInstructions = {} %}
-{% set state.context = none %}
-{% set state.insideQuery = false %}
-{% set state.functionArguments = {} %}
+{# UTILITIES, GLOBAL VARIABLES, PARENT CLASSES #}
+
+{#
+    Static Functions: Standards
+
+    Members:
+        Public:
+           printEmptyTable()
+#}
+
+{# Prints the single value column name #}
+{%- macro printSingleValueColumnName() %}
+_val
+{%- endmacro %}
+
+{# Prints an empty table #}
+{%- macro printEmptyTable() %}
+SELECT * FROM (SELECT 1 _val) WHERE _val = 0
+{%- endmacro %}
+
+{#
+    CLASS - State
+
+    Members:
+        Public:
+            construct(stateNamespace)
+            coercionInstructions
+            context
+            insideQuery
+            functionArguments
+#}
+
+{%- set StateClass = namespace() %}
+{%- macro stateClassConstruct(stateNamespace) %}
+{%- set stateNamespace.coercionInstructions = {} %}
+{%- set stateNamespace.context = none %}
+{%- set stateNamespace.insideQuery = false %}
+{%- set stateNamespace.functionArguments = {} %}
+{%- endmacro %}
+{%- set StateClass.construct = stateClassConstruct %}
+
+{#
+    ENUM - DataType
+
+    Values:
+        SIMPLE
+        ENCAPSULATED
+        TABLE
+        INHERITED
+        STATEMENT
+        UNKNOWN
+#}
+
+{%- set DataType = namespace() %}
+{%- set DataType.SIMPLE = 'simple' %}
+{%- set DataType.ENCAPSULATED = 'encapsulated' %}
+{%- set DataType.TABLE = 'table' %}
+{%- set DataType.INHERITED = 'inherited' %}
+{%- set DataType.STATEMENT = 'statement' %}
+{%- set DataType.UNKNOWN = 'unknown' %}
+
+{#
+    CLASS - Operator
+
+    Members:
+        Public:
+            construct(operatorNamespace)
+            print(state, arguments)
+            getDataType(carrier, state, arguments)
+#}
+
+{%- set OperatorClass = namespace() %}
+{%- macro operatorClassGetDataType(carrier, state, arguments) %}
+{%- set carrier.value = DataType.UNKNOWN %}
+{%- endmacro %}
+{%- macro operatorClassPrint(state, arguments) %}
+/* Operator with state: {{ state }} and arguments: {{ arguments }} */
+{%- endmacro %}
+{%- macro operatorClassConstruct(operatorNamespace) %}
+{%- set operatorNamespace.getDataType = operatorClassGetDataType %}
+{%- set operatorNamespace.print = operatorClassPrint %}
+{%- endmacro %}
+{%- set OperatorClass.construct = operatorClassConstruct %}
+
+{#
+    STATIC FUNCTIONS - Context Handling
+
+    Members:
+        Public:printIDFromContext(context)
+#}
+
+{# Prints the id matching the current context #}
+{%- macro printIDFromContext(context) %}
+{{ context }}id
+{%- endmacro %}
+
+{#
+    STATIC FUNCTIONS - SparkSQL Type Conversion
+
+    Members:
+        Public:
+            coerce(originalType, targetType, state, arguments)
+        Private:
+            collect(context, toCollect)
+            decollect(context, toDecollect)
+            encapsulate(context, toEncapsulate)
+#}
+
+{# Wraps SQL statement in a collect block #}
+{%- macro collect(context, toCollect)%}
+SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }})
+{%- if context != 'Unfiltered' %}
+ GROUP BY {{ printIDFromContext(context) }}
+{%- endif %}
 {% endmacro %}
 
-{# Utility function to get the column a context should be grouped by #}
-{% macro GetIDFromContext(context) %}{{ context }}id{% endmacro %}
+{# OperatorHandler - Wraps SQL statement in a decollect block #}
+{%- macro decollect(context, toDecollect) %}
+SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }}))
+{%- endmacro %}
 
-{# Standards #}
-{% macro EmptyTable() %}SELECT * FROM (SELECT 1 _val) WHERE _val = 0{% endmacro %}
+{# OperatorHandler - Wraps SQL statement in an encapsulate block #}
+{%- macro encapsulate(context, toEncapsulate) %}
+SELECT {{ toEncapsulate }} _val
+{%- endmacro %}
 
-{# Utility functions for printing lists #}
-{% macro ListPrintingUtility(listOfItemsToPrint, joiner) %}{% set ns = namespace(first = true) %}{% for item in listOfItemsToPrint %}{% if ns.first %}{% set ns.first = false %}{% else %}{{ joiner }}{% endif %}{{ item }}{% endfor %}{% endmacro %}
-{%- macro ArgumentListPrintingUtility(state, listOfArgumentsToPrint, joiner) %}
+{%- macro coerce(originalType, targetType, state, arguments) %}
+{%- if targetType == 'ENCAPSULATED' %}
+{%- if originalType == 'SIMPLE' %}
+{{ encapsulate(context, arguments['operator'].print(state, arguments)) }}
+{%- elif originalType == 'TABLE' %}
+{{ collect(context, arguments['operator'].print(state, arguments)) }}
+{%- else %}
+{{ expression }}
+{%- endif %}
+{%- elif targetType == 'TABLE' %}
+{%- if originalType == 'ENCAPSULATED' %}
+{{ decollect(context, arguments['operator'].print(state, arguments)) }}
+{%- else %}
+{{ arguments['operator'].print(state, arguments) }}
+{%- endif %}
+{%- else %}
+{{ arguments['operator'].print(state, arguments) }}
+{%- endif %}
+{%- endmacro %}
+
+{#
+    CLASS - OperatorHandler
+
+    Members:
+        Public:
+            construct(operatorHandlerNamespace)
+            print(state, arguments)
+        Private:
+            printCoercingIfApplicable(state, arguments)
+#}
+
+{%- set OperatorHandlerClass = namespace() %}
+
+{%- macro printCoercingIfApplicable(state, arguments) %}
+{%- if state != none and state.coercionInstructions != none and state.coercionInstructions[arguments['operator'].dataType] != none %}
+{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}
+{%- else %}
+{{ arguments['operator'].print(state, arguments) }}
+{%- endif %}
+{%- endmacro %}
+
+{%- macro OperatorHandlerConstruct(operatorHandlerNamespace) %}
+{%- set operatorHandlerNamespace.print = printCoercingIfApplicable %}
+{%- endmacro %}
+{%- set OperatorHandlerClass.construct = OperatorHandlerConstruct %}
+
+{#
+    Global Variable - OperatorHandler
+#}
+{%- set OperatorHandler = namespace() %}
+{%- do OperatorHandlerClass.construct(OperatorHandler) %}
+
+{#
+    Static Functions: List Printing Utilities
+
+    Members:
+        Public:
+            printItemsFromList(listOfItemsToPrint, joiner)
+            printOperatorsFromList(state, listOfArgumentsToPrint, joiner)
+#}
+
+{# Prints items from a list, delimiting them with a joiner #}
+{%- macro printItemsFromList(listOfItemsToPrint, joiner) %}
+{%- set ns = namespace(first = true) %}
+{%- for item in listOfItemsToPrint %}
+{%- if ns.first %}
+{%- set ns.first = false %}
+{%- else %}
+{{ joiner }}
+{%- endif %}
+{{ item }}
+{%- endfor %}
+{%- endmacro %}
+
+{# Prints operators from a list, delimiting them with a joiner #}
+{%- macro printOperatorsFromList(state, listOfArgumentsToPrint, joiner) %}
 {%- set ns = namespace(first = true) %}
 {%- for item in listOfArgumentsToPrint %}
 {%- if ns.first %}
@@ -26,48 +211,24 @@
 {%- endfor %}
 {%- endmacro %}
 
-{# Utility functions for dataType conversions #}
-{% macro Collect(context, toCollect)%}SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }}){% if context == 'Unfiltered' %}{% else %} GROUP BY {{ GetIDFromContext(context) }}{% endif %}{% endmacro %}
-{% macro Decollect(context, toDecollect) %}SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }})){% endmacro %}
-{% macro Encapsulate(context, toEncapsulate) %}SELECT {{ toEncapsulate }} _val{% endmacro %}
-{%- macro coerce(originalType, targetType, state, arguments) %}
-{%- if targetType == 'ENCAPSULATED' %}
-{%- if originalType == 'SIMPLE' %}
-{{ Encapsulate(context, arguments['operator'].print(state, arguments)) }}
-{%- elif originalType == 'TABLE' %}
-{{ Collect(context, arguments['operator'].print(state, arguments)) }}
-{%- else %}
-{{ expression }}
-{%- endif %}
-{%- elif targetType == 'TABLE' %}
-{%- if originalType == 'ENCAPSULATED' %}
-{{ Decollect(context, arguments['operator'].print(state, arguments)) }}
-{%- else %}
-{{ arguments['operator'].print(state, arguments) }}
-{%- endif %}
-{%- else %}
-{{ arguments['operator'].print(state, arguments) }}
-{%- endif %}
-{%- endmacro %}
-{%- macro printCoercingIfApplicable(state, arguments) %}
-{%- if state != none and state.coercionInstructions != none and state.coercionInstructions[arguments['operator'].dataType] != none %}
-{{ coerce(arguments['operator'].dataType, state.coercionInstructions[arguments['operator'].dataType], state, arguments) }}
-{%- else %}
-{{ arguments['operator'].print(state, arguments) }}
-{%- endif %}
-{%- endmacro %}
-
-{# Namespace that handles printing operators #}
-{% set OperatorHandler = namespace() %}
-{% set OperatorHandler.print = printCoercingIfApplicable %}
-
-{# Default operator - printed by java transpiler for operators it doesn't support yet #}
-{% set Default = namespace() %}
-{% set Default.dataType = 'UNKNOWN' %}
+{#
+    Class - DefaultOperator
+#}
+{% set DefaultOperatorClass = namespace() %}
 {%- macro printDefault(state, arguments) %}
-/* Unsupported operator: <{{ arguments['unsupportedOperator'] }}> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/ 
+/* Unsupported operator: <{{ arguments['unsupportedOperator'] }}> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/ 
 {%- endmacro %}
-{% set Default.print = printDefault %}
+{%- macro constructDefaultOperator(defaultOperatorNamespace) %}
+{%- do OperatorClass.construct(defaultOperatorNamespace) %}
+{%- set defaultOperatorNamespace.print = printDefault %}
+{%- endmacro %}
+{%- set DefaultOperatorClass.construct = constructDefaultOperator %}
+
+{#
+    Global Variable - Default
+#}
+{%- set Default = namespace() %}
+{%- do DefaultOperatorClass.construct(Default) %}
 
 {# OPERATOR IMPLEMENTATIONS #}
 
@@ -115,7 +276,7 @@
 {% set Concatenate = namespace() %}
 {% set Concatenate.dataType = 'SIMPLE' %}
 {%- macro printConcatenate(state, arguments) %}
-concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
+concat({{ printOperatorsFromList(state, arguments['children'], ", ") }})
 {%- endmacro %}
 {% set Concatenate.print = printConcatenate %}
 
@@ -126,7 +287,7 @@ concat({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
 {%- if state.context == 'Unfiltered' %}
 SELECT count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }})
 {%- else %}
-SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }}) GROUP BY {{ GetIDFromContext(state.context) }}
+SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }}) GROUP BY {{ printIDFromContext(state.context) }}
 {%- endif %}
 {%- endmacro %}
 {% set Count.print = printCount %}
@@ -162,8 +323,8 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {%- set internalState = state %}
 {%- if internalState == none %}
 {%- set internalState = namespace() %}
+{%- do StateClass.construct(internalState) %}
 {%- endif %}
-{%- do InitState(internalState) %}
 {%- set previousContext = internalState.context %}
 {%- if previousContext == none and arguments['context'] != none %}
 {%- set internalState.context = arguments['context'] %}
@@ -260,11 +421,11 @@ SELECT {{ GetIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.
 {%- macro printList(state, arguments) %}
 SELECT collect_list(_val) AS _val FROM (
 {%- if arguments['children']|length == 0 %}
-{{ EmptyTable() }}
+{{ printEmptyTable() }}
 {%- else %}
 {%- set previousCoercionInstructions = state.coercionInstructions %}
 {%- set state.coercionInstructions = { 'SIMPLE': 'ENCAPSULATED' } %}
-{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}
+{{ printOperatorsFromList(state, arguments['children'], ' UNION ') }}
 {%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- endif %})
 {%- endmacro %}
@@ -334,7 +495,7 @@ SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {%- set previousCoercionInstructions = state.coercionInstructions %}
 {%- set state.coercionInstructions = {} %}
 {%- if arguments['letClause']|length > 0 %}
-LET {{ ArgumentListPrintingUtility(state, arguments['letClause'], ", ") }} 
+LET {{ printOperatorsFromList(state, arguments['letClause'], ", ") }} 
 {% endif %}
 SELECT
 {%- if arguments['returnClause']|length == 0 %}
@@ -342,7 +503,7 @@ SELECT
 {%- else %}
  {{ OperatorHandler.print(state, arguments['returnClause'][0]) }} 
 {%- endif %}
- FROM ({{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }})
+ FROM ({{ printOperatorsFromList(state, arguments['children'], ", ") }})
 {%- if arguments['where']|length > 0 %}
  WHERE {{ OperatorHandler.print(state, arguments['where'][0]) }}
 {%- endif %}
@@ -366,7 +527,7 @@ SELECT * FROM {{ arguments['templateId'] }}
 {% set ReturnClause = namespace() %}
 {% set ReturnClause.dataType = 'UNKNOWN' %}
 {%- macro printReturnClause(state, arguments) %}
-{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+{{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {%- endmacro %}
 {% set ReturnClause.print = printReturnClause %}
 
@@ -374,7 +535,7 @@ SELECT * FROM {{ arguments['templateId'] }}
 {% set SortClause = namespace() %}
 {% set SortClause.dataType = 'UNKNOWN' %}
 {%- macro printSortClause(state, arguments) %}
-ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+ORDER BY {{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {%- endmacro %}
 {% set SortClause.print = printSortClause %}
 
@@ -393,7 +554,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {# Tuple operator #}
 {% set Tuple = namespace() %}
 {% set Tuple.dataType = 'ENCAPSULATED' %}
-{% macro printTuple(state, arguments) %}SELECT struct(*) from ({{ ArgumentListPrintingUtility(state, arguments['children'], ', ') }}){% endmacro %}
+{% macro printTuple(state, arguments) %}SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], ', ') }}){% endmacro %}
 {% set Tuple.print = printTuple %}
 
 {# TupleElement operator #}
@@ -405,7 +566,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {# Union operator #}
 {% set Union = namespace() %}
 {% set Union.dataType = 'TABLE' %}
-{% macro printUnion(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ ArgumentListPrintingUtility(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
+{% macro printUnion(state, arguments) %}{% set previousCoercionInstructions = state.coercionInstructions %}{% set state.coercionInstructions = { 'ENCAPSULATED': 'TABLE' } %}{{ printOperatorsFromList(state, arguments['children'], ' UNION ') }}{% set state.coercionInstructions = previousCoercionInstructions %}{% endmacro %}
 {% set Union.print = printUnion %}
 
 {# ValueSetRef operator #}
@@ -473,7 +634,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set TypeSpecifier = namespace() %}
 {% set TypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printTypeSpecifier(state, arguments) %}
-/* Unsupported operator: <TypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+/* Unsupported operator: <TypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
 {% set TypeSpecifier.print = printTypeSpecifier %}
 
@@ -481,7 +642,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set IntervalTypeSpecifier = namespace() %}
 {% set IntervalTypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printIntervalTypeSpecifier(state, arguments) %}
-/* Unsupported operator: <IntervalTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+/* Unsupported operator: <IntervalTypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
 {% set IntervalTypeSpecifier.print = printIntervalTypeSpecifier %}
 
@@ -489,7 +650,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set ListTypeSpecifier = namespace() %}
 {% set ListTypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printListTypeSpecifier(state, arguments) %}
-/* Unsupported operator: <ListTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+/* Unsupported operator: <ListTypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
 {% set ListTypeSpecifier.print = printListTypeSpecifier %}
 
@@ -497,7 +658,7 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set NamedTypeSpecifier = namespace() %}
 {% set NamedTypeSpecifier.dataType = 'STATEMENT' %}
 {%- macro printNamedTypeSpecifier(state, arguments) %}
-/* Unsupported operator: <NamedTypeSpecifier> with children:[*/{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}/*]*/
+/* Unsupported operator: <NamedTypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
 {%- endmacro %}
 {% set NamedTypeSpecifier.print = printNamedTypeSpecifier %}
 
@@ -524,6 +685,6 @@ ORDER BY {{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
 {% set ChildrenListPrinting = namespace() %}
 {% set ChildrenListPrinting.dataType = 'SIMPLE' %}
 {%- macro printChildrenListPrinting(state, arguments) %}
-{{ ArgumentListPrintingUtility(state, arguments['children'], ", ") }}
+{{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {%- endmacro %}
 {% set ChildrenListPrinting.print = printChildrenListPrinting %}
