@@ -28,6 +28,7 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
             context
             insideQuery
             functionArguments
+            insideSqlComment
 #}
 
 {%- set StateClass = namespace() %}
@@ -36,6 +37,7 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
 {%- set stateNamespace.context = none %}
 {%- set stateNamespace.insideQuery = false %}
 {%- set stateNamespace.functionArguments = {} %}
+{%- set stateNamespace.insideSqlComment = false %}
 {%- endmacro %}
 {%- set StateClass.construct = stateClassConstruct %}
 
@@ -74,7 +76,16 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
 {%- set carrier.value = this.defaultDataType %}
 {%- endmacro %}
 {%- macro operatorClassPrint(this, state, arguments) %}
-/* Operator with state: {{ state }} and arguments: {{ arguments }} */
+{%- set previousInsideSqlComment = state.insideSqlComment %}
+{%- set state.insideSqlComment = true %}
+{%- if not previousInsideSqlComment %}
+/*
+{%- endif %}
+ Operator with state: {{ state }} and arguments: {{ arguments }} 
+{% if not previousInsideSqlComment %}
+*/ 
+{%- endif %}
+{%- set state.insideSqlComment = previousInsideSqlComment %}
 {%- endmacro %}
 {%- macro operatorClassConstruct(operatorNamespace) %}
 {%- set operatorNamespace.defaultDataType = DataType.SIMPLE %}
@@ -221,7 +232,16 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 #}
 {% set DefaultOperatorClass = namespace() %}
 {%- macro printDefault(this, state, arguments) %}
-/* Unsupported operator: <{{ arguments['unsupportedOperator'] }}> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/ 
+{%- set previousInsideSqlComment = state.insideSqlComment %}
+{%- set state.insideSqlComment = true %}
+{%- if not previousInsideSqlComment %}
+/*
+{%- endif %}
+ Unsupported operator: <{{ arguments['unsupportedOperator'] }}> with children:[{{ printOperatorsFromList(state, arguments['children'], ", ") }}] 
+{%- if not previousInsideSqlComment %}
+*/
+{%- endif %}
+{%- set state.insideSqlComment = previousInsideSqlComment %}
 {%- endmacro %}
 {%- macro constructDefaultOperator(defaultOperatorNamespace) %}
 {%- do OperatorClass.construct(defaultOperatorNamespace) %}
@@ -426,11 +446,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 
 {# InValueSet operator #}
 {%- set InValueSet = namespace() %}
-{%- macro printInValueSet(this, state, arguments) %}
-/* Unsupported Node: InValueSet for item [{{ OperatorHandler.print(state, arguments['children'][0])}}] in value set: [{{ OperatorHandler.print(state, arguments['children'][1]) }}]*/
-{%- endmacro %}
-{%- do OperatorClass.construct(InValueSet) %}
-{%- set InValueSet.print = printInValueSet %}
+{%- do DefaultOperatorClass.construct(InValueSet) %}
 
 {# LessThan operator #}
 {%- set LessThan = namespace() %}

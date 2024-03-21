@@ -42,7 +42,11 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpress
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.EndNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.FlattenNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.SingletonFromNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.StartNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ToDecimalNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.typespecifier.IntervalTypeSpecifierNode;
@@ -168,6 +172,18 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitDivide(Divide element, State state) {
         new BinaryExpressionNode<Divide>(state, element);
         return super.visitDivide(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitEnd(End element, State state) {
+        new EndNode(state, element);
+        return super.visitEnd(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitEqual(Equal element, State state) {
+        new BinaryExpressionNode<Equal>(state, element);
+        return super.visitEqual(element, state);
     }
 
     @Override
@@ -339,6 +355,18 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitSingletonFrom(SingletonFrom element, State state) {
+        new SingletonFromNode(state, element);
+        return super.visitSingletonFrom(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitStart(Start element, State state) {
+        new StartNode(state, element);
+        return super.visitStart(element, state);
+    }
+
+    @Override
     public TranspilerNode visitSortByItem(SortByItem element, State state) {
         if (element instanceof ByColumn) {
             return visitByColumn((ByColumn) element, state);
@@ -361,6 +389,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitSubtract(Subtract element, State state) {
         new BinaryExpressionNode<Subtract>(state, element);
         return super.visitSubtract(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitToDecimal(ToDecimal element, State state) {
+        new ToDecimalNode(state, element);
+        return super.visitToDecimal(element, state);
     }
 
     @Override
