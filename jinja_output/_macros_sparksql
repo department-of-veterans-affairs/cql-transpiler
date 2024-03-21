@@ -15,7 +15,7 @@ _val
 
 {# Prints an empty table #}
 {%- macro printEmptyTable() %}
-SELECT * FROM (SELECT 1 _val) WHERE _val = 0
+SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingleValueColumnName() }} = 0
 {%- endmacro %}
 
 {#
@@ -108,7 +108,7 @@ SELECT * FROM (SELECT 1 _val) WHERE _val = 0
 
 {# Wraps SQL statement in a collect block #}
 {%- macro collect(context, toCollect)%}
-SELECT collect_list(struct(*)) AS _val FROM ({{ toCollect }})
+SELECT collect_list(struct(*)) AS {{ printSingleValueColumnName() }} FROM ({{ toCollect }})
 {%- if context != 'Unfiltered' %}
  GROUP BY {{ printIDFromContext(context) }}
 {%- endif %}
@@ -121,7 +121,7 @@ SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }}))
 
 {# OperatorHandler - Wraps SQL statement in an encapsulate block #}
 {%- macro encapsulate(context, toEncapsulate) %}
-SELECT {{ toEncapsulate }} _val
+SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- endmacro %}
 
 {%- macro coerce(originalType, targetType, state, arguments) %}
@@ -419,7 +419,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {% set List = namespace() %}
 {% set List.dataType = 'ENCAPSULATED' %}
 {%- macro printList(state, arguments) %}
-SELECT collect_list(_val) AS _val FROM (
+SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueColumnName() }} FROM (
 {%- if arguments['children']|length == 0 %}
 {{ printEmptyTable() }}
 {%- else %}
