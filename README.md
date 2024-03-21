@@ -65,7 +65,7 @@ The operatorValues dictionary should be treated as essentially a class, that alw
 
 ### Design - Jinja-to-SparkSQL
 
-The particular behavior of the macros file that targets SparkSQL implements its behavior using the following classes and standards.
+The macros file that targets SparkSQL implements its behavior using the following classes and standards.
 
 #### State
 
