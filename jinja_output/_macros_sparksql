@@ -19,6 +19,26 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
 {%- endmacro %}
 
 {#
+    ENUM - DataType
+
+    Values:
+        SIMPLE
+        ENCAPSULATED
+        TABLE
+        INHERITED
+        STATEMENT
+        UNKNOWN
+#}
+
+{%- set DataType = namespace() %}
+{%- set DataType.SIMPLE = 'simple' %}
+{%- set DataType.ENCAPSULATED = 'encapsulated' %}
+{%- set DataType.TABLE = 'table' %}
+{%- set DataType.INHERITED = 'inherited' %}
+{%- set DataType.STATEMENT = 'statement' %}
+{%- set DataType.UNKNOWN = 'unknown' %}
+
+{#
     CLASS - State
 
     Members:
@@ -40,26 +60,6 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
 {%- set stateNamespace.insideSqlComment = false %}
 {%- endmacro %}
 {%- set StateClass.construct = stateClassConstruct %}
-
-{#
-    ENUM - DataType
-
-    Values:
-        SIMPLE
-        ENCAPSULATED
-        TABLE
-        INHERITED
-        STATEMENT
-        UNKNOWN
-#}
-
-{%- set DataType = namespace() %}
-{%- set DataType.SIMPLE = 'simple' %}
-{%- set DataType.ENCAPSULATED = 'encapsulated' %}
-{%- set DataType.TABLE = 'table' %}
-{%- set DataType.INHERITED = 'inherited' %}
-{%- set DataType.STATEMENT = 'statement' %}
-{%- set DataType.UNKNOWN = 'unknown' %}
 
 {#
     CLASS - Operator
@@ -142,15 +142,15 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- if targetType == DataType.ENCAPSULATED and originalType == DataType.SIMPLE %}
 {%- set state.coercionInstructions = {} %}
 {{ encapsulate(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
-{%- set state.coercionInstructions = state.previousCoercionInstructions %}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- elif targetType == DataType.ENCAPSULATED and originalType == DataType.TABLE %}
 {%- set state.coercionInstructions = {} %}
 {{ collect(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
-{%- set state.coercionInstructions = state.previousCoercionInstructions %}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- elif targetType == DataType.TABLE and originalType == DataType.ENCAPSULATED %}
 {%- set state.coercionInstructions = {} %}
 {{ decollect(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
-{%- set state.coercionInstructions = state.previousCoercionInstructions %}
+{%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- else %}
 {{ arguments['operator'].print(arguments['operator'], state, arguments) }}
 {%- endif %}
@@ -168,17 +168,13 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- set OperatorHandlerClass = namespace() %}
 
 {%- macro operatorHandlerPrint(state, arguments) %}
-{%- if state == none %}
-{%- set state = namespace() %}
-{%- do StateClass.construct(state) %}
-{%- endif %}
-{%- set operatorDataType = namespace() %}
-{%- do arguments['operator'].getDataType(arguments['operator'], operatorDataType, state, arguments) %}
-{%- if state.coercionInstructions[operatorDataType] != none %}
-{{ coerce(operatorDataType, state.coercionInstructions[operatorDataType], state, arguments) }}
-{%- else %}
-{{ arguments['operator'].print(arguments['operator'], state, arguments) }}
-{%- endif %}
+{%-     if state == none %}
+{%-         set state = namespace() %}
+{%-         do StateClass.construct(state) %}
+{%-     endif %}
+{%-     set operatorDataTypeCarrier = namespace() %}
+{%-     do arguments['operator'].getDataType(arguments['operator'], operatorDataTypeCarrier, state, arguments) %}
+{{ coerce(operatorDataTypeCarrier.value, state.coercionInstructions[operatorDataTypeCarrier.value], state, arguments) }}
 {%- endmacro %}
 
 {%- macro OperatorHandlerConstruct(operatorHandlerNamespace) %}
@@ -216,15 +212,15 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 
 {# Prints operators from a list, delimiting them with a joiner #}
 {%- macro printOperatorsFromList(state, listOfArgumentsToPrint, joiner) %}
-{%- set ns = namespace(first = true) %}
-{%- for item in listOfArgumentsToPrint %}
-{%- if ns.first %}
-{%- set ns.first = false %}
-{%- else %}
+{%-     set ns = namespace(first = true) %}
+{%-     for item in listOfArgumentsToPrint %}
+{%-         if ns.first %}
+{%-             set ns.first = false %}
+{%-         else %}
 {{ joiner }}
-{%- endif %}
+{%-         endif %}
 {{ OperatorHandler.print(state, item) }}
-{%- endfor %}
+{%-     endfor %}
 {%- endmacro %}
 
 {#
@@ -365,12 +361,12 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# ExpressionDef operator #}
 {%- set ExpressionDef = namespace() %}
 {%- macro printExpressionDef(this, state, arguments) %}
-{%- set previousContext = state.context %}
-{%- if previousContext == none and arguments['context'] != none %}
-{%- set state.context = arguments['context'] %}
-{%- endif %}
+{%-     set previousContext = state.context %}
+{%-     if previousContext == none and arguments['context'] != none %}
+{%-         set state.context = arguments['context'] %}
+{%-     endif %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }}
-{%- set state.context = previousContext %}
+{%-     set state.context = previousContext %}
 {%- endmacro %}
 {%- do OperatorClass.construct(ExpressionDef) %}
 {%- set ExpressionDef.defaultDataType = DataType.INHERITED %}
@@ -488,7 +484,7 @@ SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueCo
 {%- endmacro %}
 {%- do OperatorClass.construct(List) %}
 {%- set List.defaultDataType = DataType.ENCAPSULATED %}
-{% set List.print = printList %}
+{%- set List.print = printList %}
 
 {# Literal operator #}
 {%- set Literal = namespace() %}
