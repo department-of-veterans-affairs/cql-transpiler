@@ -79,11 +79,11 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
 {%- set previousInsideSqlComment = state.insideSqlComment %}
 {%- set state.insideSqlComment = true %}
 {%- if not previousInsideSqlComment %}
-/*
+/* 
 {%- endif %}
- Operator with state: {{ state }} and arguments: {{ arguments }} 
+Operator with state: {{ state }} and arguments: {{ arguments }} 
 {% if not previousInsideSqlComment %}
-*/ 
+ */ 
 {%- endif %}
 {%- set state.insideSqlComment = previousInsideSqlComment %}
 {%- endmacro %}
@@ -224,34 +224,34 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- endmacro %}
 
 {#
-    Class - DefaultOperator
+    Class - UnsupportedOperator
 #}
-{% set DefaultOperatorClass = namespace() %}
+{% set UnsupportedOperatorClass = namespace() %}
 {%- macro printDefault(this, state, arguments) %}
-{%- set previousInsideSqlComment = state.insideSqlComment %}
-{%- set state.insideSqlComment = true %}
-{%- if not previousInsideSqlComment %}
+{%-     set previousInsideSqlComment = state.insideSqlComment %}
+{%-     set state.insideSqlComment = true %}
+{%-     if not previousInsideSqlComment %}
 /*
-{%- endif %}
- Unsupported operator: <{{ arguments['unsupportedOperator'] }}> with children:[{{ printOperatorsFromList(state, arguments['children'], ", ") }}] 
-{%- if not previousInsideSqlComment %}
+{%-     endif %}
+{Operator: {% if arguments['unsupportedOperator'] != none or arguments['unsupportedOperator']|length == 0 %}{{ arguments['unsupportedOperator'] }}{% else %}{{ arguments }}{% endif %} with children: [{{ printOperatorsFromList(state, arguments['children'], ", ") }}]}
+{%-     if not previousInsideSqlComment %}
 */
-{%- endif %}
-{%- set state.insideSqlComment = previousInsideSqlComment %}
+{%-     endif %}
+{%-     set state.insideSqlComment = previousInsideSqlComment %}
 {%- endmacro %}
-{%- macro constructDefaultOperator(defaultOperatorNamespace) %}
-{%- do OperatorClass.construct(defaultOperatorNamespace) %}
-{%- set defaultOperatorNamespace.print = printDefault %}
+{%- macro constructUnsupportedOperator(unsupportedOperatorNamespace) %}
+{%-     do OperatorClass.construct(unsupportedOperatorNamespace) %}
+{%-     set unsupportedOperatorNamespace.print = printDefault %}
 {%- endmacro %}
-{%- set DefaultOperatorClass.construct = constructDefaultOperator %}
+{%- set UnsupportedOperatorClass.construct = constructUnsupportedOperator %}
 
 {#
-    Global Variable - Default
+    Global Variable - Unsupported
 #}
 {}
-{%- set Default = namespace() %}
-{%- do DefaultOperatorClass.construct(Default) %}
-{%- set Default.defaultDataType = DataType.UNKNOWN %}
+{%- set Unsupported = namespace() %}
+{%- do UnsupportedOperatorClass.construct(Unsupported) %}
+{%- set Unsupported.defaultDataType = DataType.UNKNOWN %}
 
 {# OPERATOR IMPLEMENTATIONS #}
 
@@ -407,13 +407,13 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {%- set FunctionRef.defaultDataType = DataType.INHERITED %}
 {%- set FunctionRef.print = printFunctionRef %}
 
-{# GreaterThan operator #}
-{%- set GreaterThan = namespace() %}
-{%- macro printGreaterThan(this, state, arguments) %}
+{# Greater operator #}
+{%- set Greater = namespace() %}
+{%- macro printGreater(this, state, arguments) %}
 ({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }})
 {%- endmacro %}
-{%- do OperatorClass.construct(GreaterThan) %}
-{%- set GreaterThan.print = printGreaterThan %}
+{%- do OperatorClass.construct(Greater) %}
+{%- set Greater.print = printGreater %}
 
 {# GreaterOrEqual operator #}
 {%- set GreaterOrEqual = namespace() %}
@@ -439,17 +439,13 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {%- do OperatorClass.construct(In) %}
 {%- set In.print = printIn %}
 
-{# InValueSet operator #}
-{%- set InValueSet = namespace() %}
-{%- do DefaultOperatorClass.construct(InValueSet) %}
-
-{# LessThan operator #}
-{%- set LessThan = namespace() %}
-{%- macro printLessThan(this, state, arguments) %}
+{# Less operator #}
+{%- set Less = namespace() %}
+{%- macro printLess(this, state, arguments) %}
 ({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }})
 {%- endmacro %}
-{%- do OperatorClass.construct(LessThan) %}
-{%- set LessThan.print = printLessThan %}
+{%- do OperatorClass.construct(Less) %}
+{%- set Less.print = printLess %}
 
 {# LessOrEqual operator #}
 {%- set LessOrEqual = namespace() %}
@@ -589,7 +585,21 @@ SELECT
 {# Retrieve operator #}
 {%- set Retrieve = namespace() %}
 {%- macro printRetrieve(this, state, arguments) %}
+{%-     if arguments['codeProperty'] == 'code' %}
+{%-         if arguments['codeComparator'] == 'in' %}
+SELECT * FROM {{ OperatorHandler.print(state, arguments['valueSet'][0]) }}
+{%-         else %}
+{%-             if not state.insideSqlComment %}
+/*
+{%-             endif %}
+Retrieve with unsupported arguments: {{ arguments }}
+{%-             if not state.insideSqlComment %}
+*/
+{%-             endif %}
+{%-         endif %}
+{%-     else %}
 SELECT * FROM {{ arguments['templateId'] }}
+{%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Retrieve) %}
 {%- set Retrieve.defaultDataType = DataType.TABLE %}
@@ -736,68 +746,59 @@ WITH {{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorH
 {%- set With.print = printWith %}
 {%- set With.defaultDataType = DataType.STATEMENT %}
 
+{# InValueSet operator #}
+{%- set InValueSet = namespace() %}
+{%- macro printInValueSet(this, state, arguments) %}
+IN {{ OperatorHandler.print(state, arguments['children'][0])}}
+{%- endmacro %}
+{%- do OperatorClass.construct(InValueSet) %}
+{%- set InValueSet.defaultDataType = DataType.SIMPLE %}
+{%- set InValueSet.print = printInValueSet %}
+
 {#
     NONPRINTING OPERATORS
 
     Some varieties of operator have no SQL equivalent, but may be printed in debug text or inside comments
 #}
 
-{# NonPrintingOperatorClass #}
+{# TypeSpecifierOperatorClass #}
 
-{% set NonPrintingOperatorClass = namespace() %}
-{%- macro printNonPrinting(this, state, arguments) %}
+{% set TypeSpecifierOperatorClass = namespace() %}
+{%- macro printTypeSpecifier(this, state, arguments) %}
 {%-     set previousInsideSqlComment = state.insideSqlComment %}
 {%-     set state.insideSqlComment = true %}
 {%-     if not previousInsideSqlComment %}
 /*
 {%-     endif %}
- Nonprinting operator: <{{ this.name }}> with children:[{{ printOperatorsFromList(state, arguments['children'], ", ") }}] 
+ TypeSpecifier operator: <{{ this.name }}> with children:[{{ printOperatorsFromList(state, arguments['children'], ", ") }}] 
 {%-     if not previousInsideSqlComment %}
 */
 {%-     endif %}
 {%-     set state.insideSqlComment = previousInsideSqlComment %}
 {%- endmacro %}
-{%- macro constructNonPrintingOperator(nonPrintingOperatorNamespace) %}
-{%-     do DefaultOperatorClass.construct(nonPrintingOperatorNamespace) %}
-{%-     set NonPrintingOperatorClass.name = "NonPrinting" %}
-{%-     set nonPrintingOperatorNamespace.print = printNonPrinting %}
+{%- macro constructTypeSpecifierOperator(typeSpecifierOperatorNamespace) %}
+{%-     do UnsupportedOperatorClass.construct(typeSpecifierOperatorNamespace) %}
+{%-     set TypeSpecifierOperatorClass.name = "TypeSpecifier" %}
+{%-     set typeSpecifierOperatorNamespace.print = printTypeSpecifier %}
 {%- endmacro %}
-{%- set NonPrintingOperatorClass.construct = constructNonPrintingOperator %}
+{%- set TypeSpecifierOperatorClass.construct = constructTypeSpecifierOperator %}
 
 {# TypeSpecifier operator #}
 {%- set TypeSpecifier = namespace() %}
-{%- do NonPrintingOperatorClass.construct(TypeSpecifier) %}
+{%- do TypeSpecifierOperatorClass.construct(TypeSpecifier) %}
 {%- set TypeSpecifier.name = 'TypeSpecifier' %}
 
 {# IntervalTypeSpecifier operator #}
 {%- set IntervalTypeSpecifier = namespace() %}
-{%- do NonPrintingOperatorClass.construct(IntervalTypeSpecifier) %}
+{%- do TypeSpecifierOperatorClass.construct(IntervalTypeSpecifier) %}
 {%- set IntervalTypeSpecifier.name = 'IntervalTypeSpecifier' %}
 
 {# ListTypeSpecifier operator #}
 {%- set ListTypeSpecifier = namespace() %}
-{%- do NonPrintingOperatorClass.construct(ListTypeSpecifier) %}
+{%- do TypeSpecifierOperatorClass.construct(ListTypeSpecifier) %}
 {%- set ListTypeSpecifier.name = 'ListTypeSpecifier' %}
 
 {# NamedTypeSpecifier operator #}
 {%- set NamedTypeSpecifier = namespace() %}
-{%- do NonPrintingOperatorClass.construct(NamedTypeSpecifier) %}
+{%- do TypeSpecifierOperatorClass.construct(NamedTypeSpecifier) %}
 {%- set NamedTypeSpecifier.name = 'NamedTypeSpecifier' %}
-
-{# OPERATOR TEMPLATES #}
-
-{# SingletonDefault operator #}
-{%- set SingletonDefault = namespace() %}
-{%- macro printSingletonDefault(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }}
-{%- endmacro %}
-{%- do OperatorClass.construct(SingletonDefault) %}
-{%- set SingletonDefault.print = printSingletonDefault %}
-
-{# ChildrenListPrinting operator #}
-{%- set ChildrenListPrinting = namespace() %}
-{%- macro printChildrenListPrinting(this, state, arguments) %}
-{{ printOperatorsFromList(state, arguments['children'], ", ") }}
-{%- endmacro %}
-{%- do OperatorClass.construct(ChildrenListPrinting) %}
-{%- set ChildrenListPrinting.print = printChildrenListPrinting %}
