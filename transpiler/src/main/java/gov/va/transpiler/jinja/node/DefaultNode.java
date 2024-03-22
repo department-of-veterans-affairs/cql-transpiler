@@ -24,7 +24,7 @@ public class DefaultNode extends CQLEquivalent<Trackable> {
     @Override
     protected Map<String, String> getSimpleArgumentMap() {
         var map = super.getSimpleArgumentMap();
-        map.put("'unsupportedOperator'", super.getOperator());
+        map.put("'unsupportedOperator'", "'" + super.getOperator() + "'");
         return map;
     }
 }

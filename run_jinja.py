@@ -1,7 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 template_dir = "jinja_output"
-#cql_to_jinja_source = "MATGlobalCommonFunctions_7.0.000"
-cql_to_jinja_source = "Retrievals_1.0"
+cql_to_jinja_source = "DischargedonAntithromboticTherapy_12.0.000"
+#cql_to_jinja_source = "Retrievals_1.0"
 env = Environment(loader = FileSystemLoader(template_dir))
 env.trim_blocks = True
 env.lstrip_blocks = True

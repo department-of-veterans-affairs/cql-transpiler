@@ -42,7 +42,8 @@ public class QueryLetRefNode extends ExpressionNode<QueryLetRef> implements Refe
     @Override
     protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
         var map = super.getComplexArgumentMap();
-        map.put("'referenceValue'", Collections.singletonList((LetClauseNode) getReferenceTo()));
+        // TODO
+        //map.put("'referenceValue'", Collections.singletonList((LetClauseNode) getReferenceTo()));
         return map;
     }
 }

@@ -245,7 +245,6 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- endmacro %}
 {%- set DefaultOperatorClass.construct = constructDefaultOperator %}
 
-
 {#
     Global Variable - Default
 #}
@@ -719,6 +718,15 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {%- do OperatorClass.construct(SingletonFrom) %}
 {%- set SingletonFrom.print = printSingletonFrom %}
 
+{# QueryLetRef operator #}
+{%- set QueryLetRef = namespace() %}
+{%- macro printQueryLetRef(this, state, arguments) %}
+{{ arguments['referenceName'] }}
+{%- endmacro %}
+{%- do OperatorClass.construct(QueryLetRef) %}
+{%- set QueryLetRef.defaultDataType = DataType.UNKNOWN %}
+{%- set QueryLetRef.print = printQueryLetRef %}
+
 {# With operator #}
 {%- set With = namespace() %}
 {%- macro printWith(this, state, arguments) %}
@@ -728,46 +736,53 @@ WITH {{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorH
 {%- set With.print = printWith %}
 {%- set With.defaultDataType = DataType.STATEMENT %}
 
-{# NONPRINTING OPERATORS #}
 {#
+    NONPRINTING OPERATORS
+
     Some varieties of operator have no SQL equivalent, but may be printed in debug text or inside comments
 #}
 
+{# NonPrintingOperatorClass #}
+
+{% set NonPrintingOperatorClass = namespace() %}
+{%- macro printNonPrinting(this, state, arguments) %}
+{%-     set previousInsideSqlComment = state.insideSqlComment %}
+{%-     set state.insideSqlComment = true %}
+{%-     if not previousInsideSqlComment %}
+/*
+{%-     endif %}
+ Nonprinting operator: <{{ this.name }}> with children:[{{ printOperatorsFromList(state, arguments['children'], ", ") }}] 
+{%-     if not previousInsideSqlComment %}
+*/
+{%-     endif %}
+{%-     set state.insideSqlComment = previousInsideSqlComment %}
+{%- endmacro %}
+{%- macro constructNonPrintingOperator(nonPrintingOperatorNamespace) %}
+{%-     do DefaultOperatorClass.construct(nonPrintingOperatorNamespace) %}
+{%-     set NonPrintingOperatorClass.name = "NonPrinting" %}
+{%-     set nonPrintingOperatorNamespace.print = printNonPrinting %}
+{%- endmacro %}
+{%- set NonPrintingOperatorClass.construct = constructNonPrintingOperator %}
+
 {# TypeSpecifier operator #}
 {%- set TypeSpecifier = namespace() %}
-{%- macro printTypeSpecifier(this, state, arguments) %}
-/* Unsupported operator: <TypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
-{%- endmacro %}
-{%- do OperatorClass.construct(TypeSpecifier) %}
-{%- set TypeSpecifier.defaultDataType = DataType.STATEMENT %}
-{%- set TypeSpecifier.print = printTypeSpecifier %}
+{%- do NonPrintingOperatorClass.construct(TypeSpecifier) %}
+{%- set TypeSpecifier.name = 'TypeSpecifier' %}
 
 {# IntervalTypeSpecifier operator #}
 {%- set IntervalTypeSpecifier = namespace() %}
-{%- macro printIntervalTypeSpecifier(this, state, arguments) %}
-/* Unsupported operator: <IntervalTypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
-{%- endmacro %}
-{%- do OperatorClass.construct(IntervalTypeSpecifier) %}
-{%- set IntervalTypeSpecifier.defaultDataType = DataType.STATEMENT %}
-{%- set IntervalTypeSpecifier.print = printIntervalTypeSpecifier %}
+{%- do NonPrintingOperatorClass.construct(IntervalTypeSpecifier) %}
+{%- set IntervalTypeSpecifier.name = 'IntervalTypeSpecifier' %}
 
 {# ListTypeSpecifier operator #}
 {%- set ListTypeSpecifier = namespace() %}
-{%- macro printListTypeSpecifier(this, state, arguments) %}
-/* Unsupported operator: <ListTypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
-{%- endmacro %}
-{%- do OperatorClass.construct(ListTypeSpecifier) %}
-{%- set ListTypeSpecifier.defaultDataType = DataType.STATEMENT %}
-{%- set ListTypeSpecifier.print = printListTypeSpecifier %}
+{%- do NonPrintingOperatorClass.construct(ListTypeSpecifier) %}
+{%- set ListTypeSpecifier.name = 'ListTypeSpecifier' %}
 
 {# NamedTypeSpecifier operator #}
 {%- set NamedTypeSpecifier = namespace() %}
-{%- macro printNamedTypeSpecifier(this, state, arguments) %}
-/* Unsupported operator: <NamedTypeSpecifier> with children:[*/{{ printOperatorsFromList(state, arguments['children'], ", ") }}/*]*/
-{%- endmacro %}
-{%- do OperatorClass.construct(NamedTypeSpecifier) %}
-{%- set NamedTypeSpecifier.defaultDataType = DataType.STATEMENT %}
-{%- set NamedTypeSpecifier.print = printNamedTypeSpecifier %}
+{%- do NonPrintingOperatorClass.construct(NamedTypeSpecifier) %}
+{%- set NamedTypeSpecifier.name = 'NamedTypeSpecifier' %}
 
 {# OPERATOR TEMPLATES #}
 
