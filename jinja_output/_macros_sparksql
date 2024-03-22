@@ -585,7 +585,11 @@ SELECT
 {# Retrieve operator #}
 {%- set Retrieve = namespace() %}
 {%- macro printRetrieve(this, state, arguments) %}
+{%-     if arguments['codeProperty'] == 'code' %}
+SELECT * FROM {{ OperatorHandler.print(state, arguments['valueSet'][0]) }}
+{%-     else %}
 SELECT * FROM {{ arguments['templateId'] }}
+{%- endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Retrieve) %}
 {%- set Retrieve.defaultDataType = DataType.TABLE %}

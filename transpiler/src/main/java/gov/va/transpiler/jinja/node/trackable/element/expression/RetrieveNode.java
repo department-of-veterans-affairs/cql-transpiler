@@ -41,6 +41,8 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
         var map = super.getSimpleArgumentMap();
         map.put("'modelType'", "'" + getCqlEquivalent().getDataType().getNamespaceURI() + "'");
         map.put("'templateId'", getCqlEquivalent().getTemplateId() == null ? "none" : "'" + getCqlEquivalent().getTemplateId() + "'");
+        map.put("'codeComparator'", getCqlEquivalent().getCodeComparator() == null ? "none" : "'" + getCqlEquivalent().getCodeComparator() + "'");
+        map.put("'codeProperty'", getCqlEquivalent().getCodeProperty() == null ? "none" : "'" + getCqlEquivalent().getCodeProperty() + "'");
         return map;
     }
 
