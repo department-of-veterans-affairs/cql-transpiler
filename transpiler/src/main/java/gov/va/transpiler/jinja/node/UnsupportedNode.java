@@ -10,15 +10,15 @@ import gov.va.transpiler.jinja.state.State;
 /**
  * Represents a node we don't support yet.
  */
-public class DefaultNode extends CQLEquivalent<Trackable> {
+public class UnsupportedNode extends CQLEquivalent<Trackable> {
 
-    public DefaultNode(State state, Trackable t) {
+    public UnsupportedNode(State state, Trackable t) {
         super(state, t);
     }
 
     @Override
     public String getOperator() {
-        return Standards.macroFileName() + "." + Standards.DEFAULT_OPERATOR;
+        return Standards.macroFileName() + "." + Standards.UNSUPPORTED_OPERATOR;
     }
 
     @Override

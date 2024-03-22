@@ -42,12 +42,12 @@ public class TranspilerNode {
         return true;
     }
 
-    public void addChild(TranspilerNode child) throws UnsupportedChildNodeException {
+    public void addChild(TranspilerNode child) throws InvalidChildNodeException {
         if (child.isEnabled()) {
             if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || getChildren().size() < allowedNumberOfChildren()) {
                 children.add(child);
             } else {
-                throw new UnsupportedChildNodeException(this, child);
+                throw new InvalidChildNodeException(this, child);
             }
         }
     }

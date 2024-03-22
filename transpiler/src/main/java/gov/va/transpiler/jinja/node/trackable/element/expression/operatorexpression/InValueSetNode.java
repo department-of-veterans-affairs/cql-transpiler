@@ -9,4 +9,6 @@ public class InValueSetNode extends OperatorExpressionNode<InValueSet> {
     public InValueSetNode(State state, InValueSet cqlEquivalent) {
         super(state, cqlEquivalent);
     }
+
+    // TODO
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.hl7.elm.r1.Query;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
+import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.node.trackable.element.LetClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
 import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
@@ -30,19 +30,19 @@ public class QueryNode extends ExpressionNode<Query> {
             if (returnClauseNodeList.isEmpty()) {
                 returnClauseNodeList.add((ReturnClauseNode) child);
             } else {
-                throw new UnsupportedChildNodeException(this, child);
+                throw new InvalidChildNodeException(this, child);
             }
         } else if (child instanceof SortClauseNode) {
             if (sortClauseNodeList.isEmpty()) {
                 sortClauseNodeList.add((SortClauseNode) child);
             } else {
-                throw new UnsupportedChildNodeException(this, child);
+                throw new InvalidChildNodeException(this, child);
             }
         } else if (child instanceof ExpressionNode && ((ExpressionNode<?>) child).getCqlEquivalent() == getCqlEquivalent().getWhere()) {
             if (whereList.isEmpty()) {
                 whereList.add((ExpressionNode<?>) child);
             } else {
-                throw new UnsupportedChildNodeException(this, child);
+                throw new InvalidChildNodeException(this, child);
             }
         } else if (child instanceof LetClauseNode) {
             letClauseNodeList.add((LetClauseNode) child);  

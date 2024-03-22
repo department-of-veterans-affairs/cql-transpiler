@@ -7,7 +7,7 @@ import java.util.Map;
 import org.hl7.elm.r1.Retrieve;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
+import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.state.State;
 
 public class RetrieveNode extends ExpressionNode<Retrieve> {
@@ -29,7 +29,7 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
             if (valueSetRefList.isEmpty()) {
                 valueSetRefList.add(child);
             } else {
-                throw new UnsupportedChildNodeException(this, child);
+                throw new InvalidChildNodeException(this, child);
             }
         } else {
             super.addChild(child);
@@ -40,7 +40,7 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
     protected Map<String, String> getSimpleArgumentMap() {
         var map = super.getSimpleArgumentMap();
         map.put("'modelType'", "'" + getCqlEquivalent().getDataType().getNamespaceURI() + "'");
-        map.put("'templateId'", "'" + getCqlEquivalent().getTemplateId() + "'");
+        map.put("'templateId'", getCqlEquivalent().getTemplateId() == null ? "none" : "'" + getCqlEquivalent().getTemplateId() + "'");
         return map;
     }
 
@@ -50,4 +50,6 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
         map.put("'valueSet'", valueSetRefList);
         return map;
     }
+
+    // TODO
 }

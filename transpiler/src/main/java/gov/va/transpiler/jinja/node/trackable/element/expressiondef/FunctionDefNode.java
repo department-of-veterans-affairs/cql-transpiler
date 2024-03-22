@@ -7,7 +7,7 @@ import java.util.Map;
 import org.hl7.elm.r1.FunctionDef;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.UnsupportedChildNodeException;
+import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.typespecifier.TypeSpecifierNode;
 import gov.va.transpiler.jinja.state.State;
@@ -31,7 +31,7 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
             if (typeSpecifierNode == null) {
                 typeSpecifierNode = (TypeSpecifierNode<?>) child;
             } else {
-                throw new UnsupportedChildNodeException(this, child);
+                throw new InvalidChildNodeException(this, child);
             }
         } else {
             super.addChild(child);

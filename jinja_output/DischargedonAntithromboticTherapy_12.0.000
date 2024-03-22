@@ -52,28 +52,28 @@
 	define "SDE Ethnicity":
 	  ["Patient Characteristic Ethnicity": "Ethnicity"]
 #}
-{% macro SDE_Ethnicity(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Ethnicity', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'null', 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': Ethnicity, 'children': []}]}]}) }}{% endmacro %}
+{% macro SDE_Ethnicity(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Ethnicity', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': Ethnicity, 'children': []}]}]}) }}{% endmacro %}
 {{ SDE_Ethnicity(none) }}
 {#
 	// DischargedonAntithromboticTherapy lines [22:1-23:43]
 	define "SDE Payer":
 	  ["Patient Characteristic Payer": "Payer"]
 #}
-{% macro SDE_Payer(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Payer', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'null', 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': Payer, 'children': []}]}]}) }}{% endmacro %}
+{% macro SDE_Payer(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Payer', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': Payer, 'children': []}]}]}) }}{% endmacro %}
 {{ SDE_Payer(none) }}
 {#
 	// DischargedonAntithromboticTherapy lines [25:1-26:41]
 	define "SDE Race":
 	  ["Patient Characteristic Race": "Race"]
 #}
-{% macro SDE_Race(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Race', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'null', 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': Race, 'children': []}]}]}) }}{% endmacro %}
+{% macro SDE_Race(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Race', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': Race, 'children': []}]}]}) }}{% endmacro %}
 {{ SDE_Race(none) }}
 {#
 	// DischargedonAntithromboticTherapy lines [28:1-29:58]
 	define "SDE Sex":
 	  ["Patient Characteristic Sex": "ONC Administrative Sex"]
 #}
-{% macro SDE_Sex(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Sex', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'null', 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': ONC_Administrative_Sex, 'children': []}]}]}) }}{% endmacro %}
+{% macro SDE_Sex(state) %}{{ _macros_sparksql.OperatorHandler.print(state, {'operator': _macros_sparksql.ExpressionDef, 'context': 'Patient', 'name': 'SDE Sex', 'children': [{'operator': _macros_sparksql.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'children': [], 'valueSet': [{'operator': _macros_sparksql.ValueSetRef, 'reference': ONC_Administrative_Sex, 'children': []}]}]}) }}{% endmacro %}
 {{ SDE_Sex(none) }}
 {#
 	// DischargedonAntithromboticTherapy lines [31:1-32:33]

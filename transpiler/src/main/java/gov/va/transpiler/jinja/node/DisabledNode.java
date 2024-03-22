@@ -2,6 +2,7 @@ package gov.va.transpiler.jinja.node;
 
 import org.cqframework.cql.elm.tracking.Trackable;
 
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class DisabledNode extends CQLEquivalent<Trackable> {
@@ -13,5 +14,10 @@ public class DisabledNode extends CQLEquivalent<Trackable> {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    @Override
+    public String getOperator() {
+        return Standards.macroFileName() + "." + Standards.DISABLED_OPERATOR;
     }
 }

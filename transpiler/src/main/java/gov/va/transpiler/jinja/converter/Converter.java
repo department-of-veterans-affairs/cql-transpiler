@@ -4,7 +4,7 @@ import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.elm.r1.*;
 
-import gov.va.transpiler.jinja.node.DefaultNode;
+import gov.va.transpiler.jinja.node.UnsupportedNode;
 import gov.va.transpiler.jinja.node.DisabledNode;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.TupleElementNode;
@@ -66,7 +66,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
             if (elm == null) {
                 current = new DisabledNode(state, null);
             } else {
-                current = new DefaultNode(state, elm);
+                current = new UnsupportedNode(state, elm);
             }
         }
         state.setCurrentNode(null);
@@ -220,6 +220,18 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitGreater(Greater element, State state) {
+        new BinaryExpressionNode<Greater>(state, element);
+        return super.visitGreater(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitGreaterOrEqual(GreaterOrEqual element, State state) {
+        new BinaryExpressionNode<GreaterOrEqual>(state, element);
+        return super.visitGreaterOrEqual(element, state);
+    }
+
+    @Override
     public TranspilerNode visitIdentifierRef(IdentifierRef element, State state) {
         new IdentifierRefNode(state, element);
         return super.visitIdentifierRef(element, state);
@@ -247,6 +259,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {
         new IntervalTypeSpecifierNode(state, element);
         return super.visitIntervalTypeSpecifier(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitLess(Less element, State state) {
+        new BinaryExpressionNode<Less>(state, element);
+        return super.visitLess(element, state);
     }
 
     @Override
