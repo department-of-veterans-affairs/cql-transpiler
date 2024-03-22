@@ -585,20 +585,20 @@ SELECT
 {# Retrieve operator #}
 {%- set Retrieve = namespace() %}
 {%- macro printRetrieve(this, state, arguments) %}
-{%-     if arguments['codeComparator'] == 'in' %}
-{%-         if arguments['codeProperty'] == 'code' %}
+{%-     if arguments['codeProperty'] == 'code' %}
+{%-         if arguments['codeComparator'] == 'in' %}
 SELECT * FROM {{ OperatorHandler.print(state, arguments['valueSet'][0]) }}
 {%-         else %}
-SELECT * FROM {{ arguments['templateId'] }}
+{%-             if not state.insideSqlComment %}
+/*
+{%-             endif %}
+Retrieve with unsupported arguments: {{ arguments }}
+{%-             if not state.insideSqlComment %}
+*/
+{%-             endif %}
 {%-         endif %}
 {%-     else %}
-{%-         if not state.insideSqlComment %}
-/*
-{%-         endif %}
-/* Retrieve with unsupported arguments: {{ arguments }} */
-{%-         if not state.insideSqlComment %}
-*/
-{%-         endif %}
+SELECT * FROM {{ arguments['templateId'] }}
 {%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Retrieve) %}

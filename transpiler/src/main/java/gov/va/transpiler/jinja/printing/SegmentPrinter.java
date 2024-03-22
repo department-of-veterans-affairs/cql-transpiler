@@ -94,7 +94,7 @@ public class SegmentPrinter {
 
     private void printOriginalCQLToFile(File file, Segment segment) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-            outputStream.write("{#" .getBytes());
+            outputStream.write("/*" .getBytes());
             outputStream.write(Standards.NEWLINE.getBytes());
             outputStream.write((Standards.INDENT + "// " + segment.getOriginalLibraryIdentifier().getId() + " lines [" + segment.getLocator() + "]").getBytes());
             var linesFromFile = contentRetriever.getTextFromLibrary(segment.getOriginalLibraryIdentifier(), Locator.fromString(segment.getLocator() ));
@@ -104,7 +104,7 @@ public class SegmentPrinter {
                 outputStream.write(line.getBytes());
             }
             outputStream.write(Standards.NEWLINE.getBytes());
-            outputStream.write("#}".getBytes());
+            outputStream.write("*/".getBytes());
             outputStream.write(Standards.NEWLINE.getBytes());
         }
     }
