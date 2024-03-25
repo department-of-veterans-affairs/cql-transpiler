@@ -53,11 +53,11 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
 
 {%- set StateClass = namespace() %}
 {%- macro stateClassConstruct(stateNamespace) %}
-{%- set stateNamespace.coercionInstructions = {} %}
-{%- set stateNamespace.context = none %}
-{%- set stateNamespace.insideQuery = false %}
-{%- set stateNamespace.functionArguments = {} %}
-{%- set stateNamespace.insideSqlComment = false %}
+{%-     set stateNamespace.coercionInstructions = {} %}
+{%-     set stateNamespace.context = none %}
+{%-     set stateNamespace.insideQuery = false %}
+{%-     set stateNamespace.functionArguments = {} %}
+{%-     set stateNamespace.insideSqlComment = false %}
 {%- endmacro %}
 {%- set StateClass.construct = stateClassConstruct %}
 
@@ -73,24 +73,24 @@ SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingle
 
 {%- set OperatorClass = namespace() %}
 {%- macro operatorClassGetDataType(this, carrier, state, arguments) %}
-{%- set carrier.value = this.defaultDataType %}
+{%-     set carrier.value = this.defaultDataType %}
 {%- endmacro %}
 {%- macro operatorClassPrint(this, state, arguments) %}
-{%- set previousInsideSqlComment = state.insideSqlComment %}
-{%- set state.insideSqlComment = true %}
-{%- if not previousInsideSqlComment %}
+{%-     set previousInsideSqlComment = state.insideSqlComment %}
+{%-     set state.insideSqlComment = true %}
+{%-     if not previousInsideSqlComment %}
 /* 
-{%- endif %}
+{%-     endif %}
 Operator with state: {{ state }} and arguments: {{ arguments }} 
-{% if not previousInsideSqlComment %}
+{%-     if not previousInsideSqlComment %}
  */ 
-{%- endif %}
-{%- set state.insideSqlComment = previousInsideSqlComment %}
+{%-     endif %}
+{%-     set state.insideSqlComment = previousInsideSqlComment %}
 {%- endmacro %}
 {%- macro operatorClassConstruct(operatorNamespace) %}
-{%- set operatorNamespace.defaultDataType = DataType.SIMPLE %}
-{%- set operatorNamespace.getDataType = operatorClassGetDataType %}
-{%- set operatorNamespace.print = operatorClassPrint %}
+{%-     set operatorNamespace.defaultDataType = DataType.SIMPLE %}
+{%-     set operatorNamespace.getDataType = operatorClassGetDataType %}
+{%-     set operatorNamespace.print = operatorClassPrint %}
 {%- endmacro %}
 {%- set OperatorClass.construct = operatorClassConstruct %}
 
@@ -121,9 +121,9 @@ Operator with state: {{ state }} and arguments: {{ arguments }}
 {# Wraps SQL statement in a collect block #}
 {%- macro collect(context, toCollect)%}
 SELECT collect_list(struct(*)) AS {{ printSingleValueColumnName() }} FROM ({{ toCollect }})
-{%- if context != 'Unfiltered' %}
+{%-     if context != 'Unfiltered' %}
  GROUP BY {{ printIDFromContext(context) }}
-{%- endif %}
+{%-     endif %}
 {% endmacro %}
 
 {# Wraps SQL statement in a decollect block #}
@@ -138,22 +138,22 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 
 {# Coerces the first applicable child of this node into the correct type #}
 {%- macro coerce(originalType, targetType, state, arguments) %}
-{% set previousCoercionInstructions = state.coercionInstructions %}
-{%- if targetType == DataType.ENCAPSULATED and originalType == DataType.SIMPLE %}
-{%- set state.coercionInstructions = {} %}
+{%-     set previousCoercionInstructions = state.coercionInstructions %}
+{%-     if targetType == DataType.ENCAPSULATED and originalType == DataType.SIMPLE %}
+{%-         set state.coercionInstructions = {} %}
 {{ encapsulate(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
-{%- elif targetType == DataType.ENCAPSULATED and originalType == DataType.TABLE %}
-{%- set state.coercionInstructions = {} %}
+{%-         set state.coercionInstructions = previousCoercionInstructions %}
+{%-     elif targetType == DataType.ENCAPSULATED and originalType == DataType.TABLE %}
+{%-         set state.coercionInstructions = {} %}
 {{ collect(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
-{%- elif targetType == DataType.TABLE and originalType == DataType.ENCAPSULATED %}
-{%- set state.coercionInstructions = {} %}
+{%-         set state.coercionInstructions = previousCoercionInstructions %}
+{%-     elif targetType == DataType.TABLE and originalType == DataType.ENCAPSULATED %}
+{%-         set state.coercionInstructions = {} %}
 {{ decollect(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
-{%- else %}
+{%-         set state.coercionInstructions = previousCoercionInstructions %}
+{%-     else %}
 {{ arguments['operator'].print(arguments['operator'], state, arguments) }}
-{%- endif %}
+{%-     endif %}
 {%- endmacro %}
 
 {#
@@ -178,7 +178,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- endmacro %}
 
 {%- macro OperatorHandlerConstruct(operatorHandlerNamespace) %}
-{%- set operatorHandlerNamespace.print = operatorHandlerPrint %}
+{%-     set operatorHandlerNamespace.print = operatorHandlerPrint %}
 {%- endmacro %}
 {%- set OperatorHandlerClass.construct = OperatorHandlerConstruct %}
 
@@ -199,15 +199,15 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 
 {# Prints items from a list, delimiting them with a joiner #}
 {%- macro printItemsFromList(listOfItemsToPrint, joiner) %}
-{%- set ns = namespace(first = true) %}
-{%- for item in listOfItemsToPrint %}
-{%- if ns.first %}
-{%- set ns.first = false %}
-{%- else %}
+{%-     set ns = namespace(first = true) %}
+{%-     for item in listOfItemsToPrint %}
+{%-         if ns.first %}
+{%-             set ns.first = false %}
+{%-         else %}
 {{ joiner }}
-{%- endif %}
+{%-         endif %}
 {{ item }}
-{%- endfor %}
+{%-     endfor %}
 {%- endmacro %}
 
 {# Prints operators from a list, delimiting them with a joiner #}
@@ -315,11 +315,11 @@ concat({{ printOperatorsFromList(state, arguments['children'], ", ") }})
 {# Count operator #}
 {% set Count = namespace() %}
 {%- macro printCount(this, state, arguments) %}
-{%- if state.context == 'Unfiltered' %}
+{%-     if state.context == 'Unfiltered' %}
 SELECT count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }})
-{%- else %}
+{%-     else %}
 SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }}) GROUP BY {{ printIDFromContext(state.context) }}
-{%- endif %}
+{%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Count) %}
 {% set Count.defaultDataType = DataType.TABLE %}
@@ -357,6 +357,14 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {%- do OperatorClass.construct(Equal) %}
 {%- set Equal.print = printEqual %}
 
+{# Exists operator #}
+{%- set Exists = namespace() %}
+{%- macro printExists(this, state, arguments) %}
+EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
+{%- endmacro %}
+{%- do OperatorClass.construct(Exists) %}
+{%- set Exists.print = printExists %}
+
 {# ExpressionDef operator #}
 {%- set ExpressionDef = namespace() %}
 {%- macro printExpressionDef(this, state, arguments) %}
@@ -383,25 +391,25 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# FunctionDef operator #}
 {% set FunctionDef = namespace() %}
 {%- macro printFunctionDef(this, state, arguments) %}
-{%- set previousOperandsMatchedToFunctionArguments = state.operandsMatchedToFunctionArguments %}
-{%- set state.operandsMatchedToFunctionArguments = {} %}
-{%- for item in state.functionArguments %}
-{%- do state.operandsMatchedToFunctionArguments.update({ arguments.operators[loop.index - 1].name: item }) %}
-{%- endfor %}
+{%-     set previousOperandsMatchedToFunctionArguments = state.operandsMatchedToFunctionArguments %}
+{%-     set state.operandsMatchedToFunctionArguments = {} %}
+{%-     for item in state.functionArguments %}
+{%-         do state.operandsMatchedToFunctionArguments.update({ arguments.operators[loop.index - 1].name: item }) %}
+{%-     endfor %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }}
-{%- set state.operandsMatchedToFunctionArguments = previousOperandsMatchedToFunctionArguments %}
+{%-     set state.operandsMatchedToFunctionArguments = previousOperandsMatchedToFunctionArguments %}
 {%- endmacro %}
 {%- do OperatorClass.construct(FunctionDef) %}
-{% set FunctionDef.defaultDataType = DataType.INHERITED %}
+{%- set FunctionDef.defaultDataType = DataType.INHERITED %}
 {%- set FunctionDef.print = printFunctionDef %}
 
 {# FunctionRef operator #}
 {%- set FunctionRef = namespace() %}
 {%- macro printFunctionRef(this, state, arguments) %}
-{%- set previousFunctionArguments = state.functionArguments %}
-{%- set state.functionArguments = arguments['children'] %}
+{%-     set previousFunctionArguments = state.functionArguments %}
+{%-     set state.functionArguments = arguments['children'] %}
 {{ arguments['reference'](state) }}
-{%- set state.functionArguments = previousFunctionArguments %}
+{%-     set state.functionArguments = previousFunctionArguments %}
 {%- endmacro %}
 {%- do OperatorClass.construct(FunctionRef) %}
 {%- set FunctionRef.defaultDataType = DataType.INHERITED %}
@@ -468,14 +476,14 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {%- set List = namespace() %}
 {%- macro printList(this, state, arguments) %}
 SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueColumnName() }} FROM (
-{%- if arguments['children']|length == 0 %}
+{%-     if arguments['children']|length == 0 %}
 {{ printEmptyTable() }}
-{%- else %}
-{%- set previousCoercionInstructions = state.coercionInstructions %}
-{%- set state.coercionInstructions = { DataType.SIMPLE: DataType.ENCAPSULATED } %}
+{%-     else %}
+{%-         set previousCoercionInstructions = state.coercionInstructions %}
+{%-         set state.coercionInstructions = { DataType.SIMPLE: DataType.ENCAPSULATED } %}
 {{ printOperatorsFromList(state, arguments['children'], ' UNION ') }}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
-{%- endif %})
+{%-         set state.coercionInstructions = previousCoercionInstructions %}
+{%-     endif %})
 {%- endmacro %}
 {%- do OperatorClass.construct(List) %}
 {%- set List.defaultDataType = DataType.ENCAPSULATED %}
@@ -484,13 +492,13 @@ SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueCo
 {# Literal operator #}
 {%- set Literal = namespace() %}
 {%- macro printLiteral(this, state, arguments) %}
-{%- if arguments['type'] == 'Integer' %}
+{%-     if arguments['type'] == 'Integer' %}
 {{ arguments['value'] }}
-{%- elif arguments['type'] == 'String' %}
+{%-     elif arguments['type'] == 'String' %}
 '{{ arguments['value'] }}'
-{%- else %}
+{%-     else %}
 {{ arguments['type'] }}::{{ arguments['value'] }}
-{%- endif %}
+{%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Literal) %}
 {%- set Literal.print = printLiteral %}
@@ -534,20 +542,20 @@ SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueCo
 SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {%- endmacro %}
 {%- macro printProperty(this, state, arguments) %}
-{%- if arguments['children']|length > 0 %}
-{%- if state.insideQuery %}
+{%-     if arguments['children']|length > 0 %}
+{%-         if state.insideQuery %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }}.{{ arguments['path'] }}
-{%- else %}
-{%- set previousCoercionInstructions = state.coercionInstructions %}
-{%- set state.coercionInstructions = {} %}
+{%-         else %}
+{%-             set previousCoercionInstructions = state.coercionInstructions %}
+{%-             set state.coercionInstructions = {} %}
 {{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
-{%- endif %}
-{%- elif arguments['path'] != none %}
+{%-             set state.coercionInstructions = previousCoercionInstructions %}
+{%-         endif %}
+{%-     elif arguments['path'] != none %}
 {{ arguments['scope'] }}.{{ arguments['path'] }}
-{%- else %}
+{%-     else %}
 {{ arguments['scope'] }}
-{%- endif %}
+{%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Property) %}
 {%- set Property.defaultDataType = DataType.ENCAPSULATED %}
@@ -556,27 +564,27 @@ SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {# Query operator #}
 {%- set Query = namespace() %}
 {%- macro printQuery(this, state, arguments) %}
-{%- set state.insideQuery = true %}
-{%- set previousCoercionInstructions = state.coercionInstructions %}
-{%- set state.coercionInstructions = {} %}
-{%- if arguments['letClause']|length > 0 %}
+{%-     set state.insideQuery = true %}
+{%-     set previousCoercionInstructions = state.coercionInstructions %}
+{%-     set state.coercionInstructions = {} %}
+{%-     if arguments['letClause']|length > 0 %}
 LET {{ printOperatorsFromList(state, arguments['letClause'], ", ") }} 
-{%- endif %}
+{%-     endif %}
 SELECT
-{%- if arguments['returnClause']|length == 0 %}
+{%-     if arguments['returnClause']|length == 0 %}
  *
-{%- else %}
+{%-     else %}
  {{ OperatorHandler.print(state, arguments['returnClause'][0]) }} 
-{%- endif %}
+{%-     endif %}
  FROM ({{ printOperatorsFromList(state, arguments['children'], ", ") }})
-{%- if arguments['where']|length > 0 %}
+{%-     if arguments['where']|length > 0 %}
  WHERE {{ OperatorHandler.print(state, arguments['where'][0]) }}
-{%- endif %}
-{%- if arguments['sortClause']|length > 0 %}
+{%-     endif %}
+{%-     if arguments['sortClause']|length > 0 %}
  {{ OperatorHandler.print(state, arguments['sortClause'][0]) }}
-{%- endif %}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
-{%- set state.insideQuery = false %}
+{%-     endif %}
+{%-     set state.coercionInstructions = previousCoercionInstructions %}
+{%-     set state.insideQuery = false %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Query) %}
 {%- set Query.defaultDataType = DataType.TABLE %}
@@ -651,10 +659,10 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {# TupleElement operator #}
 {%- set TupleElement = namespace() %}
 {%- macro printTupleElement(this, state, arguments) %}
-{%- set previousCoercionInstructions = state.coercionInstructions %}
-{%- set state.coercionInstructions = { DataType.TABLE: DataType.ENCAPSULATED, DataType.SIMPLE: DataType.ENCAPSULATED } %}
+{%-     set previousCoercionInstructions = state.coercionInstructions %}
+{%-     set state.coercionInstructions = { DataType.TABLE: DataType.ENCAPSULATED, DataType.SIMPLE: DataType.ENCAPSULATED } %}
 {{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['name'] }}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%-     set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro %}
 {%- do OperatorClass.construct(TupleElement) %}
 {%- set TupleElement.defaultDataType = DataType.ENCAPSULATED %}
@@ -663,10 +671,10 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {# Union operator #}
 {%- set Union = namespace() %}
 {%- macro printUnion(this, state, arguments) %}
-{%- set previousCoercionInstructions = state.coercionInstructions %}
-{%- set state.coercionInstructions = { DataType.ENCAPSULATED: DataType.TABLE } %}
+{%-     set previousCoercionInstructions = state.coercionInstructions %}
+{%-     set state.coercionInstructions = { DataType.ENCAPSULATED: DataType.TABLE } %}
 {{ printOperatorsFromList(state, arguments['children'], ' UNION ') }}
-{%- set state.coercionInstructions = previousCoercionInstructions %}
+{%-     set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Union) %}
 {%- set Union.defaultDataType = DataType.TABLE %}
@@ -685,11 +693,11 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {# End operator - dependencies: [Property] #}
 {%- set End = namespace() %}
 {%- macro printEnd(this, state, arguments) %}
-{%- set endArguments = namespace() %}
-{%- set endArguments.path = 'high' %}
-{%- set endArguments.children = arguments.children %}
-{%- set endArguments.scope = none %}
-{%- set endArguments.operator = Property %}
+{%-     set endArguments = namespace() %}
+{%-     set endArguments.path = 'high' %}
+{%-     set endArguments.children = arguments.children %}
+{%-     set endArguments.scope = none %}
+{%-     set endArguments.operator = Property %}
 {{ OperatorHandler.print(state, endArguments) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(End) %}
@@ -699,11 +707,11 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {# Start operator - dependencies: [Property] #}
 {%- set Start = namespace() %}
 {%- macro printStart(this, state, arguments) %}
-{%- set startArguments = namespace() %}
-{%- set startArguments.path = 'low' %}
-{%- set startArguments.children = arguments.children %}
-{%- set startArguments.scope = none %}
-{%- set startArguments.operator = Property %}
+{%-     set startArguments = namespace() %}
+{%-     set startArguments.path = 'low' %}
+{%-     set startArguments.children = arguments.children %}
+{%-     set startArguments.scope = none %}
+{%-     set startArguments.operator = Property %}
 {{ OperatorHandler.print(state, startArguments) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Start) %}
