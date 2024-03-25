@@ -140,6 +140,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitCalculateAgeAt(CalculateAgeAt element, State state) {
+        new BinaryExpressionNode<CalculateAgeAt>(state, element);
+        return super.visitCalculateAgeAt(element, state);
+    }
+
+    @Override
     public TranspilerNode visitConcatenate(Concatenate element, State state) {
         new NaryExpressionNode<Concatenate>(state, element);
         return super.visitConcatenate(element, state);

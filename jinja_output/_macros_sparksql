@@ -312,6 +312,14 @@ concat({{ printOperatorsFromList(state, arguments['children'], ", ") }})
 {%- do OperatorClass.construct(Concatenate) %}
 {%- set Concatenate.print = printConcatenate %}
 
+{# CalculateAgeAt operator #}
+{%- set CalculateAgeAt = namespace() %}
+{%- macro printCalculateAgeAt(this, state, arguments) %}
+floor(months_between({{ OperatorHandler.print(state, arguments['children'][0])}}, {{ OperatorHandler.print(state, arguments['children'][1]) }}) / 12)
+{%- endmacro %}
+{%- do OperatorClass.construct(CalculateAgeAt) %}
+{%- set CalculateAgeAt.print = printCalculateAgeAt %}
+
 {# Count operator #}
 {% set Count = namespace() %}
 {%- macro printCount(this, state, arguments) %}
