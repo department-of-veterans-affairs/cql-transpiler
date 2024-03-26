@@ -42,11 +42,13 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpress
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.DateFromNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.EndNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ExistsNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.FlattenNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.SingletonFromNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.StartNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ToDateNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ToDecimalNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
@@ -168,6 +170,13 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         new DateTimeNode(state, element);
         return super.visitDateTime(element, state);
     }
+
+    @Override
+    public TranspilerNode visitDateFrom(DateFrom element, State state) {
+        new DateFromNode(state, element);
+        return super.visitDateFrom(element, state);
+    }
+
 
     @Override
     public TranspilerNode visitDifferenceBetween(DifferenceBetween element, State state) {
@@ -426,6 +435,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitToDecimal(ToDecimal element, State state) {
         new ToDecimalNode(state, element);
         return super.visitToDecimal(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitToDate(ToDate element, State state) {
+        new ToDateNode(state, element);
+        return super.visitToDate(element, state);
     }
 
     @Override

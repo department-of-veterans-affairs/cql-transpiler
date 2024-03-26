@@ -333,6 +333,14 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {% set Count.defaultDataType = DataType.TABLE %}
 {% set Count.print = printCount %}
 
+{# DateFrom operator #}
+{%- set DateFrom = namespace() %}
+{%- macro printDateFrom(this, state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{%- endmacro %}
+{%- do OperatorClass.construct(DateFrom) %}
+{%- set DateFrom.print = printDateFrom %}
+
 {# DateTime operator #}
 {%- set DateTime = namespace() %}
 {%- macro printDateTime(this, state, arguments) %}
@@ -646,6 +654,14 @@ ORDER BY {{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Subtract) %}
 {%- set Subtract.print = printSubtract %}
+
+{# ToDate operator #}
+{%- set ToDate = namespace() %}
+{%- macro printToDate(this, state, arguments) %}
+to_date({{ OperatorHandler.print(state, arguments['children'][0]) }})
+{%- endmacro %}
+{%- do OperatorClass.construct(ToDate) %}
+{%- set ToDate.print = printToDate %}
 
 {# ToDecimal operator #}
 {%- set ToDecimal = namespace() %}
