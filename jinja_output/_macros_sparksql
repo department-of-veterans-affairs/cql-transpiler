@@ -263,6 +263,14 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- do OperatorClass.construct(Add) %}
 {%- set Add.print = printAdd %}
 
+{# As operator #}
+{%- set As = namespace() %}
+{%- macro printAs(this, state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorHandler.print(state, arguments['typeSpecifier'][0]) }}/* Bad translation */
+{%- endmacro %}
+{%- do OperatorClass.construct(As) %}
+{%- set As.print = printAs %}
+
 {# After operator #}
 {%- set After = namespace() %}
 {%- macro printAfter(this, state, arguments) %}

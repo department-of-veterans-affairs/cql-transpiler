@@ -42,6 +42,7 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpress
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.AsNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.DateFromNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.EndNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ExistsNode;
@@ -97,6 +98,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitAdd(Add element, State state) {
         new BinaryExpressionNode<Add>(state, element);
         return super.visitAdd(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitAs(As element, State state) {
+        new AsNode(state, element);
+        return super.visitAs(element, state);
     }
 
     @Override
