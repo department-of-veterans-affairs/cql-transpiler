@@ -471,6 +471,14 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {%- do OperatorClass.construct(In) %}
 {%- set In.print = printIn %}
 
+{# If operator #}
+{%- set If = namespace() %}
+{%- macro printIf(this, state, arguments) %}
+IF ({{ OperatorHandler.print(state, arguments['condition'][0])}}) THEN ({{ OperatorHandler.print(state, arguments['then'][0])}}) ELSE ({{ OperatorHandler.print(state, arguments['else'][0])}})
+{%- endmacro %}
+{%- do OperatorClass.construct(If) %}
+{%- set If.print = printIf %}
+
 {# Less operator #}
 {%- set Less = namespace() %}
 {%- macro printLess(this, state, arguments) %}
