@@ -30,6 +30,7 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.IdentifierRefNo
 import gov.va.transpiler.jinja.node.trackable.element.expression.IfNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.NullNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.OperandRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.ParameterRefNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
@@ -48,6 +49,8 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpress
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.EndNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ExistsNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.FlattenNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.IsNullNode;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.NotNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.SingletonFromNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.StartNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ToDateNode;
@@ -298,6 +301,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitIsNull(IsNull element, State state) {
+        new IsNullNode(state, element);
+        return super.visitIsNull(element, state);
+    }
+
+    @Override
     public TranspilerNode visitLess(Less element, State state) {
         new BinaryExpressionNode<Less>(state, element);
         return super.visitLess(element, state);
@@ -473,6 +482,18 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitNamedTypeSpecifier(NamedTypeSpecifier element, State state) {
         new NamedTypeSpecifierNode(state, element);
         return super.visitNamedTypeSpecifier(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitNot(Not element, State state) {
+        new NotNode(state, element);
+        return super.visitNot(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitNull(Null element, State state) {
+        new NullNode(state, element);
+        return super.visitNull(element, state);
     }
 
     @Override

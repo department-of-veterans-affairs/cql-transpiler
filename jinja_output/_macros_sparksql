@@ -551,6 +551,22 @@ SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueCo
 {%- do OperatorClass.construct(Negate) %}
 {%- set Negate.print = printNegate %}
 
+{# Not operator #}
+{%- set Not = namespace() %}
+{%- macro printNot(this, state, arguments) %}
+NOT {{ OperatorHandler.print(state, arguments['children'][0]) }}
+{%- endmacro %}
+{%- do OperatorClass.construct(Not) %}
+{%- set Not.print = printNot %}
+
+{# Null operator #}
+{%- set Null = namespace() %}
+{%- macro printNull(this, state, arguments) %}
+NULL
+{%- endmacro %}
+{%- do OperatorClass.construct(Null) %}
+{%- set Null.print = printNull %}
+
 {# OperandRef operator #}
 {%- set OperandRef = namespace() %}
 {%- macro printOperandRef(this, state, arguments) %}
@@ -802,6 +818,15 @@ IN {{ OperatorHandler.print(state, arguments['children'][0])}}
 {%- do OperatorClass.construct(InValueSet) %}
 {%- set InValueSet.defaultDataType = DataType.SIMPLE %}
 {%- set InValueSet.print = printInValueSet %}
+
+{# IsNull operator #}
+{%- set IsNull = namespace() %}
+{%- macro printIsNull(this, state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0])}} IS NULL
+{%- endmacro %}
+{%- do OperatorClass.construct(IsNull) %}
+{%- set IsNull.defaultDataType = DataType.SIMPLE %}
+{%- set IsNull.print = printIsNull %}
 
 {#
     NONPRINTING OPERATORS
