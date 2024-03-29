@@ -312,14 +312,6 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- set ByExpression.defaultDataType = DataType.STATEMENT %}
 {%- set ByExpression.print = printByExpression %}
 
-{# Concatenate operator #}
-{%- set Concatenate = namespace() %}
-{%- macro printConcatenate(this, state, arguments) %}
-concat({{ printOperatorsFromList(state, arguments['children'], ", ") }})
-{%- endmacro %}
-{%- do OperatorClass.construct(Concatenate) %}
-{%- set Concatenate.print = printConcatenate %}
-
 {# CalculateAgeAt operator #}
 {%- set CalculateAgeAt = namespace() %}
 {%- macro printCalculateAgeAt(this, state, arguments) %}
@@ -327,6 +319,24 @@ floor(months_between({{ OperatorHandler.print(state, arguments['children'][0])}}
 {%- endmacro %}
 {%- do OperatorClass.construct(CalculateAgeAt) %}
 {%- set CalculateAgeAt.print = printCalculateAgeAt %}
+
+{# Coalesce operator #}
+{%- set Coalesce = namespace() %}
+{%- macro printCoalesce(this, state, arguments) %}
+coalesce({{ printOperatorsFromList(state, arguments['children'], ', ') }})
+{%- endmacro %}
+{%- do OperatorClass.construct(Coalesce) %}
+{%- set Coalesce.defaultDataType = DataType.SIMPLE %}
+{%- set Coalesce.print = printCoalesce %}
+
+
+{# Concatenate operator #}
+{%- set Concatenate = namespace() %}
+{%- macro printConcatenate(this, state, arguments) %}
+concat({{ printOperatorsFromList(state, arguments['children'], ", ") }})
+{%- endmacro %}
+{%- do OperatorClass.construct(Concatenate) %}
+{%- set Concatenate.print = printConcatenate %}
 
 {# Count operator #}
 {% set Count = namespace() %}

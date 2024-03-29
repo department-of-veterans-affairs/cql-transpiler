@@ -43,7 +43,6 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.aggregateexpres
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.InValueSetNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.UnionNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.AsNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.DateFromNode;
 import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.EndNode;
@@ -156,6 +155,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitCalculateAgeAt(CalculateAgeAt element, State state) {
         new BinaryExpressionNode<CalculateAgeAt>(state, element);
         return super.visitCalculateAgeAt(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitCoalesce(Coalesce element, State state) {
+        new NaryExpressionNode<Coalesce>(state, element);
+        return super.visitCoalesce(element, state);
     }
 
     @Override
@@ -498,7 +503,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitUnion(Union element, State state) {
-        new UnionNode(state, element);
+        new NaryExpressionNode<Union>(state, element);
         return super.visitUnion(element, state);
     }
 
