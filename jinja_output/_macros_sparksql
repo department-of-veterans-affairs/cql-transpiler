@@ -266,7 +266,8 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# As operator #}
 {%- set As = namespace() %}
 {%- macro printAs(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorHandler.print(state, arguments['typeSpecifier'][0]) }}/* Bad translation */
+{{ OperatorHandler.print(state, arguments['children'][0])}}
+{#- arguments['typeSpecifier'][0] is unused #}
 {%- endmacro %}
 {%- do OperatorClass.construct(As) %}
 {%- set As.print = printAs %}
