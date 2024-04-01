@@ -4,61 +4,17 @@ import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.elm.r1.*;
 
-import gov.va.transpiler.jinja.node.UnsupportedNode;
-import gov.va.transpiler.jinja.node.DisabledNode;
-import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.trackable.TupleElementNode;
-import gov.va.transpiler.jinja.node.trackable.element.AliasedQuerySourceNode;
-import gov.va.transpiler.jinja.node.trackable.element.ByColumnNode;
-import gov.va.transpiler.jinja.node.trackable.element.ByDirectionNode;
-import gov.va.transpiler.jinja.node.trackable.element.ByExpressionNode;
-import gov.va.transpiler.jinja.node.trackable.element.ContextDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.IncludeDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.LetClauseNode;
-import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
-import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.ParameterDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
-import gov.va.transpiler.jinja.node.trackable.element.SortByItemNode;
-import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
-import gov.va.transpiler.jinja.node.trackable.element.UsingDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionRefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.FunctionRefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.IdentifierRefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.IfNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.ListNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.LiteralNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.NullNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.OperandRefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.ParameterRefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.PropertyNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.QueryLetRefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.QueryNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.RetrieveNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.TupleNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.ValueSetRefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.aggregateexpression.CountNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.DateTimeNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.InValueSetNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.BinaryExpressionNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.NaryExpressionNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.AsNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.DateFromNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.EndNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ExistsNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.FlattenNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.IsNullNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.NotNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.SingletonFromNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.StartNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ToDateNode;
-import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.ToDecimalNode;
-import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefNode;
-import gov.va.transpiler.jinja.node.trackable.element.typespecifier.IntervalTypeSpecifierNode;
-import gov.va.transpiler.jinja.node.trackable.element.typespecifier.ListTypeSpecifierNode;
-import gov.va.transpiler.jinja.node.trackable.element.typespecifier.NamedTypeSpecifierNode;
+import gov.va.transpiler.jinja.node.*;
+import gov.va.transpiler.jinja.node.trackable.*;
+import gov.va.transpiler.jinja.node.trackable.element.*;
+import gov.va.transpiler.jinja.node.trackable.element.expression.*;
+import gov.va.transpiler.jinja.node.trackable.element.expression.aggregateexpression.*;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.*;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.binaryexpression.*;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.naryexpression.*;
+import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression.*;
+import gov.va.transpiler.jinja.node.trackable.element.expressiondef.*;
+import gov.va.transpiler.jinja.node.trackable.element.typespecifier.*;
 import gov.va.transpiler.jinja.state.State;
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
@@ -119,6 +75,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitAliasedQuerySource(AliasedQuerySource element, State state) {
         new AliasedQuerySourceNode(state, element);
         return super.visitAliasedQuerySource(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitAliasRef(AliasRef element, State state) {
+        new AliasRefNode(state, element);
+        return super.visitAliasRef(element, state);
     }
 
     @Override
@@ -298,6 +260,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         new IncludeDefNode(state, element);
         return super.visitIncludeDef(element, state);
     }
+
+    // @Override
+    // public TranspilerNode visitInterval(Interval element, State state) {
+    //     new IntervalNode(state, element);
+    //     return super.visitInterval(element, state);
+    // }
 
     @Override
     public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {
