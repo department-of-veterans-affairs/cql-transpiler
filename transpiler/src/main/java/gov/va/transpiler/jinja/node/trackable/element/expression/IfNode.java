@@ -7,7 +7,6 @@ import java.util.Map;
 import org.hl7.elm.r1.If;
 
 import gov.va.transpiler.jinja.node.CQLEquivalent;
-import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.state.State;
 
@@ -28,28 +27,32 @@ public class IfNode extends ExpressionNode<If> {
                 if (conditionNode == null) {
                     conditionNode = child;
                 } else {
-                    throw new InvalidChildNodeException(this, child);
+                    super.addChild(child);
                 }
             } else if (cqlEquivalentChild.getCqlEquivalent() == getCqlEquivalent().getThen()) {
                 if (thenNode == null) {
                     thenNode = child;
                 } else {
-                    throw new InvalidChildNodeException(this, child);
+                    super.addChild(child);
                 }
             } else if (cqlEquivalentChild.getCqlEquivalent() == getCqlEquivalent().getElse()) {
                 if (elseNode == null) {
                     elseNode = child;
                 } else {
-                    throw new InvalidChildNodeException(this, child);
+                    super.addChild(child);
                 }
             } else {
-                throw new InvalidChildNodeException(this, child);
+                super.addChild(child);
             }
         } else {
-            throw new InvalidChildNodeException(this, child);
+           super.addChild(child);
         }
     }
 
+    @Override
+    public int allowedNumberOfChildren() {
+        return 0;
+    }
 
     @Override
     protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {

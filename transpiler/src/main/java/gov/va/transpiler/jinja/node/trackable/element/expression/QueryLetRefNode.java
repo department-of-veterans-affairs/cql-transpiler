@@ -11,9 +11,15 @@ import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 import gov.va.transpiler.jinja.state.State;
 
 public class QueryLetRefNode extends ExpressionNode<QueryLetRef> implements ReferenceNode {
+    // TODO: include reference source as nested operator tree inside output
 
     public QueryLetRefNode(State state, QueryLetRef cqlEquivalent) {
         super(state, cqlEquivalent);
+    }
+
+    @Override
+    public int allowedNumberOfChildren() {
+        return 0;
     }
 
     @Override
@@ -34,14 +40,13 @@ public class QueryLetRefNode extends ExpressionNode<QueryLetRef> implements Refe
     @Override
     protected Map<String, String> getSimpleArgumentMap() {
         var map = super.getSimpleArgumentMap();
-        map.put("'referenceName'", "'" + referenceName() + "'");
+        map.put("'name'", "'" + referenceName() + "'");
         return map;
     }
 
     @Override
     protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
         var map = super.getComplexArgumentMap();
-        // TODO
         //map.put("'referenceValue'", Collections.singletonList((LetClauseNode) getReferenceTo()));
         return map;
     }

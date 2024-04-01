@@ -9,5 +9,9 @@ public class NullNode extends ExpressionNode<Null> {
     public NullNode(State state, Null cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
+
+    @Override
+    public int allowedNumberOfChildren() {
+        return 0;
+    }
 }

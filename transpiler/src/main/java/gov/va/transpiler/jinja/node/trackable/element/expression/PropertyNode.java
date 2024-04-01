@@ -14,6 +14,11 @@ public class PropertyNode extends ExpressionNode<Property> {
     }
 
     @Override
+    public int allowedNumberOfChildren() {
+        return 1;
+    }
+
+    @Override
     public TranspilerNode getChildByReference(String nameOrIndex) {
         // expand chained property calls
         return getChild().getChildByReference(getCqlEquivalent().getPath()).getChildByReference(nameOrIndex);

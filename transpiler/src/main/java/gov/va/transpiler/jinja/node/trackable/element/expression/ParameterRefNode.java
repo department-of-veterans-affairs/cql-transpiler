@@ -11,6 +11,12 @@ public class ParameterRefNode extends ExpressionNode<ParameterRef> {
     public ParameterRefNode(State state, ParameterRef cqlEquivalent) {
         super(state, cqlEquivalent);
     }
+
+    @Override
+    public int allowedNumberOfChildren() {
+        return 0;
+    }
+
     @Override
     protected Map<String, String> getSimpleArgumentMap() {
         var map = super.getSimpleArgumentMap();

@@ -19,6 +19,11 @@ public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements Refe
     }
 
     @Override
+    public int allowedNumberOfChildren() {
+        return 0;
+    }
+
+    @Override
     public TranspilerNode getChildByReference(String nameOrIndex) {
         return ((ValueSetDefNode) getReferenceTo()).getChildByReference(nameOrIndex);
     }

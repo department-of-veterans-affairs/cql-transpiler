@@ -20,7 +20,7 @@ public class LiteralNode extends ExpressionNode<Literal> {
 
     @Override
     public int allowedNumberOfChildren() {
-        return 1;
+        return 0;
     }
 
     @Override

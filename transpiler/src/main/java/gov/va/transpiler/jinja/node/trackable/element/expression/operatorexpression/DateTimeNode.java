@@ -8,7 +8,6 @@ import org.hl7.elm.r1.DateTime;
 
 import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.state.State;
 
 public class DateTimeNode extends OperatorExpressionNode<DateTime> {
@@ -47,8 +46,13 @@ public class DateTimeNode extends OperatorExpressionNode<DateTime> {
                 timezoneOffsetList.add(child);
             }
         } else {
-            throw new InvalidChildNodeException(this, child);
+            super.addChild(child);
         }
+    }
+
+    @Override
+    public int allowedNumberOfChildren() {
+        return 0;
     }
 
     @Override

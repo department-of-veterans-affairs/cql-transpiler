@@ -13,6 +13,11 @@ public class OperandRefNode extends ExpressionNode<OperandRef> {
     }
 
     @Override
+    public int allowedNumberOfChildren() {
+        return 0;
+    }
+
+    @Override
     protected Map<String, String> getSimpleArgumentMap() {
         var map = super.getSimpleArgumentMap();
         map.put("'reference'",  "'" + getCqlEquivalent().getName() +"'");
