@@ -1,4 +1,4 @@
-package gov.va.transpiler.jinja.node.trackable.element.expression;
+package gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.state.State;
 
-public class DateTimeNode extends ExpressionNode<DateTime> {
+public class DateTimeNode extends OperatorExpressionNode<DateTime> {
 
     List<TranspilerNode> yearList = new ArrayList<>();
     List<TranspilerNode> monthList = new ArrayList<>();
