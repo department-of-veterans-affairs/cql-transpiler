@@ -288,6 +288,14 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- do OperatorClass.construct(AliasedQuerySource) %}
 {%- set AliasedQuerySource.print = printAliasedQuerySource %}
 
+{# AliasRef operator #}
+{%- set AliasRef = namespace() %}
+{%- macro printAliasRef(this, state, arguments) %}
+{{ arguments['name'] }}
+{%- endmacro %}
+{%- do OperatorClass.construct(AliasRef) %}
+{%- set AliasRef.print = printAliasRef %}
+
 {# And operator #}
 {%- set And = namespace() %}
 {%- macro printAnd(this, state, arguments) %}
@@ -485,10 +493,16 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {# If operator #}
 {%- set If = namespace() %}
 {%- macro printIf(this, state, arguments) %}
-IF ({{ OperatorHandler.print(state, arguments['condition'][0])}}) THEN ({{ OperatorHandler.print(state, arguments['then'][0])}}) ELSE ({{ OperatorHandler.print(state, arguments['else'][0])}})
+{%-             set previousCoercionInstructions = state.coercionInstructions %}
+{%-             set state.coercionInstructions = {} %}
+{#- conditional statement shouldn't be coerced #}
+IF ({{ OperatorHandler.print(state, arguments['condition'][0])}})
+{%-             set state.coercionInstructions = previousCoercionInstructions %}
+ THEN ({{ OperatorHandler.print(state, arguments['then'][0])}}) ELSE ({{ OperatorHandler.print(state, arguments['else'][0])}})
 {%- endmacro %}
 {%- do OperatorClass.construct(If) %}
 {%- set If.print = printIf %}
+{%- set If.defaultDataType = DataType.INHERITED %}
 
 {# Less operator #}
 {%- set Less = namespace() %}
@@ -806,10 +820,9 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {# QueryLetRef operator #}
 {%- set QueryLetRef = namespace() %}
 {%- macro printQueryLetRef(this, state, arguments) %}
-{{ arguments['referenceName'] }}
+{{ arguments['name'] }}
 {%- endmacro %}
 {%- do OperatorClass.construct(QueryLetRef) %}
-{%- set QueryLetRef.defaultDataType = DataType.UNKNOWN %}
 {%- set QueryLetRef.print = printQueryLetRef %}
 
 {# With operator #}
