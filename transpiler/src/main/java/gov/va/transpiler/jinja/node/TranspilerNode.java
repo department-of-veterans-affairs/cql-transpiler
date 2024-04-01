@@ -95,29 +95,28 @@ public class TranspilerNode {
         return topLevel;
     }
 
-    protected Segment joinChildren(List<? extends TranspilerNode> children, String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
+    protected Segment joinTranspilerNodesAsSegment(List<? extends TranspilerNode> transpilerNodeList, String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
         var topLevel = new Segment();
         topLevel.setHead(head);
-        switch(children.size()) {
+        switch(transpilerNodeList.size()) {
             case 0:
                 break;
             case 1:
-                topLevel.addChild(children.get(0).toSegment());
+                topLevel.addChild(transpilerNodeList.get(0).toSegment());
                 break;
             default:
-                for (int i = 0; i < children.size(); i++) {
+                for (int i = 0; i < transpilerNodeList.size(); i++) {
                     // Prefix
                     var prefixSegment = new Segment();
                     prefixSegment.setHead(childPrefix);
                     topLevel.addChild(prefixSegment);
 
                     // Child
-                    topLevel.addChild(children.get(i).toSegment());
+                    topLevel.addChild(transpilerNodeList.get(i).toSegment());
 
                     // Postfix
                     var postfixSegment = new Segment();
-                    boolean last = i == children.size() - 1;
-                    postfixSegment.setHead(last ? childPostfix : childPostfix + (childJoinerInline));
+                    postfixSegment.setHead(i == transpilerNodeList.size() - 1 ? childPostfix : childPostfix + (childJoinerInline));
                     topLevel.addChild(postfixSegment);
                 }
                 break;
@@ -153,7 +152,7 @@ public class TranspilerNode {
         // Render complex arguments as jinja dictionary entries
         for (var entry: complexArgumentMap.entrySet()) {
             var complexArgumentSegment = new Segment(entry.getKey() + ": ");
-            complexArgumentSegment.addChild(joinChildren(entry.getValue(), "[", "]", "", "", ", "));
+            complexArgumentSegment.addChild(joinTranspilerNodesAsSegment(entry.getValue(), "[", "]", "", "", ", "));
             argumentList.add(complexArgumentSegment);
         }
 
