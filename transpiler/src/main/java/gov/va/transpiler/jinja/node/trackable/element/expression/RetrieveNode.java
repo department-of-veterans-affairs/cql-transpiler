@@ -11,6 +11,7 @@ import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.state.State;
 
 public class RetrieveNode extends ExpressionNode<Retrieve> {
+    // TODO: argments included in the original CQL node are missing from the list of simple arguments
 
     public List<TranspilerNode> valueSetRefList = new ArrayList<>();
 
@@ -52,6 +53,4 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
         map.put("'valueSet'", valueSetRefList);
         return map;
     }
-
-    // TODO
 }
