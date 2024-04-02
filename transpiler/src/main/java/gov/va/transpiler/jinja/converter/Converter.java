@@ -261,11 +261,11 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
         return super.visitIncludeDef(element, state);
     }
 
-    // @Override
-    // public TranspilerNode visitInterval(Interval element, State state) {
-    //     new IntervalNode(state, element);
-    //     return super.visitInterval(element, state);
-    // }
+    @Override
+    public TranspilerNode visitInterval(Interval element, State state) {
+        new IntervalNode(state, element);
+        return super.visitInterval(element, state);
+    }
 
     @Override
     public TranspilerNode visitIntervalTypeSpecifier(IntervalTypeSpecifier element, State state) {

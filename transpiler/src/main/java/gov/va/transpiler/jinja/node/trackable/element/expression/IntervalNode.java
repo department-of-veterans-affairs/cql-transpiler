@@ -20,7 +20,7 @@ public class IntervalNode extends ExpressionNode<Interval> {
     public IntervalNode(State state, Interval cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
+
     public void addChild(TranspilerNode child) {
         if (child instanceof CQLEquivalent) {
             var cqlEquivalentChild = (CQLEquivalent<?>) child;
@@ -65,9 +65,9 @@ public class IntervalNode extends ExpressionNode<Interval> {
     protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
         var map = super.getComplexArgumentMap();
         map.put("'high'", Collections.singletonList(highNode));
-        map.put("'highClosedExpression'", Collections.singletonList(highClosedExpressionNode));
+        map.put("'highClosedExpression'", highClosedExpressionNode == null ? Collections.emptyList() : Collections.singletonList(highClosedExpressionNode));
         map.put("'low'", Collections.singletonList(lowNode));
-        map.put("'lowClosedExpression'", Collections.singletonList(lowClosedExpressionNode));
+        map.put("'lowClosedExpression'", lowClosedExpressionNode == null ? Collections.emptyList() : Collections.singletonList(lowClosedExpressionNode));
         return map;
     }
 }

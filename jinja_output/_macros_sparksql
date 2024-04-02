@@ -490,6 +490,16 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {%- do OperatorClass.construct(In) %}
 {%- set In.print = printIn %}
 
+{# Interval operator #}
+{%- set Interval = namespace() %}
+{%- macro printInterval(this, state, arguments) %}
+{# TODO: high closed expression, low closed expression, struct formatting pass #}
+SELECT struct({{ OperatorHandler.print(state, arguments['high'][0])}} as high, {{ OperatorHandler.print(state, arguments['low'][0]) }} as low) {{ printSingleValueColumnName() }}
+{%- endmacro %}
+{%- do OperatorClass.construct(Interval) %}
+{%- set Interval.print = printInterval %}
+{%- set Interval.defaultDataType = DataType.ENCAPSULATED %}
+
 {# If operator #}
 {%- set If = namespace() %}
 {%- macro printIf(this, state, arguments) %}
