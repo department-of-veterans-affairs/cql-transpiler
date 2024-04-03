@@ -245,7 +245,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitIn(In element, State state) {
-        new BinaryExpressionNode<In>(state, element);
+        new InNode(state, element);
         return super.visitIn(element, state);
     }
 

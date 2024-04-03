@@ -253,6 +253,13 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- do UnsupportedOperatorClass.construct(Unsupported) %}
 {%- set Unsupported.defaultDataType = DataType.UNKNOWN %}
 
+{#
+    Global Variables - Interval support
+#}
+
+{%- set intervalStart = 'low'%}
+{%- set intervalEnd = 'high'%}
+
 {# OPERATOR IMPLEMENTATIONS #}
 
 {# Add operator #}
@@ -490,11 +497,19 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {%- do OperatorClass.construct(In) %}
 {%- set In.print = printIn %}
 
+{# InInterval operator #}
+{%- set InInterval = namespace() %}
+{%- macro printInInterval(this, state, arguments) %}
+{{ OperatorHandler.print(state, arguments['children'][0])}} BETWEEN (SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['children'][1]) }}, SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['children'][1]) }})
+{%- endmacro %}
+{%- do OperatorClass.construct(InInterval) %}
+{%- set InInterval.print = printInInterval %}
+
 {# Interval operator #}
 {%- set Interval = namespace() %}
 {%- macro printInterval(this, state, arguments) %}
 {# TODO: high closed expression, low closed expression, struct formatting pass #}
-SELECT struct({{ OperatorHandler.print(state, arguments['high'][0])}} as high, {{ OperatorHandler.print(state, arguments['low'][0]) }} as low) {{ printSingleValueColumnName() }}
+SELECT struct({{ OperatorHandler.print(state, arguments['high'][0])}} as {{ intervalEnd }}, {{ OperatorHandler.print(state, arguments['low'][0]) }} as {{ intervalStart }}) {{ printSingleValueColumnName() }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Interval) %}
 {%- set Interval.print = printInterval %}
@@ -785,7 +800,7 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {%- set End = namespace() %}
 {%- macro printEnd(this, state, arguments) %}
 {%-     set endArguments = namespace() %}
-{%-     set endArguments.path = 'high' %}
+{%-     set endArguments.path = intervalEnd %}
 {%-     set endArguments.children = arguments.children %}
 {%-     set endArguments.scope = none %}
 {%-     set endArguments.operator = Property %}
@@ -799,7 +814,7 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {%- set Start = namespace() %}
 {%- macro printStart(this, state, arguments) %}
 {%-     set startArguments = namespace() %}
-{%-     set startArguments.path = 'low' %}
+{%-     set startArguments.path = intervalStart %}
 {%-     set startArguments.children = arguments.children %}
 {%-     set startArguments.scope = none %}
 {%-     set startArguments.operator = Property %}
@@ -847,7 +862,7 @@ WITH {{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorH
 {# InValueSet operator #}
 {%- set InValueSet = namespace() %}
 {%- macro printInValueSet(this, state, arguments) %}
-IN {{ OperatorHandler.print(state, arguments['children'][0])}}
+{{ OperatorHandler.print(state, arguments['children'][0])}} IN {{ OperatorHandler.print(state, arguments['children'][1])}}
 {%- endmacro %}
 {%- do OperatorClass.construct(InValueSet) %}
 {%- set InValueSet.defaultDataType = DataType.SIMPLE %}
