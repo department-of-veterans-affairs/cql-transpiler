@@ -367,6 +367,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitQuantity(Quantity element, State state) {
+        new QuantityNode(state, element);
+        return super.visitQuantity(element, state);
+    }
+
+    @Override
     public TranspilerNode visitQueryLetRef(QueryLetRef element, State state) {
         new QueryLetRefNode(state, element);
         return super.visitQueryLetRef(element, state);

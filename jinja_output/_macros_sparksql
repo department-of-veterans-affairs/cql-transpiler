@@ -842,6 +842,30 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {%- do OperatorClass.construct(SingletonFrom) %}
 {%- set SingletonFrom.print = printSingletonFrom %}
 
+{# Quantity operator #}
+{%- set Quantity = namespace() %}
+{%- macro printQuantity(this, state, arguments) %}
+{%- if arguments['unit'] == 'year' %}
+INTERVAL {{ arguments['value'] }} YEAR
+{%- elif arguments['unit'] == 'month' %}
+INTERVAL {{ arguments['value'] }} MONTH
+{%- elif arguments['unit'] == 'day' %}
+INTERVAL {{ arguments['value'] }} DAY
+{%- elif arguments['unit'] == 'hour' %}
+INTERVAL {{ arguments['value'] }} HOUR
+{%- elif arguments['unit'] == 'minute' %}
+INTERVAL {{ arguments['value'] }} MINUTE
+{%- elif arguments['unit'] == 'second' %}
+INTERVAL {{ arguments['value'] }} SECOND
+{%- elif arguments['unit'] == 'millisecond' %}
+INTERVAL {{ arguments['value'] }} MILLISECOND
+{%- else %}
+/* Unsupported Quantity: {{ '{' }}{{ arguments['unit'] }}, {{ arguments['value'] }}{{ '}' }} */
+{%- endif %}
+{%- endmacro %}
+{%- do OperatorClass.construct(Quantity) %}
+{%- set Quantity.print = printQuantity %}
+
 {# QueryLetRef operator #}
 {%- set QueryLetRef = namespace() %}
 {%- macro printQueryLetRef(this, state, arguments) %}
