@@ -56,8 +56,8 @@ public class DateTimeNode extends OperatorExpressionNode<DateTime> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         map.put("'year'", yearList);
         map.put("'month'", monthList);
         map.put("'day'", dayList);

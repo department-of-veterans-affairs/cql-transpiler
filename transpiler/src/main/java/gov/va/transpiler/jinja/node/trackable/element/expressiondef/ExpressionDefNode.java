@@ -32,8 +32,8 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'context'", "'" + getCqlEquivalent().getContext() + "'");
         map.put("'name'", "'" + getCqlEquivalent().getName() + "'");
         return map;

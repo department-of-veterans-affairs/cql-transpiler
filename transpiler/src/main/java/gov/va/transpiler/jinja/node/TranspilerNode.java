@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
@@ -129,38 +130,48 @@ public class TranspilerNode {
         return new Segment(name + ": " + value);
     }
 
-    protected Map<String, String> getSimpleArgumentMap() {
+    protected Map<String, String> getLiteralArgumentMap() {
         Map<String, String> argumentMap = new LinkedHashMap<>();
         argumentMap.put("'operator'", getOperator());
         return argumentMap;
     }
 
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        Map<String, List<TranspilerNode>> complexArgumentMap = new LinkedHashMap<>();
-        complexArgumentMap.put("'children'", getChildren());
-        return complexArgumentMap;
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        Map<String, TranspilerNode> argumentMap = new LinkedHashMap<>();
+        return argumentMap;
     }
 
-    protected List<Segment> getArgumentList(Map<String, String> simpleArgumentMap, Map<String, List<TranspilerNode>> complexArgumentMap) {
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        Map<String, List<TranspilerNode>> argumentMap = new LinkedHashMap<>();
+        argumentMap.put("'children'", getChildren());
+        return argumentMap;
+    }
+
+    protected List<Segment> getArgumentList(Map<String, String> literalArgumentMap, Map<String, TranspilerNode> nodeArgumentMap, Map<String, List<TranspilerNode>> nodeListArgumentMap) {
         List<Segment> argumentList = new ArrayList<>();
 
-        // Render simple arguments as jinja dictionary entries
-        for (var entry : simpleArgumentMap.entrySet()) {
-            argumentList.add(argumentToSegment(entry.getKey(), entry.getValue()));
-        }
+        // Render literal arguments as jinja dictionary entries
+        argumentList.addAll(literalArgumentMap.entrySet().stream().map(entry -> argumentToSegment(entry.getKey(), entry.getValue())).collect(Collectors.toList()));
 
-        // Render complex arguments as jinja dictionary entries
-        for (var entry: complexArgumentMap.entrySet()) {
-            var complexArgumentSegment = new Segment(entry.getKey() + ": ");
-            complexArgumentSegment.addChild(joinTranspilerNodesAsSegment(entry.getValue(), "[", "]", "", "", ", "));
-            argumentList.add(complexArgumentSegment);
-        }
+        // Render arguments that are nodes as jinja dictionary entries
+        argumentList.addAll(nodeArgumentMap.entrySet().stream().map(entry -> {
+            var nodeArgumentSegment = new Segment(entry.getKey() + ": ");
+            nodeArgumentSegment.addChild(entry.getValue().toSegment());
+            return nodeArgumentSegment;
+        }).collect(Collectors.toList()));
+
+        // Render arguments that are lists of nodes as jinja dictionary entries
+        argumentList.addAll(nodeListArgumentMap.entrySet().stream().map(entry -> {
+            var nodeListArgumentSegment = new Segment(entry.getKey() + ": ");
+            nodeListArgumentSegment.addChild(joinTranspilerNodesAsSegment(entry.getValue(), "[", "]", "", "", ", "));
+            return nodeListArgumentSegment;
+        }).collect(Collectors.toList()));
 
         return argumentList;
     }
 
     public Segment toSegment() {
-        return joinSegments(getArgumentList(getSimpleArgumentMap(), getComplexArgumentMap()), "{", "}", ", ");
+        return joinSegments(getArgumentList(getLiteralArgumentMap(), getNodeArgumentMap(), getNodeListArgumentMap()), "{", "}", ", ");
     }
 
     public String getTargetFileLocation() {

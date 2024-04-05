@@ -38,8 +38,8 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'modelType'", "'" + getCqlEquivalent().getDataType().getNamespaceURI() + "'");
         map.put("'templateId'", getCqlEquivalent().getTemplateId() == null ? "none" : "'" + getCqlEquivalent().getTemplateId() + "'");
         map.put("'codeComparator'", getCqlEquivalent().getCodeComparator() == null ? "none" : "'" + getCqlEquivalent().getCodeComparator() + "'");
@@ -48,8 +48,8 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         map.put("'valueSet'", valueSetRefList);
         return map;
     }

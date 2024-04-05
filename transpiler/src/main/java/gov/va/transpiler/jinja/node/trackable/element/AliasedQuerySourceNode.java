@@ -13,8 +13,8 @@ public class AliasedQuerySourceNode extends ElementNode<AliasedQuerySource> {
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'alias'", "'" + getCqlEquivalent().getAlias() + "'");
         return map;
     }

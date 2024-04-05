@@ -18,8 +18,8 @@ public class QuantityNode extends ExpressionNode<Quantity> {
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'unit'", "'" + getCqlEquivalent().getUnit() + "'");
         map.put("'value'", "'" + getCqlEquivalent().getValue() + "'");
         return map;

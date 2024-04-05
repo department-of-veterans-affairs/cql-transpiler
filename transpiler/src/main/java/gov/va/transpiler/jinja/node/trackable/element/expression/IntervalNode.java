@@ -62,8 +62,8 @@ public class IntervalNode extends ExpressionNode<Interval> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         map.put("'high'", Collections.singletonList(highNode));
         map.put("'highClosedExpression'", highClosedExpressionNode == null ? Collections.emptyList() : Collections.singletonList(highClosedExpressionNode));
         map.put("'low'", Collections.singletonList(lowNode));

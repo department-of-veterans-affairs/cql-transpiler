@@ -25,8 +25,8 @@ public class PropertyNode extends ExpressionNode<Property> {
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'scope'", getCqlEquivalent().getScope() == null ? "none" : "'" + getCqlEquivalent().getScope() + "'");
         map.put("'path'", getCqlEquivalent().getPath() == null ? "none" : "'" + getCqlEquivalent().getPath() + "'");
         return map;

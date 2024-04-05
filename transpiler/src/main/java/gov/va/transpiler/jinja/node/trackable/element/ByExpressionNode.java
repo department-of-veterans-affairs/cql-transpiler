@@ -13,8 +13,8 @@ public class ByExpressionNode extends SortByItemNode<ByExpression> {
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'direction'", getCqlEquivalent().getDirection() == null ? "none" : "'" + getCqlEquivalent().getDirection().name() + "'");
         return map;
     }

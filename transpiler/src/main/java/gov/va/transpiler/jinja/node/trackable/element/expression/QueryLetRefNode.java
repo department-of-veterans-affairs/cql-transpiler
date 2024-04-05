@@ -38,15 +38,15 @@ public class QueryLetRefNode extends ExpressionNode<QueryLetRef> implements Refe
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'name'", "'" + referenceName() + "'");
         return map;
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         //map.put("'referenceValue'", Collections.singletonList((LetClauseNode) getReferenceTo()));
         return map;
     }

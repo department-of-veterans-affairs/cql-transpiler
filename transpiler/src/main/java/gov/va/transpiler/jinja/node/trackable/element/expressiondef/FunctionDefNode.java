@@ -39,8 +39,8 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         map.put("'operators'", operandDefNodeList);
         return map;
     }

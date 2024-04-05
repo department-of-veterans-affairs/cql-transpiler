@@ -24,8 +24,8 @@ public class LiteralNode extends ExpressionNode<Literal> {
     }
 
     @Override
-    public Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    public Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'type'", "'" + getCqlEquivalent().getValueType().getLocalPart() + "'");
         map.put("'value'", "'" + getCqlEquivalent().getValue() + "'");
         return map;

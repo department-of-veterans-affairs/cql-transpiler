@@ -18,8 +18,8 @@ public class ParameterRefNode extends ExpressionNode<ParameterRef> {
     }
 
     @Override
-    protected Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    protected Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'name'", "'" + getCqlEquivalent().getName().replace(" ", "_") + "'");
         return map;
     }

@@ -55,8 +55,8 @@ public class IfNode extends ExpressionNode<If> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         map.put("'condition'", Collections.singletonList(conditionNode));
         map.put("'then'", Collections.singletonList(thenNode));
         map.put("'else'", Collections.singletonList(elseNode));

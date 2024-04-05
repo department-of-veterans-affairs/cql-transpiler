@@ -52,8 +52,8 @@ public class QueryNode extends ExpressionNode<Query> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         map.put("'where'", whereList);
         map.put("'returnClause'", returnClauseNodeList);
         map.put("'sortClause'", sortClauseNodeList);

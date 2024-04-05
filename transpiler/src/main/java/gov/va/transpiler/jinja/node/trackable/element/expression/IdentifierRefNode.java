@@ -14,8 +14,8 @@ public class IdentifierRefNode extends ExpressionNode<IdentifierRef> {
     }
 
     @Override
-    public Map<String, String> getSimpleArgumentMap() {
-        var map = super.getSimpleArgumentMap();
+    public Map<String, String> getLiteralArgumentMap() {
+        var map = super.getLiteralArgumentMap();
         map.put("'name'", "'" + getCqlEquivalent().getName() + "'");
         return map;
     }

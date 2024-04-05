@@ -33,8 +33,8 @@ public class AsNode extends UnaryExpressionNode<As> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getComplexArgumentMap() {
-        var map = super.getComplexArgumentMap();
+    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
+        var map = super.getNodeListArgumentMap();
         map.put("'typeSpecifier'", Collections.singletonList(typeSpecifier));
         return map;
     }
