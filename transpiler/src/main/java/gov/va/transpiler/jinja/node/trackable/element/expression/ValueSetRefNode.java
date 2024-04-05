@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.hl7.elm.r1.ValueSetRef;
 
-import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 import gov.va.transpiler.jinja.state.State;
@@ -21,11 +20,6 @@ public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements Refe
     @Override
     public int allowedNumberOfChildren() {
         return 0;
-    }
-
-    @Override
-    public TranspilerNode getChildByReference(String nameOrIndex) {
-        return ((ValueSetDefNode) getReferenceTo()).getChildByReference(nameOrIndex);
     }
 
     @Override

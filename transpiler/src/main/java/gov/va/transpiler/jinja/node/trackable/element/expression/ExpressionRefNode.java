@@ -5,7 +5,6 @@ import java.util.Map;
 import org.hl7.elm.r1.ExpressionRef;
 
 import gov.va.transpiler.jinja.state.State;
-import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 
@@ -16,11 +15,6 @@ public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T
     public ExpressionRefNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
         prefix = state.getCurrentLibraryNode().getAliasForLibrary(state.getLibraryNodeForReference(getReferenceTo()));
-    }
-
-    @Override
-    public TranspilerNode getChildByReference(String nameOrIndex) {
-        return ((ExpressionDefNode<?>) getReferenceTo()).getChildByReference(nameOrIndex);
     }
 
     @Override

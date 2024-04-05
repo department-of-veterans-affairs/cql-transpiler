@@ -17,12 +17,6 @@ public class FunctionRefNode extends ExpressionRefNode<FunctionRef> {
     public String referenceType() {
         return FunctionDefNode.REFERENCE_TYPE;
     }
-
-    @Override
-    public TranspilerNode getChildByReference(String nameOrIndex) {
-        return ((FunctionDefNode) getReferenceTo()).getChildByReference(nameOrIndex);
-    }
-
     @Override
     public int allowedNumberOfChildren() {
         return TranspilerNode.UNLIMITED_CHILDREN;

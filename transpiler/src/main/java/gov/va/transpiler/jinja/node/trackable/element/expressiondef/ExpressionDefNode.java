@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.hl7.elm.r1.ExpressionDef;
 
-import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.trackable.element.ElementNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 import gov.va.transpiler.jinja.printing.Segment;
@@ -19,11 +18,6 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     public ExpressionDefNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
         state.setContext(getCqlEquivalent().getContext());
-    }
-
-    @Override
-    public TranspilerNode getChildByReference(String nameOrIndex) {
-        return getChild().getChildByReference(nameOrIndex);
     }
 
     @Override

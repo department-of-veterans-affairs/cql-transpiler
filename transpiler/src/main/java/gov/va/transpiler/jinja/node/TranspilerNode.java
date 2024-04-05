@@ -69,10 +69,6 @@ public class TranspilerNode {
         return getChildren().isEmpty() ? null : getChildren().get(1);
     }
 
-    public TranspilerNode getChildByReference(String nameOrIndex) {
-        return getChild();
-    }
-
     protected String getOperator() {
         return "UnsupportedOperator";
     }

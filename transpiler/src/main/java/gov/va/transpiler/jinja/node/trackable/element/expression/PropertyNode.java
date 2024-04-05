@@ -5,7 +5,6 @@ import java.util.Map;
 import org.hl7.elm.r1.Property;
 
 import gov.va.transpiler.jinja.state.State;
-import gov.va.transpiler.jinja.node.TranspilerNode;
 
 public class PropertyNode extends ExpressionNode<Property> {
 
@@ -16,12 +15,6 @@ public class PropertyNode extends ExpressionNode<Property> {
     @Override
     public int allowedNumberOfChildren() {
         return 1;
-    }
-
-    @Override
-    public TranspilerNode getChildByReference(String nameOrIndex) {
-        // expand chained property calls
-        return getChild().getChildByReference(getCqlEquivalent().getPath()).getChildByReference(nameOrIndex);
     }
 
     @Override

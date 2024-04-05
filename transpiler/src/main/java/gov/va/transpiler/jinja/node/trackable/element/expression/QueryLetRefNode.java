@@ -33,11 +33,6 @@ public class QueryLetRefNode extends ExpressionNode<QueryLetRef> implements Refe
     }
 
     @Override
-    public TranspilerNode getChildByReference(String nameOrIndex) {
-        return ((LetClauseNode) getReferenceTo()).getChildByReference(nameOrIndex);
-    }
-
-    @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
         map.put("'name'", "'" + referenceName() + "'");
