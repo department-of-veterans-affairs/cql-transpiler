@@ -1,7 +1,5 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.hl7.elm.r1.Retrieve;
@@ -11,9 +9,9 @@ import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.state.State;
 
 public class RetrieveNode extends ExpressionNode<Retrieve> {
-    // TODO: argments included in the original CQL node are missing from the list of simple arguments
+    // TODO: arguments included in the original CQL node are missing from the list of simple arguments
 
-    public List<TranspilerNode> valueSetRefList = new ArrayList<>();
+    public TranspilerNode valueSetNode;
 
     public RetrieveNode(State state, Retrieve cqlEquivalent) {
         super(state, cqlEquivalent);
@@ -27,8 +25,8 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
     @Override
     public void addChild(TranspilerNode child) {
         if(child instanceof ValueSetRefNode) {
-            if (valueSetRefList.isEmpty()) {
-                valueSetRefList.add(child);
+            if (valueSetNode == null) {
+                valueSetNode = child;
             } else {
                 throw new InvalidChildNodeException(this, child);
             }
@@ -48,9 +46,9 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
-        var map = super.getNodeListArgumentMap();
-        map.put("'valueSet'", valueSetRefList);
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        var map = super.getNodeArgumentMap();
+        map.put("'valueSet'", valueSetNode);
         return map;
     }
 }

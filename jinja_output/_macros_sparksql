@@ -265,7 +265,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# Add operator #}
 {%- set Add = namespace() %}
 {%- macro printAdd(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} + {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} + {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Add) %}
 {%- set Add.print = printAdd %}
@@ -273,8 +273,8 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# As operator #}
 {%- set As = namespace() %}
 {%- macro printAs(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0])}}
-{#- arguments['typeSpecifier'][0] is unused #}
+{#-     arguments['typeSpecifier'] is unused #}
+{{ OperatorHandler.print(state, arguments['child'])}}
 {%- endmacro %}
 {%- do OperatorClass.construct(As) %}
 {%- set As.print = printAs %}
@@ -282,7 +282,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# After operator #}
 {%- set After = namespace() %}
 {%- macro printAfter(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} > {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(After) %}
 {%- set After.print = printAfter %}
@@ -290,7 +290,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# AliasedQuerySource operator #}
 {%- set AliasedQuerySource = namespace() %}
 {%- macro printAliasedQuerySource(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['alias'] }}
+{{ OperatorHandler.print(state, arguments['child']) }} AS {{ arguments['alias'] }}
 {%- endmacro %}
 {%- do OperatorClass.construct(AliasedQuerySource) %}
 {%- set AliasedQuerySource.print = printAliasedQuerySource %}
@@ -306,7 +306,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# And operator #}
 {%- set And = namespace() %}
 {%- macro printAnd(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} AND {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} AND {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(And) %}
 {%- set And.print = printAnd %}
@@ -314,7 +314,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# Before operator #}
 {%- set Before = namespace() %}
 {%- macro printBefore(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} < {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Before) %}
 {%- set Before.print = printBefore %}
@@ -322,7 +322,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# ByExpression operator #}
 {%- set ByExpression = namespace() %}
 {%- macro printByExpression(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }} {{ arguments['direction'] }}
+{{ OperatorHandler.print(state, arguments['child']) }} {{ arguments['direction'] }}
 {%- endmacro %}
 {%- do OperatorClass.construct(ByExpression) %}
 {%- set ByExpression.defaultDataType = DataType.STATEMENT %}
@@ -331,7 +331,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {# CalculateAgeAt operator #}
 {%- set CalculateAgeAt = namespace() %}
 {%- macro printCalculateAgeAt(this, state, arguments) %}
-floor(months_between({{ OperatorHandler.print(state, arguments['children'][0])}}, {{ OperatorHandler.print(state, arguments['children'][1]) }}) / 12)
+floor(months_between({{ OperatorHandler.print(state, arguments['right'])}}, {{ OperatorHandler.print(state, arguments['left']) }}) / 12)
 {%- endmacro %}
 {%- do OperatorClass.construct(CalculateAgeAt) %}
 {%- set CalculateAgeAt.print = printCalculateAgeAt %}
@@ -358,9 +358,9 @@ concat({{ printOperatorsFromList(state, arguments['children'], ", ") }})
 {% set Count = namespace() %}
 {%- macro printCount(this, state, arguments) %}
 {%-     if state.context == 'Unfiltered' %}
-SELECT count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }})
+SELECT count(*) FROM ({{ OperatorHandler.print(state, arguments['child']) }})
 {%-     else %}
-SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.print(state, arguments['children'][0]) }}) GROUP BY {{ printIDFromContext(state.context) }}
+SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandler.print(state, arguments['child']) }}) GROUP BY {{ printIDFromContext(state.context) }}
 {%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Count) %}
@@ -370,7 +370,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# DateFrom operator #}
 {%- set DateFrom = namespace() %}
 {%- macro printDateFrom(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{{ OperatorHandler.print(state, arguments['child']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(DateFrom) %}
 {%- set DateFrom.print = printDateFrom %}
@@ -378,7 +378,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# DateTime operator #}
 {%- set DateTime = namespace() %}
 {%- macro printDateTime(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['year'][0]) }}-{{ OperatorHandler.print(state, arguments['month'][0]) }}-{{ OperatorHandler.print(state, arguments['day'][0]) }}T{{ OperatorHandler.print(state, arguments['hour'][0]) }}:{{ OperatorHandler.print(state, arguments['minute'][0]) }}:{{ OperatorHandler.print(state, arguments['second'][0]) }}.{{ OperatorHandler.print(state, arguments['millisecond'][0]) }}Z
+{{ OperatorHandler.print(state, arguments['year']) }}-{{ OperatorHandler.print(state, arguments['month']) }}-{{ OperatorHandler.print(state, arguments['day']) }}T{{ OperatorHandler.print(state, arguments['hour']) }}:{{ OperatorHandler.print(state, arguments['minute']) }}:{{ OperatorHandler.print(state, arguments['second']) }}.{{ OperatorHandler.print(state, arguments['millisecond']) }}Z
 {%- endmacro %}
 {%- do OperatorClass.construct(DateTime) %}
 {%- set DateTime.print = printDateTime %}
@@ -386,7 +386,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# DifferenceBetween operator #}
 {%- set DifferenceBetween = namespace() %}
 {%- macro printDifferenceBetween(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][1])}} - {{ OperatorHandler.print(state, arguments['children'][0]) }})
+({{ OperatorHandler.print(state, arguments['right'])}} - {{ OperatorHandler.print(state, arguments['left']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(DifferenceBetween) %}
 {%- set DifferenceBetween.print = printDifferenceBetween %}
@@ -394,15 +394,23 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# Divide operator #}
 {%- set Divide = namespace() %}
 {% macro printDivide(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} / {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} / {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Divide) %}
 {%- set Divide.print = printDivide %}
 
+{# End operator #}
+{%- set End = namespace() %}
+{%- macro printEnd(this, state, arguments) %}
+SELECT {{ intervalEnd }} from {{ OperatorHandler.print(state, arguments['child']) }}
+{%- endmacro %}
+{%- do OperatorClass.construct(End) %}
+{%- set End.print = printEnd %}
+
 {# Equal operator #}
 {%- set Equal = namespace() %}
 {%- macro printEqual(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} = {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} = {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Equal) %}
 {%- set Equal.print = printEqual %}
@@ -410,7 +418,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# Exists operator #}
 {%- set Exists = namespace() %}
 {%- macro printExists(this, state, arguments) %}
-EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
+EXISTS ({{ OperatorHandler.print(state, arguments['child'])}})
 {%- endmacro %}
 {%- do OperatorClass.construct(Exists) %}
 {%- set Exists.print = printExists %}
@@ -422,7 +430,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {%-     if previousContext == none and arguments['context'] != none %}
 {%-         set state.context = arguments['context'] %}
 {%-     endif %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{{ OperatorHandler.print(state, arguments['child']) }}
 {%-     set state.context = previousContext %}
 {%- endmacro %}
 {%- do OperatorClass.construct(ExpressionDef) %}
@@ -441,12 +449,13 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {# FunctionDef operator #}
 {% set FunctionDef = namespace() %}
 {%- macro printFunctionDef(this, state, arguments) %}
+{#-     arguments['typeSpecifier'] is unused #}
 {%-     set previousOperandsMatchedToFunctionArguments = state.operandsMatchedToFunctionArguments %}
 {%-     set state.operandsMatchedToFunctionArguments = {} %}
 {%-     for item in state.functionArguments %}
 {%-         do state.operandsMatchedToFunctionArguments.update({ arguments.operators[loop.index - 1].name: item }) %}
 {%-     endfor %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{{ OperatorHandler.print(state, arguments['child']) }}
 {%-     set state.operandsMatchedToFunctionArguments = previousOperandsMatchedToFunctionArguments %}
 {%- endmacro %}
 {%- do OperatorClass.construct(FunctionDef) %}
@@ -468,7 +477,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {# Greater operator #}
 {%- set Greater = namespace() %}
 {%- macro printGreater(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} > {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} > {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Greater) %}
 {%- set Greater.print = printGreater %}
@@ -476,7 +485,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {# GreaterOrEqual operator #}
 {%- set GreaterOrEqual = namespace() %}
 {%- macro printGreaterOrEqual(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} >= {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} >= {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(GreaterOrEqual) %}
 {%- set GreaterOrEqual.print = printGreaterOrEqual %}
@@ -492,7 +501,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {# In operator #}
 {%- set In = namespace() %}
 {%- macro printIn(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} IN {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} IN {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(In) %}
 {%- set In.print = printIn %}
@@ -500,7 +509,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {# InInterval operator #}
 {%- set InInterval = namespace() %}
 {%- macro printInInterval(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0])}} BETWEEN (SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['children'][1]) }}, SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['children'][1]) }})
+{{ OperatorHandler.print(state, arguments['left'])}} BETWEEN (SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['right']) }}, SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(InInterval) %}
 {%- set InInterval.print = printInInterval %}
@@ -509,7 +518,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['children'][0])}})
 {%- set Interval = namespace() %}
 {%- macro printInterval(this, state, arguments) %}
 {# TODO: high closed expression, low closed expression, struct formatting pass #}
-SELECT struct({{ OperatorHandler.print(state, arguments['high'][0])}} as {{ intervalEnd }}, {{ OperatorHandler.print(state, arguments['low'][0]) }} as {{ intervalStart }}) {{ printSingleValueColumnName() }}
+SELECT struct({{ OperatorHandler.print(state, arguments['high'])}} as {{ intervalEnd }}, {{ OperatorHandler.print(state, arguments['low']) }} as {{ intervalStart }}) {{ printSingleValueColumnName() }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Interval) %}
 {%- set Interval.print = printInterval %}
@@ -521,9 +530,9 @@ SELECT struct({{ OperatorHandler.print(state, arguments['high'][0])}} as {{ inte
 {%-             set previousCoercionInstructions = state.coercionInstructions %}
 {%-             set state.coercionInstructions = {} %}
 {#- conditional statement shouldn't be coerced #}
-IF ({{ OperatorHandler.print(state, arguments['condition'][0])}})
+IF ({{ OperatorHandler.print(state, arguments['condition'])}})
 {%-             set state.coercionInstructions = previousCoercionInstructions %}
- THEN ({{ OperatorHandler.print(state, arguments['then'][0])}}) ELSE ({{ OperatorHandler.print(state, arguments['else'][0])}})
+ THEN ({{ OperatorHandler.print(state, arguments['then'])}}) ELSE ({{ OperatorHandler.print(state, arguments['else'])}})
 {%- endmacro %}
 {%- do OperatorClass.construct(If) %}
 {%- set If.print = printIf %}
@@ -532,7 +541,7 @@ IF ({{ OperatorHandler.print(state, arguments['condition'][0])}})
 {# Less operator #}
 {%- set Less = namespace() %}
 {%- macro printLess(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} < {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} < {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Less) %}
 {%- set Less.print = printLess %}
@@ -540,7 +549,7 @@ IF ({{ OperatorHandler.print(state, arguments['condition'][0])}})
 {# LessOrEqual operator #}
 {%- set LessOrEqual = namespace() %}
 {%- macro printLessOrEqual(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} <= {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} <= {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(LessOrEqual) %}
 {%- set LessOrEqual.print = printLessOrEqual %}
@@ -548,7 +557,7 @@ IF ({{ OperatorHandler.print(state, arguments['condition'][0])}})
 {# LetClause operator #}
 {%- set LetClause = namespace() %}
 {%- macro printLetClause(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{{ OperatorHandler.print(state, arguments['child']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(LetClause) %}
 {%- set LetClause.defaultDataType = DataType.INHERITED %}
@@ -588,7 +597,7 @@ SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueCo
 {# Multiply operator #}
 {%- set Multiply = namespace() %}
 {%- macro printMultiply(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0]) }} * {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left']) }} * {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Multiply) %}
 {%- set Multiply.print = printMultiply %}
@@ -596,7 +605,7 @@ SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueCo
 {# Negate operator #}
 {%- set Negate = namespace() %}
 {%- macro printNegate(this, state, arguments) %}
--{{ OperatorHandler.print(state, arguments['children'][0]) }}
+-{{ OperatorHandler.print(state, arguments['child']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Negate) %}
 {%- set Negate.print = printNegate %}
@@ -604,7 +613,7 @@ SELECT collect_list({{ printSingleValueColumnName() }}) AS {{ printSingleValueCo
 {# Not operator #}
 {%- set Not = namespace() %}
 {%- macro printNot(this, state, arguments) %}
-NOT {{ OperatorHandler.print(state, arguments['children'][0]) }}
+NOT {{ OperatorHandler.print(state, arguments['child']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Not) %}
 {%- set Not.print = printNot %}
@@ -629,10 +638,18 @@ NULL
 {# Or operator #}
 {%- set Or = namespace() %}
 {%- macro printOr(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0])}} OR {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left'])}} OR {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Or) %}
 {%- set Or.print = printOr %}
+
+{# ParameterRef operator #}
+{%- set ParameterRef = namespace() %}
+{%- macro printParameterRef(this, state, arguments) %}
+@{{ arguments['name'] }}
+{%- endmacro %}
+{%- do OperatorClass.construct(ParameterRef) %}
+{%- set ParameterRef.print = printParameterRef %}
 
 {# Property operator #}
 {%- set Property = namespace() %}
@@ -640,13 +657,13 @@ NULL
 SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {%- endmacro %}
 {%- macro printProperty(this, state, arguments) %}
-{%-     if arguments['children']|length > 0 %}
+{%-     if arguments['child'] != none %}
 {%-         if state.insideQuery %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }}.{{ arguments['path'] }}
+{{ OperatorHandler.print(state, arguments['child']) }}.{{ arguments['path'] }}
 {%-         else %}
 {%-             set previousCoercionInstructions = state.coercionInstructions %}
 {%-             set state.coercionInstructions = {} %}
-{{ printPropertyOfDataStructure(arguments['path'], state, arguments['children'][0]) }}
+{{ printPropertyOfDataStructure(arguments['path'], state, arguments['child']) }}
 {%-             set state.coercionInstructions = previousCoercionInstructions %}
 {%-         endif %}
 {%-     elif arguments['path'] != none %}
@@ -665,21 +682,21 @@ SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
 {%-     set state.insideQuery = true %}
 {%-     set previousCoercionInstructions = state.coercionInstructions %}
 {%-     set state.coercionInstructions = {} %}
-{%-     if arguments['letClause']|length > 0 %}
-LET {{ printOperatorsFromList(state, arguments['letClause'], ", ") }} 
+{%-     if arguments['letClauseList']|length > 0 %}
+LET {{ printOperatorsFromList(state, arguments['letClauseList'], ", ") }} 
 {%-     endif %}
 SELECT
-{%-     if arguments['returnClause']|length == 0 %}
+{%-     if arguments['returnClause'] == none %}
  *
 {%-     else %}
- {{ OperatorHandler.print(state, arguments['returnClause'][0]) }} 
+ {{ OperatorHandler.print(state, arguments['returnClause']) }} 
 {%-     endif %}
  FROM ({{ printOperatorsFromList(state, arguments['children'], ", ") }})
-{%-     if arguments['where']|length > 0 %}
- WHERE {{ OperatorHandler.print(state, arguments['where'][0]) }}
+{%-     if arguments['where'] != none %}
+ WHERE {{ OperatorHandler.print(state, arguments['where']) }}
 {%-     endif %}
-{%-     if arguments['sortClause']|length > 0 %}
- {{ OperatorHandler.print(state, arguments['sortClause'][0]) }}
+{%-     if arguments['sortClause'] != none %}
+ {{ OperatorHandler.print(state, arguments['sortClause']) }}
 {%-     endif %}
 {%-     set state.coercionInstructions = previousCoercionInstructions %}
 {%-     set state.insideQuery = false %}
@@ -693,7 +710,7 @@ SELECT
 {%- macro printRetrieve(this, state, arguments) %}
 {%-     if arguments['codeProperty'] == 'code' %}
 {%-         if arguments['codeComparator'] == 'in' %}
-SELECT * FROM {{ OperatorHandler.print(state, arguments['valueSet'][0]) }}
+SELECT * FROM {{ OperatorHandler.print(state, arguments['valueSet']) }}
 {%-         else %}
 {%-             if not state.insideSqlComment %}
 /*
@@ -729,10 +746,18 @@ ORDER BY {{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {%- set SortClause.defaultDataType = DataType.STATEMENT %}
 {%- set SortClause.print = printSortClause %}
 
+{# Start operator - dependencies: [Property] #}
+{%- set Start = namespace() %}
+{%- macro printStart(this, state, arguments) %}
+SELECT {{ intervalStart }} from {{ OperatorHandler.print(state, arguments['child']) }}
+{%- endmacro %}
+{%- do OperatorClass.construct(Start) %}
+{%- set Start.print = printStart %}
+
 {# Subtract operator #}
 {%- set Subtract = namespace() %}
 {%- macro printSubtract(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['children'][0]) }} - {{ OperatorHandler.print(state, arguments['children'][1]) }})
+({{ OperatorHandler.print(state, arguments['left']) }} - {{ OperatorHandler.print(state, arguments['right']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Subtract) %}
 {%- set Subtract.print = printSubtract %}
@@ -740,7 +765,7 @@ ORDER BY {{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {# ToDate operator #}
 {%- set ToDate = namespace() %}
 {%- macro printToDate(this, state, arguments) %}
-to_date({{ OperatorHandler.print(state, arguments['children'][0]) }})
+to_date({{ OperatorHandler.print(state, arguments['child']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(ToDate) %}
 {%- set ToDate.print = printToDate %}
@@ -748,7 +773,7 @@ to_date({{ OperatorHandler.print(state, arguments['children'][0]) }})
 {# ToDecimal operator #}
 {%- set ToDecimal = namespace() %}
 {%- macro printToDecimal(this, state, arguments) %}
-(0.0 + {{ OperatorHandler.print(state, arguments['children'][0]) }})
+(0.0 + {{ OperatorHandler.print(state, arguments['child']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(ToDecimal) %}
 {%- set ToDecimal.print = printToDecimal %}
@@ -767,7 +792,7 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {%- macro printTupleElement(this, state, arguments) %}
 {%-     set previousCoercionInstructions = state.coercionInstructions %}
 {%-     set state.coercionInstructions = { DataType.TABLE: DataType.ENCAPSULATED, DataType.SIMPLE: DataType.ENCAPSULATED } %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }} AS {{ arguments['name'] }}
+{{ OperatorHandler.print(state, arguments['child']) }} AS {{ arguments['name'] }}
 {%-     set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro %}
 {%- do OperatorClass.construct(TupleElement) %}
@@ -794,50 +819,22 @@ SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], '
 {%- do OperatorClass.construct(ValueSetRef) %}
 {%- set ValueSetRef.print = printValueSetRef %}
 
-{# OPERATORS WITH DEPENDENCIES #}
 
-{# End operator - dependencies: [Property] #}
-{%- set End = namespace() %}
-{%- macro printEnd(this, state, arguments) %}
-{%-     set endArguments = namespace() %}
-{%-     set endArguments.path = intervalEnd %}
-{%-     set endArguments.children = arguments.children %}
-{%-     set endArguments.scope = none %}
-{%-     set endArguments.operator = Property %}
-{{ OperatorHandler.print(state, endArguments) }}
+{# With operator #}
+{%- set With = namespace() %}
+{%- macro printWith(this, state, arguments) %}
+WHERE (LET {{ OperatorHandler.print(state, arguments['child'])}} AS {{ arguments['alias'] }} SELECT {{ OperatorHandler.print(state, arguments['suchThat']) }} {{ printSingleValueColumnName() }})
 {%- endmacro %}
-{%- do OperatorClass.construct(End) %}
-{%- set End.defaultDataType = Property.defaultDataType %}
-{%- set End.print = printEnd %}
-
-{# Start operator - dependencies: [Property] #}
-{%- set Start = namespace() %}
-{%- macro printStart(this, state, arguments) %}
-{%-     set startArguments = namespace() %}
-{%-     set startArguments.path = intervalStart %}
-{%-     set startArguments.children = arguments.children %}
-{%-     set startArguments.scope = none %}
-{%-     set startArguments.operator = Property %}
-{{ OperatorHandler.print(state, startArguments) }}
-{%- endmacro %}
-{%- do OperatorClass.construct(Start) %}
-{%- set Start.defaultDataType = Property.defaultDataType %}
-{%- set Start.print = printStart %}
+{%- do OperatorClass.construct(With) %}
+{%- set With.print = printWith %}
+{%- set With.defaultDataType = DataType.STATEMENT %}
 
 {# UNTESTED OPERATORS #}
-
-{# ParameterRef operator #}
-{%- set ParameterRef = namespace() %}
-{%- macro printParameterRef(this, state, arguments) %}
-@{{ arguments['name'] }}
-{%- endmacro %}
-{%- do OperatorClass.construct(ParameterRef) %}
-{%- set ParameterRef.print = printParameterRef %}
 
 {# SingletonFrom operator #}
 {%- set SingletonFrom = namespace() %}
 {%- macro printSingletonFrom(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0]) }}
+{{ OperatorHandler.print(state, arguments['child']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(SingletonFrom) %}
 {%- set SingletonFrom.print = printSingletonFrom %}
@@ -860,7 +857,7 @@ INTERVAL {{ arguments['value'] }} SECOND
 {%- elif arguments['unit'] == 'millisecond' %}
 INTERVAL {{ arguments['value'] }} MILLISECOND
 {%- else %}
-/* Unsupported Quantity: {{ '{' }}{{ arguments['unit'] }}, {{ arguments['value'] }}{{ '}' }} */
+/* Unsupported Quantity: <{{ arguments['unit'] }}, {{ arguments['value'] }}> */
 {%- endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Quantity) %}
@@ -874,19 +871,19 @@ INTERVAL {{ arguments['value'] }} MILLISECOND
 {%- do OperatorClass.construct(QueryLetRef) %}
 {%- set QueryLetRef.print = printQueryLetRef %}
 
-{# With operator #}
-{%- set With = namespace() %}
-{%- macro printWith(this, state, arguments) %}
-WITH {{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorHandler.print(state, arguments['children'][1]) }}
-{%- endmacro %}
-{%- do OperatorClass.construct(With) %}
-{%- set With.print = printWith %}
-{%- set With.defaultDataType = DataType.STATEMENT %}
-
 {# InValueSet operator #}
 {%- set InValueSet = namespace() %}
 {%- macro printInValueSet(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0])}} IN {{ OperatorHandler.print(state, arguments['children'][1])}}
+/* Unsupported InValueSet
+{%-     if arguments['child'] != none %}
+ with child: <{{ OperatorHandler.print(state, arguments['child'])}}>
+{%-     endif %}
+{%-     if arguments['valueSetReference'] == none %}
+ valueSetExpression: <{{ OperatorHandler.print(state, arguments['valueSetExpression'])}}>
+{%-     else %}
+ valueSetReference: <{{ OperatorHandler.print(state, arguments['valueSetReference'])}}>
+{%-     endif %}
+*/
 {%- endmacro %}
 {%- do OperatorClass.construct(InValueSet) %}
 {%- set InValueSet.defaultDataType = DataType.SIMPLE %}
@@ -895,7 +892,7 @@ WITH {{ OperatorHandler.print(state, arguments['children'][0])}} AS {{ OperatorH
 {# IsNull operator #}
 {%- set IsNull = namespace() %}
 {%- macro printIsNull(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['children'][0])}} IS NULL
+{{ OperatorHandler.print(state, arguments['child']) }} AS {{ arguments['alias'] }} SUCH THAT {{ arguments['suchThat'] }}
 {%- endmacro %}
 {%- do OperatorClass.construct(IsNull) %}
 {%- set IsNull.defaultDataType = DataType.SIMPLE %}

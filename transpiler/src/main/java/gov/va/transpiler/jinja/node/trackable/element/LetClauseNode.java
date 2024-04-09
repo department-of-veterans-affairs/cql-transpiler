@@ -14,6 +14,11 @@ public class LetClauseNode extends ElementNode<LetClause> implements Referenceab
     }
 
     @Override
+    public int allowedNumberOfChildren() {
+        return 1;
+    }
+
+    @Override
     public String referenceType() {
         return REFERENCE_TYPE;
     }

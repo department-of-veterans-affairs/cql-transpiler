@@ -134,12 +134,20 @@ public class TranspilerNode {
 
     protected Map<String, TranspilerNode> getNodeArgumentMap() {
         Map<String, TranspilerNode> argumentMap = new LinkedHashMap<>();
+        if (allowedNumberOfChildren() == 1) {
+            argumentMap.put("'child'", getChild());
+        } else if (allowedNumberOfChildren() == 2) {
+            argumentMap.put("'left'", getLeft());
+            argumentMap.put("'right'", getRight());
+        }
         return argumentMap;
     }
 
     protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
         Map<String, List<TranspilerNode>> argumentMap = new LinkedHashMap<>();
-        argumentMap.put("'children'", getChildren());
+        if (allowedNumberOfChildren() < 0 || allowedNumberOfChildren() > 2) {
+            argumentMap.put("'children'", getChildren());
+        }
         return argumentMap;
     }
 
@@ -152,7 +160,7 @@ public class TranspilerNode {
         // Render arguments that are nodes as jinja dictionary entries
         argumentList.addAll(nodeArgumentMap.entrySet().stream().map(entry -> {
             var nodeArgumentSegment = new Segment(entry.getKey() + ": ");
-            nodeArgumentSegment.addChild(entry.getValue().toSegment());
+            nodeArgumentSegment.addChild(entry.getValue() == null ? new Segment("none") : entry.getValue().toSegment());
             return nodeArgumentSegment;
         }).collect(Collectors.toList()));
 
@@ -167,7 +175,7 @@ public class TranspilerNode {
     }
 
     public Segment toSegment() {
-        return joinSegments(getArgumentList(getLiteralArgumentMap(), getNodeArgumentMap(), getNodeListArgumentMap()), "{", "}", ", ");
+        return joinSegments(getArgumentList(getLiteralArgumentMap(), getNodeArgumentMap(), getNodeListArgumentMap()), "{ ", " }", ", ");
     }
 
     public String getTargetFileLocation() {

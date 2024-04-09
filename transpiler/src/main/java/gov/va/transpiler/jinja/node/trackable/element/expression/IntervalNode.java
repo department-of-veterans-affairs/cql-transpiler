@@ -1,7 +1,5 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.hl7.elm.r1.Interval;
@@ -25,29 +23,13 @@ public class IntervalNode extends ExpressionNode<Interval> {
         if (child instanceof CQLEquivalent) {
             var cqlEquivalentChild = (CQLEquivalent<?>) child;
             if (cqlEquivalentChild.getCqlEquivalent() == getCqlEquivalent().getHigh()) {
-                if (highNode == null) {
-                    highNode = child;
-                } else {
-                    super.addChild(child);
-                }
+                highNode = child;
             } else if (cqlEquivalentChild.getCqlEquivalent() == getCqlEquivalent().getHighClosedExpression()) {
-                if (highClosedExpressionNode == null) {
-                    highClosedExpressionNode = child;
-                } else {
-                    super.addChild(child);
-                }
+                highClosedExpressionNode = child;
             } else if (cqlEquivalentChild.getCqlEquivalent() == getCqlEquivalent().getLow()) {
-                if (lowNode == null) {
-                    lowNode = child;
-                } else {
-                    super.addChild(child);
-                }
+                lowNode = child;
             } else if (cqlEquivalentChild.getCqlEquivalent() == getCqlEquivalent().getHighClosedExpression()) {
-                if (lowClosedExpressionNode == null) {
-                    lowClosedExpressionNode = child;
-                } else {
-                    super.addChild(child);
-                }
+                lowClosedExpressionNode = child;
             } else {
                 super.addChild(child);
             }
@@ -62,12 +44,12 @@ public class IntervalNode extends ExpressionNode<Interval> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
-        var map = super.getNodeListArgumentMap();
-        map.put("'high'", Collections.singletonList(highNode));
-        map.put("'highClosedExpression'", highClosedExpressionNode == null ? Collections.emptyList() : Collections.singletonList(highClosedExpressionNode));
-        map.put("'low'", Collections.singletonList(lowNode));
-        map.put("'lowClosedExpression'", lowClosedExpressionNode == null ? Collections.emptyList() : Collections.singletonList(lowClosedExpressionNode));
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        var map = super.getNodeArgumentMap();
+        map.put("'high'", highNode);
+        map.put("'highClosedExpression'", highClosedExpressionNode);
+        map.put("'low'", lowNode);
+        map.put("'lowClosedExpression'", lowClosedExpressionNode);
         return map;
     }
 }

@@ -16,6 +16,7 @@ public class TupleElementNode extends TrackableNode<TupleElement> {
     public int allowedNumberOfChildren() {
         return 1;
     }
+
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();

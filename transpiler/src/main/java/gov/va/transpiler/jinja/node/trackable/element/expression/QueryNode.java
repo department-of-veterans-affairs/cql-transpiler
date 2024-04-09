@@ -7,17 +7,15 @@ import java.util.Map;
 import org.hl7.elm.r1.Query;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
-import gov.va.transpiler.jinja.node.InvalidChildNodeException;
+import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.trackable.element.LetClauseNode;
-import gov.va.transpiler.jinja.node.trackable.element.ReturnClauseNode;
-import gov.va.transpiler.jinja.node.trackable.element.SortClauseNode;
 import gov.va.transpiler.jinja.state.State;
 
 public class QueryNode extends ExpressionNode<Query> {
 
-    public List<TranspilerNode> whereList = new ArrayList<>();
-    public List<TranspilerNode> returnClauseNodeList = new ArrayList<>();
-    public List<TranspilerNode> sortClauseNodeList = new ArrayList<>();
+    public TranspilerNode whereNode;
+    public TranspilerNode returnClauseNode;
+    public TranspilerNode sortClauseNode;
     public List<TranspilerNode> letClauseNodeList = new ArrayList<>();
 
     public QueryNode(State state, Query cqlEquivalent) {
@@ -26,24 +24,12 @@ public class QueryNode extends ExpressionNode<Query> {
 
     @Override
     public void addChild(TranspilerNode child) {
-        if(child instanceof ReturnClauseNode) {
-            if (returnClauseNodeList.isEmpty()) {
-                returnClauseNodeList.add((ReturnClauseNode) child);
-            } else {
-                throw new InvalidChildNodeException(this, child);
-            }
-        } else if (child instanceof SortClauseNode) {
-            if (sortClauseNodeList.isEmpty()) {
-                sortClauseNodeList.add((SortClauseNode) child);
-            } else {
-                throw new InvalidChildNodeException(this, child);
-            }
-        } else if (child instanceof ExpressionNode && ((ExpressionNode<?>) child).getCqlEquivalent() == getCqlEquivalent().getWhere()) {
-            if (whereList.isEmpty()) {
-                whereList.add((ExpressionNode<?>) child);
-            } else {
-                throw new InvalidChildNodeException(this, child);
-            }
+        if(child instanceof CQLEquivalent && ((CQLEquivalent<?>)child).getCqlEquivalent() == getCqlEquivalent().getReturn()) {
+                returnClauseNode = child;
+        } else if (child instanceof CQLEquivalent && ((CQLEquivalent<?>)child).getCqlEquivalent() == getCqlEquivalent().getSort()) {
+                sortClauseNode = child;
+        } else if (child instanceof CQLEquivalent && ((CQLEquivalent<?>)child).getCqlEquivalent() == getCqlEquivalent().getWhere()) {
+                whereNode = child;
         } else if (child instanceof LetClauseNode) {
             letClauseNodeList.add((LetClauseNode) child);  
         } else {
@@ -52,12 +38,18 @@ public class QueryNode extends ExpressionNode<Query> {
     }
 
     @Override
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        var map = super.getNodeArgumentMap();
+        map.put("'where'", whereNode);
+        map.put("'returnClause'", returnClauseNode);
+        map.put("'sortClause'", sortClauseNode);
+        return map;
+    }
+
+    @Override
     protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
         var map = super.getNodeListArgumentMap();
-        map.put("'where'", whereList);
-        map.put("'returnClause'", returnClauseNodeList);
-        map.put("'sortClause'", sortClauseNodeList);
-        map.put("'letClause'", letClauseNodeList);
+        map.put("'letClauseList'", letClauseNodeList);
         return map;
     }
 }

@@ -9,4 +9,9 @@ public class CountNode extends AggregateExpressionNode<Count> {
     public CountNode(State state, Count cqlEquivalent) {
         super(state, cqlEquivalent);
     }
+
+    @Override
+    public int allowedNumberOfChildren() {
+        return 1;
+    }
 }

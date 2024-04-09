@@ -9,5 +9,4 @@ public class IntervalTypeSpecifierNode extends TypeSpecifierNode<IntervalTypeSpe
     public IntervalTypeSpecifierNode(State state, IntervalTypeSpecifier cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
 }

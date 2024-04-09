@@ -9,5 +9,4 @@ public class ListTypeSpecifierNode extends TypeSpecifierNode<ListTypeSpecifier> 
     public ListTypeSpecifierNode(State state, ListTypeSpecifier cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
 }

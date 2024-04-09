@@ -13,6 +13,11 @@ public class ByExpressionNode extends SortByItemNode<ByExpression> {
     }
 
     @Override
+    public int allowedNumberOfChildren() {
+        return 1;
+    }
+
+    @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
         map.put("'direction'", getCqlEquivalent().getDirection() == null ? "none" : "'" + getCqlEquivalent().getDirection().name() + "'");

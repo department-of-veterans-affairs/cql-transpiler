@@ -10,5 +10,4 @@ public class TrackableNode<T extends Trackable> extends CQLEquivalent<T> {
     public TrackableNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
     }
-    
 }

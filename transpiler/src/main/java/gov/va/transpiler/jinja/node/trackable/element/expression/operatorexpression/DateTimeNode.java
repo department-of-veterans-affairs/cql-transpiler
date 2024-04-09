@@ -1,7 +1,5 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.hl7.elm.r1.DateTime;
@@ -12,14 +10,14 @@ import gov.va.transpiler.jinja.state.State;
 
 public class DateTimeNode extends OperatorExpressionNode<DateTime> {
 
-    List<TranspilerNode> yearList = new ArrayList<>();
-    List<TranspilerNode> monthList = new ArrayList<>();
-    List<TranspilerNode> dayList = new ArrayList<>();
-    List<TranspilerNode> hourList = new ArrayList<>();
-    List<TranspilerNode> minuteList = new ArrayList<>();
-    List<TranspilerNode> secondList = new ArrayList<>();
-    List<TranspilerNode> millisecondList = new ArrayList<>();
-    List<TranspilerNode> timezoneOffsetList = new ArrayList<>();
+    TranspilerNode yearNode;
+    TranspilerNode monthNode;
+    TranspilerNode dayNode;
+    TranspilerNode hourNode;
+    TranspilerNode minuteNode;
+    TranspilerNode secondNode;
+    TranspilerNode millisecondNode;
+    TranspilerNode timezoneOffsetNode;
 
     public DateTimeNode(State state, DateTime cqlEquivalent) {
         super(state, cqlEquivalent);
@@ -29,21 +27,21 @@ public class DateTimeNode extends OperatorExpressionNode<DateTime> {
     public void addChild(TranspilerNode child) {
         if (child instanceof CQLEquivalent) {
             if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getYear()) {
-                yearList.add(child);
+                yearNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getMonth()) {
-                monthList.add(child);
+                monthNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getDay()) {
-                dayList.add(child);
+                dayNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getHour()) {
-                hourList.add(child);
+                hourNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getMinute()) {
-                minuteList.add(child);
+                minuteNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getSecond()) {
-                secondList.add(child);
+                secondNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getMillisecond()) {
-                millisecondList.add(child);
+                millisecondNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getTimezoneOffset()) {
-                timezoneOffsetList.add(child);
+                timezoneOffsetNode = child;
             }
         } else {
             super.addChild(child);
@@ -56,16 +54,16 @@ public class DateTimeNode extends OperatorExpressionNode<DateTime> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
-        var map = super.getNodeListArgumentMap();
-        map.put("'year'", yearList);
-        map.put("'month'", monthList);
-        map.put("'day'", dayList);
-        map.put("'hour'", hourList);
-        map.put("'minute'", minuteList);
-        map.put("'second'", secondList);
-        map.put("'millisecond'", millisecondList);
-        map.put("'timezoneOffset'", timezoneOffsetList);
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        var map = super.getNodeArgumentMap();
+        map.put("'year'", yearNode);
+        map.put("'month'", monthNode);
+        map.put("'day'", dayNode);
+        map.put("'hour'", hourNode);
+        map.put("'minute'", minuteNode);
+        map.put("'second'", secondNode);
+        map.put("'millisecond'", millisecondNode);
+        map.put("'timezoneOffset'", timezoneOffsetNode);
         return map;
     }
 }

@@ -1,7 +1,5 @@
 package gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpression.unaryexpression;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.hl7.elm.r1.As;
@@ -13,17 +11,22 @@ import gov.va.transpiler.jinja.state.State;
 
 public class AsNode extends UnaryExpressionNode<As> {
 
-    private TranspilerNode typeSpecifier;
+    private TranspilerNode typeSpecifierNode;
 
     public AsNode(State state, As cqlEquivalent) {
         super(state, cqlEquivalent);
     }
 
     @Override
+    public int allowedNumberOfChildren() {
+        return 1;
+    }
+
+    @Override
     public void addChild(TranspilerNode child) {
         if (child instanceof TypeSpecifierNode) {
-            if (typeSpecifier == null) {
-                typeSpecifier = child;
+            if (typeSpecifierNode == null) {
+                typeSpecifierNode = child;
             } else {
                 throw new InvalidChildNodeException(this, child);
             }
@@ -33,9 +36,9 @@ public class AsNode extends UnaryExpressionNode<As> {
     }
 
     @Override
-    protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
-        var map = super.getNodeListArgumentMap();
-        map.put("'typeSpecifier'", Collections.singletonList(typeSpecifier));
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        var map = super.getNodeArgumentMap();
+        map.put("'typeSpecifier'", typeSpecifierNode);
         return map;
     }
 }

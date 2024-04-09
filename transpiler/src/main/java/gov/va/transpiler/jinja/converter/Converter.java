@@ -73,7 +73,10 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitAliasedQuerySource(AliasedQuerySource element, State state) {
-        new AliasedQuerySourceNode(state, element);
+        if (element instanceof RelationshipClause) {
+            return super.visitRelationshipClause((RelationshipClause) element, state);
+        }
+        new AliasedQuerySourceNode<AliasedQuerySource>(state, element);
         return super.visitAliasedQuerySource(element, state);
     }
 
@@ -464,6 +467,12 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitNegate(Negate element, State state) {
+        new NegateNode(state, element);
+        return super.visitNegate(element, state);
+    }
+
+    @Override
     public TranspilerNode visitNot(Not element, State state) {
         new NotNode(state, element);
         return super.visitNot(element, state);
@@ -497,5 +506,11 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitValueSetRef(ValueSetRef element, State state) {
         new ValueSetRefNode(state, element);
         return super.visitValueSetRef(element, state);
+    }
+
+    @Override
+    public TranspilerNode visitWith(With element, State state) {
+        new WithNode(state, element);
+        return super.visitWith(element, state);
     }
 }
