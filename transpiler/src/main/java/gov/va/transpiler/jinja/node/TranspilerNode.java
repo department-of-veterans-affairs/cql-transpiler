@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.state.State;
 
+/**
+ * Parent node for elements of the intermediate AST.
+ */
 public class TranspilerNode {
 
     protected static final int UNLIMITED_CHILDREN = -1;
@@ -35,14 +38,30 @@ public class TranspilerNode {
         return parent;
     }
 
+    /**
+     * Transpiler nodes implementations are allowed to specify whether they can contain a specific or unlimited number of children.See: {@link #UNLIMITED_CHILDREN}
+     * 
+     * @return Returns the amount of children this node is allowed to add.
+     */
     protected int allowedNumberOfChildren() {
         return UNLIMITED_CHILDREN;
     }
 
+    /**
+     * Disabled nodes should not be added to the intermediate AST, and should not have their children transversed.
+     * 
+     * @return Whether a node is enabled.
+     */
     protected boolean isEnabled() {
         return true;
     }
 
+    /**
+     * Adds a child node to this node.
+     * 
+     * @param child Child to add.
+     * @throws InvalidChildNodeException Thrown if a child cannot be added to this node.
+     */
     public void addChild(TranspilerNode child) throws InvalidChildNodeException {
         if (child.isEnabled()) {
             if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || getChildren().size() < allowedNumberOfChildren()) {
@@ -53,22 +72,37 @@ public class TranspilerNode {
         }
     }
 
+    /**
+     * @return The list of generic children for this node. This list should never have more than {@link #allowedNumberOfChildren()} children.
+     */
     public List<TranspilerNode> getChildren() {
         return Collections.unmodifiableList(children);
     }
 
+    /**
+     * @return If this child has one or more generic children, this returns the first generic child added to this node. Otherwise this returns null.
+     */
     protected TranspilerNode getChild() {
         return getChildren().isEmpty() ? null : getChildren().get(0);
     }
 
+    /**
+     * @return If this child has one or more generic children, this returns the first generic child added to this node. Otherwise this returns null. For use in binary expressions.
+     */
     protected TranspilerNode getLeft() {
         return getChildren().isEmpty() ? null : getChildren().get(0);
     }
 
+    /**
+     * @return If this child has two or more generic children, this returns the second generic child added to this node. Otherwise this returns null. For use in binary expressions.
+     */
     protected TranspilerNode getRight() {
         return getChildren().isEmpty() ? null : getChildren().get(1);
     }
 
+    /**
+     * @return Returns what kind of operator this node represents in the intermediate AST.
+     */
     protected String getOperator() {
         return "UnsupportedOperator";
     }

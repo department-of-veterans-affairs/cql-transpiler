@@ -1,3 +1,7 @@
+{#
+    This file should be supplied to a folder where an intermediate AST rendered in jinja so on compilation its contents are rendered as SparkSQL.
+#}
+
 {# UTILITIES, GLOBAL VARIABLES, PARENT CLASSES #}
 
 {#

@@ -31,10 +31,10 @@ public class Transpiler {
         //var cqlLibraryToTranspile = "retrievals.cql";
         String cqlLibraryToTranspileAsText = Files.readString(Paths.get(librarySource + cqlLibraryToTranspile));
 
+        // Compile CQL text files into a CQL AST in memory
         var libraryList = compiler.compile(cqlLibraryToTranspileAsText);
-        // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them
 
-        // Transform the AST into Jinja Scripts
+        // Transforms the CQL AST into an intermediate AST that keeps track of all information needed to generate SQL ASTs
         var converter = new Converter();        
         var state = new State();
         var convertedLibraries = new ArrayList<TranspilerNode>();
@@ -44,6 +44,7 @@ public class Transpiler {
         }
         var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cqlLibraryToTranspileAsText);
 
+        // Renders the intermediate AST as a set of Jinja files
         var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
         for (var mapped : convertedLibraries) {
            segmentPrinter.toFiles(mapped.toSegment(), jinjaTarget);
