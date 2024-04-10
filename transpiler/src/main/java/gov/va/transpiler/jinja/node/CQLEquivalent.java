@@ -7,6 +7,9 @@ import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
+/**
+ * A {@link TranspilerNode} directly equivalent to some node in the CQL AST.
+ */
 public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode {
 
     private T cqlEquivalent;
@@ -22,10 +25,16 @@ public abstract class CQLEquivalent<T extends Trackable> extends TranspilerNode 
         }
     }
 
+    /**
+     * @return This node's equivalent node in the CQL AST.
+     */
     public T getCqlEquivalent() {
         return cqlEquivalent;
     }
 
+    /**
+     * @return If this node is a {@link ReferenceNode}, returns the node this node is a reference to. Otherwise returns null.
+     */
     protected ReferenceableNode getReferenceTo() {
         return referenceTo;
     }
