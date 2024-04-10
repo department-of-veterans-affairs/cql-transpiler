@@ -107,65 +107,44 @@ public class TranspilerNode {
         return "UnsupportedOperator";
     }
 
+    /**
+     * Joins a {@link List} of {@link Segment}s together by adding them all to a top-level segment with joiner segments in between.
+     * 
+     * @param segmentList {@link Segment}s to join.
+     * @param head Text to use as head of the top-level {@link Segment}
+     * @param tail Text to use as tail of the top-level {@link Segment}
+     * @param joiner Text to join {@link Segment}s.
+     * @return Top level {@link Segment} containing joined {@link Segment} from {@code segmentList}.
+     */
     protected Segment joinSegments(List<Segment> segmentList, String head, String tail, String joiner) {
         var topLevel = new Segment();
         topLevel.setHead(head);
         boolean first = true;
         for (var segment: segmentList) {
-            if (first) {
-                first = false;
-            } else {
-                var joinSegment = new Segment();
-                joinSegment.setHead(joiner);
+            if (!first) {
+                var joinSegment = new Segment(joiner);
                 topLevel.addChild(joinSegment);
+            } else {
+                first = false;
             }
-
             topLevel.addChild(segment);
         }
         topLevel.setTail(tail);
         return topLevel;
     }
 
-    protected Segment joinTranspilerNodesAsSegment(List<? extends TranspilerNode> transpilerNodeList, String head, String tail, String childPrefix, String childPostfix, String childJoinerInline) {
-        var topLevel = new Segment();
-        topLevel.setHead(head);
-        switch(transpilerNodeList.size()) {
-            case 0:
-                break;
-            case 1:
-                topLevel.addChild(transpilerNodeList.get(0).toSegment());
-                break;
-            default:
-                for (int i = 0; i < transpilerNodeList.size(); i++) {
-                    // Prefix
-                    var prefixSegment = new Segment();
-                    prefixSegment.setHead(childPrefix);
-                    topLevel.addChild(prefixSegment);
-
-                    // Child
-                    topLevel.addChild(transpilerNodeList.get(i).toSegment());
-
-                    // Postfix
-                    var postfixSegment = new Segment();
-                    postfixSegment.setHead(i == transpilerNodeList.size() - 1 ? childPostfix : childPostfix + (childJoinerInline));
-                    topLevel.addChild(postfixSegment);
-                }
-                break;
-        }
-        topLevel.setTail(tail);
-        return topLevel;
-    }
-
-    protected Segment argumentToSegment(String name, String value) {
-        return new Segment(name + ": " + value);
-    }
-
+    /**
+     * @return All simple details about this node, including which operator it represents in the intermediate AST.
+     */
     protected Map<String, String> getLiteralArgumentMap() {
         Map<String, String> argumentMap = new LinkedHashMap<>();
         argumentMap.put("'operator'", getOperator());
         return argumentMap;
     }
 
+    /**
+     * @return List of details about this node that refer to individual nodes. Includes this node's 'child' if it can only have a maximum of one generic child, or this node's 'left' and 'right' members if it can only have a maximum of two.
+     */
     protected Map<String, TranspilerNode> getNodeArgumentMap() {
         Map<String, TranspilerNode> argumentMap = new LinkedHashMap<>();
         if (allowedNumberOfChildren() == 1) {
@@ -177,19 +156,28 @@ public class TranspilerNode {
         return argumentMap;
     }
 
+    /**
+     * @return List of details about this node that refer to lists of nodes. Includes this nodes 'children' if it can have three or more generic children.
+     */
     protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
         Map<String, List<TranspilerNode>> argumentMap = new LinkedHashMap<>();
-        if (allowedNumberOfChildren() < 0 || allowedNumberOfChildren() > 2) {
+        if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || allowedNumberOfChildren() > 2) {
             argumentMap.put("'children'", getChildren());
         }
         return argumentMap;
     }
 
+    /**
+     * @param literalArgumentMap Simple details about a node.
+     * @param nodeArgumentMap Details about a node that refer to other nodes.
+     * @param nodeListArgumentMap Details about a node that refer to lists of other nodes.
+     * @return Collation of all details provided.
+     */
     protected List<Segment> getArgumentList(Map<String, String> literalArgumentMap, Map<String, TranspilerNode> nodeArgumentMap, Map<String, List<TranspilerNode>> nodeListArgumentMap) {
         List<Segment> argumentList = new ArrayList<>();
 
         // Render literal arguments as jinja dictionary entries
-        argumentList.addAll(literalArgumentMap.entrySet().stream().map(entry -> argumentToSegment(entry.getKey(), entry.getValue())).collect(Collectors.toList()));
+        argumentList.addAll(literalArgumentMap.entrySet().stream().map(entry -> new Segment(entry.getKey() + ": " + entry.getValue())).collect(Collectors.toList()));
 
         // Render arguments that are nodes as jinja dictionary entries
         argumentList.addAll(nodeArgumentMap.entrySet().stream().map(entry -> {
@@ -201,17 +189,25 @@ public class TranspilerNode {
         // Render arguments that are lists of nodes as jinja dictionary entries
         argumentList.addAll(nodeListArgumentMap.entrySet().stream().map(entry -> {
             var nodeListArgumentSegment = new Segment(entry.getKey() + ": ");
-            nodeListArgumentSegment.addChild(joinTranspilerNodesAsSegment(entry.getValue(), "[", "]", "", "", ", "));
+            var segmentList = entry.getValue().stream().map(node -> node.toSegment()).collect(Collectors.toList());
+            var joinedSegment = joinSegments(segmentList, "[", "]", ", ");
+            nodeListArgumentSegment.addChild(joinedSegment);
             return nodeListArgumentSegment;
         }).collect(Collectors.toList()));
 
         return argumentList;
     }
 
+    /**
+     * @return This node rendered as a {@link Segment}.
+     */
     public Segment toSegment() {
         return joinSegments(getArgumentList(getLiteralArgumentMap(), getNodeArgumentMap(), getNodeListArgumentMap()), "{ ", " }", ", ");
     }
 
+    /**
+     * @return A {@link String} describing this node's relative location in the file system.
+     */
     public String getTargetFileLocation() {
         return getParent() == null ? "" : getParent().getTargetFileLocation();
     }
