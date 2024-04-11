@@ -16,19 +16,33 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.operatorexpress
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.*;
 import gov.va.transpiler.jinja.node.trackable.element.typespecifier.*;
 import gov.va.transpiler.jinja.state.State;
+
+/**
+ * Converts the CQL AST into a tree structure of {@link TranspilerNode}s able to compile and print an intermediate AST.
+ */
 public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
+    /**
+     * Entry point.
+     * 
+     * @param library CQL AST node to convert.
+     * @param state Used to keep track of state variables.
+     * @return Root node for the intermediate AST.
+     */
     public TranspilerNode convert(Library library, State state) {
         return visitElement(library, state);
     }
 
     @Override
     protected TranspilerNode defaultResult(Trackable elm, State state) {
+        // If we support the specific type of Trackable provided, the last TranspilerNode created will be the current node.
         var current = state.getCurrentNode();
         if (current == null) {
             if (elm == null) {
+                // If the provided Trackable is null, we can't support it in the intermediate ELM.
                 current = new DisabledNode(state, null);
             } else {
+                // If we don't explicitly support a type of Trackable, it becomes an UnsupportedNode in the intermediate AST
                 current = new UnsupportedNode(state, elm);
             }
         }

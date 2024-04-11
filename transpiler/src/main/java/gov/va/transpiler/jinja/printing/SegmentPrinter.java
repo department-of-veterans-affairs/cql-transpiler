@@ -97,7 +97,7 @@ public class SegmentPrinter {
             outputStream.write("/*" .getBytes());
             outputStream.write(Standards.NEWLINE.getBytes());
             outputStream.write((Standards.INDENT + "// " + segment.getOriginalLibraryIdentifier().getId() + " lines [" + segment.getLocator() + "]").getBytes());
-            var linesFromFile = contentRetriever.getTextFromLibrary(segment.getOriginalLibraryIdentifier(), Locator.fromString(segment.getLocator() ));
+            var linesFromFile = contentRetriever.getLinesOfTextFromLibrary(segment.getOriginalLibraryIdentifier(), Locator.fromString(segment.getLocator() ));
             for (var line : linesFromFile) {
                 outputStream.write(Standards.NEWLINE.getBytes());
                 outputStream.write(Standards.INDENT.getBytes());

@@ -20,6 +20,9 @@ public class TranspilerNode {
     private TranspilerNode parent;
     private List<TranspilerNode> children = new ArrayList<>();
 
+    /**
+     * @param state Used to keep track of state variables. When a transpiler node is constructed, it should always set itself as the current node.
+     */
     public TranspilerNode(State state) {
         state.setCurrentNode(this);
     }
