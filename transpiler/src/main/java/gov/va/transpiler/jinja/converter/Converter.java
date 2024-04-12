@@ -168,7 +168,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitDateFrom(DateFrom element, State state) {
-        new DateFromNode(state, element);
+        new UnaryExpressionNode<DateFrom>(state, element);
         return super.visitDateFrom(element, state);
     }
 
@@ -187,7 +187,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitEnd(End element, State state) {
-        new EndNode(state, element);
+        new UnaryExpressionNode<End>(state, element);
         return super.visitEnd(element, state);
     }
 
@@ -199,7 +199,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitExists(Exists element, State state) {
-        new ExistsNode(state, element);
+        new UnaryExpressionNode<Exists>(state, element);
         return super.visitExists(element, state);
     }
 
@@ -220,7 +220,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitFlatten(Flatten element, State state) {
-        new FlattenNode(state, element);
+        new UnaryExpressionNode<Flatten>(state, element);
         return super.visitFlatten(element, state);
     }
 
@@ -292,7 +292,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitIsNull(IsNull element, State state) {
-        new IsNullNode(state, element);
+        new UnaryExpressionNode<IsNull>(state, element);
         return super.visitIsNull(element, state);
     }
 
@@ -415,13 +415,13 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitSingletonFrom(SingletonFrom element, State state) {
-        new SingletonFromNode(state, element);
+        new UnaryExpressionNode<SingletonFrom>(state, element);
         return super.visitSingletonFrom(element, state);
     }
 
     @Override
     public TranspilerNode visitStart(Start element, State state) {
-        new StartNode(state, element);
+        new UnaryExpressionNode<Start>(state, element);
         return super.visitStart(element, state);
     }
 
@@ -452,13 +452,13 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitToDecimal(ToDecimal element, State state) {
-        new ToDecimalNode(state, element);
+        new UnaryExpressionNode<ToDecimal>(state, element);
         return super.visitToDecimal(element, state);
     }
 
     @Override
     public TranspilerNode visitToDate(ToDate element, State state) {
-        new ToDateNode(state, element);
+        new UnaryExpressionNode<ToDate>(state, element);
         return super.visitToDate(element, state);
     }
 
@@ -482,13 +482,13 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
 
     @Override
     public TranspilerNode visitNegate(Negate element, State state) {
-        new NegateNode(state, element);
+        new UnaryExpressionNode<Negate>(state, element);
         return super.visitNegate(element, state);
     }
 
     @Override
     public TranspilerNode visitNot(Not element, State state) {
-        new NotNode(state, element);
+        new UnaryExpressionNode<Not>(state, element);
         return super.visitNot(element, state);
     }
 
