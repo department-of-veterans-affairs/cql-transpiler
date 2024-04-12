@@ -33,10 +33,6 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
         return map;
     }
 
-    protected Segment nodeToDictionarySegment() {
-        return super.toSegment();
-    }
-
     @Override
     public Segment toSegment() {
         var enclosingSegment = new Segment("");
@@ -45,9 +41,9 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
         // macro segment
         var macro = new Segment("{% macro " + referenceName() + "(state) %}", "{% endmacro %}", PrintType.Inline);
         enclosingSegment.addChild(macro);
-        // internal segment - wrap the dictionary representation of this object
+        // internal segment -- wrap the dictionary representation of this object
         var internal = new Segment("{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}", PrintType.Inline);
-        internal.addChild(nodeToDictionarySegment());
+        internal.addChild(super.toSegment());
         macro.addChild(internal);
         return enclosingSegment;
     }

@@ -9,15 +9,22 @@ import gov.va.transpiler.jinja.state.State;
 public class IncludeDefNode extends ElementNode<IncludeDef> {
 
     private LibraryNode referencedLibrary;
+
     public IncludeDefNode(State state, IncludeDef cqlEquivalent) {
         super(state, cqlEquivalent);
         referencedLibrary = state.getLibraryNodeByIDAndVersion(getCqlEquivalent().getPath(), getCqlEquivalent().getVersion());
     }
 
+    /**
+     * @return Library this include statement references.
+     */
     public LibraryNode getReferencedLibrary() {
         return referencedLibrary;
     }
 
+    /**
+     * @return Alias to use inside a macro file. Substitutes whitespace and restricted characters permissible in CQL variable names but impermissible in Jinja.
+     */
     public String getAliasForReferencedLibrary() {
         return getCqlEquivalent().getLocalIdentifier() == null ? getReferencedLibrary().getTargetFileLocation()
             .replace(" ", "_")

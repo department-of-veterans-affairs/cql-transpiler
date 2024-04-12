@@ -57,19 +57,30 @@ public class LibraryNode extends ElementNode<Library> {
 
     @Override
     public Segment toSegment() {
+        // Encapsulate children in a file
         var segment = new Segment();
         segment.setPrintType(PrintType.File);
         segment.setOriginalLibraryIdentifier(getCqlEquivalent().getIdentifier());
         segment.setFileLocation(getTargetFileLocation());
+
+        // Print the header
         var headerSegment = new Segment();
         headerSegment.setPrintType(PrintType.Line);
+        // The provided macro file is used to convert the intermediate AST into the target language
         headerSegment.setHead("{% import '" + Standards.macroFileName() + "' as " + Standards.macroFileName() +" %}");
         segment.addChild(headerSegment);
+
+        // Include any other translated libraries required
         for (var child: includeDefNodeList) {
             segment.addChild(child.toSegment());
         }
+
+        // Print children
         for (var child: getChildren()) {
+            // child nodes are set up as ASTs equivalent to CQL statements
             segment.addChild(child.toSegment());
+
+            // invoke the child node so that when the library file is compiled with jinja, each child is printed as SQL
             if (child instanceof ExpressionDefNode && !(child instanceof FunctionDefNode)) {
                 segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).referenceName() + "(none) }}\n"));
             }
