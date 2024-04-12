@@ -406,7 +406,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# End operator #}
 {%- set End = namespace() %}
 {%- macro printEnd(this, state, arguments) %}
-SELECT {{ intervalEnd }} from {{ OperatorHandler.print(state, arguments['child']) }}
+SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['child']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(End) %}
 {%- set End.print = printEnd %}
@@ -753,7 +753,7 @@ ORDER BY {{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {# Start operator - dependencies: [Property] #}
 {%- set Start = namespace() %}
 {%- macro printStart(this, state, arguments) %}
-SELECT {{ intervalStart }} from {{ OperatorHandler.print(state, arguments['child']) }}
+SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['child']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Start) %}
 {%- set Start.print = printStart %}
@@ -785,7 +785,7 @@ to_date({{ OperatorHandler.print(state, arguments['child']) }})
 {# Tuple operator #}
 {%- set Tuple = namespace() %}
 {%- macro printTuple(this, state, arguments) %}
-SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], ', ') }})
+SELECT struct(*) FROM ({{ printOperatorsFromList(state, arguments['children'], ', ') }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Tuple) %}
 {%- set Tuple.defaultDataType = DataType.ENCAPSULATED %}
