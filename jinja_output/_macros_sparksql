@@ -390,7 +390,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# DifferenceBetween operator #}
 {%- set DifferenceBetween = namespace() %}
 {%- macro printDifferenceBetween(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['right'])}} - {{ OperatorHandler.print(state, arguments['left']) }})
+DATEDIFF({{ OperatorHandler.print(state, arguments['right'])}}, {{ OperatorHandler.print(state, arguments['left']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(DifferenceBetween) %}
 {%- set DifferenceBetween.print = printDifferenceBetween %}
@@ -406,7 +406,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# End operator #}
 {%- set End = namespace() %}
 {%- macro printEnd(this, state, arguments) %}
-SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['child']) }}
+{{ OperatorHandler.print(state, arguments['child']) }}.{{ intervalEnd }}
 {%- endmacro %}
 {%- do OperatorClass.construct(End) %}
 {%- set End.print = printEnd %}
@@ -657,19 +657,9 @@ NULL
 
 {# Property operator #}
 {%- set Property = namespace() %}
-{%- macro printPropertyOfDataStructure(path, state, dataStructure) %}
-SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
-{%- endmacro %}
 {%- macro printProperty(this, state, arguments) %}
 {%-     if arguments['child'] != none %}
-{%-         if state.insideQuery %}
 {{ OperatorHandler.print(state, arguments['child']) }}.{{ arguments['path'] }}
-{%-         else %}
-{%-             set previousCoercionInstructions = state.coercionInstructions %}
-{%-             set state.coercionInstructions = {} %}
-{{ printPropertyOfDataStructure(arguments['path'], state, arguments['child']) }}
-{%-             set state.coercionInstructions = previousCoercionInstructions %}
-{%-         endif %}
 {%-     elif arguments['path'] != none %}
 {{ arguments['scope'] }}.{{ arguments['path'] }}
 {%-     else %}
@@ -750,10 +740,10 @@ ORDER BY {{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {%- set SortClause.defaultDataType = DataType.STATEMENT %}
 {%- set SortClause.print = printSortClause %}
 
-{# Start operator - dependencies: [Property] #}
+{# Start operator #}
 {%- set Start = namespace() %}
 {%- macro printStart(this, state, arguments) %}
-SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['child']) }}
+{{ OperatorHandler.print(state, arguments['child']) }}.{{ intervalStart }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Start) %}
 {%- set Start.print = printStart %}
