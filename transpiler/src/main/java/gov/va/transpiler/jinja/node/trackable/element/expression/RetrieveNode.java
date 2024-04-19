@@ -2,6 +2,8 @@ package gov.va.transpiler.jinja.node.trackable.element.expression;
 
 import java.util.Map;
 
+import org.hl7.cql.model.ClassType;
+import org.hl7.cql.model.ListType;
 import org.hl7.elm.r1.Retrieve;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
@@ -40,6 +42,18 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
         var map = super.getLiteralArgumentMap();
         map.put("'modelType'", "'" + getCqlEquivalent().getDataType().getNamespaceURI() + "'");
         map.put("'templateId'", getCqlEquivalent().getTemplateId() == null ? "none" : "'" + getCqlEquivalent().getTemplateId() + "'");
+        // Some models have a label that's different from their template ID
+        var resultTypeLabel = "none";
+        if (getCqlEquivalent().getResultType() instanceof ListType) {
+            var resultType = (ListType) getCqlEquivalent().getResultType();
+            if (resultType.getElementType() instanceof ClassType) {
+                var elementType = (ClassType) resultType.getElementType();
+                if (elementType.getLabel() != null) {
+                    resultTypeLabel = "'" + elementType.getLabel() + "'";
+                }
+            }
+        }
+        map.put("'resultTypeLabel'", resultTypeLabel);
         map.put("'codeComparator'", getCqlEquivalent().getCodeComparator() == null ? "none" : "'" + getCqlEquivalent().getCodeComparator() + "'");
         map.put("'codeProperty'", getCqlEquivalent().getCodeProperty() == null ? "none" : "'" + getCqlEquivalent().getCodeProperty() + "'");
         return map;

@@ -193,7 +193,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- do OperatorHandlerClass.construct(OperatorHandler) %}
 
 {#
-    Static Functions: List Printing Utilities
+    STATIC FUNCTIONS - List Printing Utilities
 
     Members:
         Public:
@@ -263,6 +263,22 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 
 {%- set intervalStart = 'low'%}
 {%- set intervalEnd = 'high'%}
+
+{#
+    STATIC FUNCTIONS - in valueset check
+
+    Members:
+        Public:
+            valuesetCodes(valueSet, asOfDate)
+            inValueSet(valueSet, codeProperty)
+#}
+{%- macro valueSetCodes(valueSetOID, asOfDate) %}
+(SELECT codes FROM {{ systemValueset }} WHERE oid = "{{ valueSetOID }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+{%- endmacro %}
+
+{%- macro inValueSet(valueSet, codeProperty) %}
+EXISTS({{ valueSetCodes(valueSet) }}, _vs -> {{codeProperty}}.code = _vs.code AND {{codeProperty}}.system = _vs.system)
+{%- endmacro %}
 
 {# OPERATOR IMPLEMENTATIONS #}
 
@@ -513,7 +529,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['child'])}})
 {# InInterval operator #}
 {%- set InInterval = namespace() %}
 {%- macro printInInterval(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['left'])}} BETWEEN (SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['right']) }}, SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['right']) }})
+{{ OperatorHandler.print(state, arguments['left'])}} BETWEEN SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['right']) }} AND SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['right']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(InInterval) %}
 {%- set InInterval.print = printInInterval %}
@@ -702,20 +718,25 @@ SELECT
 {# Retrieve operator #}
 {%- set Retrieve = namespace() %}
 {%- macro printRetrieve(this, state, arguments) %}
-{%-     if arguments['codeProperty'] == 'code' %}
-{%-         if arguments['codeComparator'] == 'in' %}
-SELECT * FROM {{ OperatorHandler.print(state, arguments['valueSet']) }}
-{%-         else %}
-{%-             if not state.insideSqlComment %}
-/*
-{%-             endif %}
-Retrieve with unsupported arguments: {{ arguments }}
-{%-             if not state.insideSqlComment %}
-*/
-{%-             endif %}
-{%-         endif %}
+{%-     if arguments['resultTypeLabel'] %}
+{%-         set resultTypeLabel = arguments['resultTypeLabel'] %}
 {%-     else %}
-SELECT * FROM {{ arguments['templateId'] }}
+{%-         set resultTypeLabel = arguments['templateId'] %}
+{%-     endif %}
+{%-     set dataTypeRef = arguments['modelType'].split(':')[2]|lower ~ "__" ~ resultTypeLabel|lower|replace(" ", "_")|replace(",", "") ~ "_" ~ arguments['modelType'].split(':')[3] %}
+SELECT
+_dataType.*,
+-- Apply system attributes during the retrieve so they're present within derived calculations.
+GETDATE() _evaluatedOn,
+DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey,
+STRUCT(
+    STRING(_ep.measurementPeriod) key,
+    _ep.measurementPeriod measurementPeriod
+) _parameters
+FROM fhirlake.{{ dataTypeRef }} _dataType
+CROSS JOIN {{ systemEvaluationPeriod }} _ep
+{%      if arguments['codeProperty'] != None %}
+WHERE {{ inValueSet(valueSet, "_dataType." ~arguments['codeProperty']) }}
 {%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Retrieve) %}
