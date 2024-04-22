@@ -5,11 +5,7 @@
 #}
 
 {%- macro systemEvaluationPeriod() %}
-SELECT
-  STRUCT(
-    CAST('2023-01-01' AS DATE) low,
-    CAST('2023-12-31' AS DATE) high
-  ) measurementPeriod
+SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
 {%- endmacro %}
 
 {%- macro systemValueSet() %}
@@ -49,24 +45,24 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
 
 
 {%- macro retrieveDBT(state, valueSet, model, dataType, version, codeProperty="code") %}
-  {%- set dataTypeReference = model ~ "__" ~ dataType ~ "_v" ~ version %}
-  (
-    SELECT
-      _dataType.*,
-      -- Apply system attributes during the retrieve so they're present within derived calculations.
-      GETDATE() _evaluatedOn,
-      DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey,
-      STRUCT(
-        STRING(_ep.measurementPeriod) key,
-        _ep.measurementPeriod measurementPeriod
-      ) _parameters
-    FROM /* source "fhirlake" {{ dataTypeRefernce }} */ {#{{ source("fhirlake", dataTypeReference) }}#} _dataType
-    -- Link to evaluation period which represents
-    CROSS JOIN {{ systemEvaluationPeriod() }} _ep
-    {%- if valueSet %}
-    WHERE {{ inValueSet(state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
-    {%- endif %}
-  )
+{%-   set dataTypeReference = model ~ "__" ~ dataType ~ "_" ~ version %}
+(
+  SELECT
+    _dataType.*,
+    -- Apply system attributes during the retrieve so they're present within derived calculations.
+    GETDATE() _evaluatedOn,
+    DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey,
+    STRUCT(
+      STRING(_ep.measurementPeriod) key,
+      _ep.measurementPeriod measurementPeriod
+    ) _parameters
+  FROM /* source "fhirlake" {{ dataTypeReference }} */ {#{{ source("fhirlake", dataTypeReference) }}#} _dataType
+  -- Link to evaluation period which represents
+  CROSS JOIN {{ systemEvaluationPeriod() }} _ep
+{%    if valueSet -%}
+  WHERE {{ inValueSet(state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
+{%-   endif %}
+)
 {%- endmacro %}
 
 {%- macro retrieve(this, state, arguments) %}
@@ -80,7 +76,7 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
   arguments['valueSet'],
   arguments['modelType'].split(':')[2]|lower,
   resultTypeLabel|lower|replace(" ", "_")|replace(",", ""),
-  arguments['modelType'].split(':')[3],
+  arguments['modelType'].split(':')[3]|replace("_", ""),
   arguments['codeProperty']
 ) }}
 {%- endmacro %}
