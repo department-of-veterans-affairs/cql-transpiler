@@ -18,7 +18,7 @@ public class UnsupportedNode extends CQLEquivalent<Trackable> {
 
     @Override
     public String getOperator() {
-        return Standards.macroFileName() + "." + Standards.UNSUPPORTED_OPERATOR;
+        return Standards.macroFileReferenceName() + "." + Standards.UNSUPPORTED_OPERATOR;
     }
 
     @Override

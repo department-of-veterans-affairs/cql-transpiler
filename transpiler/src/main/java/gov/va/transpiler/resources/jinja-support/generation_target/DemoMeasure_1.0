@@ -1,2 +1,0 @@
-{% import 'macros' as macros %}
-{% import 'MATGlobalCommonFunctions_7.0.000' as MATGlobalCommonFunctions %}

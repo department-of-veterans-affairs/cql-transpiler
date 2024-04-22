@@ -42,7 +42,7 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
         var macro = new Segment("{% macro " + referenceName() + "(state) %}", "{% endmacro %}", PrintType.Inline);
         enclosingSegment.addChild(macro);
         // internal segment -- wrap the dictionary representation of this object
-        var internal = new Segment("{{ " + Standards.macroFileName() + ".OperatorHandler.print(state, ", ") }}", PrintType.Inline);
+        var internal = new Segment("{{ " + Standards.macroFileReferenceName() + ".printOperator(state, ", ") }}", PrintType.Inline);
         internal.addChild(super.toSegment());
         macro.addChild(internal);
         return enclosingSegment;
