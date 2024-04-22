@@ -1,3 +1,5 @@
+{% import '_variables.j2' as _variables %}
+
 {#
     This file should be supplied to a folder where an intermediate AST rendered in jinja so on compilation its contents are rendered as SparkSQL.
 #}
@@ -273,7 +275,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
             inValueSet(valueSet, codeProperty)
 #}
 {%- macro valueSetCodes(valueSetOID, asOfDate) %}
-(SELECT codes FROM {{ systemValueset }} WHERE oid = "{{ valueSetOID }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+(SELECT codes FROM {{ _variables.systemValueset }} WHERE oid = "{{ valueSetOID }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
 {%- macro inValueSet(valueSet, codeProperty) %}
@@ -734,7 +736,7 @@ STRUCT(
     _ep.measurementPeriod measurementPeriod
 ) _parameters
 FROM fhirlake.{{ dataTypeRef }} _dataType
-CROSS JOIN {{ systemEvaluationPeriod }} _ep
+CROSS JOIN {{ _variables.systemEvaluationPeriod }} _ep
 {%      if arguments['codeProperty'] != None %}
 WHERE {{ inValueSet(valueSet, "_dataType." ~arguments['codeProperty']) }}
 {%-     endif %}

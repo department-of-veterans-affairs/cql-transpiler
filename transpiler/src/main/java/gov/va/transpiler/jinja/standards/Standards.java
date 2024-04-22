@@ -11,6 +11,7 @@ public class Standards {
     public static final String UNSUPPORTED_OPERATOR = "Unsupported";
     public static final String DISABLED_OPERATOR = "Disabled";
     public static final String UNFILTERED_CONTEXT = "Unfiltered";
+    public static final String JINJA_FILE_POSTFIX = ".j2";
 
     private static final String MACRO_FILE_PREFIX = "_macros_";
 

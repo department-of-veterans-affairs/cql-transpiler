@@ -67,7 +67,7 @@ public class LibraryNode extends ElementNode<Library> {
         var headerSegment = new Segment();
         headerSegment.setPrintType(PrintType.Line);
         // The provided macro file is used to convert the intermediate AST into the target language
-        headerSegment.setHead("{% import '" + Standards.macroFileName() + "' as " + Standards.macroFileName() +" %}");
+        headerSegment.setHead("{% import '" + Standards.macroFileName() + Standards.JINJA_FILE_POSTFIX + "' as " + Standards.macroFileName() +" %}");
         segment.addChild(headerSegment);
 
         // Include any other translated libraries required

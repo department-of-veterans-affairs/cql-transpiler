@@ -4,6 +4,7 @@ import org.hl7.elm.r1.IncludeDef;
 
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class IncludeDefNode extends ElementNode<IncludeDef> {
@@ -33,6 +34,6 @@ public class IncludeDefNode extends ElementNode<IncludeDef> {
 
     @Override
     public Segment toSegment() {
-        return new Segment("{% import '" + referencedLibrary.getTargetFileLocation() + "' as " + getAliasForReferencedLibrary(), " %}", PrintType.Line);
+        return new Segment("{% import '" + referencedLibrary.getTargetFileLocation() + Standards.JINJA_FILE_POSTFIX + "' as " + getAliasForReferencedLibrary(), " %}", PrintType.Line);
     }
 }

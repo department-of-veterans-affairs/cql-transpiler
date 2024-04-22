@@ -82,7 +82,7 @@ public class SegmentPrinter {
      * @throws IOException
      */
     protected void fileSegmentToFile(Segment segment, String targetPath) throws IOException {
-        var path = targetPath + segment.getFileLocation();
+        var path = targetPath + segment.getFileLocation() + Standards.JINJA_FILE_POSTFIX;
         File file = new File(path);
 
         if (file.exists()) {
@@ -105,7 +105,7 @@ public class SegmentPrinter {
      * @throws IOException
      */
     protected void printTextSegment(Segment segment, String targetPath) throws FileNotFoundException, IOException {
-        var path = targetPath + segment.getFileLocation();
+        var path = targetPath + segment.getFileLocation() + Standards.JINJA_FILE_POSTFIX;
         File file = new File(path);
 
         // Print the original CQL text if PRINT_LOCATORS is enabled and locators are specified

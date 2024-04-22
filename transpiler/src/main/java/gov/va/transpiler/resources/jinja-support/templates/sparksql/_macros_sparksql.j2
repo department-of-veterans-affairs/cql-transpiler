@@ -1,3 +1,9 @@
+{% import '_variables.j2' as _variables %}
+
+{#
+    This file should be supplied to a folder where an intermediate AST rendered in jinja so on compilation its contents are rendered as SparkSQL.
+#}
+
 {# UTILITIES, GLOBAL VARIABLES, PARENT CLASSES #}
 
 {#
@@ -189,7 +195,7 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 {%- do OperatorHandlerClass.construct(OperatorHandler) %}
 
 {#
-    Static Functions: List Printing Utilities
+    STATIC FUNCTIONS - List Printing Utilities
 
     Members:
         Public:
@@ -259,6 +265,22 @@ SELECT {{ toEncapsulate }} {{ printSingleValueColumnName() }}
 
 {%- set intervalStart = 'low'%}
 {%- set intervalEnd = 'high'%}
+
+{#
+    STATIC FUNCTIONS - in valueset check
+
+    Members:
+        Public:
+            valuesetCodes(valueSet, asOfDate)
+            inValueSet(valueSet, codeProperty)
+#}
+{%- macro valueSetCodes(valueSetOID, asOfDate) %}
+(SELECT codes FROM {{ systemValueset }} WHERE oid = "{{ valueSetOID }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+{%- endmacro %}
+
+{%- macro inValueSet(valueSet, codeProperty) %}
+EXISTS({{ valueSetCodes(valueSet) }}, _vs -> {{codeProperty}}.code = _vs.code AND {{codeProperty}}.system = _vs.system)
+{%- endmacro %}
 
 {# OPERATOR IMPLEMENTATIONS #}
 
@@ -386,7 +408,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# DifferenceBetween operator #}
 {%- set DifferenceBetween = namespace() %}
 {%- macro printDifferenceBetween(this, state, arguments) %}
-({{ OperatorHandler.print(state, arguments['right'])}} - {{ OperatorHandler.print(state, arguments['left']) }})
+DATEDIFF({{ OperatorHandler.print(state, arguments['right'])}}, {{ OperatorHandler.print(state, arguments['left']) }})
 {%- endmacro %}
 {%- do OperatorClass.construct(DifferenceBetween) %}
 {%- set DifferenceBetween.print = printDifferenceBetween %}
@@ -402,7 +424,7 @@ SELECT {{ printIDFromContext(state.context) }}, count(*) FROM ({{ OperatorHandle
 {# End operator #}
 {%- set End = namespace() %}
 {%- macro printEnd(this, state, arguments) %}
-SELECT {{ intervalEnd }} from {{ OperatorHandler.print(state, arguments['child']) }}
+{{ OperatorHandler.print(state, arguments['child']) }}.{{ intervalEnd }}
 {%- endmacro %}
 {%- do OperatorClass.construct(End) %}
 {%- set End.print = printEnd %}
@@ -509,7 +531,7 @@ EXISTS ({{ OperatorHandler.print(state, arguments['child'])}})
 {# InInterval operator #}
 {%- set InInterval = namespace() %}
 {%- macro printInInterval(this, state, arguments) %}
-{{ OperatorHandler.print(state, arguments['left'])}} BETWEEN (SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['right']) }}, SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['right']) }})
+{{ OperatorHandler.print(state, arguments['left'])}} BETWEEN SELECT {{ intervalStart }} FROM {{ OperatorHandler.print(state, arguments['right']) }} AND SELECT {{ intervalEnd }} FROM {{ OperatorHandler.print(state, arguments['right']) }}
 {%- endmacro %}
 {%- do OperatorClass.construct(InInterval) %}
 {%- set InInterval.print = printInInterval %}
@@ -653,19 +675,9 @@ NULL
 
 {# Property operator #}
 {%- set Property = namespace() %}
-{%- macro printPropertyOfDataStructure(path, state, dataStructure) %}
-SELECT {{ path }} FROM {{ OperatorHandler.print(state, dataStructure) }}
-{%- endmacro %}
 {%- macro printProperty(this, state, arguments) %}
 {%-     if arguments['child'] != none %}
-{%-         if state.insideQuery %}
 {{ OperatorHandler.print(state, arguments['child']) }}.{{ arguments['path'] }}
-{%-         else %}
-{%-             set previousCoercionInstructions = state.coercionInstructions %}
-{%-             set state.coercionInstructions = {} %}
-{{ printPropertyOfDataStructure(arguments['path'], state, arguments['child']) }}
-{%-             set state.coercionInstructions = previousCoercionInstructions %}
-{%-         endif %}
 {%-     elif arguments['path'] != none %}
 {{ arguments['scope'] }}.{{ arguments['path'] }}
 {%-     else %}
@@ -708,20 +720,25 @@ SELECT
 {# Retrieve operator #}
 {%- set Retrieve = namespace() %}
 {%- macro printRetrieve(this, state, arguments) %}
-{%-     if arguments['codeProperty'] == 'code' %}
-{%-         if arguments['codeComparator'] == 'in' %}
-SELECT * FROM {{ OperatorHandler.print(state, arguments['valueSet']) }}
-{%-         else %}
-{%-             if not state.insideSqlComment %}
-/*
-{%-             endif %}
-Retrieve with unsupported arguments: {{ arguments }}
-{%-             if not state.insideSqlComment %}
-*/
-{%-             endif %}
-{%-         endif %}
+{%-     if arguments['resultTypeLabel'] %}
+{%-         set resultTypeLabel = arguments['resultTypeLabel'] %}
 {%-     else %}
-SELECT * FROM {{ arguments['templateId'] }}
+{%-         set resultTypeLabel = arguments['templateId'] %}
+{%-     endif %}
+{%-     set dataTypeRef = arguments['modelType'].split(':')[2]|lower ~ "__" ~ resultTypeLabel|lower|replace(" ", "_")|replace(",", "") ~ "_" ~ arguments['modelType'].split(':')[3] %}
+SELECT
+_dataType.*,
+-- Apply system attributes during the retrieve so they're present within derived calculations.
+GETDATE() _evaluatedOn,
+DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey,
+STRUCT(
+    STRING(_ep.measurementPeriod) key,
+    _ep.measurementPeriod measurementPeriod
+) _parameters
+FROM fhirlake.{{ dataTypeRef }} _dataType
+CROSS JOIN {{ systemEvaluationPeriod }} _ep
+{%      if arguments['codeProperty'] != None %}
+WHERE {{ inValueSet(valueSet, "_dataType." ~arguments['codeProperty']) }}
 {%-     endif %}
 {%- endmacro %}
 {%- do OperatorClass.construct(Retrieve) %}
@@ -746,10 +763,10 @@ ORDER BY {{ printOperatorsFromList(state, arguments['children'], ", ") }}
 {%- set SortClause.defaultDataType = DataType.STATEMENT %}
 {%- set SortClause.print = printSortClause %}
 
-{# Start operator - dependencies: [Property] #}
+{# Start operator #}
 {%- set Start = namespace() %}
 {%- macro printStart(this, state, arguments) %}
-SELECT {{ intervalStart }} from {{ OperatorHandler.print(state, arguments['child']) }}
+{{ OperatorHandler.print(state, arguments['child']) }}.{{ intervalStart }}
 {%- endmacro %}
 {%- do OperatorClass.construct(Start) %}
 {%- set Start.print = printStart %}
@@ -781,7 +798,7 @@ to_date({{ OperatorHandler.print(state, arguments['child']) }})
 {# Tuple operator #}
 {%- set Tuple = namespace() %}
 {%- macro printTuple(this, state, arguments) %}
-SELECT struct(*) from ({{ printOperatorsFromList(state, arguments['children'], ', ') }})
+SELECT struct(*) FROM ({{ printOperatorsFromList(state, arguments['children'], ', ') }})
 {%- endmacro %}
 {%- do OperatorClass.construct(Tuple) %}
 {%- set Tuple.defaultDataType = DataType.ENCAPSULATED %}
