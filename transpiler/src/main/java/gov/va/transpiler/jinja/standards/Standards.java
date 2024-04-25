@@ -14,7 +14,7 @@ public class Standards {
     public static final String JINJA_FILE_POSTFIX = ".j2";
 
     private static final String OPERATOR_MACRO_FILE_PREFIX = "_operators";
-
+    private static final String CUSTOM_MACRO_FILE_PREFIX = "_custom";
     private static String targetLanguage;
 
     /**
@@ -44,5 +44,9 @@ public class Standards {
      */
     public static String macroFileReferenceName() {
         return OPERATOR_MACRO_FILE_PREFIX;
+    }
+
+    public static String getCustomFunctionFileName() {
+        return CUSTOM_MACRO_FILE_PREFIX + getTargetLanguage() + JINJA_FILE_POSTFIX;
     }
 }

@@ -19,9 +19,9 @@ import gov.va.transpiler.jinja.state.State;
 public class Transpiler {
 
     public static void main(String[] args) throws IOException {
-        var librarySource = "./test_cql/";
+        var librarySource = "./resources/cql/";
         var fileLibrarySourceProvider = new FileLibrarySourceProvider(librarySource);
-        var jinjaTarget = "jinja_output/";
+        var jinjaTarget = "resources/jinja/";
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
         var target = "sparksql";
         Standards.setTargetLanguage(target);

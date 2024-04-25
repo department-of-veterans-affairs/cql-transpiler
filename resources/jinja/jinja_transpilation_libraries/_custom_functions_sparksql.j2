@@ -1,4 +1,5 @@
-{% import 'sparksql/_globals_sparksql.j2' as _globals %}
+{%- import 'jinja_transpilation_libraries/sparksql/_globals_sparksql.j2' as _globals %}
+{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.j2' as _operators %}
 
 {#
   TODO: source, env_var
@@ -65,12 +66,12 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
 )
 {%- endmacro %}
 
-{%- macro retrieve(this, state, arguments) %}
-{%-     if arguments['resultTypeLabel'] %}
-{%-         set resultTypeLabel = arguments['resultTypeLabel'] %}
-{%-     else %}
-{%-         set resultTypeLabel = arguments['templateId'] %}
-{%-     endif %}
+{%- macro printRetrieve(this, state, arguments) %}
+{%-   if arguments['resultTypeLabel'] %}
+{%-     set resultTypeLabel = arguments['resultTypeLabel'] %}
+{%-   else %}
+{%-     set resultTypeLabel = arguments['templateId'] %}
+{%-   endif %}
 {{ retrieveDBT(
   state,
   arguments['valueSet'],
@@ -79,4 +80,9 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
   arguments['modelType'].split(':')[3]|replace("_", ""),
   arguments['codeProperty']
 ) }}
+{%- endmacro %}
+
+{%- macro setup() %}
+{# TODO #}
+{#{%-   do _operators.Retrieve.print = printRetrieve %}#}
 {%- endmacro %}
