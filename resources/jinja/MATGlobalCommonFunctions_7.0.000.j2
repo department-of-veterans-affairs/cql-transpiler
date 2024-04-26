@@ -1,6 +1,7 @@
-{% import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.j2' as _operators %}
+{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.j2' as _operators %}
 {%- import 'jinja_transpilation_libraries/_custom_functions_sparksql.j2' as _custom_functions %}
 {%- do _custom_functions.setup() %}
+
 /*
 	// MATGlobalCommonFunctions lines [5:1-5:82]
 	valueset "Emergency Department Visit": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.292' 
