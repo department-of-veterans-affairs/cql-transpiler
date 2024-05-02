@@ -2,7 +2,7 @@
 {#
     This file should be supplied to a folder where an intermediate AST rendered in jinja so on compilation its contents are rendered as SparkSQL.
 #}
-{%- import'jinja_transpilation_libraries/sparksql/_globals_sparksql.j2' as _globals %}
+{%- import'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' as _globals %}
 
 {%- macro printOperator(state, operatorArguments) %}
 {{ _globals.OperatorHandler.print(state, operatorArguments) }}

@@ -1,9 +1,9 @@
-{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.j2' as _operators %}
-{%- import 'jinja_transpilation_libraries/_custom_functions_sparksql.j2' as _custom_functions %}
+{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' as _operators %}
+{%- import 'jinja_transpilation_libraries/_custom_functions_sparksql.sql' as _custom_functions %}
 {%- do _custom_functions.setup() %}
 
-{% import 'MATGlobalCommonFunctions_7.0.000.j2' as Global %}
-{% import 'TJCOverall_7.1.000.j2' as TJC %}
+{% import 'MATGlobalCommonFunctions_7.0.000.sql' as Global %}
+{% import 'TJCOverall_7.1.000.sql' as TJC %}
 /*
 	// DischargedonAntithromboticTherapy lines [8:1-8:94]
 	valueset "Antithrombotic Therapy for Ischemic Stroke": 'urn:oid:2.16.840.1.113762.1.4.1110.62'

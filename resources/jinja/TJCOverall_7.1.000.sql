@@ -1,8 +1,8 @@
-{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.j2' as _operators %}
-{%- import 'jinja_transpilation_libraries/_custom_functions_sparksql.j2' as _custom_functions %}
+{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' as _operators %}
+{%- import 'jinja_transpilation_libraries/_custom_functions_sparksql.sql' as _custom_functions %}
 {%- do _custom_functions.setup() %}
 
-{% import 'MATGlobalCommonFunctions_7.0.000.j2' as Global %}
+{% import 'MATGlobalCommonFunctions_7.0.000.sql' as Global %}
 /*
 	// TJCOverall lines [7:1-7:65]
 	valueset "Comfort Measures": 'urn:oid:1.3.6.1.4.1.33895.1.3.0.45' 

@@ -1,5 +1,5 @@
-{%- import 'jinja_transpilation_libraries/sparksql/_globals_sparksql.j2' as _globals %}
-{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.j2' as _operators %}
+{%- import 'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' as _globals %}
+{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' as _operators %}
 
 {#
   TODO: source, env_var
@@ -83,5 +83,5 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
 {%- endmacro %}
 
 {%- macro setup() %}
-{%-   set _operators.Retrieve.print = printRetrieve %}
+{#{%-   set _operators.Retrieve.print = printRetrieve %}#}
 {%- endmacro %}
