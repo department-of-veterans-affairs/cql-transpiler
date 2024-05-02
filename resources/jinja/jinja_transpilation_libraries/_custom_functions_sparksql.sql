@@ -57,7 +57,7 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
       STRING(_ep.measurementPeriod) key,
       _ep.measurementPeriod measurementPeriod
     ) _parameters
-  FROM /* source "fhirlake" {{ dataTypeReference }} */ {#{{ source("fhirlake", dataTypeReference) }}#} _dataType
+  FROM {{ source("fhirlake", dataTypeReference) }} _dataType
   -- Link to evaluation period which represents
   CROSS JOIN {{ systemEvaluationPeriod() }} _ep
 {%    if valueSet -%}
