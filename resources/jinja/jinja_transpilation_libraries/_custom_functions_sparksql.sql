@@ -83,6 +83,5 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
 {%- endmacro %}
 
 {%- macro setup() %}
-{# TODO #}
-{#{%-   do _operators.Retrieve.print = printRetrieve %}#}
+{%-   set _operators.Retrieve.print = printRetrieve %}
 {%- endmacro %}
