@@ -1,6 +1,4 @@
 {%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' as _operators %}
-{%- import 'jinja_transpilation_libraries/_custom_functions_sparksql.sql' as _custom_functions %}
-{%- do _custom_functions.setup() %}
 
 {% import 'MATGlobalCommonFunctions_7.0.000.sql' as Global %}
 /*

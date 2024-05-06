@@ -2,7 +2,8 @@
 {#
     This file should be supplied to a folder where an intermediate AST rendered in jinja so on compilation its contents are rendered as SparkSQL.
 #}
-{%- import'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' as _globals %}
+{%- import 'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' as _globals %}
+{%- import 'jinja_transpilation_libraries/sparksql/_custom_functions_sparksql.sql' as _custom %}
 
 {%- macro printOperator(state, operatorArguments) %}
 {{ _globals.OperatorHandler.print(state, operatorArguments) }}
@@ -446,7 +447,11 @@ SELECT
 {%- set Retrieve = namespace() %}
 {%- do _globals.OperatorClass.construct(Retrieve) %}
 {%- set Retrieve.defaultDataType = _globals.DataType.TABLE %}
-{%- set Retrieve.print = _globals.printUnimplemented %}
+{%- if _custom and _custom.printRetrieve %}
+{%-     set Retrieve.print = _custom.printRetrieve %}
+{%- else %}
+{%-     set Retrieve.print = _globals.printUnimplemented %}
+{%- endif %}
 
 {# ReturnClause operator #}
 {%- set ReturnClause = namespace() %}

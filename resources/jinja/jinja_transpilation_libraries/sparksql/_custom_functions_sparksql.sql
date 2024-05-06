@@ -1,9 +1,4 @@
 {%- import 'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' as _globals %}
-{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' as _operators %}
-
-{#
-  TODO: source, env_var
-#}
 
 {%- macro systemEvaluationPeriod() %}
 SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
@@ -80,8 +75,4 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
   arguments['modelType'].split(':')[3]|replace("_", ""),
   arguments['codeProperty']
 ) }}
-{%- endmacro %}
-
-{%- macro setup() %}
-{#{%-   set _operators.Retrieve.print = printRetrieve %}#}
 {%- endmacro %}
