@@ -46,58 +46,58 @@
 	// DischargedonAntithromboticTherapy lines [17:1-17:15]
 	context Patient
 */
-{% macro Patient(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Patient', 'child': { 'operator': _operators.SingletonFrom, 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'Patient', 'resultTypeLabel': none, 'codeComparator': none, 'codeProperty': none, 'child': none, 'valueSet': none } } }) }}{% endmacro %}
-{{ Patient(none) }}
+{% macro DischargedonAntithromboticTherapyPatient(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Patient', 'child': { 'operator': _operators.SingletonFrom, 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'Patient', 'resultTypeLabel': none, 'codeComparator': none, 'codeProperty': none, 'child': none, 'valueSet': none } } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyPatient(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [19:1-20:51]
 	define "SDE Ethnicity":
 	  ["Patient Characteristic Ethnicity": "Ethnicity"]
 */
-{% macro SDE_Ethnicity(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Ethnicity', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Ethnicity', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Ethnicity } } }) }}{% endmacro %}
-{{ SDE_Ethnicity(none) }}
+{% macro DischargedonAntithromboticTherapySDE_Ethnicity(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Ethnicity', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Ethnicity', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Ethnicity } } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapySDE_Ethnicity(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [22:1-23:43]
 	define "SDE Payer":
 	  ["Patient Characteristic Payer": "Payer"]
 */
-{% macro SDE_Payer(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Payer', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Payer', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Payer } } }) }}{% endmacro %}
-{{ SDE_Payer(none) }}
+{% macro DischargedonAntithromboticTherapySDE_Payer(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Payer', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Payer', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Payer } } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapySDE_Payer(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [25:1-26:41]
 	define "SDE Race":
 	  ["Patient Characteristic Race": "Race"]
 */
-{% macro SDE_Race(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Race', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Race', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Race } } }) }}{% endmacro %}
-{{ SDE_Race(none) }}
+{% macro DischargedonAntithromboticTherapySDE_Race(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Race', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Race', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Race } } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapySDE_Race(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [28:1-29:58]
 	define "SDE Sex":
 	  ["Patient Characteristic Sex": "ONC Administrative Sex"]
 */
-{% macro SDE_Sex(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Sex', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Sex', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': ONC_Administrative_Sex } } }) }}{% endmacro %}
-{{ SDE_Sex(none) }}
+{% macro DischargedonAntithromboticTherapySDE_Sex(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'SDE Sex', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': none, 'resultTypeLabel': 'Patient Characteristic Sex', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': ONC_Administrative_Sex } } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapySDE_Sex(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [31:1-32:33]
 	define "Denominator":
 	  TJC."Ischemic Stroke Encounter"
 */
-{% macro Denominator(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Denominator', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.Ischemic_Stroke_Encounter } }) }}{% endmacro %}
-{{ Denominator(none) }}
+{% macro DischargedonAntithromboticTherapyDenominator(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Denominator', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.TJCOverallIschemic_Stroke_Encounter } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyDenominator(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [34:1-35:50]
 	define "Initial Population":
 	  TJC."Encounter with Principal Diagnosis and Age"
 */
-{% macro Initial_Population(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Initial Population', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.Encounter_with_Principal_Diagnosis_and_Age } }) }}{% endmacro %}
-{{ Initial_Population(none) }}
+{% macro DischargedonAntithromboticTherapyInitial_Population(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Initial Population', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.TJCOverallEncounter_with_Principal_Diagnosis_and_Age } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyInitial_Population(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [37:1-39:70]
 	define "Denominator Exclusions":
 	  TJC."Ischemic Stroke Encounters with Discharge Disposition"
 	    union TJC."Encounter with Comfort Measures during Hospitalization"
 */
-{% macro Denominator_Exclusions(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Denominator Exclusions', 'child': { 'operator': _operators.Union, 'children': [{ 'operator': _operators.ExpressionRef, 'reference': TJC.Ischemic_Stroke_Encounters_with_Discharge_Disposition }, { 'operator': _operators.ExpressionRef, 'reference': TJC.Encounter_with_Comfort_Measures_during_Hospitalization }] } }) }}{% endmacro %}
-{{ Denominator_Exclusions(none) }}
+{% macro DischargedonAntithromboticTherapyDenominator_Exclusions(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Denominator Exclusions', 'child': { 'operator': _operators.Union, 'children': [{ 'operator': _operators.ExpressionRef, 'reference': TJC.TJCOverallIschemic_Stroke_Encounters_with_Discharge_Disposition }, { 'operator': _operators.ExpressionRef, 'reference': TJC.TJCOverallEncounter_with_Comfort_Measures_during_Hospitalization }] } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyDenominator_Exclusions(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [41:1-44:92]
 	define "Encounter with Pharmacological Contraindications for Antithrombotic Therapy at Discharge":
@@ -105,8 +105,8 @@
 	    with ["Medication, Discharge": "Pharmacological Contraindications For Antithrombotic Therapy"] Pharmacological
 	      such that Pharmacological.authorDatetime during IschemicStrokeEncounter.relevantPeriod
 */
-{% macro Encounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Encounter with Pharmacological Contraindications for Antithrombotic Therapy at Discharge', 'child': { 'operator': _operators.Query, 'where': none, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'IschemicStrokeEncounter', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.Ischemic_Stroke_Encounter } }, { 'operator': _operators.With, 'alias': 'Pharmacological', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'PositiveMedicationDischarge', 'resultTypeLabel': 'Medication, Discharge', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Pharmacological_Contraindications_For_Antithrombotic_Therapy } }, 'suchThat': { 'operator': _operators.InInterval, 'left': { 'operator': _operators.Property, 'scope': 'Pharmacological', 'path': 'authorDatetime', 'child': none }, 'right': { 'operator': _operators.Property, 'scope': 'IschemicStrokeEncounter', 'path': 'relevantPeriod', 'child': none } } }], 'letClauseList': [] } }) }}{% endmacro %}
-{{ Encounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge(none) }}
+{% macro DischargedonAntithromboticTherapyEncounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Encounter with Pharmacological Contraindications for Antithrombotic Therapy at Discharge', 'child': { 'operator': _operators.Query, 'where': none, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'IschemicStrokeEncounter', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.TJCOverallIschemic_Stroke_Encounter } }, { 'operator': _operators.With, 'alias': 'Pharmacological', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'PositiveMedicationDischarge', 'resultTypeLabel': 'Medication, Discharge', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Pharmacological_Contraindications_For_Antithrombotic_Therapy } }, 'suchThat': { 'operator': _operators.InInterval, 'left': { 'operator': _operators.Property, 'scope': 'Pharmacological', 'path': 'authorDatetime', 'child': none }, 'right': { 'operator': _operators.Property, 'scope': 'IschemicStrokeEncounter', 'path': 'relevantPeriod', 'child': none } } }], 'letClauseList': [] } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyEncounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [46:1-49:73]
 	define "Reason for Not Giving Antithrombotic at Discharge":
@@ -114,8 +114,8 @@
 	    where NoAntithromboticDischarge.negationRationale in "Medical Reason For Not Providing Treatment"
 	      or NoAntithromboticDischarge.negationRationale in "Patient Refusal"
 */
-{% macro Reason_for_Not_Giving_Antithrombotic_at_Discharge(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Reason for Not Giving Antithrombotic at Discharge', 'child': { 'operator': _operators.Query, 'where': { 'operator': _operators.Or, 'left': { 'operator': _operators.InValueSet, 'child': none, 'valueSetReference': { 'operator': _operators.ValueSetRef, 'reference': Medical_Reason_For_Not_Providing_Treatment }, 'valueSetExpression': none }, 'right': { 'operator': _operators.InValueSet, 'child': none, 'valueSetReference': { 'operator': _operators.ValueSetRef, 'reference': Patient_Refusal }, 'valueSetExpression': none } }, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'NoAntithromboticDischarge', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'NegativeMedicationDischarge', 'resultTypeLabel': 'Medication, Not Discharged', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Antithrombotic_Therapy_for_Ischemic_Stroke } } }], 'letClauseList': [] } }) }}{% endmacro %}
-{{ Reason_for_Not_Giving_Antithrombotic_at_Discharge(none) }}
+{% macro DischargedonAntithromboticTherapyReason_for_Not_Giving_Antithrombotic_at_Discharge(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Reason for Not Giving Antithrombotic at Discharge', 'child': { 'operator': _operators.Query, 'where': { 'operator': _operators.Or, 'left': { 'operator': _operators.InValueSet, 'child': none, 'valueSetReference': { 'operator': _operators.ValueSetRef, 'reference': Medical_Reason_For_Not_Providing_Treatment }, 'valueSetExpression': none }, 'right': { 'operator': _operators.InValueSet, 'child': none, 'valueSetReference': { 'operator': _operators.ValueSetRef, 'reference': Patient_Refusal }, 'valueSetExpression': none } }, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'NoAntithromboticDischarge', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'NegativeMedicationDischarge', 'resultTypeLabel': 'Medication, Not Discharged', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Antithrombotic_Therapy_for_Ischemic_Stroke } } }], 'letClauseList': [] } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyReason_for_Not_Giving_Antithrombotic_at_Discharge(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [51:1-54:100]
 	define "Numerator":
@@ -123,8 +123,8 @@
 	    with ["Medication, Discharge": "Antithrombotic Therapy for Ischemic Stroke"] DischargeAntithrombotic
 	      such that DischargeAntithrombotic.authorDatetime during IschemicStrokeEncounter.relevantPeriod
 */
-{% macro Numerator(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Numerator', 'child': { 'operator': _operators.Query, 'where': none, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'IschemicStrokeEncounter', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.Ischemic_Stroke_Encounter } }, { 'operator': _operators.With, 'alias': 'DischargeAntithrombotic', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'PositiveMedicationDischarge', 'resultTypeLabel': 'Medication, Discharge', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Antithrombotic_Therapy_for_Ischemic_Stroke } }, 'suchThat': { 'operator': _operators.InInterval, 'left': { 'operator': _operators.Property, 'scope': 'DischargeAntithrombotic', 'path': 'authorDatetime', 'child': none }, 'right': { 'operator': _operators.Property, 'scope': 'IschemicStrokeEncounter', 'path': 'relevantPeriod', 'child': none } } }], 'letClauseList': [] } }) }}{% endmacro %}
-{{ Numerator(none) }}
+{% macro DischargedonAntithromboticTherapyNumerator(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Numerator', 'child': { 'operator': _operators.Query, 'where': none, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'IschemicStrokeEncounter', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.TJCOverallIschemic_Stroke_Encounter } }, { 'operator': _operators.With, 'alias': 'DischargeAntithrombotic', 'child': { 'operator': _operators.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'PositiveMedicationDischarge', 'resultTypeLabel': 'Medication, Discharge', 'codeComparator': 'in', 'codeProperty': 'code', 'child': none, 'valueSet': { 'operator': _operators.ValueSetRef, 'reference': Antithrombotic_Therapy_for_Ischemic_Stroke } }, 'suchThat': { 'operator': _operators.InInterval, 'left': { 'operator': _operators.Property, 'scope': 'DischargeAntithrombotic', 'path': 'authorDatetime', 'child': none }, 'right': { 'operator': _operators.Property, 'scope': 'IschemicStrokeEncounter', 'path': 'relevantPeriod', 'child': none } } }], 'letClauseList': [] } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyNumerator(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [56:1-59:102]
 	define "Encounter with Documented Reason for No Antithrombotic At Discharge":
@@ -132,13 +132,13 @@
 	    with "Reason for Not Giving Antithrombotic at Discharge" NoDischargeAntithrombotic
 	      such that NoDischargeAntithrombotic.authorDatetime during IschemicStrokeEncounter.relevantPeriod
 */
-{% macro Encounter_with_Documented_Reason_for_No_Antithrombotic_At_Discharge(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Encounter with Documented Reason for No Antithrombotic At Discharge', 'child': { 'operator': _operators.Query, 'where': none, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'IschemicStrokeEncounter', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.Ischemic_Stroke_Encounter } }, { 'operator': _operators.With, 'alias': 'NoDischargeAntithrombotic', 'child': { 'operator': _operators.ExpressionRef, 'reference': Reason_for_Not_Giving_Antithrombotic_at_Discharge }, 'suchThat': { 'operator': _operators.InInterval, 'left': { 'operator': _operators.Property, 'scope': 'NoDischargeAntithrombotic', 'path': 'authorDatetime', 'child': none }, 'right': { 'operator': _operators.Property, 'scope': 'IschemicStrokeEncounter', 'path': 'relevantPeriod', 'child': none } } }], 'letClauseList': [] } }) }}{% endmacro %}
-{{ Encounter_with_Documented_Reason_for_No_Antithrombotic_At_Discharge(none) }}
+{% macro DischargedonAntithromboticTherapyEncounter_with_Documented_Reason_for_No_Antithrombotic_At_Discharge(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Encounter with Documented Reason for No Antithrombotic At Discharge', 'child': { 'operator': _operators.Query, 'where': none, 'returnClause': none, 'sortClause': none, 'children': [{ 'operator': _operators.AliasedQuerySource, 'alias': 'IschemicStrokeEncounter', 'child': { 'operator': _operators.ExpressionRef, 'reference': TJC.TJCOverallIschemic_Stroke_Encounter } }, { 'operator': _operators.With, 'alias': 'NoDischargeAntithrombotic', 'child': { 'operator': _operators.ExpressionRef, 'reference': DischargedonAntithromboticTherapyReason_for_Not_Giving_Antithrombotic_at_Discharge }, 'suchThat': { 'operator': _operators.InInterval, 'left': { 'operator': _operators.Property, 'scope': 'NoDischargeAntithrombotic', 'path': 'authorDatetime', 'child': none }, 'right': { 'operator': _operators.Property, 'scope': 'IschemicStrokeEncounter', 'path': 'relevantPeriod', 'child': none } } }], 'letClauseList': [] } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyEncounter_with_Documented_Reason_for_No_Antithrombotic_At_Discharge(none) }}
 /*
 	// DischargedonAntithromboticTherapy lines [61:1-63:100]
 	define "Denominator Exceptions":
 	  "Encounter with Documented Reason for No Antithrombotic At Discharge"
 	    union "Encounter with Pharmacological Contraindications for Antithrombotic Therapy at Discharge"
 */
-{% macro Denominator_Exceptions(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Denominator Exceptions', 'child': { 'operator': _operators.Union, 'children': [{ 'operator': _operators.ExpressionRef, 'reference': Encounter_with_Documented_Reason_for_No_Antithrombotic_At_Discharge }, { 'operator': _operators.ExpressionRef, 'reference': Encounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge }] } }) }}{% endmacro %}
-{{ Denominator_Exceptions(none) }}
+{% macro DischargedonAntithromboticTherapyDenominator_Exceptions(state) %}{{ _operators.printOperator(state, { 'operator': _operators.ExpressionDef, 'context': 'Patient', 'name': 'Denominator Exceptions', 'child': { 'operator': _operators.Union, 'children': [{ 'operator': _operators.ExpressionRef, 'reference': DischargedonAntithromboticTherapyEncounter_with_Documented_Reason_for_No_Antithrombotic_At_Discharge }, { 'operator': _operators.ExpressionRef, 'reference': DischargedonAntithromboticTherapyEncounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge }] } }) }}{% endmacro %}
+{{ DischargedonAntithromboticTherapyDenominator_Exceptions(none) }}

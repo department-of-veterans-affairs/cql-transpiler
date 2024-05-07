@@ -14,10 +14,12 @@ import gov.va.transpiler.jinja.state.State;
 public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> implements ReferenceableNode {
 
     public static final String REFERENCE_TYPE = "ExpressionDef";
+    private final String libraryName;
 
     public ExpressionDefNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
         state.setContext(getCqlEquivalent().getContext());
+        libraryName = state.getCurrentLibraryNode().getCqlEquivalent().getIdentifier().getId();
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
         enclosingSegment.setPrintType(PrintType.Line);
         enclosingSegment.setLocator(getCqlEquivalent().getLocator());
         // macro segment
-        var macro = new Segment("{% macro " + referenceName() + "(state) %}", "{% endmacro %}", PrintType.Inline);
+        var macro = new Segment("{% macro " + getLibraryName() + referenceName() + "(state) %}", "{% endmacro %}", PrintType.Inline);
         enclosingSegment.addChild(macro);
         // internal segment -- wrap the dictionary representation of this object
         var internal = new Segment("{{ " + Standards.macroFileReferenceName() + ".printOperator(state, ", ") }}", PrintType.Inline);
@@ -61,5 +63,9 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     @Override
     public String getTargetFileLocation() {
         return super.getTargetFileLocation() + Standards.FOLDER_SEPARATOR +  referenceName();
+    }
+
+    public String getLibraryName() {
+        return libraryName;
     }
 }

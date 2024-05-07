@@ -3,7 +3,7 @@
     This file should be supplied to a folder where an intermediate AST rendered in jinja so on compilation its contents are rendered as SparkSQL.
 #}
 {%- import 'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' as _globals %}
-{%- import 'jinja_transpilation_libraries/sparksql/_custom_functions_sparksql.sql' as _custom %}
+{#{%- import 'jinja_transpilation_libraries/sparksql/_custom_functions_sparksql.sql' as _custom %}#}
 
 {%- macro printOperator(state, operatorArguments) %}
 {{ _globals.OperatorHandler.print(state, operatorArguments) }}

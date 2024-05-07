@@ -68,9 +68,7 @@ public class LibraryNode extends ElementNode<Library> {
         headerSegment.setPrintType(PrintType.Line);
         // The provided macro file is used to convert the intermediate AST into the target language
         headerSegment.setHead( //
-            "{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql" + Standards.JINJA_FILE_POSTFIX + "' as _operators %}\n" + //
-            "{%- import 'jinja_transpilation_libraries/_custom_functions_sparksql" + Standards.JINJA_FILE_POSTFIX + "' as _custom_functions %}\n" +//
-            "{%- do _custom_functions.setup() %}\n" //
+            "{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql" + Standards.JINJA_FILE_POSTFIX + "' as _operators %}\n" //
         );
         segment.addChild(headerSegment);
 
@@ -84,9 +82,11 @@ public class LibraryNode extends ElementNode<Library> {
             // child nodes are set up as ASTs equivalent to CQL statements
             segment.addChild(child.toSegment());
 
-            // invoke the child node so that when the library file is compiled with jinja, each child is printed as SQL
-            if (child instanceof ExpressionDefNode && !(child instanceof FunctionDefNode)) {
-                segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).referenceName() + "(none) }}\n"));
+            if (Standards.PRINT_EXPRESSIONS_INLINE) {
+                // invoke the child node so that when the library file is compiled with jinja, each child is printed as SQL
+                if (child instanceof ExpressionDefNode && !(child instanceof FunctionDefNode)) {
+                    segment.addChild(new Segment("{{ " + ((ExpressionDefNode<?>) child).getLibraryName() + ((ExpressionDefNode<?>) child).referenceName() + "(none) }}\n"));
+                }
             }
         }
         return segment;

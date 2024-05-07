@@ -35,7 +35,7 @@ public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'reference'", (prefix == null ? "" : prefix + ".") + referenceName());
+        map.put("'reference'", (prefix == null ? "" : prefix + ".") + ((ExpressionDefNode<?>) getReferenceTo()).getLibraryName() + referenceName());
         return map;
     }
 }
