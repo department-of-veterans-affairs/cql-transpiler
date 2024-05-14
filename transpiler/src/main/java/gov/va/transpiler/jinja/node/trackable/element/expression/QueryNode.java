@@ -25,16 +25,18 @@ public class QueryNode extends ExpressionNode<Query> {
     @Override
     public void addChild(TranspilerNode child) {
         if(child instanceof CQLEquivalent && ((CQLEquivalent<?>)child).getCqlEquivalent() == getCqlEquivalent().getReturn()) {
-                returnClauseNode = child;
+            returnClauseNode = child;
         } else if (child instanceof CQLEquivalent && ((CQLEquivalent<?>)child).getCqlEquivalent() == getCqlEquivalent().getSort()) {
-                sortClauseNode = child;
+            sortClauseNode = child;
         } else if (child instanceof CQLEquivalent && ((CQLEquivalent<?>)child).getCqlEquivalent() == getCqlEquivalent().getWhere()) {
-                whereNode = child;
+            whereNode = child;
         } else if (child instanceof LetClauseNode) {
-            letClauseNodeList.add((LetClauseNode) child);  
+            letClauseNodeList.add((LetClauseNode) child);
         } else {
             super.addChild(child);
         }
+        getOperatorDependencies().add(child.getOperator());
+        getOperatorDependencies().addAll(child.getOperatorDependencies());
     }
 
     @Override

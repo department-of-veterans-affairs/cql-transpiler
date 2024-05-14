@@ -36,6 +36,8 @@ public class IntervalNode extends ExpressionNode<Interval> {
         } else {
             super.addChild(child);
         }
+        getOperatorDependencies().add(child.getOperator());
+        getOperatorDependencies().addAll(child.getOperatorDependencies());
     }
 
     @Override

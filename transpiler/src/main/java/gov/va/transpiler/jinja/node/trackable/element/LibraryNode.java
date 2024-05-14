@@ -38,6 +38,8 @@ public class LibraryNode extends ElementNode<Library> {
         } else {
             super.addChild(child);
         }
+        getOperatorDependencies().add(child.getOperator());
+        getOperatorDependencies().addAll(child.getOperatorDependencies());
     }
 
     public String getAliasForLibrary(LibraryNode libraryNode) {
@@ -64,12 +66,16 @@ public class LibraryNode extends ElementNode<Library> {
         segment.setFileLocation(getTargetFileLocation());
 
         // Print the header
+        // Import every operator macro used inside this file
         var headerSegment = new Segment();
-        headerSegment.setPrintType(PrintType.Line);
-        // The provided macro file is used to convert the intermediate AST into the target language
-        headerSegment.setHead( //
-            "{%- import 'jinja_transpilation_libraries/sparksql/_operators_sparksql" + Standards.JINJA_FILE_POSTFIX + "' as _operators %}\n" //
-        );
+        var printOperatorSegment = new Segment("{%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql" + Standards.JINJA_FILE_POSTFIX + "' import printOperator %}");
+        printOperatorSegment.setPrintType(PrintType.Line);
+        headerSegment.addChild(printOperatorSegment);
+        for (var operator : getOperatorDependencies()) {
+            var subHeaderSegment = new Segment("{%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql" + Standards.JINJA_FILE_POSTFIX + "' import " + operator + " %}");
+            subHeaderSegment.setPrintType(PrintType.Line);
+            headerSegment.addChild(subHeaderSegment);
+        }
         segment.addChild(headerSegment);
 
         // Include any other translated libraries required

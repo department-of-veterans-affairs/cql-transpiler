@@ -3,8 +3,10 @@ package gov.va.transpiler.jinja.node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import gov.va.transpiler.jinja.printing.Segment;
@@ -19,6 +21,7 @@ public class TranspilerNode {
 
     private TranspilerNode parent;
     private List<TranspilerNode> children = new ArrayList<>();
+    private Set<String> operatorsUsed = new LinkedHashSet<>();
 
     /**
      * @param state Used to keep track of state variables. When a transpiler node is constructed, it should always set itself as the current node.
@@ -60,6 +63,13 @@ public class TranspilerNode {
     }
 
     /**
+     * @return Returns a list of operators this operator is reliant on.
+     */
+    public Set<String> getOperatorDependencies() {
+        return operatorsUsed;
+    }
+
+    /**
      * Adds a child node to this node.
      * 
      * @param child Child to add.
@@ -69,6 +79,8 @@ public class TranspilerNode {
         if (child.isEnabled()) {
             if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || getChildren().size() < allowedNumberOfChildren()) {
                 children.add(child);
+                getOperatorDependencies().add(child.getOperator());
+                getOperatorDependencies().addAll(child.getOperatorDependencies());
             } else {
                 throw new InvalidChildNodeException(this, child);
             }
@@ -106,7 +118,7 @@ public class TranspilerNode {
     /**
      * @return Returns what kind of operator this node represents in the intermediate AST.
      */
-    protected String getOperator() {
+    public String getOperator() {
         return "UnsupportedOperator";
     }
 

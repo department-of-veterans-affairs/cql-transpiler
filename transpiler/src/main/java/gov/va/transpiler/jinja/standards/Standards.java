@@ -13,6 +13,7 @@ public class Standards {
     public static final String UNFILTERED_CONTEXT = "Unfiltered";
     public static final String JINJA_FILE_POSTFIX = ".sql";
     public static final boolean PRINT_EXPRESSIONS_INLINE = true;
+    public static final String PRINT_FUNCTION_NAME = "printOperator";
     private static final String OPERATOR_MACRO_FILE_PREFIX = "_operators";
     private static final String CUSTOM_MACRO_FILE_PREFIX = "_custom";
     private static String targetLanguage;

@@ -21,6 +21,6 @@ public class DisabledNode extends CQLEquivalent<Trackable> {
 
     @Override
     public String getOperator() {
-        return Standards.macroFileReferenceName() + "." + Standards.DISABLED_OPERATOR;
+        return Standards.DISABLED_OPERATOR;
     }
 }
