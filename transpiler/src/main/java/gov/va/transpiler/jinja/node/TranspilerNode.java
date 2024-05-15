@@ -22,6 +22,7 @@ public class TranspilerNode {
     private TranspilerNode parent;
     private List<TranspilerNode> children = new ArrayList<>();
     private Set<String> operatorsUsed = new LinkedHashSet<>();
+    private Map<String, Set<String>> macrosUsed = new LinkedHashMap<>();
 
     /**
      * @param state Used to keep track of state variables. When a transpiler node is constructed, it should always set itself as the current node.
@@ -65,8 +66,33 @@ public class TranspilerNode {
     /**
      * @return Returns a list of operators this operator is reliant on.
      */
-    public Set<String> getOperatorDependencies() {
+    protected Set<String> getOperatorDependencies() {
         return operatorsUsed;
+    }
+
+    /**
+     * @return Returns a map of macro file/macro pairs this operator is reliant on
+     */
+    protected Map<String, Set<String>> getMacroDependencies() {
+        return macrosUsed;
+    }
+
+    public void addMacroToMacroDependencies(String macroFile, String macroName) {
+        var macroSetForFile = getMacroDependencies().getOrDefault(macroFile, new LinkedHashSet<>());
+        macroSetForFile.add(macroName);
+        getMacroDependencies().put(macroFile, macroSetForFile);
+    }
+
+    public void processChildDependencies(TranspilerNode child) {
+        if (child != null && child.isEnabled()) {
+            getOperatorDependencies().add(child.getOperator());
+            getOperatorDependencies().addAll(child.getOperatorDependencies());
+            child.getMacroDependencies().entrySet().forEach(macroSetEntry -> {
+                for (var macro : macroSetEntry.getValue()) {
+                    addMacroToMacroDependencies(macroSetEntry.getKey(), macro);
+                }
+            });
+        }
     }
 
     /**
@@ -79,8 +105,7 @@ public class TranspilerNode {
         if (child.isEnabled()) {
             if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || getChildren().size() < allowedNumberOfChildren()) {
                 children.add(child);
-                getOperatorDependencies().add(child.getOperator());
-                getOperatorDependencies().addAll(child.getOperatorDependencies());
+                processChildDependencies(child);
             } else {
                 throw new InvalidChildNodeException(this, child);
             }

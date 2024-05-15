@@ -10,14 +10,16 @@ import gov.va.transpiler.jinja.state.State;
 public class ValueSetDefNode extends ElementNode<ValueSetDef> implements ReferenceableNode {
 
     public static final String REFERENCE_TYPE = "ValueSetDef";
+    private final String libraryName;
 
     public ValueSetDefNode(State state, ValueSetDef t) {
         super(state, t);
+        libraryName = state.getCurrentLibraryNode().getCqlEquivalent().getIdentifier().getId();
     }
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment("{% set " + referenceName() + " = '" + getCqlEquivalent().getId(),"' %}", PrintType.Line);
+        var segment = new Segment("{% set " + getLibraryName() +referenceName() + " = '" + getCqlEquivalent().getId(),"' %}", PrintType.Line);
         segment.setLocator(getCqlEquivalent().getLocator());
         return segment;
     }
@@ -35,5 +37,9 @@ public class ValueSetDefNode extends ElementNode<ValueSetDef> implements Referen
     @Override
     public int allowedNumberOfChildren() {
         return 0;
+    }
+
+    public String getLibraryName() {
+        return libraryName;
     }
 }

@@ -23,8 +23,7 @@ public class RelationshipClauseNode<T extends RelationshipClause> extends Aliase
         } else {
             super.addChild(child);
         }
-        getOperatorDependencies().add(child.getOperator());
-        getOperatorDependencies().addAll(child.getOperatorDependencies());
+        processChildDependencies(child);
     }
 
     @Override

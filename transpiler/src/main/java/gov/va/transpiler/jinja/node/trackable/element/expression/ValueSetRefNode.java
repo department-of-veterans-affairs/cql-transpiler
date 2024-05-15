@@ -10,11 +10,14 @@ import gov.va.transpiler.jinja.state.State;
 
 public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements ReferenceNode {
 
-    final String prefix;
+    final boolean isReferenceToExternalLibrary;
 
     public ValueSetRefNode(State state, ValueSetRef cqlEquivalent) {
         super(state, cqlEquivalent);
-        prefix = state.getCurrentLibraryNode().getAliasForLibrary(state.getLibraryNodeForReference(getReferenceTo()));
+        isReferenceToExternalLibrary = state.getCurrentLibraryNode().isReferenceToExternalLibrary(state.getLibraryNodeForReference(getReferenceTo()));
+        if (isReferenceToExternalLibrary) {
+            addMacroToMacroDependencies(((ValueSetDefNode) getReferenceTo()).getLibraryName(), referenceName());
+        }
     }
 
     @Override
@@ -35,7 +38,7 @@ public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements Refe
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'reference'", (prefix == null ? "" : prefix + ".") + referenceName());
+        map.put("'reference'", ((ValueSetDefNode) getReferenceTo()).getLibraryName() + referenceName());
         return map;
     }
 }

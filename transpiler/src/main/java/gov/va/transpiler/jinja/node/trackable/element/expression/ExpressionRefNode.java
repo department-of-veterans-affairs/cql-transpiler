@@ -10,11 +10,14 @@ import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 
 public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T> implements ReferenceNode {
 
-    final String prefix;
+    final boolean isReferenceToExternalLibrary;
 
     public ExpressionRefNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
-        prefix = state.getCurrentLibraryNode().getAliasForLibrary(state.getLibraryNodeForReference(getReferenceTo()));
+        isReferenceToExternalLibrary = state.getCurrentLibraryNode().isReferenceToExternalLibrary(state.getLibraryNodeForReference(getReferenceTo()));
+        if (isReferenceToExternalLibrary) {
+            addMacroToMacroDependencies(((ExpressionDefNode<?>) getReferenceTo()).getLibraryName(), referenceName());
+        }
     }
 
     @Override
@@ -35,7 +38,7 @@ public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'reference'", (prefix == null ? "" : prefix + ".") + ((ExpressionDefNode<?>) getReferenceTo()).getLibraryName() + referenceName());
+        map.put("'reference'", ((ExpressionDefNode<?>) getReferenceTo()).getLibraryName() + referenceName());
         return map;
     }
 }

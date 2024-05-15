@@ -28,8 +28,7 @@ public class InValueSetNode extends OperatorExpressionNode<InValueSet> {
         } else {
             super.addChild(child);
         }
-        getOperatorDependencies().add(child.getOperator());
-        getOperatorDependencies().addAll(child.getOperatorDependencies());
+        processChildDependencies(child);
     }
 
     @Override

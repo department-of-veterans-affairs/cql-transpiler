@@ -46,8 +46,7 @@ public class DateTimeNode extends OperatorExpressionNode<DateTime> {
         } else {
             super.addChild(child);
         }
-        getOperatorDependencies().add(child.getOperator());
-        getOperatorDependencies().addAll(child.getOperatorDependencies());
+        processChildDependencies(child);
     }
 
     @Override

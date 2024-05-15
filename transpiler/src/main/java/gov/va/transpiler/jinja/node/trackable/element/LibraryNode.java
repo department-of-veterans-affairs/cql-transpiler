@@ -38,18 +38,12 @@ public class LibraryNode extends ElementNode<Library> {
         } else {
             super.addChild(child);
         }
-        getOperatorDependencies().add(child.getOperator());
-        getOperatorDependencies().addAll(child.getOperatorDependencies());
+        processChildDependencies(child);
     }
 
-    public String getAliasForLibrary(LibraryNode libraryNode) {
+    public boolean isReferenceToExternalLibrary(LibraryNode libraryNode) {
         var optional = includeDefNodeList.stream().filter(includeDefNode -> includeDefNode.getReferencedLibrary() == libraryNode).findFirst();
-        if (optional.isPresent()) {
-            return optional.get().getAliasForReferencedLibrary();
-        } else {
-            // Returned when something in this library is being referenced by something else within this library
-            return null;
-        }
+        return optional.isPresent();
     }
 
     @Override
@@ -65,9 +59,11 @@ public class LibraryNode extends ElementNode<Library> {
         segment.setOriginalLibraryIdentifier(getCqlEquivalent().getIdentifier());
         segment.setFileLocation(getTargetFileLocation());
 
-        // Print the header
-        // Import every operator macro used inside this file
+        // Print the headers
         var headerSegment = new Segment();
+        segment.addChild(headerSegment);
+
+        // Import every operator macro used inside this file
         var printOperatorSegment = new Segment("{%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql" + Standards.JINJA_FILE_POSTFIX + "' import printOperator %}");
         printOperatorSegment.setPrintType(PrintType.Line);
         headerSegment.addChild(printOperatorSegment);
@@ -76,11 +72,14 @@ public class LibraryNode extends ElementNode<Library> {
             subHeaderSegment.setPrintType(PrintType.Line);
             headerSegment.addChild(subHeaderSegment);
         }
-        segment.addChild(headerSegment);
 
-        // Include any other translated libraries required
-        for (var child: includeDefNodeList) {
-            segment.addChild(child.toSegment());
+        // Import every other macro used inside this file
+        for (var macroSetEntry : getMacroDependencies().entrySet()) {
+            for (var macro : macroSetEntry.getValue()) {
+                var subHeaderSegment = new Segment("{%- from 'jinja_transpilation_libraries/sparksql/" + macroSetEntry.getKey() + Standards.JINJA_FILE_POSTFIX + "' import " + macroSetEntry.getKey() + macro + " %}");
+                subHeaderSegment.setPrintType(PrintType.Line);
+                headerSegment.addChild(subHeaderSegment);
+            }
         }
 
         // Print children

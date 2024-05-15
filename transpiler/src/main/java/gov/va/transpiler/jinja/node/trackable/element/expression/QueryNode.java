@@ -35,8 +35,7 @@ public class QueryNode extends ExpressionNode<Query> {
         } else {
             super.addChild(child);
         }
-        getOperatorDependencies().add(child.getOperator());
-        getOperatorDependencies().addAll(child.getOperatorDependencies());
+        processChildDependencies(child);
     }
 
     @Override
