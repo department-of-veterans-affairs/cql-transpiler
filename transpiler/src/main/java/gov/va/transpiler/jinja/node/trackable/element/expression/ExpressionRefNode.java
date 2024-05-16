@@ -16,7 +16,7 @@ public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T
         super(state, cqlEquivalent);
         isReferenceToExternalLibrary = state.getCurrentLibraryNode().isReferenceToExternalLibrary(state.getLibraryNodeForReference(getReferenceTo()));
         if (isReferenceToExternalLibrary) {
-            addMacroToMacroDependencies(((ExpressionDefNode<?>) getReferenceTo()).getLibraryName(), referenceName());
+            addMacroToMacroDependencies(state.getLibraryNodeForReference(((ExpressionDefNode<?>) getReferenceTo())).getTargetFileLocation(), ((ExpressionDefNode<?>) getReferenceTo()).getLibraryName() + referenceName());
         }
     }
 

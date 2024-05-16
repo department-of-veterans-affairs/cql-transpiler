@@ -16,10 +16,10 @@
 {%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' import Property %}
 {%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' import Or %}
 {%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' import InValueSet %}
-{%- from 'jinja_transpilation_libraries/sparksql/TJCOverall.sql' import TJCOverallIschemic_Stroke_Encounter %}
-{%- from 'jinja_transpilation_libraries/sparksql/TJCOverall.sql' import TJCOverallEncounter_with_Principal_Diagnosis_and_Age %}
-{%- from 'jinja_transpilation_libraries/sparksql/TJCOverall.sql' import TJCOverallIschemic_Stroke_Encounters_with_Discharge_Disposition %}
-{%- from 'jinja_transpilation_libraries/sparksql/TJCOverall.sql' import TJCOverallEncounter_with_Comfort_Measures_during_Hospitalization %}
+{%- from 'TJCOverall_7.1.000.sql' import TJCOverallIschemic_Stroke_Encounter %}
+{%- from 'TJCOverall_7.1.000.sql' import TJCOverallEncounter_with_Principal_Diagnosis_and_Age %}
+{%- from 'TJCOverall_7.1.000.sql' import TJCOverallIschemic_Stroke_Encounters_with_Discharge_Disposition %}
+{%- from 'TJCOverall_7.1.000.sql' import TJCOverallEncounter_with_Comfort_Measures_during_Hospitalization %}
 /*
 	// DischargedonAntithromboticTherapy lines [8:1-8:94]
 	valueset "Antithrombotic Therapy for Ischemic Stroke": 'urn:oid:2.16.840.1.113762.1.4.1110.62'

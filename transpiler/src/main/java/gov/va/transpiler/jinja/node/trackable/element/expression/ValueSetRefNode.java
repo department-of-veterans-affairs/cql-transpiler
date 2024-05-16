@@ -15,8 +15,7 @@ public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements Refe
     public ValueSetRefNode(State state, ValueSetRef cqlEquivalent) {
         super(state, cqlEquivalent);
         isReferenceToExternalLibrary = state.getCurrentLibraryNode().isReferenceToExternalLibrary(state.getLibraryNodeForReference(getReferenceTo()));
-        if (isReferenceToExternalLibrary) {
-            addMacroToMacroDependencies(((ValueSetDefNode) getReferenceTo()).getLibraryName(), referenceName());
+        if (isReferenceToExternalLibrary) { addMacroToMacroDependencies(state.getLibraryNodeForReference(((ValueSetDefNode) getReferenceTo())).getTargetFileLocation(), ((ValueSetDefNode) getReferenceTo()).getLibraryName() + referenceName());
         }
     }
 

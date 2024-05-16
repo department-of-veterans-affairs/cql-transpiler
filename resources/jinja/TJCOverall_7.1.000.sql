@@ -44,9 +44,9 @@
 {%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' import Interval %}
 {%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' import Add %}
 {%- from 'jinja_transpilation_libraries/sparksql/_operators_sparksql.sql' import Quantity %}
-{%- from 'jinja_transpilation_libraries/sparksql/MATGlobalCommonFunctions.sql' import MATGlobalCommonFunctionsLengthInDays %}
-{%- from 'jinja_transpilation_libraries/sparksql/MATGlobalCommonFunctions.sql' import MATGlobalCommonFunctionsNormalizeInterval %}
-{%- from 'jinja_transpilation_libraries/sparksql/MATGlobalCommonFunctions.sql' import MATGlobalCommonFunctionsHospitalizationWithObservation %}
+{%- from 'MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsLengthInDays %}
+{%- from 'MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsNormalizeInterval %}
+{%- from 'MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsHospitalizationWithObservation %}
 /*
 	// TJCOverall lines [7:1-7:65]
 	valueset "Comfort Measures": 'urn:oid:1.3.6.1.4.1.33895.1.3.0.45' 
