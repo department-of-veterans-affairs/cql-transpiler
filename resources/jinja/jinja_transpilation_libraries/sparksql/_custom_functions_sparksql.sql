@@ -1,4 +1,4 @@
-{%- import 'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' as _globals %}
+{%- from 'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' import OperatorHandler %}
 
 {%- macro systemEvaluationPeriod() %}
 SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
@@ -32,7 +32,7 @@ GROUP BY oid, version
 
 {%- macro valueSetCodes(state, valueSet, asOfDate) %}
 (SELECT codes FROM {{ systemValueSet }} WHERE oid = "{{ 
-_globals.OperatorHandler.print(state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+OperatorHandler.print(state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
 {%- macro inValueSet(state, valueSet, codeProperty) %}
