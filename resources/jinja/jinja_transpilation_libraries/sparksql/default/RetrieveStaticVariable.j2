@@ -1,0 +1,18 @@
+{#
+    Environment prerequisites:
+        * OperatorClass.j2
+        * DataTypeEnum.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.j2" import OperatorClassInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.j2" import DataTypeEnumInit %}
+
+{% macro RetrieveStaticVariableInit(environment) %}
+{# initialize prerequisites #}
+{%-   do OperatorClassInit(environment) %}
+{%-   do DataTypeEnumInit(environment) %}
+{# initialize member variables #}
+{%-     set environment.Retrieve = namespace() %}
+{%-     do environment.OperatorClass.construct(environment, environment.Retrieve) %}
+{%-     set environment.Retrieve.defaultDataType = environment.DataType.TABLE %}
+{%-     set environment.Retrieve.print = printUnimplemented %}
+{%- endmacro %}

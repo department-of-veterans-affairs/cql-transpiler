@@ -1,0 +1,53 @@
+{#
+    Environment prerequisites:
+        * StandardFunctions.j2
+        * ContextHandlingFunctions.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/ContextHandlingFunctions.j2" import ContextHandlingFunctionsInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.j2" import ListPrintingFunctionsInit %}
+
+{# Wraps SQL statement in a collect block #}
+{%- macro collect(environment, context, toCollect)%}
+SELECT collect_list(struct(*)) AS {{ environment.printSingleValueColumnName() }} FROM ({{ toCollect }})
+{%-     if context != 'Unfiltered' %}
+ GROUP BY {{ environment.printIDFromContext(context) }}
+{%-     endif %}
+{% endmacro %}
+
+{# Wraps SQL statement in a decollect block #}
+{%- macro decollect(context, toDecollect) %}
+SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }}))
+{%- endmacro %}
+
+{# Wraps SQL statement in an encapsulate block #}
+{%- macro encapsulate(environment, context, toEncapsulate) %}
+SELECT {{ toEncapsulate }} {{ environment.printSingleValueColumnName() }}
+{%- endmacro %}
+
+{# Coerces the first applicable child of this node into the correct type #}
+{%- macro coerce(environment, originalType, targetType, state, arguments) %}
+{%-     set previousCoercionInstructions = state.coercionInstructions %}
+{%-     if targetType == DataType.ENCAPSULATED and originalType == DataType.SIMPLE %}
+{%-         set state.coercionInstructions = {} %}
+{{ encapsulate(environment, context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
+{%-         set state.coercionInstructions = previousCoercionInstructions %}
+{%-     elif targetType == DataType.ENCAPSULATED and originalType == DataType.TABLE %}
+{%-         set state.coercionInstructions = {} %}
+{{ collect(environment, context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
+{%-         set state.coercionInstructions = previousCoercionInstructions %}
+{%-     elif targetType == DataType.TABLE and originalType == DataType.ENCAPSULATED %}
+{%-         set state.coercionInstructions = {} %}
+{{ decollect(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
+{%-         set state.coercionInstructions = previousCoercionInstructions %}
+{%-     else %}
+{{ arguments['operator'].print(arguments['operator'], state, arguments) }}
+{%-     endif %}
+{%- endmacro %}
+
+{% macro TypeConversionFunctionsInit(environment) -%}
+{#      initialize prerequisites #}
+{%-     do ContextHandlingFunctionsInit(environment) %}
+{%-     do ListPrintingFunctionsInit(environment) %}
+{#      initialize member variables #}
+{%-     set environment.coerce = coerce %}
+{% endmacro %}

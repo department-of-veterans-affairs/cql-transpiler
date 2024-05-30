@@ -1,0 +1,30 @@
+{#
+    Environment prerequisites:
+        * OperatorHandlerStaticVariable.j2
+        * OperatorClass.j2
+        * DataTypeEnum.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.j2" import OperatorClassInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.j2" import DataTypeEnumInit %}
+
+{%- macro printExpressionDef(environment, this, state, arguments) %}
+{%-     set previousContext = state.context %}
+{%-     if previousContext == none and arguments['context'] != none %}
+{%-         set state.context = arguments['context'] %}
+{%-     endif %}
+{{ environment.OperatorHandler.print(environment, state, arguments['child']) }}
+{%-     set state.context = previousContext %}
+{%- endmacro %}
+
+{% macro ExpressionDefStaticVariableInit(environment) %}
+{# initialize prerequisites #}
+{%-   do OperatorHandlerStaticVariableInit(environment) %}
+{%-   do OperatorClassInit(environment) %}
+{%-   do DataTypeEnumInit(environment) %}
+{# initialize member variables #}
+{%-     set environment.ExpressionDef = namespace() %}
+{%-     do environment.OperatorClass.construct(environment, environment.ExpressionDef) %}
+{%-     set environment.ExpressionDef.defaultDataType = environment.DataType.INHERITED %}
+{%-     set environment.ExpressionDef.print = printExpressionDef %}
+{%- endmacro %}

@@ -1,0 +1,25 @@
+
+{#
+    Environment prerequisites:
+        * OperatorClass.j2
+        * DataTypeEnum.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/ExpressionDefVariable.j2" import ExpressionDefVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/SingletonFromVariable.j2" import SingletonFromStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/RetrieveCustomOverride.j2" import RetrieveCustomOverride %}
+
+{%- set environment = namespace() %}
+
+{%- macro TestOutputInit(environment) %}
+{%-     do OperatorHandlerStaticVariableInit(environment) %}
+{%-     do ExpressionDefVariableInit(environment) %}
+{%-     do SingletonFromStaticVariableInit(environment) %}
+{%-     do RetrieveCustomOverride(environment) %}
+{%- endmacro %}
+
+{%- do TestOutputInit(environment) %}
+
+{% macro TestOutputPatient(environment, state) %}{{ environment.OperatorHandler.print(state, { 'operator': environment.ExpressionDef, 'context': 'Patient', 'name': 'Patient', 'child': { 'operator': environment.SingletonFrom, 'child': { 'operator': environment.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'Patient', 'resultTypeLabel': none, 'codeComparator': none, 'codeProperty': none, 'child': none, 'valueSet': none } } }) }}{% endmacro %}
+
+{{ TestOutputPatient(environment) }}

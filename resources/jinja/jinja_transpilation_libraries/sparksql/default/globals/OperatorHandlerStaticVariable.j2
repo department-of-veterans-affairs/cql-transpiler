@@ -1,0 +1,13 @@
+{#    
+    Environment prerequisites:
+        * OperatorHandlerClass.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerClass.j2" import OperatorHandlerClassInit %}
+
+{% macro OperatorHandlerStaticVariableInit(environment) -%}
+{# initialize prerequisites #}
+{%-     do OperatorHandlerClassInit(environment) %}
+{# initialize member variables #}
+{%-     set environment.OperatorHandler = namespace() %}
+{%-     do environment.OperatorHandlerClass.construct(environment, environment.OperatorHandler) %}
+{%- endmacro %}

@@ -8,7 +8,7 @@ resources_folder = 'resources/'
 
 jinja_subfolder = 'jinja/'
 template_subfolder = 'template'
-file_to_translate = 'TJCOverall_7.1.000.sql'
+file_to_translate = 'TestOutput.j2'
 
 sql_target_subfolder = "sql_output/"
 

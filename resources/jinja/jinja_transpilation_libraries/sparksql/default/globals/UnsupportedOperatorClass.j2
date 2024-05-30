@@ -1,0 +1,40 @@
+{#    
+    Environment prerequisites:
+        * ListPrintingFunctions.j2
+        * OperatorClass.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.j2" import OperatorClassInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.j2" import ListPrintingFunctionsInit %}
+
+{% macro printDefault(environment, this, state, arguments) %}
+{%-     set previousInsideSqlComment = state.insideSqlComment %}
+{%-     set state.insideSqlComment = true %}
+{%-     if not previousInsideSqlComment -%}
+            /*
+{%-     endif -%}
+        Unsupported Operator: <
+{%-     if arguments['unsupportedOperator'] != none or arguments['unsupportedOperator']|length == 0 -%}
+            {{ arguments['unsupportedOperator'] }}
+{%-     else -%}
+            {{ arguments }}
+{%      endif -%}
+        > with arguments: <{{arguments}}> with children: <[{{ environment.printOperatorsFromList(state, arguments['children'], ", ") }}]>
+{%-     if not previousInsideSqlComment -%}
+            */
+{%-     endif %}
+{%-     set state.insideSqlComment = previousInsideSqlComment %}
+{%- endmacro %}
+
+{% macro UnsupportedOperatorConstruct(environment, unsupportedOperatorNamespace) %}
+{%-     do environment.OperatorClass.construct(environment, unsupportedOperatorNamespace) %}
+{%-     set unsupportedOperatorNamespace.print = printDefault %}
+{%- endmacro %}
+
+{% macro UnsupportedOperatorClassInit(environment) %}
+{# initialize prerequisites #}
+{%-     do OperatorClassInit(environment) %}
+{%-     do ListPrintingFunctionsInit(environment) %}
+{# initialize member variables #}
+{%-     set environment.UnsupportedOperatorClass = namespace() %}
+{%-     set environment.UnsupportedOperatorClass.construct = UnsupportedOperatorConstruct %}
+{% endmacro %}

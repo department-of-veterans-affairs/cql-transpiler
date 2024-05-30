@@ -178,20 +178,6 @@ EXISTS ({{ printOperator(state, arguments['child'])}})
 {%- do OperatorClass.construct(Exists) %}
 {%- set Exists.print = printExists %}
 
-{# ExpressionDef operator #}
-{%- set ExpressionDef = namespace() %}
-{%- macro printExpressionDef(this, state, arguments) %}
-{%-     set previousContext = state.context %}
-{%-     if previousContext == none and arguments['context'] != none %}
-{%-         set state.context = arguments['context'] %}
-{%-     endif %}
-{{ printOperator(state, arguments['child']) }}
-{%-     set state.context = previousContext %}
-{%- endmacro %}
-{%- do OperatorClass.construct(ExpressionDef) %}
-{%- set ExpressionDef.defaultDataType = DataType.INHERITED %}
-{%- set ExpressionDef.print = printExpressionDef %}
-
 {# ExpressionRef operator #}
 {%- set ExpressionRef = namespace() %}
 {%- macro printExpressionRef(this, state, arguments) %}
@@ -450,16 +436,6 @@ SELECT
 {%- set Query.defaultDataType = DataType.TABLE %}
 {%- set Query.print = printQuery %}
 
-{# Retrieve operator #}
-{%- set Retrieve = namespace() %}
-{%- do OperatorClass.construct(Retrieve) %}
-{%- set Retrieve.defaultDataType = DataType.TABLE %}
-{%- if customPrintRetrieve %}
-{%-     set Retrieve.print = customPrintRetrieve %}
-{%- else %}
-{%-     set Retrieve.print = printUnimplemented %}
-{%- endif %}
-
 {# ReturnClause operator #}
 {%- set ReturnClause = namespace() %}
 {%- macro printReturnClause(this, state, arguments) %}
@@ -562,14 +538,6 @@ WHERE (LET {{ printOperator(state, arguments['child'])}} AS {{ arguments['alias'
 {%- set With.defaultDataType = DataType.STATEMENT %}
 
 {# UNTESTED OPERATORS #}
-
-{# SingletonFrom operator #}
-{%- set SingletonFrom = namespace() %}
-{%- macro printSingletonFrom(this, state, arguments) %}
-{{ printOperator(state, arguments['child']) }}
-{%- endmacro %}
-{%- do OperatorClass.construct(SingletonFrom) %}
-{%- set SingletonFrom.print = printSingletonFrom %}
 
 {# Quantity operator #}
 {%- set Quantity = namespace() %}

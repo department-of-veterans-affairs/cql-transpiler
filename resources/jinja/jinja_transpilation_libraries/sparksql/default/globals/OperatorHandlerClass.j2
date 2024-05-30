@@ -1,0 +1,30 @@
+{#
+    Environment prerequisites:
+        * StateClass.j2
+        * TypeConversionFunctions.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/StateClass.j2" import StateClassInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/TypeConversionFunctions.j2" import TypeConversionFunctionsInit %}
+
+{% macro OperatorHandlerPrint(environment, state, arguments) %}
+{%-     if state == none %}
+{%-         set state = namespace() %}
+{%-         do environment.StateClass.construct(environment, state) %}
+{%-     endif %}
+{%-     set operatorDataTypeEnumCarrier = namespace() %}
+{%-     do arguments['operator'].getDataType(arguments['operator'], operatorDataTypeEnumCarrier, state, arguments) %}
+{{ environment.coerce(operatorDataTypeEnumCarrier.value, state.coercionInstructions[operatorDataTypeEnumCarrier.value], state, arguments) }}
+{%- endmacro %}
+
+{% macro OperatorHandlerConstruct(environment, operatorHandlerNamespace) %}
+{%-     set operatorHandlerNamespace.print = OperatorHandlerPrint %}
+{%- endmacro %}
+
+{% macro OperatorHandlerClassInit(environment) -%}
+{#      initialize prerequisites #}
+{%-     do StateClassInit(environment) %}
+{%-     do TypeConversionFunctionsInit(environment) %}
+{#      initialize OperatorHandlerClass #}
+{%-     set environment.OperatorHandlerClass = namespace() %}
+{%-     set environment.OperatorHandlerClass.construct = OperatorHandlerConstruct %}
+{% endmacro %}

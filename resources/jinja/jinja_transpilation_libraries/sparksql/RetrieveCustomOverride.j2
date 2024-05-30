@@ -1,4 +1,9 @@
-{%- from 'jinja_transpilation_libraries/sparksql/_globals_sparksql.sql' import OperatorHandler %}
+{#    
+    Environment prerequisites:
+        * RetrieveOperator.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/RetrieveOperatorStaticVariable.j2" import RetrieveOperatorStaticVariableInit %}
 
 {%- macro systemEvaluationPeriod() %}
 SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
@@ -30,9 +35,9 @@ FROM all
 GROUP BY oid, version
 {%- endmacro %}
 
-{%- macro valueSetCodes(state, valueSet, asOfDate) %}
+{%- macro valueSetCodes(environment, state, valueSet, asOfDate) %}
 (SELECT codes FROM {{ systemValueSet }} WHERE oid = "{{ 
-OperatorHandler.print(state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+environment.OperatorHandler.print(state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
 {%- macro inValueSet(state, valueSet, codeProperty) %}
@@ -61,7 +66,7 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
 )
 {%- endmacro %}
 
-{%- macro printRetrieve(this, state, arguments) %}
+{% macro RetrievePrintCustomOverride(this, state, arguments) %}
 {%-   if arguments['resultTypeLabel'] %}
 {%-     set resultTypeLabel = arguments['resultTypeLabel'] %}
 {%-   else %}
@@ -75,4 +80,12 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
   arguments['modelType'].split(':')[3]|replace("_", ""),
   arguments['codeProperty']
 ) }}
+{%- endmacro %}
+
+{% macro RetrieveOperatorCustomOverrideInit(environment) %}
+{# initialize prerequisites #}
+{%-   do OperatorHandlerStaticVariableInit(environment) %}
+{%-   do RetrieveOperatorStaticVariableInit(environment) %}
+{# initialize member variables #}
+{%-   set environment.RetrieveOperator.print = RetrievePrintCustomOverride %}
 {%- endmacro %}

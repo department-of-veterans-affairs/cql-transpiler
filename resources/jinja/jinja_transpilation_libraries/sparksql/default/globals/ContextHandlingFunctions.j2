@@ -1,0 +1,9 @@
+
+{# Prints the id matching the current context #}
+{%- macro printIDFromContext(environment, context) %}
+{{ context }}id
+{%- endmacro %}
+
+{% macro initContextHandling(environment) -%}
+{%-     set environment.printIDFromContext = printIDFromContext %}
+{% endmacro %}

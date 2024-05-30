@@ -1,0 +1,22 @@
+{#
+    Environment prerequisites:
+        * OperatorHandlerStaticVariable.j2
+        * OperatorClass.j2
+#}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.j2" import OperatorClassInit %}
+
+{%- macro printSingletonFrom(environment, this, state, arguments) %}
+{{ environment.OperatorHandler.print(environment, state, arguments['child']) }}
+{%- endmacro %}
+
+{% macro SingletonFromStaticVariableInit(environment) %}
+{# initialize prerequisites #}
+{%-   do OperatorHandlerStaticVariableInit(environment) %}
+{%-   do OperatorClassInit(environment) %}
+{%-   do DataTypeEnumInit(environment) %}
+{# initialize member variables #}
+{%-     set environment.SingletonFrom = namespace() %}
+{%-     do environment.OperatorClass.construct(environment, environment.SingletonFrom) %}
+{%-     set environment.SingletonFrom.print = printSingletonFrom %}
+{%- endmacro %}
