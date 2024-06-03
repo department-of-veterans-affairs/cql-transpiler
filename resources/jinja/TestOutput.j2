@@ -7,6 +7,7 @@
 {% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
 {% from "jinja_transpilation_libraries/sparksql/default/ExpressionDefStaticVariable.j2" import ExpressionDefStaticVariableInit %}
 {% from "jinja_transpilation_libraries/sparksql/default/SingletonFromStaticVariable.j2" import SingletonFromStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.j2" import RetrieveStaticVariableInit %}
 {% from "jinja_transpilation_libraries/sparksql/RetrieveCustomOverride.j2" import RetrieveCustomOverrideInit %}
 
 {%- set environment = namespace() %}
@@ -14,7 +15,8 @@
 {%- macro TestOutputInit(environment) %}
 {%-     do ExpressionDefStaticVariableInit(environment) %}
 {%-     do SingletonFromStaticVariableInit(environment) %}
-{%-     do RetrieveCustomOverrideInit(environment) %}
+{%-     do RetrieveStaticVariableInit(environment) %}
+{#{%-     do RetrieveCustomOverrideInit(environment) %}#}
 {%- endmacro %}
 
 {%- do TestOutputInit(environment) %}

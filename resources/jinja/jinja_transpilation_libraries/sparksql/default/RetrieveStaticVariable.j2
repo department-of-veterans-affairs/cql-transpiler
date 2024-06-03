@@ -14,6 +14,5 @@
 {%-     set Retrieve = namespace() %}
 {%-     set Retrieve.defaultDataType = environment.DataTypeEnum.TABLE %}
 {%-     do environment.OperatorClass.construct(environment, none, Retrieve) %}
-{%-     set Retrieve.print = printUnimplemented %}
 {%-     set environment.Retrieve = Retrieve %}
 {%- endmacro %}
