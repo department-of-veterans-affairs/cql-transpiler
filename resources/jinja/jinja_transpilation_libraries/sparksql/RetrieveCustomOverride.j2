@@ -2,8 +2,8 @@
     Environment prerequisites:
         * RetrieveOperator.j2
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/RetrieveOperatorStaticVariable.j2" import RetrieveOperatorStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.j2" import RetrieveStaticVariableInit %}
 
 {%- macro systemEvaluationPeriod() %}
 SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
@@ -37,7 +37,7 @@ GROUP BY oid, version
 
 {%- macro valueSetCodes(environment, state, valueSet, asOfDate) %}
 (SELECT codes FROM {{ systemValueSet }} WHERE oid = "{{ 
-environment.OperatorHandler.print(state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
 {%- macro inValueSet(state, valueSet, codeProperty) %}
@@ -66,7 +66,7 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
 )
 {%- endmacro %}
 
-{% macro RetrievePrintCustomOverride(this, state, arguments) %}
+{% macro RetrievePrintCustomOverride(environment, this, state, arguments) %}
 {%-   if arguments['resultTypeLabel'] %}
 {%-     set resultTypeLabel = arguments['resultTypeLabel'] %}
 {%-   else %}
@@ -82,10 +82,12 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
 ) }}
 {%- endmacro %}
 
-{% macro RetrieveOperatorCustomOverrideInit(environment) %}
+{% macro RetrieveCustomOverrideInit(environment) %}
 {# initialize prerequisites #}
 {%-   do OperatorHandlerStaticVariableInit(environment) %}
-{%-   do RetrieveOperatorStaticVariableInit(environment) %}
+{%-   do RetrieveStaticVariableInit(environment) %}
 {# initialize member variables #}
-{%-   set environment.RetrieveOperator.print = RetrievePrintCustomOverride %}
+{%-   set Retrieve = environment.Retrieve %}
+{# TODO: does this work? #}
+{%-   set Retrieve.print = RetrievePrintCustomOverride %}
 {%- endmacro %}

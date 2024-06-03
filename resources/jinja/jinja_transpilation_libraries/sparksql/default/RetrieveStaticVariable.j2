@@ -11,8 +11,9 @@
 {%-   do OperatorClassInit(environment) %}
 {%-   do DataTypeEnumInit(environment) %}
 {# initialize member variables #}
-{%-     set environment.Retrieve = namespace() %}
-{%-     do environment.OperatorClass.construct(environment, environment.Retrieve) %}
-{%-     set environment.Retrieve.defaultDataType = environment.DataType.TABLE %}
-{%-     set environment.Retrieve.print = printUnimplemented %}
+{%-     set Retrieve = namespace() %}
+{%-     set Retrieve.defaultDataType = environment.DataTypeEnum.TABLE %}
+{%-     do environment.OperatorClass.construct(environment, none, Retrieve) %}
+{%-     set Retrieve.print = printUnimplemented %}
+{%-     set environment.Retrieve = Retrieve %}
 {%- endmacro %}

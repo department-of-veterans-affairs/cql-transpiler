@@ -11,7 +11,8 @@
 {%-     do UnsupportedOperatorClassInit(environment) %}
 {%-     do DataTypeEnumInit(environment) %}
 {# initialize member variables #}
-{%-     set environment.Unsupported = namespace() %}
-{%-     do environment.UnsupportedOperatorClass.construct(environment, environment.Unsupported) %}
-{%-     set environment.Unsupported.defaultDataType = environment.DataType.UNKNOWN %}
+{%-     set Unsupported = namespace() %}
+{%-     set Unsupported.defaultDataType = environment.DataTypeEnum.UNKNOWN %}
+{%-     do environment.UnsupportedOperatorClass.construct(environment, Unsupported) %}
+{%-     set environment.Unsupported = Unsupported %}
 {% endmacro %}

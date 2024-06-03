@@ -22,7 +22,8 @@ Operator with state: {{ state }} and arguments: {{ arguments }}
 {%-     set operatorNamespace.print = OperatorClassPrint %}
 {%- endmacro %}
 
-{% macro initOperatorClass(environment) -%}
-{%-     set environment.OperatorClass = namespace() %}
-{%-     set environment.OperatorClass.construct = OperatorClassConstruct %}
+{% macro OperatorClassInit(environment) -%}
+{%-     set OperatorClass = namespace() %}
+{%-     set OperatorClass.construct = OperatorClassConstruct %}
+{%-     set environment.OperatorClass = OperatorClass %}
 {% endmacro %}

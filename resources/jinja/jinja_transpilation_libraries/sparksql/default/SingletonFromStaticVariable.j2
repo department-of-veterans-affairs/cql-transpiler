@@ -3,11 +3,12 @@
         * OperatorHandlerStaticVariable.j2
         * OperatorClass.j2
 #}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.j2" import DataTypeEnumInit %}
 {% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
 {% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.j2" import OperatorClassInit %}
 
 {%- macro printSingletonFrom(environment, this, state, arguments) %}
-{{ environment.OperatorHandler.print(environment, state, arguments['child']) }}
+{{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
 {%- endmacro %}
 
 {% macro SingletonFromStaticVariableInit(environment) %}
@@ -16,7 +17,8 @@
 {%-   do OperatorClassInit(environment) %}
 {%-   do DataTypeEnumInit(environment) %}
 {# initialize member variables #}
-{%-     set environment.SingletonFrom = namespace() %}
-{%-     do environment.OperatorClass.construct(environment, environment.SingletonFrom) %}
-{%-     set environment.SingletonFrom.print = printSingletonFrom %}
+{%-     set SingletonFrom = namespace() %}
+{%-     do environment.OperatorClass.construct(environment, none, SingletonFrom) %}
+{%-     set SingletonFrom.print = printSingletonFrom %}
+{%-     set environment.SingletonFrom = SingletonFrom %}
 {%- endmacro %}

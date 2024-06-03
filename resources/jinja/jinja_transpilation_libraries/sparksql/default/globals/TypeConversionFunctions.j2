@@ -8,39 +8,39 @@
 
 {# Wraps SQL statement in a collect block #}
 {%- macro collect(environment, context, toCollect)%}
-SELECT collect_list(struct(*)) AS {{ environment.printSingleValueColumnName() }} FROM ({{ toCollect }})
+SELECT collect_list(struct(*)) AS {{ environment.printSingleValueColumnName(environment) }} FROM ({{ toCollect }})
 {%-     if context != 'Unfiltered' %}
- GROUP BY {{ environment.printIDFromContext(context) }}
+ GROUP BY {{ environment.printIDFromContext(environment, context) }}
 {%-     endif %}
 {% endmacro %}
 
 {# Wraps SQL statement in a decollect block #}
-{%- macro decollect(context, toDecollect) %}
+{%- macro decollect(environment, context, toDecollect) %}
 SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }}))
 {%- endmacro %}
 
 {# Wraps SQL statement in an encapsulate block #}
 {%- macro encapsulate(environment, context, toEncapsulate) %}
-SELECT {{ toEncapsulate }} {{ environment.printSingleValueColumnName() }}
+SELECT {{ toEncapsulate }} {{ environment.printSingleValueColumnName(environment) }}
 {%- endmacro %}
 
 {# Coerces the first applicable child of this node into the correct type #}
 {%- macro coerce(environment, originalType, targetType, state, arguments) %}
 {%-     set previousCoercionInstructions = state.coercionInstructions %}
-{%-     if targetType == DataType.ENCAPSULATED and originalType == DataType.SIMPLE %}
+{%-     if targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.SIMPLE %}
 {%-         set state.coercionInstructions = {} %}
-{{ encapsulate(environment, context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
+{{ encapsulate(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
 {%-         set state.coercionInstructions = previousCoercionInstructions %}
-{%-     elif targetType == DataType.ENCAPSULATED and originalType == DataType.TABLE %}
+{%-     elif targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.TABLE %}
 {%-         set state.coercionInstructions = {} %}
-{{ collect(environment, context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
+{{ collect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
 {%-         set state.coercionInstructions = previousCoercionInstructions %}
-{%-     elif targetType == DataType.TABLE and originalType == DataType.ENCAPSULATED %}
+{%-     elif targetType == environment.DataTypeEnum.TABLE and originalType == environment.DataTypeEnum.ENCAPSULATED %}
 {%-         set state.coercionInstructions = {} %}
-{{ decollect(context, arguments['operator'].print(arguments['operator'], state, arguments)) }}
+{{ decollect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
 {%-         set state.coercionInstructions = previousCoercionInstructions %}
 {%-     else %}
-{{ arguments['operator'].print(arguments['operator'], state, arguments) }}
+{{ arguments['operator'].print(environment, arguments['operator'], state, arguments) }}
 {%-     endif %}
 {%- endmacro %}
 

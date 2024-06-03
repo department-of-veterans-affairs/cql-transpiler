@@ -1,9 +1,10 @@
 {% macro DataTypeEnumInit(environment) %}
-{%-     set environment.DataTypeEnum = namespace() %}
-{%-     set environment.DataTypeEnum.SIMPLE = 'simple' %}
-{%-     set environment.DataTypeEnum.ENCAPSULATED = 'encapsulated' %}
-{%-     set environment.DataTypeEnum.TABLE = 'table' %}
-{%-     set environment.DataTypeEnum.INHERITED = 'inherited' %}
-{%-     set environment.DataTypeEnum.STATEMENT = 'statement' %}
-{%-     set environment.DataTypeEnum.UNKNOWN = 'unknown' %}
+{%-     set DataTypeEnum = namespace() %}
+{%-     set DataTypeEnum.SIMPLE = 'simple' %}
+{%-     set DataTypeEnum.ENCAPSULATED = 'encapsulated' %}
+{%-     set DataTypeEnum.TABLE = 'table' %}
+{%-     set DataTypeEnum.INHERITED = 'inherited' %}
+{%-     set DataTypeEnum.STATEMENT = 'statement' %}
+{%-     set DataTypeEnum.UNKNOWN = 'unknown' %}
+{%-     set environment.DataTypeEnum = DataTypeEnum %}
 {% endmacro %}

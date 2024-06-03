@@ -13,7 +13,7 @@
 {%-     if previousContext == none and arguments['context'] != none %}
 {%-         set state.context = arguments['context'] %}
 {%-     endif %}
-{{ environment.OperatorHandler.print(environment, state, arguments['child']) }}
+{{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
 {%-     set state.context = previousContext %}
 {%- endmacro %}
 
@@ -23,8 +23,9 @@
 {%-   do OperatorClassInit(environment) %}
 {%-   do DataTypeEnumInit(environment) %}
 {# initialize member variables #}
-{%-     set environment.ExpressionDef = namespace() %}
-{%-     do environment.OperatorClass.construct(environment, environment.ExpressionDef) %}
-{%-     set environment.ExpressionDef.defaultDataType = environment.DataType.INHERITED %}
-{%-     set environment.ExpressionDef.print = printExpressionDef %}
+{%-     set ExpressionDef = namespace() %}
+{%-     set environment.ExpressionDef = ExpressionDef %}
+{%-     do environment.OperatorClass.construct(environment, none, environment.ExpressionDef) %}
+{%-     set ExpressionDef.defaultDataType = environment.DataTypeEnum.INHERITED %}
+{%-     set ExpressionDef.print = printExpressionDef %}
 {%- endmacro %}

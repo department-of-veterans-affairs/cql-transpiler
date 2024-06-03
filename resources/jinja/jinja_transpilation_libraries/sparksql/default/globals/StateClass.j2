@@ -8,6 +8,7 @@
 {%- endmacro %}
 
 {% macro StateClassInit(environment) -%}
-{%-     set environment.StateClass = namespace() %}
-{%-     set environment.StateClass.construct = StateClassConstruct %}
+{%-     set StateClass = namespace() %}
+{%-     set StateClass.construct = StateClassConstruct %}
+{%-     set environment.StateClass = StateClass %}
 {% endmacro %}

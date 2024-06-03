@@ -6,14 +6,14 @@
 {% from "jinja_transpilation_libraries/sparksql/default/globals/StateClass.j2" import StateClassInit %}
 {% from "jinja_transpilation_libraries/sparksql/default/globals/TypeConversionFunctions.j2" import TypeConversionFunctionsInit %}
 
-{% macro OperatorHandlerPrint(environment, state, arguments) %}
+{% macro OperatorHandlerPrint(environment, this, state, arguments) %}
 {%-     if state == none %}
 {%-         set state = namespace() %}
 {%-         do environment.StateClass.construct(environment, state) %}
 {%-     endif %}
 {%-     set operatorDataTypeEnumCarrier = namespace() %}
-{%-     do arguments['operator'].getDataType(arguments['operator'], operatorDataTypeEnumCarrier, state, arguments) %}
-{{ environment.coerce(operatorDataTypeEnumCarrier.value, state.coercionInstructions[operatorDataTypeEnumCarrier.value], state, arguments) }}
+{%-     do arguments['operator'].getDataType(environment, arguments['operator'], operatorDataTypeEnumCarrier, state, arguments) %}
+{{ environment.coerce(environment, operatorDataTypeEnumCarrier.value, state.coercionInstructions[operatorDataTypeEnumCarrier.value], state, arguments) }}
 {%- endmacro %}
 
 {% macro OperatorHandlerConstruct(environment, operatorHandlerNamespace) %}
@@ -25,6 +25,7 @@
 {%-     do StateClassInit(environment) %}
 {%-     do TypeConversionFunctionsInit(environment) %}
 {#      initialize OperatorHandlerClass #}
-{%-     set environment.OperatorHandlerClass = namespace() %}
-{%-     set environment.OperatorHandlerClass.construct = OperatorHandlerConstruct %}
+{%-     set OperatorHandlerClass = namespace() %}
+{%-     set OperatorHandlerClass.construct = OperatorHandlerConstruct %}
+{%-     set environment.OperatorHandlerClass = OperatorHandlerClass %}
 {% endmacro %}

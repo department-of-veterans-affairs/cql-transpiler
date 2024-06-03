@@ -20,11 +20,11 @@
 {%-         else %}
 {{ joiner }}
 {%-         endif %}
-{{ environment.OperatorHandler.print(state, item) }}
+{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, item) }}
 {%-     endfor %}
 {%- endmacro %}
 
 {% macro ListPrintingFunctionsInit(environment) -%}
 {%-     set environment.printItemsFromList = printItemsFromList %}
-{%-     set parentNamespace.printOperatorsFromList = environment %}
+{%-     set environment.printOperatorsFromList = printOperatorsFromList %}
 {% endmacro %}
