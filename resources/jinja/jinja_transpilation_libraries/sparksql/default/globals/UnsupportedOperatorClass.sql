@@ -1,10 +1,10 @@
 {#    
     Environment prerequisites:
-        * ListPrintingFunctions.j2
-        * OperatorClass.j2
+        * ListPrintingFunctions.sql
+        * OperatorClass.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.j2" import OperatorClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.j2" import ListPrintingFunctionsInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.sql" import OperatorClassInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
 
 {% macro printDefault(environment, this, state, arguments) %}
 {%-     set previousInsideSqlComment = state.insideSqlComment %}

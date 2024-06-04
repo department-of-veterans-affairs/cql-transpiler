@@ -1,10 +1,10 @@
 {#
     Environment prerequisites:
-        * StandardFunctions.j2
-        * ContextHandlingFunctions.j2
+        * StandardFunctions.sql
+        * ContextHandlingFunctions.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/ContextHandlingFunctions.j2" import ContextHandlingFunctionsInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.j2" import ListPrintingFunctionsInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/ContextHandlingFunctions.sql" import ContextHandlingFunctionsInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
 
 {# Wraps SQL statement in a collect block #}
 {%- macro collect(environment, context, toCollect)%}

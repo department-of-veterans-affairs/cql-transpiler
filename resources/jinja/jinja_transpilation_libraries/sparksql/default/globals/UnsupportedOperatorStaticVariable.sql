@@ -1,10 +1,10 @@
 {#    
     Environment prerequisites:
-        * UnsupportedOperatorClass.j2
-        * DataTypeEnum.j2
+        * UnsupportedOperatorClass.sql
+        * DataTypeEnum.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/UnsupportedOperatorClass.j2" import UnsupportedOperatorClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.j2" import DataTypeEnumInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/UnsupportedOperatorClass.sql" import UnsupportedOperatorClassInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {% macro UnsupportedOperatorStaticVariableInit(environment) %}
 {# initialize prerequisites #}

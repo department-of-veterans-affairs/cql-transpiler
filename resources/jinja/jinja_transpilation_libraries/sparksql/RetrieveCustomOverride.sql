@@ -1,9 +1,10 @@
 {#    
     Environment prerequisites:
-        * RetrieveOperator.j2
+        * OperatorHandlerStaticVariable.sql
+        * RetrieveStaticVariable.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.j2" import RetrieveStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
 
 {%- macro systemEvaluationPeriod() %}
 SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod

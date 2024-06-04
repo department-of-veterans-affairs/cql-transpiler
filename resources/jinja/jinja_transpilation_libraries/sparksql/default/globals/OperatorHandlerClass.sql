@@ -1,10 +1,10 @@
 {#
     Environment prerequisites:
-        * StateClass.j2
-        * TypeConversionFunctions.j2
+        * StateClass.sql
+        * TypeConversionFunctions.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/StateClass.j2" import StateClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/TypeConversionFunctions.j2" import TypeConversionFunctionsInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/StateClass.sql" import StateClassInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/TypeConversionFunctions.sql" import TypeConversionFunctionsInit %}
 
 {% macro OperatorHandlerPrint(environment, this, state, arguments) %}
 {%-     if state == none %}

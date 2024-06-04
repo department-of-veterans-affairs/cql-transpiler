@@ -1,14 +1,14 @@
 
 {#
     Environment prerequisites:
-        * OperatorClass.j2
-        * DataTypeEnum.j2
+        * OperatorClass.sql
+        * DataTypeEnum.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.j2" import OperatorHandlerStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/ExpressionDefStaticVariable.j2" import ExpressionDefStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/SingletonFromStaticVariable.j2" import SingletonFromStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.j2" import RetrieveStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/RetrieveCustomOverride.j2" import RetrieveCustomOverrideInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/ExpressionDefStaticVariable.sql" import ExpressionDefStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/SingletonFromStaticVariable.sql" import SingletonFromStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
+{% from "jinja_transpilation_libraries/sparksql/RetrieveCustomOverride.sql" import RetrieveCustomOverrideInit %}
 
 {%- set environment = namespace() %}
 
