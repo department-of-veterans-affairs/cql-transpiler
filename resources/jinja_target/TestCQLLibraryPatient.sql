@@ -1,4 +1,3 @@
 
 
-
 /*Operator with state: <Namespace {'coercionInstructions': {}, 'context': 'Patient', 'insideQuery': False, 'functionArguments': {}, 'insideSqlComment': True}> and arguments: {'operator': <Namespace {'defaultDataType': 'simple', 'getDataType': <Macro 'OperatorClassGetDataType'>, 'print': <Macro 'OperatorClassPrint'>}>, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'Patient', 'resultTypeLabel': None, 'codeComparator': None, 'codeProperty': None, 'child': None, 'valueSet': None} */

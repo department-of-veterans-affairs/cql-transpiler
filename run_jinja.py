@@ -7,18 +7,17 @@ target_dialect = 'sparksql'
 resources_folder = 'resources/'
 
 jinja_subfolder = 'jinja/'
-template_subfolder = 'template'
-file_to_translate = 'TestOutput.sql'
-
-sql_target_subfolder = "sql_output/"
+model_subfolder = 'models/'
+model_to_translate = 'TestCQLLibraryPatient.sql'
+target_subfolder = "jinja_target/"
 
 env = Environment(loader = FileSystemLoader(resources_folder + jinja_subfolder))
 env.trim_blocks = True
 env.lstrip_blocks = True
 env.add_extension('jinja2.ext.do')
-template = env.get_template(file_to_translate)
+template = env.get_template(model_subfolder + model_to_translate)
 
 rendered = template.render()
 
-with open(resources_folder + sql_target_subfolder + file_to_translate.rsplit('.', 1)[0] + '.sql', 'w') as file:
+with open(resources_folder + target_subfolder + model_to_translate.rsplit('.', 1)[0] + '.sql', 'w') as file:
     file.write(rendered)

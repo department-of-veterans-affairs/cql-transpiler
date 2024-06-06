@@ -3,8 +3,8 @@
         * StandardFunctions.sql
         * ContextHandlingFunctions.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/ContextHandlingFunctions.sql" import ContextHandlingFunctionsInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
+{% from "library/globals/ContextHandlingFunctions.sql" import ContextHandlingFunctionsInit %}
+{% from "library/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
 
 {# Wraps SQL statement in a collect block #}
 {%- macro collect(environment, context, toCollect)%}

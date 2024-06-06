@@ -3,8 +3,8 @@
         * StateClass.sql
         * TypeConversionFunctions.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/StateClass.sql" import StateClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/TypeConversionFunctions.sql" import TypeConversionFunctionsInit %}
+{% from "library/globals/StateClass.sql" import StateClassInit %}
+{% from "library/globals/TypeConversionFunctions.sql" import TypeConversionFunctionsInit %}
 
 {% macro OperatorHandlerPrint(environment, this, state, arguments) %}
 {%-     if state == none %}

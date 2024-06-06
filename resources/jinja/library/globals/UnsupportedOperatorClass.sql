@@ -3,8 +3,8 @@
         * ListPrintingFunctions.sql
         * OperatorClass.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.sql" import OperatorClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
+{% from "library/globals/OperatorClass.sql" import OperatorClassInit %}
+{% from "library/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
 
 {% macro printDefault(environment, this, state, arguments) %}
 {%-     set previousInsideSqlComment = state.insideSqlComment %}

@@ -3,9 +3,9 @@
         * OperatorHandlerStaticVariable.sql
         * OperatorClass.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.sql" import OperatorClassInit %}
+{% from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+{% from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{% from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
 {%- macro printSingletonFrom(environment, this, state, arguments) %}
 {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}

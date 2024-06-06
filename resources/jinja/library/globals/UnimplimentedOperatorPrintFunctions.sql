@@ -2,7 +2,7 @@
     Environment prerequisites:
         * StandardFunctions.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/StandardFunctions.sql" import StandardFunctionsInit %}
+{% from "library/globals/StandardFunctions.sql" import StandardFunctionsInit %}
 
 {%- macro printUnimplemented(environment, this, state, arguments) -%}
 {%      set previousInsideSqlComment = state.insideSqlComment -%}

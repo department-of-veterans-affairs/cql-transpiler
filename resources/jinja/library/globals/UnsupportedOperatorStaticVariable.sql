@@ -3,8 +3,8 @@
         * UnsupportedOperatorClass.sql
         * DataTypeEnum.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/UnsupportedOperatorClass.sql" import UnsupportedOperatorClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+{% from "library/globals/UnsupportedOperatorClass.sql" import UnsupportedOperatorClassInit %}
+{% from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {% macro UnsupportedOperatorStaticVariableInit(environment) %}
 {# initialize prerequisites #}

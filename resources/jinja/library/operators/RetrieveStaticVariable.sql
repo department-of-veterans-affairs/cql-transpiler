@@ -3,8 +3,8 @@
         * OperatorClass.sql
         * DataTypeEnum.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.sql" import OperatorClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+{% from "library/globals/OperatorClass.sql" import OperatorClassInit %}
+{% from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {% macro RetrieveStaticVariableInit(environment) %}
 {# initialize prerequisites #}

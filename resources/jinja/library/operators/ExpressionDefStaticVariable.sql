@@ -4,9 +4,9 @@
         * OperatorClass.sql
         * DataTypeEnum.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorClass.sql" import OperatorClassInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+{% from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{% from "library/globals/OperatorClass.sql" import OperatorClassInit %}
+{% from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro printExpressionDef(environment, this, state, arguments) %}
 {%-     set previousContext = state.context %}
