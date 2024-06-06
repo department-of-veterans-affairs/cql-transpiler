@@ -8,7 +8,7 @@
 {% from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 {% from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
-{%- macro printExpressionDef(environment, this, state, arguments) %}
+{%- macro ExpressionDefPrint(environment, this, state, arguments) %}
 {%-     set previousContext = state.context %}
 {%-     if previousContext == none and arguments['context'] != none %}
 {%-         set state.context = arguments['context'] %}
@@ -27,5 +27,5 @@
 {%-     set environment.ExpressionDef = ExpressionDef %}
 {%-     do environment.OperatorClass.construct(environment, none, environment.ExpressionDef) %}
 {%-     set ExpressionDef.defaultDataType = environment.DataTypeEnum.INHERITED %}
-{%-     set ExpressionDef.print = printExpressionDef %}
+{%-     set ExpressionDef.print = ExpressionDefPrint %}
 {%- endmacro %}

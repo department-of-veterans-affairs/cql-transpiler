@@ -7,7 +7,7 @@
 {% from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {% from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
-{%- macro printSingletonFrom(environment, this, state, arguments) %}
+{%- macro SingletonFromPrint(environment, this, state, arguments) %}
 {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
 {%- endmacro %}
 
@@ -19,6 +19,6 @@
 {# initialize member variables #}
 {%-     set SingletonFrom = namespace() %}
 {%-     do environment.OperatorClass.construct(environment, none, SingletonFrom) %}
-{%-     set SingletonFrom.print = printSingletonFrom %}
+{%-     set SingletonFrom.print = SingletonFromPrint %}
 {%-     set environment.SingletonFrom = SingletonFrom %}
 {%- endmacro %}

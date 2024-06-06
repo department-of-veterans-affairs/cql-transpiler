@@ -4,16 +4,20 @@
 {%- endmacro %}
 
 {%- macro OperatorClassPrint(environment, this, state, arguments) %}
-{%-     set previousInsideSqlComment = state.insideSqlComment %}
-{%-     set state.insideSqlComment = true %}
-{%-     if not previousInsideSqlComment %}
-/* 
-{%-     endif %}
-Operator with state: {{ state }} and arguments: {{ arguments }} 
-{%-     if not previousInsideSqlComment %}
- */ 
-{%-     endif %}
-{%-     set state.insideSqlComment = previousInsideSqlComment %}
+/* Operator with state: <{{ state }}>, arguments: <{{ arguments }}>
+{%-     if arguments['child'] -%}
+, child:<*/{{ environment.OperatorHandler.print(state, arguments['child']) }}/*>
+{%-     endif -%}
+{%-     if arguments['children'] -%}
+, children:<*/{{ environment.printOperatorsFromList(state, arguments['children'], " /* break */ ") }}/*>
+{%-     endif -%}
+{%-     if arguments['left'] -%}
+, left:<*/{{ environment.OperatorHandler.print(state, arguments['left']) }}/*>
+{%-     endif -%}
+{%-     if arguments['right'] -%}
+, right:<*/{{ environment.OperatorHandler.print(state, arguments['right']) }}/*>
+{%-     endif -%}
+ */
 {%- endmacro %}
 
 {%- macro OperatorClassConstruct(environment, state, operatorNamespace) %}

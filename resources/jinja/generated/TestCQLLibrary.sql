@@ -1,2 +1,1 @@
-
 {% macro TestCQLLibraryPatient(environment, state) %}{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, { 'operator': environment.ExpressionDef, 'context': 'Patient', 'name': 'Patient', 'child': { 'operator': environment.SingletonFrom, 'child': { 'operator': environment.Retrieve, 'modelType': 'urn:healthit-gov:qdm:v5_6', 'templateId': 'Patient', 'resultTypeLabel': none, 'codeComparator': none, 'codeProperty': none, 'child': none, 'valueSet': none } } }) }}{% endmacro %}
