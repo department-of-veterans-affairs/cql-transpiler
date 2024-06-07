@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import gov.va.transpiler.jinja.printing.Segment;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 /**
@@ -178,7 +179,7 @@ public class TranspilerNode {
      */
     protected Map<String, String> getLiteralArgumentMap() {
         Map<String, String> argumentMap = new LinkedHashMap<>();
-        argumentMap.put("'operator'", getOperator());
+        argumentMap.put("'operator'", Standards.ENVIRONMENT_NAME + "." + getOperator());
         return argumentMap;
     }
 

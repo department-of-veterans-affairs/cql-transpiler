@@ -24,7 +24,7 @@ public class UnsupportedNode extends CQLEquivalent<Trackable> {
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'unsupportedOperator'", "'" + super.getOperator() + "'");
+        map.put("'unsupportedOperator'", "'" + Standards.ENVIRONMENT_NAME + "." + super.getOperator() + "'");
         return map;
     }
 }

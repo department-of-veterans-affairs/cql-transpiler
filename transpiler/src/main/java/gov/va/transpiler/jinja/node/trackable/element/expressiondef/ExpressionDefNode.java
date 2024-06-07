@@ -41,10 +41,12 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
         enclosingSegment.setPrintType(PrintType.Line);
         enclosingSegment.setLocator(getCqlEquivalent().getLocator());
         // macro segment
-        var macro = new Segment("{% macro " + getLibraryName() + referenceName() + "(state) %}", "{% endmacro %}", PrintType.Inline);
+        var macro = new Segment("{% macro " + getLibraryName() + referenceName() + "(" + Standards.ENVIRONMENT_NAME + ", " + Standards.STATE_NAME + ") %}", "{% endmacro %}", PrintType.Inline);
         enclosingSegment.addChild(macro);
         // internal segment -- wrap the dictionary representation of this object
-        var internal = new Segment("{{ " + Standards.PRINT_FUNCTION_NAME + "(state, ", ") }}", PrintType.Inline);
+        String head = "{{ " + Standards.ENVIRONMENT_NAME + "." + Standards.OPERATOR_HANDLER_NAME + "." + Standards.PRINT_FUNCTION_NAME + "(" + Standards.ENVIRONMENT_NAME + ", " + Standards.ENVIRONMENT_NAME + "." + Standards.OPERATOR_HANDLER_NAME + ", " + Standards.STATE_NAME + ", ";
+        String tail = ") }}";
+        var internal = new Segment(head, tail, PrintType.Inline);
         internal.addChild(super.toSegment());
         macro.addChild(internal);
         return enclosingSegment;

@@ -21,7 +21,7 @@ public class Transpiler {
     public static void main(String[] args) throws IOException {
         var librarySource = "./resources/cql/";
         var fileLibrarySourceProvider = new FileLibrarySourceProvider(librarySource);
-        var jinjaTarget = "resources/jinja/";
+        var jinjaTarget = "resources/jinja/generated/";
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
         var target = "sparksql";
         Standards.setTargetLanguage(target);

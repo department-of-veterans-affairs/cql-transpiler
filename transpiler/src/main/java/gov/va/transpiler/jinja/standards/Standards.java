@@ -12,8 +12,10 @@ public class Standards {
     public static final String DISABLED_OPERATOR = "Disabled";
     public static final String UNFILTERED_CONTEXT = "Unfiltered";
     public static final String JINJA_FILE_POSTFIX = ".sql";
-    public static final boolean PRINT_EXPRESSIONS_INLINE = true;
-    public static final String PRINT_FUNCTION_NAME = "printOperator";
+    public static final String ENVIRONMENT_NAME = "environment";
+    public static final String STATE_NAME = "state";
+    public static final String OPERATOR_HANDLER_NAME = "OperatorHandler";
+    public static final String PRINT_FUNCTION_NAME = "print";
     private static final String OPERATOR_MACRO_FILE_PREFIX = "_operators";
     private static final String CUSTOM_MACRO_FILE_PREFIX = "_custom";
     private static String targetLanguage;
