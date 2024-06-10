@@ -8,18 +8,18 @@
 {% from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 {% from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
-{%- macro AddPrint(environment, this, state, arguments) -%}
-({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} + {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right'])}})
+{%- macro AliasRefPrint(environment, this, state, arguments) -%}
+{{ arguments['name'] }}
 {%- endmacro %}
 
-{% macro AddStaticVariableInit(environment) %}
+{% macro AliasRefStaticVariableInit(environment) %}
 {# initialize prerequisites #}
 {%-   do OperatorHandlerStaticVariableInit(environment) %}
 {%-   do OperatorClassInit(environment) %}
 {%-   do DataTypeEnumInit(environment) %}
 {# initialize member variables #}
-{%-     set Add = namespace() %}
-{%-     set environment.Add = Add %}
-{%-     do environment.OperatorClass.construct(environment, none, environment.Add) %}
-{%-     set Add.print = AddPrint %}
+{%-     set AliasRef = namespace() %}
+{%-     set environment.AliasRef = AliasRef %}
+{%-     do environment.OperatorClass.construct(environment, none, environment.AliasRef) %}
+{%-     set AliasRef.print = AliasRefPrint %}
 {%- endmacro %}

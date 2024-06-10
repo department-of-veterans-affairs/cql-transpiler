@@ -7,6 +7,8 @@
 {% from "library/operators/SingletonFromStaticVariable.sql" import SingletonFromStaticVariableInit %}
 
 {% macro init(environment) %}
+{%-     do AddDefStaticVariableInit(environment) %}
+{%-     do AsDefStaticVariableInit(environment) %}
 {%-     do ExpressionDefStaticVariableInit(environment) %}
 {%-     do RetrieveStaticVariableInit(environment) %}
 {%-     do SingletonFromStaticVariableInit(environment) %}
