@@ -18,7 +18,7 @@
 {%-     else -%}
             {{ arguments }}
 {%      endif -%}
-        > with arguments: <{{arguments}}> with children: <[{{ environment.printOperatorsFromList(state, arguments['children'], ", ") }}]>
+        > with arguments: <{{arguments}}> with children: <[{{ environment.printOperatorsFromList(environment, this, state, arguments['children'], ", ") }}]>
 {%-     if not previousInsideSqlComment -%}
             */
 {%-     endif %}

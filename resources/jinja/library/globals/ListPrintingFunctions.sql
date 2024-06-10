@@ -12,7 +12,7 @@
 {%- endmacro %}
 
 {# Prints operators from a list, delimiting them with a joiner #}
-{%- macro printOperatorsFromList(environment, listOfArgumentsToPrint, joiner) %}
+{%- macro printOperatorsFromList(environment, state, listOfArgumentsToPrint, joiner) %}
 {%-     set ns = namespace(first = true) %}
 {%-     for item in listOfArgumentsToPrint %}
 {%-         if ns.first %}
