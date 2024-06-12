@@ -5,7 +5,7 @@
 
 {# Prints an empty table #}
 {% macro printEmptyTable(environment) -%}
-    SELECT * FROM (SELECT 1 {{ printSingleValueColumnName() }}) WHERE {{ printSingleValueColumnName() }} = 0
+    SELECT * FROM (SELECT 1 {{ printSingleValueColumnName(environment) }}) WHERE {{ printSingleValueColumnName(environment) }} = 0
 {%- endmacro %}
 
 {% macro StandardsInit(environment) -%}
