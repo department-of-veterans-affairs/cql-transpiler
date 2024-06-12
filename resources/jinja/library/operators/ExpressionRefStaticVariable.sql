@@ -21,6 +21,6 @@
 {%-     set ExpressionRef = namespace() %}
 {%-     set environment.ExpressionRef = ExpressionRef %}
 {%-     do environment.OperatorClass.construct(environment, none, environment.ExpressionRef) %}
-{%-     set Retrieve.defaultDataType = environment.DataTypeEnum.INHERITED %}
+{%-     set ExpressionRef.defaultDataType = environment.DataTypeEnum.INHERITED %}
 {%-     set ExpressionRef.print = ExpressionRefPrint %}
 {%- endmacro %}

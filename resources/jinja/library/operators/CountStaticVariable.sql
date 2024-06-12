@@ -26,5 +26,5 @@ SELECT {{ environment.printIDFromContext(environment, state.context) }}, count(*
 {%-     set environment.Count = Count %}
 {%-     do environment.OperatorClass.construct(environment, none, environment.Count) %}
 {%-     set Count.print = CountPrint %}
-{%-     set Retrieve.defaultDataType = environment.DataTypeEnum.TABLE %}
+{%-     set Count.defaultDataType = environment.DataTypeEnum.TABLE %}
 {%- endmacro %}

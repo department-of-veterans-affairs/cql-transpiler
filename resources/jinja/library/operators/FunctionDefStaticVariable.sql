@@ -28,6 +28,6 @@
 {%-     set FunctionDef = namespace() %}
 {%-     set environment.FunctionDef = FunctionDef %}
 {%-     do environment.OperatorClass.construct(environment, none, environment.FunctionDef) %}
-{%-     set Retrieve.defaultDataType = environment.DataTypeEnum.INHERITED %}
+{%-     set FunctionDef.defaultDataType = environment.DataTypeEnum.INHERITED %}
 {%-     set FunctionDef.print = FunctionDefPrint %}
 {%- endmacro %}
