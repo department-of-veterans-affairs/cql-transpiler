@@ -20,9 +20,50 @@
 {% from "library/operators/EqualStaticVariable.sql" import EqualStaticVariableInit %}
 {% from "library/operators/ExistsStaticVariable.sql" import ExistsStaticVariableInit %}
 {% from "library/operators/ExpressionDefStaticVariable.sql" import ExpressionDefStaticVariableInit %}
-
+{% from "library/operators/ExpressionRefStaticVariable.sql" import ExpressionRefStaticVariableInit %}
+{% from "library/operators/FunctionDefStaticVariable.sql" import FunctionDefStaticVariableInit %}
+{% from "library/operators/FunctionRefStaticVariable.sql" import FunctionRefStaticVariableInit %}
+{% from "library/operators/GreaterOrEqualStaticVariable.sql" import GreaterOrEqualStaticVariableInit %}
+{% from "library/operators/GreaterStaticVariable.sql" import GreaterStaticVariableInit %}
+{% from "library/operators/IdentifierRefStaticVariable.sql" import IdentifierRefStaticVariableInit %}
+{% from "library/operators/IfStaticVariable.sql" import IfStaticVariableInit %}
+{% from "library/operators/InIntervalStaticVariable.sql" import InIntervalStaticVariableInit %}
+{% from "library/operators/InStaticVariable.sql" import InStaticVariableInit %}
+{% from "library/operators/IntervalTypeSpecifierStaticVariable.sql" import IntervalTypeSpecifierStaticVariableInit %}
+{% from "library/operators/InValuesetStaticVariable.sql" import InValuesetStaticVariableInit %}
+{% from "library/operators/IsNullStaticVariable.sql" import IsNullStaticVariableInit %}
+{% from "library/operators/LessOrEqualStaticVariable.sql" import LessOrEqualStaticVariableInit %}
+{% from "library/operators/LessStaticVariable.sql" import LessStaticVariableInit %}
+{% from "library/operators/LetClauseStaticVariable.sql" import LetClauseStaticVariableInit %}
+{% from "library/operators/ListStaticVariable.sql" import ListStaticVariableInit %}
+{% from "library/operators/ListTypeSpecifierStaticVariable.sql" import ListTypeSpecifierStaticVariableInit %}
+{% from "library/operators/LiteralStaticVariable.sql" import LiteralStaticVariableInit %}
+{% from "library/operators/MultiplyStaticVariable.sql" import MultiplyStaticVariableInit %}
+{% from "library/operators/NamedTypeSpecifierStaticVariable.sql" import NamedTypeSpecifierStaticVariableInit %}
+{% from "library/operators/NegateStaticVariable.sql" import NegateStaticVariableInit %}
+{% from "library/operators/NotStaticVariable.sql" import NotStaticVariableInit %}
+{% from "library/operators/NullStaticVariable.sql" import NullStaticVariableInit %}
+{% from "library/operators/OperandRefStaticVariable.sql" import OperandRefStaticVariableInit %}
+{% from "library/operators/OrStaticVariable.sql" import OrStaticVariableInit %}
+{% from "library/operators/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
+{% from "library/operators/PropertyStaticVariable.sql" import PropertyStaticVariableInit %}
+{% from "library/operators/QuantityStaticVariable.sql" import QuantityStaticVariableInit %}
+{% from "library/operators/QueryLetRefStaticVariable.sql" import QueryLetRefStaticVariableInit %}
+{% from "library/operators/QueryStaticVariable.sql" import QueryStaticVariableInit %}
 {% from "library/operators/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
+{% from "library/operators/ReturnClauseStaticVariable.sql" import ReturnClauseStaticVariableInit %}
 {% from "library/operators/SingletonFromStaticVariable.sql" import SingletonFromStaticVariableInit %}
+{% from "library/operators/SortClauseStaticVariable.sql" import SortClauseStaticVariableInit %}
+{% from "library/operators/StartStaticVariable.sql" import StartStaticVariableInit %}
+{% from "library/operators/SubtractStaticVariable.sql" import SubtractStaticVariableInit %}
+{% from "library/operators/ToDateStaticVariable.sql" import ToDateStaticVariableInit %}
+{% from "library/operators/ToDecimalStaticVariable.sql" import ToDecimalStaticVariableInit %}
+{% from "library/operators/TupleElementStaticVariable.sql" import TupleElementStaticVariableInit %}
+{% from "library/operators/TupleStaticVariable.sql" import TupleStaticVariableInit %}
+{% from "library/operators/TypeSpecifierStaticVariable.sql" import TypeSpecifierStaticVariableInit %}
+{% from "library/operators/UnionStaticVariable.sql" import UnionStaticVariableInit %}
+{% from "library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
+{% from "library/operators/WithStaticVariable.sql" import WithStaticVariableInit %}
 
 {% macro init(environment) %}
 {%-     do AddStaticVariableInit(environment) %}
@@ -44,7 +85,48 @@
 {%-     do EqualStaticVariableInit(environment) %}
 {%-     do ExistsStaticVariableInit(environment) %}
 {%-     do ExpressionDefStaticVariableInit(environment) %}
-
+{%-     do ExpressionRefStaticVariableInit(environment) %}
+{%-     do FunctionDefStaticVariableInit(environment) %}
+{%-     do FunctionRefStaticVariableInit(environment) %}
+{%-     do GreaterOrEqualStaticVariableInit(environment) %}
+{%-     do GreaterStaticVariableInit(environment) %}
+{%-     do IdentifierRefStaticVariableInit(environment) %}
+{%-     do IfStaticVariableInit(environment) %}
+{%-     do InIntervalStaticVariableInit(environment) %}
+{%-     do InStaticVariableInit(environment) %}
+{%-     do IntervalTypeSpecifierStaticVariableInit(environment) %}
+{%-     do InValuesetStaticVariableInit(environment) %}
+{%-     do IsNullStaticVariableInit(environment) %}
+{%-     do LessOrEqualStaticVariableInit(environment) %}
+{%-     do LessStaticVariableInit(environment) %}
+{%-     do LetClauseStaticVariableInit(environment) %}
+{%-     do ListStaticVariableInit(environment) %}
+{%-     do ListTypeSpecifierStaticVariableInit(environment) %}
+{%-     do LiteralStaticVariableInit(environment) %}
+{%-     do MultiplyStaticVariableInit(environment) %}
+{%-     do NamedTypeSpecifierStaticVariableInit(environment) %}
+{%-     do NegateStaticVariableInit(environment) %}
+{%-     do NotStaticVariableInit(environment) %}
+{%-     do NullStaticVariableInit(environment) %}
+{%-     do OperandRefStaticVariableInit(environment) %}
+{%-     do OrStaticVariableInit(environment) %}
+{%-     do ParameterRefStaticVariableInit(environment) %}
+{%-     do PropertyStaticVariableInit(environment) %}
+{%-     do QuantityStaticVariableInit(environment) %}
+{%-     do QueryLetRefStaticVariableInit(environment) %}
+{%-     do QueryStaticVariableInit(environment) %}
 {%-     do RetrieveStaticVariableInit(environment) %}
+{%-     do ReturnClauseStaticVariableInit(environment) %}
 {%-     do SingletonFromStaticVariableInit(environment) %}
+{%-     do SortClauseStaticVariableInit(environment) %}
+{%-     do StartStaticVariableInit(environment) %}
+{%-     do SubtractStaticVariableInit(environment) %}
+{%-     do ToDateStaticVariableInit(environment) %}
+{%-     do ToDecimalStaticVariableInit(environment) %}
+{%-     do TupleElementStaticVariableInit(environment) %}
+{%-     do TupleStaticVariableInit(environment) %}
+{%-     do TypeSpecifierStaticVariableInit(environment) %}
+{%-     do UnionStaticVariableInit(environment) %}
+{%-     do ValueSetRefStaticVariableInit(environment) %}
+{%-     do WithStaticVariableInit(environment) %}
 {%- endmacro %}
