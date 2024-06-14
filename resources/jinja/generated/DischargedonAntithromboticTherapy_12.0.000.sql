@@ -1,7 +1,7 @@
-{%- from 'TJCOverall_7.1.000.sql' import TJCOverallIschemic_Stroke_Encounter %}
-{%- from 'TJCOverall_7.1.000.sql' import TJCOverallEncounter_with_Principal_Diagnosis_and_Age %}
-{%- from 'TJCOverall_7.1.000.sql' import TJCOverallIschemic_Stroke_Encounters_with_Discharge_Disposition %}
-{%- from 'TJCOverall_7.1.000.sql' import TJCOverallEncounter_with_Comfort_Measures_during_Hospitalization %}
+{%- from 'generated/TJCOverall_7.1.000.sql' import TJCOverallIschemic_Stroke_Encounter %}
+{%- from 'generated/TJCOverall_7.1.000.sql' import TJCOverallEncounter_with_Principal_Diagnosis_and_Age %}
+{%- from 'generated/TJCOverall_7.1.000.sql' import TJCOverallIschemic_Stroke_Encounters_with_Discharge_Disposition %}
+{%- from 'generated/TJCOverall_7.1.000.sql' import TJCOverallEncounter_with_Comfort_Measures_during_Hospitalization %}
 /*
 	// DischargedonAntithromboticTherapy lines [8:1-8:94]
 	valueset "Antithrombotic Therapy for Ischemic Stroke": 'urn:oid:2.16.840.1.113762.1.4.1110.62'

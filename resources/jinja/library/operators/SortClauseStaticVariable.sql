@@ -21,7 +21,7 @@ ORDER BY {{ environment.printOperatorsFromList(environment, state, arguments['ch
 {%-     set SortClause = namespace() %}
 {%-     set environment.SortClause = SortClause %}
 {%-     do environment.OperatorClass.construct(environment, none, environment.SortClause) %}
-{%-     set SortClause.defaultDataType = environment.DataTypeEnum.{%- set SortClause.defaultDataType = environment.DataTypeEnum.STATEMENT %}
+{%-     set SortClause.defaultDataType = environment.DataTypeEnum.STATEMENT %}
  %}
 {%-     set SortClause.print = SortClausePrint %}
 {%- endmacro %}

@@ -64,7 +64,7 @@ public class LibraryNode extends ElementNode<Library> {
         // Import every other macro used inside this file
         for (var macroSetEntry : getMacroDependencies().entrySet()) {
             for (var macro : macroSetEntry.getValue()) {
-                var subHeaderSegment = new Segment("{%- from '" + macroSetEntry.getKey() + Standards.JINJA_FILE_POSTFIX + "' import " + macro + " %}");
+                var subHeaderSegment = new Segment("{%- from '" + Standards.GENERATED_FILE_FOLDER + Standards.FOLDER_SEPARATOR + macroSetEntry.getKey() + Standards.JINJA_FILE_POSTFIX + "' import " + macro + " %}");
                 subHeaderSegment.setPrintType(PrintType.Line);
                 headerSegment.addChild(subHeaderSegment);
             }

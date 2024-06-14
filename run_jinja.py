@@ -8,7 +8,7 @@ resources_folder = 'resources/'
 
 jinja_subfolder = 'jinja/'
 model_subfolder = 'models/'
-model_to_translate = 'TestCQLLibraryPatient.sql'
+model_to_translate = 'TJCOverallNon_Elective_Inpatient_Encounter.sql'
 target_subfolder = "jinja_target/"
 
 env = Environment(loader = FileSystemLoader(resources_folder + jinja_subfolder))

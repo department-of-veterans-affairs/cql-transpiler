@@ -1,6 +1,6 @@
-{%- from 'MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsLengthInDays %}
-{%- from 'MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsNormalizeInterval %}
-{%- from 'MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsHospitalizationWithObservation %}
+{%- from 'generated/MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsLengthInDays %}
+{%- from 'generated/MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsNormalizeInterval %}
+{%- from 'generated/MATGlobalCommonFunctions_7.0.000.sql' import MATGlobalCommonFunctionsHospitalizationWithObservation %}
 /*
 	// TJCOverall lines [7:1-7:65]
 	valueset "Comfort Measures": 'urn:oid:1.3.6.1.4.1.33895.1.3.0.45' 

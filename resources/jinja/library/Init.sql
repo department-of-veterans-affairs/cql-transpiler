@@ -30,7 +30,7 @@
 {% from "library/operators/InIntervalStaticVariable.sql" import InIntervalStaticVariableInit %}
 {% from "library/operators/InStaticVariable.sql" import InStaticVariableInit %}
 {% from "library/operators/IntervalTypeSpecifierStaticVariable.sql" import IntervalTypeSpecifierStaticVariableInit %}
-{% from "library/operators/InValuesetStaticVariable.sql" import InValuesetStaticVariableInit %}
+{% from "library/operators/InValueSetStaticVariable.sql" import InValueSetStaticVariableInit %}
 {% from "library/operators/IsNullStaticVariable.sql" import IsNullStaticVariableInit %}
 {% from "library/operators/LessOrEqualStaticVariable.sql" import LessOrEqualStaticVariableInit %}
 {% from "library/operators/LessStaticVariable.sql" import LessStaticVariableInit %}
@@ -95,7 +95,7 @@
 {%-     do InIntervalStaticVariableInit(environment) %}
 {%-     do InStaticVariableInit(environment) %}
 {%-     do IntervalTypeSpecifierStaticVariableInit(environment) %}
-{%-     do InValuesetStaticVariableInit(environment) %}
+{%-     do InValueSetStaticVariableInit(environment) %}
 {%-     do IsNullStaticVariableInit(environment) %}
 {%-     do LessOrEqualStaticVariableInit(environment) %}
 {%-     do LessStaticVariableInit(environment) %}

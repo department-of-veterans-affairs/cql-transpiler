@@ -16,6 +16,7 @@ public class Standards {
     public static final String STATE_NAME = "state";
     public static final String OPERATOR_HANDLER_NAME = "OperatorHandler";
     public static final String PRINT_FUNCTION_NAME = "print";
+    public static final String GENERATED_FILE_FOLDER = "generated";
     private static final String OPERATOR_MACRO_FILE_PREFIX = "_operators";
     private static final String CUSTOM_MACRO_FILE_PREFIX = "_custom";
     private static String targetLanguage;
