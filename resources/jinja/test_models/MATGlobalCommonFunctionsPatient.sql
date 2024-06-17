@@ -1,8 +1,8 @@
 
-{% from "library/Init.sql" import init %}
+{% from "library/Init.sql" import initEnvironment %}
 {% from "generated/MATGlobalCommonFunctions_7.0.000.sql" import MATGlobalCommonFunctionsPatient %}
 
 {%- set environment = namespace() %}
-{%- do init(environment) %}
+{%- do initEnvironment(environment) %}
 
 {{ MATGlobalCommonFunctionsPatient(environment, none) }}

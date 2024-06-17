@@ -7,7 +7,7 @@ target_dialect = 'sparksql'
 resources_folder = 'resources/'
 
 jinja_subfolder = 'jinja/'
-model_subfolder = 'models/'
+model_subfolder = 'test_models/'
 model_to_translate = 'TJCOverallNon_Elective_Inpatient_Encounter.sql'
 target_subfolder = "jinja_target/"
 

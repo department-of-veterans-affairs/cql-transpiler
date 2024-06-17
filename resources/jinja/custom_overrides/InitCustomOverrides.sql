@@ -1,8 +1,7 @@
-{#
-    Loads operators into environment
-#}
+{% from "library/Init.sql" import initEnvironment %}
 {% from "custom_overrides/RetrieveCustomOverride.sql" import RetrieveCustomOverrideInit %}
 
-{% macro init(environment) %}
+{% macro initEnvironmentWithCustomOverrides(environment) %}
+{%-     do initEnvironment(environment) %}
 {%-     do RetrieveCustomOverrideInit(environment) %}
 {%- endmacro %}

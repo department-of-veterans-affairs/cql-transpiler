@@ -41,12 +41,12 @@ GROUP BY oid, version
 environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
-{%- macro inValueSet(state, valueSet, codeProperty) %}
-EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.code AND {{codeProperty}}.system = _vs.system)
+{%- macro inValueSet(environment, state, valueSet, codeProperty) %}
+EXISTS({{ valueSetCodes(environment, state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.code AND {{codeProperty}}.system = _vs.system)
 {%- endmacro %}
 
 
-{%- macro retrieveDBT(state, valueSet, model, dataType, version, codeProperty="code") %}
+{%- macro retrieveDBT(environment, state, valueSet, model, dataType, version, codeProperty="code") %}
 {%-   set dataTypeReference = model ~ "__" ~ dataType ~ "_" ~ version %}
 (
   SELECT
@@ -62,7 +62,7 @@ EXISTS({{ valueSetCodes(state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.
   -- Link to evaluation period which represents
   CROSS JOIN {{ systemEvaluationPeriod() }} _ep
 {%    if valueSet -%}
-  WHERE {{ inValueSet(state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
+  WHERE {{ inValueSet(environment, state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
 {%-   endif %}
 )
 {%- endmacro %}

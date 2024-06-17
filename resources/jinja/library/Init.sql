@@ -65,7 +65,7 @@
 {% from "library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
 {% from "library/operators/WithStaticVariable.sql" import WithStaticVariableInit %}
 
-{% macro init(environment) %}
+{% macro initEnvironment(environment) %}
 {%-     do AddStaticVariableInit(environment) %}
 {%-     do AfterStaticVariableInit(environment) %}
 {%-     do AliasedQuerySourceStaticVariableInit(environment) %}
