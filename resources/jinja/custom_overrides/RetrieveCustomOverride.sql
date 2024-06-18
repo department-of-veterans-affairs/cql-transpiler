@@ -74,6 +74,7 @@ EXISTS({{ valueSetCodes(environment, state, valueSet) }}, _vs -> {{codeProperty}
 {%-     set resultTypeLabel = arguments['templateId'] %}
 {%-   endif %}
 {{ retrieveDBT(
+  environment,
   state,
   arguments['valueSet'],
   arguments['modelType'].split(':')[2]|lower,
@@ -89,6 +90,5 @@ EXISTS({{ valueSetCodes(environment, state, valueSet) }}, _vs -> {{codeProperty}
 {%-   do RetrieveStaticVariableInit(environment) %}
 {# initialize member variables #}
 {%-   set Retrieve = environment.Retrieve %}
-{# TODO: does this work? #}
 {%-   set Retrieve.print = RetrievePrintCustomOverride %}
 {%- endmacro %}
