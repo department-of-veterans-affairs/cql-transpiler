@@ -47,7 +47,11 @@ EXISTS({{ valueSetCodes(environment, state, valueSet) }}, _vs -> {{codeProperty}
 
 
 {%- macro retrieveDBT(environment, state, valueSet, model, dataType, version, codeProperty="code") %}
+{%- if dataType == 'patient' %}
+{%-   set dataTypeReference = 'common__patient' %}
+{%- else %}
 {%-   set dataTypeReference = model ~ "__" ~ dataType ~ "_" ~ version %}
+{%- endif %}
 (
   SELECT
     _dataType.*,
