@@ -6,11 +6,11 @@
 {% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
 
-{%- macro systemEvaluationPeriod() %}
+{%- macro RetrieveSystemEvaluationPeriod() -%}
 SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
 {%- endmacro %}
 
-{%- macro systemValueSet() %}
+{%- macro RetrieveSystemValueSet() -%}
 -- WITH CY2023 AS (
 --     SELECT _c0 `oid`, _c1 `name`, _c4 `version`, _c5 `code`, 'NDC' `codeSystem`
 --     FROM CSV.`/mnt/zones/subenv/{{ env_var('WORKGROUP_SUBENV')|lower }}/eqm/specification/valueSet/2023/CY2023_eQM_CernerNDCMap.csv.gz`
@@ -36,17 +36,17 @@ FROM all
 GROUP BY oid, version
 {%- endmacro %}
 
-{%- macro valueSetCodes(environment, state, valueSet, asOfDate) %}
-(SELECT codes FROM {{ systemValueSet }} WHERE oid = "{{ 
+{%- macro RetrieveValueSetCodes(environment, state, valueSet, asOfDate) -%}
+(SELECT codes FROM {{ RetrieveSystemValueSet }} WHERE oid = "{{ 
 environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
-{%- macro inValueSet(environment, state, valueSet, codeProperty) %}
-EXISTS({{ valueSetCodes(environment, state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.code AND {{codeProperty}}.system = _vs.system)
+{%- macro RetrieveInValueSet(environment, state, valueSet, codeProperty) -%}
+EXISTS({{ RetrieveValueSetCodes(environment, state, valueSet) }}, _vs -> {{codeProperty}}.code = _vs.code AND {{codeProperty}}.system = _vs.system)
 {%- endmacro %}
 
 
-{%- macro retrieveDBT(environment, state, valueSet, model, dataType, version, codeProperty="code") %}
+{%- macro RetrieveGetDBT(environment, state, valueSet, model, dataType, version, codeProperty="code") -%}
 {%- if dataType == 'patient' %}
 {%-   set dataTypeReference = 'common__patient' %}
 {%- else %}
@@ -64,20 +64,20 @@ EXISTS({{ valueSetCodes(environment, state, valueSet) }}, _vs -> {{codeProperty}
     ) _parameters
   FROM {{ source("fhirlake", dataTypeReference) }} _dataType
   -- Link to evaluation period which represents
-  CROSS JOIN {{ systemEvaluationPeriod() }} _ep
+  CROSS JOIN {{ RetrieveSystemEvaluationPeriod() }} _ep
 {%    if valueSet -%}
-  WHERE {{ inValueSet(environment, state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
+  WHERE {{ RetrieveInValueSet(environment, state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
 {%-   endif %}
 )
 {%- endmacro %}
 
-{% macro RetrievePrintCustomOverride(environment, this, state, arguments) %}
+{% macro RetrievePrintCustomOverride(environment, this, state, arguments) -%}
 {%-   if arguments['resultTypeLabel'] %}
 {%-     set resultTypeLabel = arguments['resultTypeLabel'] %}
 {%-   else %}
 {%-     set resultTypeLabel = arguments['templateId'] %}
 {%-   endif %}
-{{ retrieveDBT(
+{{ RetrieveGetDBT(
   environment,
   state,
   arguments['valueSet'],
