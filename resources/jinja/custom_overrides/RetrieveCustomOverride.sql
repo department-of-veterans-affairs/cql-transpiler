@@ -3,8 +3,8 @@
         * OperatorHandlerStaticVariable.sql
         * RetrieveStaticVariable.sql
 #}
-{% from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{% from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
+{%- from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{%- from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
 
 {%- macro RetrieveSystemEvaluationPeriod() -%}
 SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
@@ -37,8 +37,7 @@ GROUP BY oid, version
 {%- endmacro %}
 
 {%- macro RetrieveValueSetCodes(environment, state, valueSet, asOfDate) -%}
-(SELECT codes FROM {{ RetrieveSystemValueSet }} WHERE oid = "{{ 
-environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+(SELECT codes FROM {{ RetrieveSystemValueSet }} WHERE oid = "{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
 {%- macro RetrieveInValueSet(environment, state, valueSet, codeProperty) -%}
