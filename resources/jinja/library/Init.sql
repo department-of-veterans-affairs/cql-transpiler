@@ -1,4 +1,4 @@
-{#
+{#-
     Loads operators into environment
 #}
 {%- from "library/operators/AddStaticVariable.sql" import AddStaticVariableInit %}
@@ -66,67 +66,67 @@
 {%- from "library/operators/WithStaticVariable.sql" import WithStaticVariableInit %}
 
 {%- macro initEnvironment(environment) %}
-{%-     do AddStaticVariableInit(environment) %}
-{%-     do AfterStaticVariableInit(environment) %}
-{%-     do AliasedQuerySourceStaticVariableInit(environment) %}
-{%-     do AndStaticVariableInit(environment) %}
-{%-     do AsStaticVariableInit(environment) %}
-{%-     do BeforeStaticVariableInit(environment) %}
-{%-     do ByExpressionStaticVariableInit(environment) %}
-{%-     do CalculateAgeAtStaticVariableInit(environment) %}
-{%-     do CoalesceStaticVariableInit(environment) %}
-{%-     do ConcatenateStaticVariableInit(environment) %}
-{%-     do CountStaticVariableInit(environment) %}
-{%-     do DateFromStaticVariableInit(environment) %}
-{%-     do DateTimeStaticVariableInit(environment) %}
-{%-     do DifferenceBetweenStaticVariableInit(environment) %}
-{%-     do DivideStaticVariableInit(environment) %}
-{%-     do EndStaticVariableInit(environment) %}
-{%-     do EqualStaticVariableInit(environment) %}
-{%-     do ExistsStaticVariableInit(environment) %}
-{%-     do ExpressionDefStaticVariableInit(environment) %}
-{%-     do ExpressionRefStaticVariableInit(environment) %}
-{%-     do FunctionDefStaticVariableInit(environment) %}
-{%-     do FunctionRefStaticVariableInit(environment) %}
-{%-     do GreaterOrEqualStaticVariableInit(environment) %}
-{%-     do GreaterStaticVariableInit(environment) %}
-{%-     do IdentifierRefStaticVariableInit(environment) %}
-{%-     do IfStaticVariableInit(environment) %}
-{%-     do InIntervalStaticVariableInit(environment) %}
-{%-     do InStaticVariableInit(environment) %}
-{%-     do IntervalTypeSpecifierStaticVariableInit(environment) %}
-{%-     do InValueSetStaticVariableInit(environment) %}
-{%-     do IsNullStaticVariableInit(environment) %}
-{%-     do LessOrEqualStaticVariableInit(environment) %}
-{%-     do LessStaticVariableInit(environment) %}
-{%-     do LetClauseStaticVariableInit(environment) %}
-{%-     do ListStaticVariableInit(environment) %}
-{%-     do ListTypeSpecifierStaticVariableInit(environment) %}
-{%-     do LiteralStaticVariableInit(environment) %}
-{%-     do MultiplyStaticVariableInit(environment) %}
-{%-     do NamedTypeSpecifierStaticVariableInit(environment) %}
-{%-     do NegateStaticVariableInit(environment) %}
-{%-     do NotStaticVariableInit(environment) %}
-{%-     do NullStaticVariableInit(environment) %}
-{%-     do OperandRefStaticVariableInit(environment) %}
-{%-     do OrStaticVariableInit(environment) %}
-{%-     do ParameterRefStaticVariableInit(environment) %}
-{%-     do PropertyStaticVariableInit(environment) %}
-{%-     do QuantityStaticVariableInit(environment) %}
-{%-     do QueryLetRefStaticVariableInit(environment) %}
-{%-     do QueryStaticVariableInit(environment) %}
-{%-     do RetrieveStaticVariableInit(environment) %}
-{%-     do ReturnClauseStaticVariableInit(environment) %}
-{%-     do SingletonFromStaticVariableInit(environment) %}
-{%-     do SortClauseStaticVariableInit(environment) %}
-{%-     do StartStaticVariableInit(environment) %}
-{%-     do SubtractStaticVariableInit(environment) %}
-{%-     do ToDateStaticVariableInit(environment) %}
-{%-     do ToDecimalStaticVariableInit(environment) %}
-{%-     do TupleElementStaticVariableInit(environment) %}
-{%-     do TupleStaticVariableInit(environment) %}
-{%-     do TypeSpecifierStaticVariableInit(environment) %}
-{%-     do UnionStaticVariableInit(environment) %}
-{%-     do ValueSetRefStaticVariableInit(environment) %}
-{%-     do WithStaticVariableInit(environment) %}
+    {%- do AddStaticVariableInit(environment) %}
+    {%- do AfterStaticVariableInit(environment) %}
+    {%- do AliasedQuerySourceStaticVariableInit(environment) %}
+    {%- do AndStaticVariableInit(environment) %}
+    {%- do AsStaticVariableInit(environment) %}
+    {%- do BeforeStaticVariableInit(environment) %}
+    {%- do ByExpressionStaticVariableInit(environment) %}
+    {%- do CalculateAgeAtStaticVariableInit(environment) %}
+    {%- do CoalesceStaticVariableInit(environment) %}
+    {%- do ConcatenateStaticVariableInit(environment) %}
+    {%- do CountStaticVariableInit(environment) %}
+    {%- do DateFromStaticVariableInit(environment) %}
+    {%- do DateTimeStaticVariableInit(environment) %}
+    {%- do DifferenceBetweenStaticVariableInit(environment) %}
+    {%- do DivideStaticVariableInit(environment) %}
+    {%- do EndStaticVariableInit(environment) %}
+    {%- do EqualStaticVariableInit(environment) %}
+    {%- do ExistsStaticVariableInit(environment) %}
+    {%- do ExpressionDefStaticVariableInit(environment) %}
+    {%- do ExpressionRefStaticVariableInit(environment) %}
+    {%- do FunctionDefStaticVariableInit(environment) %}
+    {%- do FunctionRefStaticVariableInit(environment) %}
+    {%- do GreaterOrEqualStaticVariableInit(environment) %}
+    {%- do GreaterStaticVariableInit(environment) %}
+    {%- do IdentifierRefStaticVariableInit(environment) %}
+    {%- do IfStaticVariableInit(environment) %}
+    {%- do InIntervalStaticVariableInit(environment) %}
+    {%- do InStaticVariableInit(environment) %}
+    {%- do IntervalTypeSpecifierStaticVariableInit(environment) %}
+    {%- do InValueSetStaticVariableInit(environment) %}
+    {%- do IsNullStaticVariableInit(environment) %}
+    {%- do LessOrEqualStaticVariableInit(environment) %}
+    {%- do LessStaticVariableInit(environment) %}
+    {%- do LetClauseStaticVariableInit(environment) %}
+    {%- do ListStaticVariableInit(environment) %}
+    {%- do ListTypeSpecifierStaticVariableInit(environment) %}
+    {%- do LiteralStaticVariableInit(environment) %}
+    {%- do MultiplyStaticVariableInit(environment) %}
+    {%- do NamedTypeSpecifierStaticVariableInit(environment) %}
+    {%- do NegateStaticVariableInit(environment) %}
+    {%- do NotStaticVariableInit(environment) %}
+    {%- do NullStaticVariableInit(environment) %}
+    {%- do OperandRefStaticVariableInit(environment) %}
+    {%- do OrStaticVariableInit(environment) %}
+    {%- do ParameterRefStaticVariableInit(environment) %}
+    {%- do PropertyStaticVariableInit(environment) %}
+    {%- do QuantityStaticVariableInit(environment) %}
+    {%- do QueryLetRefStaticVariableInit(environment) %}
+    {%- do QueryStaticVariableInit(environment) %}
+    {%- do RetrieveStaticVariableInit(environment) %}
+    {%- do ReturnClauseStaticVariableInit(environment) %}
+    {%- do SingletonFromStaticVariableInit(environment) %}
+    {%- do SortClauseStaticVariableInit(environment) %}
+    {%- do StartStaticVariableInit(environment) %}
+    {%- do SubtractStaticVariableInit(environment) %}
+    {%- do ToDateStaticVariableInit(environment) %}
+    {%- do ToDecimalStaticVariableInit(environment) %}
+    {%- do TupleElementStaticVariableInit(environment) %}
+    {%- do TupleStaticVariableInit(environment) %}
+    {%- do TypeSpecifierStaticVariableInit(environment) %}
+    {%- do UnionStaticVariableInit(environment) %}
+    {%- do ValueSetRefStaticVariableInit(environment) %}
+    {%- do WithStaticVariableInit(environment) %}
 {%- endmacro %}

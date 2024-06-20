@@ -12,8 +12,8 @@ model_to_translate = 'TJCOverallNon_Elective_Inpatient_Encounter.sql'
 target_subfolder = "jinja_target/"
 
 env = Environment(loader = FileSystemLoader(resources_folder + jinja_subfolder))
-env.trim_blocks = True
-env.lstrip_blocks = True
+#env.trim_blocks = True
+#env.lstrip_blocks = True
 env.add_extension('jinja2.ext.do')
 template = env.get_template(model_subfolder + model_to_translate)
 
