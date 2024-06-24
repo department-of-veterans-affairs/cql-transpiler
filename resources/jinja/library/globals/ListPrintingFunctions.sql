@@ -3,10 +3,10 @@
     {%- set ns = namespace(first = true) %}
     {%- for item in listOfItemsToPrint %}
         {%- if ns.first %}
-        {%- set ns.first = false %}
-    {%- else -%}
-        {{ joiner }}
-    {%- endif -%}
+            {%- set ns.first = false %}
+        {%- else -%}
+            {{ joiner }}
+        {%- endif -%}
         {{ item }}
     {%- endfor %}
 {%- endmacro %}
