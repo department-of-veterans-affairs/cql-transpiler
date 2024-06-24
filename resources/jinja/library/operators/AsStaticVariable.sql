@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro AsPrint(environment, this, state, arguments) -%}
-    {#-     arguments['typeSpecifier'] is unused -#}
+    {#- arguments['typeSpecifier'] is unused -#}
     {{ environment.OperatorHandler.print(environment, this, state, arguments['child'])}}
 {%- endmacro %}
 
