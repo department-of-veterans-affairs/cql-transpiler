@@ -14,9 +14,9 @@
 
 {%- macro OperandRefStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {% do OperatorHandlerStaticVariableInit(environment) %}
-    {% do OperatorClassInit(environment) %}
-    {% do DataTypeEnumInit(environment) %}
+    {%- do OperatorHandlerStaticVariableInit(environment) %}
+    {%- do OperatorClassInit(environment) %}
+    {%- do DataTypeEnumInit(environment) %}
     {#- initialize member variables #}
     {%- set OperandRef = namespace() %}
     {%- set environment.OperandRef = OperandRef %}

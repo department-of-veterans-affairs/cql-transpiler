@@ -2,6 +2,6 @@
 {%- from "custom_overrides/RetrieveCustomOverride.sql" import RetrieveCustomOverrideInit %}
 
 {%- macro initEnvironmentWithCustomOverrides(environment) %}
-{%-     do initEnvironment(environment) %}
-{%-     do RetrieveCustomOverrideInit(environment) %}
+    {%- do initEnvironment(environment) %}
+    {%- do RetrieveCustomOverrideInit(environment) %}
 {%- endmacro %}
