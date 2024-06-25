@@ -37,7 +37,7 @@ public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements Refe
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'reference'", ((ValueSetDefNode) getReferenceTo()).getLibraryName() + referenceName());
+        map.put("'reference'", ((ValueSetDefNode) getReferenceTo()).getLibraryName() + referenceName() + "()");
         return map;
     }
 }

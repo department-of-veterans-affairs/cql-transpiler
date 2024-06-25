@@ -19,7 +19,7 @@ public class ValueSetDefNode extends ElementNode<ValueSetDef> implements Referen
 
     @Override
     public Segment toSegment() {
-        var segment = new Segment("{% set " + getLibraryName() +referenceName() + " = '" + getCqlEquivalent().getId(),"' %}", PrintType.Line);
+        var segment = new Segment("{% macro " + getLibraryName() + referenceName() + "() %}" + getCqlEquivalent().getId(),"{% endmacro %}", PrintType.Line);
         segment.setLocator(getCqlEquivalent().getLocator());
         return segment;
     }

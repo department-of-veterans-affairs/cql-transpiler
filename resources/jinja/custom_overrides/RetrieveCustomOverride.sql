@@ -37,7 +37,7 @@ GROUP BY oid, version
 {%- endmacro %}
 
 {%- macro RetrieveValueSetCodes(environment, state, valueSet, asOfDate) -%}
-(SELECT codes FROM {{ RetrieveSystemValueSet }} WHERE oid = "{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
+(SELECT codes FROM {{ RetrieveSystemValueSet() }} WHERE oid = "{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}" {%  if asOfDate %}AND version <= "{{ asOfDate }}" {% endif %} ORDER BY version DESC LIMIT 1)
 {%- endmacro %}
 
 {%- macro RetrieveInValueSet(environment, state, valueSet, codeProperty) -%}
