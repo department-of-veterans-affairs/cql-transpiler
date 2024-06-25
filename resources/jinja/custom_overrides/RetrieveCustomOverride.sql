@@ -7,7 +7,7 @@
 {%- from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
 
 {%- macro RetrieveSystemEvaluationPeriod() -%}
-SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) measurementPeriod
+SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) Measurement_Period
 {%- endmacro %}
 
 {%- macro RetrieveSystemValueSet() -%}
@@ -56,10 +56,10 @@ EXISTS({{ RetrieveValueSetCodes(environment, state, valueSet) }}, _vs -> {{codeP
     _dataType.*,
     -- Apply system attributes during the retrieve so they're present within derived calculations.
     GETDATE() _evaluatedOn,
-    DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey,
+    DATE_TRUNC('MM', _ep.Measurement_Period.high) _partitionKey,
     STRUCT(
-      STRING(_ep.measurementPeriod) key,
-      _ep.measurementPeriod measurementPeriod
+      STRING(_ep.Measurement_Period) key,
+      _ep.Measurement_Period Measurement_Period
     ) _parameters
   FROM {{ source("fhirlake", dataTypeReference) }} _dataType
   -- Link to evaluation period which represents
