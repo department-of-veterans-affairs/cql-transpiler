@@ -1,14 +1,10 @@
-{#    
+{#-
     Environment prerequisites:
         * OperatorHandlerStaticVariable.sql
         * RetrieveStaticVariable.sql
 #}
 {%- from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "jinja_transpilation_libraries/sparksql/default/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
-
-{%- macro RetrieveSystemEvaluationPeriod() -%}
-SELECT STRUCT(CAST('2023-01-01' AS DATE) low, CAST('2023-12-31' AS DATE) high) Measurement_Period
-{%- endmacro %}
 
 {%- macro RetrieveSystemValueSet() -%}
 -- WITH CY2023 AS (
@@ -56,21 +52,21 @@ EXISTS({{ RetrieveValueSetCodes(environment, state, valueSet) }}, _vs -> {{codeP
     _dataType.*,
     -- Apply system attributes during the retrieve so they're present within derived calculations.
     GETDATE() _evaluatedOn,
-    DATE_TRUNC('MM', _ep.Measurement_Period.high) _partitionKey,
+    DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey,
     STRUCT(
-      STRING(_ep.Measurement_Period) key,
-      _ep.Measurement_Period Measurement_Period
+      STRING(_ep.measurementPeriod) key,
+      _ep.measurementPeriod measurementPeriod
     ) _parameters
   FROM {{ source("fhirlake", dataTypeReference) }} _dataType
   -- Link to evaluation period which represents
-  CROSS JOIN {{ RetrieveSystemEvaluationPeriod() }} _ep
-{%    if valueSet -%}
+  CROSS JOIN {{ ref("system__evaluation_period") }} _ep
+  {%-if valueSet -%}
   WHERE {{ RetrieveInValueSet(environment, state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
-{%-   endif %}
+  {%- endif %}
 )
 {%- endmacro %}
 
-{% macro RetrievePrintCustomOverride(environment, this, state, arguments) -%}
+{%- macro RetrievePrintCustomOverride(environment, this, state, arguments) -%}
 {%-   if arguments['resultTypeLabel'] %}
 {%-     set resultTypeLabel = arguments['resultTypeLabel'] %}
 {%-   else %}
@@ -87,11 +83,11 @@ EXISTS({{ RetrieveValueSetCodes(environment, state, valueSet) }}, _vs -> {{codeP
 ) }}
 {%- endmacro %}
 
-{% macro RetrieveCustomOverrideInit(environment) %}
-{# initialize prerequisites #}
-{%-   do OperatorHandlerStaticVariableInit(environment) %}
-{%-   do RetrieveStaticVariableInit(environment) %}
-{# initialize member variables #}
-{%-   set Retrieve = environment.Retrieve %}
-{%-   set Retrieve.print = RetrievePrintCustomOverride %}
+{%- macro RetrieveCustomOverrideInit(environment) %}
+  {#- initialize prerequisites #}
+  {%- do OperatorHandlerStaticVariableInit(environment) %}
+  {%- do RetrieveStaticVariableInit(environment) %}
+  {# initialize member variables #}
+  {%- set Retrieve = environment.Retrieve %}
+  {%- set Retrieve.print = RetrievePrintCustomOverride %}
 {%- endmacro %}
