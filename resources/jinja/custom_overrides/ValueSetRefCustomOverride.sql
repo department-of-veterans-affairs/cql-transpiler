@@ -16,5 +16,5 @@
     {%- do ValueSetRefStaticVariableInit(environment) %}
     {# initialize member variables #}
     {%- set ValueSetRef = environment.ValueSetRef %}
-{%- set ValueSetRef.print = ValueSetRefPrintCustomOverride %}
+    {%- set ValueSetRef.print = ValueSetRefPrintCustomOverride %}
 {%- endmacro %}

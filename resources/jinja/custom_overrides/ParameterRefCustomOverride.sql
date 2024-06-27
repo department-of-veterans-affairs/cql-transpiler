@@ -7,7 +7,7 @@
 {%- from "jinja_transpilation_libraries/sparksql/default/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
 
 {%- macro ParameterRefPrintCustomOverride(environment, this, state, arguments) -%}
-    {%- if arguments['name'] = 'Measurement_Period' -%}
+    {%- if arguments['name'] == 'Measurement_Period' -%}
         measurementPeriod
     {%- elif -%}
         {{ arguments['name'] }}
