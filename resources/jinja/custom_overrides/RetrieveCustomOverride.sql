@@ -60,7 +60,7 @@ EXISTS({{ RetrieveValueSetCodes(environment, state, valueSet) }}, _vs -> {{codeP
   FROM {{ source("fhirlake", dataTypeReference) }} _dataType
   -- Link to evaluation period which represents
   CROSS JOIN {{ ref("system__evaluation_period") }} _ep
-  {%-if valueSet -%} WHERE {{ RetrieveInValueSet(environment, state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
+  {%-if valueSet %} WHERE {{ RetrieveInValueSet(environment, state, valueSet, codeProperty="_dataType." ~ codeProperty) }}
   {%- endif %}
 )
 {%- endmacro %}
