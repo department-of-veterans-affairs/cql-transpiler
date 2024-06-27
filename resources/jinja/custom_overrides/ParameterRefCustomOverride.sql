@@ -9,7 +9,7 @@
 {%- macro ParameterRefPrintCustomOverride(environment, this, state, arguments) -%}
     {%- if arguments['name'] == 'Measurement_Period' -%}
         measurementPeriod
-    {%- elif -%}
+    {%- else -%}
         {{ arguments['name'] }}
     {%- endif %}
 {%- endmacro %}
