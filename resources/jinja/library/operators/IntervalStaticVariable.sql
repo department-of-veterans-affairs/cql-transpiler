@@ -4,6 +4,7 @@
         * OperatorClass.sql
         * DataTypeEnum.sql
 #}
+{%- from "library/StandardFunctions.sql" import StandardInit %}
 {%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
@@ -15,6 +16,7 @@
 
 {%- macro IntervalStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
+    {%- do StandardInit(environment) %}
     {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
     {%- do DataTypeEnumInit(environment) %}
