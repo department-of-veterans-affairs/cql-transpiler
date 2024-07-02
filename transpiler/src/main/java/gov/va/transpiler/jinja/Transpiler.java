@@ -28,7 +28,6 @@ public class Transpiler {
 
         // read the contents of the file to text
         var cqlLibraryToTranspile = "CMS104-v12-0-000-QDM-5-6.cql";
-        //var cqlLibraryToTranspile = "retrievals.cql";
         String cqlLibraryToTranspileAsText = Files.readString(Paths.get(librarySource + cqlLibraryToTranspile));
 
         // Compile CQL text files into a CQL AST in memory

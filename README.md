@@ -2,15 +2,38 @@
 
 Evaluation of Clinical Quality Language
 
-## Use:
+## Overview
 
-* Add any needed CQL libraries in the test_cql folder
-* Specify the CQL to transpile inside the main function of gov.va.transpiler.jinja.Transpiler
-* ensure a _macros_sparksql file is present in the jinja_output folder. (An implementation can be found in the transpiler/src/jinja/resources/jinja-support/templates/sparksql folder)
+The transpiler workflow is as follows
+
+1. CQL text files are loaded into memory
+2. CQL text files are converted into CQL Abstract Syntax Trees (ASTs) in memory
+3. CQL ASTs are converted into a "generic" AST that can be used to output code in any query language.
+4. The generic ASTs are rendered in text that can be parsed as either jinja or DBT.
+5. The generic ASTs are converted into the code for a specific query language-- for example, sparkSQL.
+
+## Use: Manual SQL Output
+
+* Replace the contents of the resources/cql folder with the CQL libraries to be transpiled.
+* Specify the root CQL library to transpile inside the "cqlLibraryToTranspile" variable inside of the "transpiler/src/main/java/gov/va/transpiler/jinja/Transpiler.java" file.
 * Run the main function of gov.va.transpiler.jinja.Transpiler
-* If an error complains about files already existing in the "jinja_output" folder delete any jinja files present in that folder (exluding the macros file) and re-run the main function
-* At this point, jinja files corresponding to the translated CQL file and its dependencies will be present in the jinja_output folder. These jinja files can be used to define other jinja macros and supplied to DBT to build.
-* To see the Spark SQL the jinja files resolve to, "python run_jinja.py" in the command line. The script will print the SQL matching each eExpression defined in the original CQL
+* If an error complains about files already existing in the "resources/jinja/generated" folder delete any jinja files present in that folder and re-run the main function
+* At this point, jinja files corresponding to the transpiled CQL file and its dependencies will be present in the "resources/jinja/generated" folder.
+* For every measure to be translated inside the root CQL folder, create a jinja file that references that macro inside the "resources/jinja/test_models" folder.
+* Specify that model inside the "model_to_translate" variable inside the "run_jinja.py" file
+* execute the command "python run_jinja.py" inside the command line
+* look inside the "resources/jinja_target" folder for the output
+
+## Use: Integration with DBT
+
+* Replace the contents of the resources/cql folder with the CQL libraries to be transpiled.
+* Specify the root CQL library to transpile inside the "cqlLibraryToTranspile" variable inside of the "transpiler/src/main/java/gov/va/transpiler/jinja/Transpiler.java" file.
+* Run the main function of gov.va.transpiler.jinja.Transpiler
+* If an error complains about files already existing in the "resources/jinja/generated" folder delete any jinja files present in that folder and re-run the main function
+* At this point, jinja files corresponding to the transpiled CQL file and its dependencies will be present in the "resources/jinja/generated" folder.
+* Copy the contents of the "jinja" folder inside an existing DBT project.
+* create dbt model files as usual calling the macros created inside the transpiled CQL library files
+* compile DBT as usual
 
 ### Design
 
@@ -30,7 +53,7 @@ All macros files must satisfy certain requirements to interface with jinja gener
 
 #### Design patterns:
 
-Jinja macros files should transpilation logic using an object-oriented programming paradigm.
+Jinja macros files should implement transpilation logic using an object-oriented programming paradigm.
 Jinja does not support object-oriented programming natively, but it can be hacked to allow it through the clever use of namespaces.
 To create an an object's "constructor", create a macro function that sets certain variables on a namespace.
 To create an object that "inherits" from another object, in its constructor, run the parent constructor on the namespace.
