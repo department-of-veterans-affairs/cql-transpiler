@@ -18,7 +18,7 @@
     SELECT
     {%- if arguments['returnClause'] == none %} *
     {%- else %} {{ environment.OperatorHandler.print(environment, this, state, arguments['returnClause']) }}
-    {%- endif %} FROM ({{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }})
+    {%- endif %} FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }}
     {%- if arguments['where'] != none %} WHERE {{ environment.OperatorHandler.print(environment, this, state, arguments['where']) }}{% endif %}
     {%- if arguments['sortClause'] != none %} {{ environment.OperatorHandler.print(environment, this, state, arguments['sortClause']) }}{% endif %}
     {%- set state.coercionInstructions = previousCoercionInstructions %}
