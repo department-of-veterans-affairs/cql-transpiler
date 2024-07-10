@@ -8,7 +8,7 @@
     SELECT * FROM (SELECT 1 {{ printSingleValueColumnName(environment) }}) WHERE {{ printSingleValueColumnName(environment) }} = 0
 {%- endmacro %}
 
-{%- macro StandardInit(environment) -%}
+{%- macro StandardFunctionsInit(environment) -%}
     {%- set environment.printSingleValueColumnName = printSingleValueColumnName %}
     {%- set environment.printEmptyTable = printEmptyTable %}
 {%- endmacro %}

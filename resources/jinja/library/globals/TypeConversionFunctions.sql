@@ -3,7 +3,7 @@
         * StandardFunctions.sql
         * ContextHandlingFunctions.sql
 #}
-{%- from "library/StandardFunctions.sql" import StandardInit %}
+{%- from "library/globals/StandardFunctions.sql" import StandardFunctionsInit %}
 {%- from "library/globals/ContextHandlingFunctions.sql" import ContextHandlingFunctionsInit %}
 {%- from "library/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
 
@@ -46,7 +46,7 @@
 
 {% macro TypeConversionFunctionsInit(environment) -%}
     {#- initialize prerequisites #}
-    {%- do StandardInit(environment) %}
+    {%- do StandardFunctionsInit(environment) %}
     {%- do ContextHandlingFunctionsInit(environment) %}
     {%- do ListPrintingFunctionsInit(environment) %}
     {#- initialize member variables #}
