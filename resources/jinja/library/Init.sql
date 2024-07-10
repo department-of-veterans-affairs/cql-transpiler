@@ -29,6 +29,7 @@
 {%- from "library/operators/IfStaticVariable.sql" import IfStaticVariableInit %}
 {%- from "library/operators/InIntervalStaticVariable.sql" import InIntervalStaticVariableInit %}
 {%- from "library/operators/InStaticVariable.sql" import InStaticVariableInit %}
+{%- from "library/operators/IntervalStaticVariable.sql" import IntervalStaticVariableInit %}
 {%- from "library/operators/IntervalTypeSpecifierStaticVariable.sql" import IntervalTypeSpecifierStaticVariableInit %}
 {%- from "library/operators/InValueSetStaticVariable.sql" import InValueSetStaticVariableInit %}
 {%- from "library/operators/IsNullStaticVariable.sql" import IsNullStaticVariableInit %}
@@ -94,6 +95,7 @@
     {%- do IfStaticVariableInit(environment) %}
     {%- do InIntervalStaticVariableInit(environment) %}
     {%- do InStaticVariableInit(environment) %}
+    {%- do IntervalStaticVariableInit(environment) %}
     {%- do IntervalTypeSpecifierStaticVariableInit(environment) %}
     {%- do InValueSetStaticVariableInit(environment) %}
     {%- do IsNullStaticVariableInit(environment) %}
