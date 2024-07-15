@@ -20,9 +20,9 @@ env = Environment(loader = FileSystemLoader(resources_folder + jinja_subfolder))
 env.add_extension('jinja2.ext.do')
     
 # compiles and renders a single, specific model
-render_model(env, resources_folder, target_subfolder, model_subfolder, 'TJCOverallNon_Elective_Inpatient_Encounter.sql')
+# render_model(env, resources_folder, target_subfolder, model_subfolder, 'TJCOverallNon_Elective_Inpatient_Encounter.sql')
 
 # for every file inside the models directory, compile it and render it
-# model_file_names = os.listdir(resources_folder + jinja_subfolder + model_subfolder)
-# for model in model_file_names:
-#     render_model(env, resources_folder, target_subfolder, model_subfolder, model)
+model_file_names = os.listdir(resources_folder + jinja_subfolder + model_subfolder)
+for model in model_file_names:
+    render_model(env, resources_folder, target_subfolder, model_subfolder, model)
