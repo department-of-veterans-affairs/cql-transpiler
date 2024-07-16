@@ -1,0 +1,18 @@
+
+==== PRIOR STATE ====
+<Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPrint'>}>}>
+this
+<Namespace {'functionArguments': ['testFunctionArgument1', 'testFunctionArgument2'], 'operandsMatchedToFunctionArguments': <Macro 'testOperandsMatchedToFunctionArguments'>}>
+<Namespace {'typeSpecifier': 'testTypeSpecifier', 'operators': [{Undefined: 'testOperator1'}, {Undefined: 'testOperator2'}], 'child': 'testChild'}>
+==== FUNCTION CALL ====
+<testPrint(
+<Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPrint'>}>}>
+this
+<Namespace {'functionArguments': ['testFunctionArgument1', 'testFunctionArgument2'], 'operandsMatchedToFunctionArguments': {Undefined: 'testFunctionArgument2'}}>
+testChild
+)>
+==== POST-CALL STATE ====
+<Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPrint'>}>}>
+this
+<Namespace {'functionArguments': ['testFunctionArgument1', 'testFunctionArgument2'], 'operandsMatchedToFunctionArguments': <Macro 'testOperandsMatchedToFunctionArguments'>}>
+<Namespace {'typeSpecifier': 'testTypeSpecifier', 'operators': [{Undefined: 'testOperator1'}, {Undefined: 'testOperator2'}], 'child': 'testChild'}>

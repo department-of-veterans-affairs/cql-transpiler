@@ -12,17 +12,15 @@ The transpiler workflow is as follows
 4. The generic ASTs are rendered in text that can be parsed as either jinja or DBT.
 5. The generic ASTs are converted into the code for a specific query language-- for example, sparkSQL.
 
-## Use: Manual SQL Output
+## Use: Testing Manual SQL Output
 
 * Replace the contents of the resources/cql folder with the CQL libraries to be transpiled.
-* Specify the root CQL library to transpile inside the "cqlLibraryToTranspile" variable inside of the "transpiler/src/main/java/gov/va/transpiler/jinja/Transpiler.java" file.
 * Run the main function of gov.va.transpiler.jinja.Transpiler
 * If an error complains about files already existing in the "resources/jinja/generated" folder delete any jinja files present in that folder and re-run the main function
 * At this point, jinja files corresponding to the transpiled CQL file and its dependencies will be present in the "resources/jinja/generated" folder.
 * For every measure to be translated inside the root CQL folder, create a jinja file that references that macro inside the "resources/jinja/test_models" folder.
-* Specify that model inside the "model_to_translate" variable inside the "run_jinja.py" file
-* execute the command "python run_jinja.py" inside the command line
-* look inside the "resources/jinja_target" folder for the output
+* execute the command "python test_models.py" inside the command line
+* look inside the "resources/test_target" folder for the output
 
 ## Use: Integration with DBT
 
