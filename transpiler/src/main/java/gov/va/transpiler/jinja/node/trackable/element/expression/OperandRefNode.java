@@ -20,7 +20,7 @@ public class OperandRefNode extends ExpressionNode<OperandRef> {
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'reference'",  getCqlEquivalent().getName());
+        map.put("'reference'",  "'" + getCqlEquivalent().getName() + "'");
         return map;
     }
 }
