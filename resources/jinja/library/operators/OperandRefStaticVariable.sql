@@ -9,7 +9,11 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro OperandRefPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['reference']) }}
+    {%- if state.functionArguments -%}
+            {{ environment.OperatorHandler.print(environment, this, state, state.functionArguments[arguments['referenceTo']['name']]) }}
+    {%- else -%}
+            {{ environment.OperatorHandler.print(environment, this, state, arguments['referenceTo']) }}
+    {%- endif %}
 {%- endmacro %}
 
 {%- macro OperandRefStaticVariableInit(environment) %}

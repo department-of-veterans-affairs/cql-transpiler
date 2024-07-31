@@ -7,7 +7,7 @@
 {%- from "jinja_transpilation_libraries/sparksql/default/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
 
 {%- macro ValueSetRefPrintCustomOverride(environment, this, state, arguments) -%}
-    {{ arguments['reference'].split(':')[2] }}
+    {{ arguments[value].split(':')[2] }}
 {%- endmacro %}
 
 {%- macro ValueSetRefCustomOverrideInit(environment) %}

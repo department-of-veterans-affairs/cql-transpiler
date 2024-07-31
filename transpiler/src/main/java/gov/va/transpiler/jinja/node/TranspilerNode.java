@@ -248,7 +248,7 @@ public abstract class TranspilerNode {
     }
 
     /**
-     * @return List of details about this node that refer to lists of nodes. Includes this nodes 'children' if it can have three or more generic children.
+     * @return List of details about this node that refer to lists of nodes. Includes this node's 'children' if it can have three or more generic children.
      */
     protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
         Map<String, List<TranspilerNode>> argumentMap = new LinkedHashMap<>();

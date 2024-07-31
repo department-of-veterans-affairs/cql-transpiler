@@ -1,0 +1,24 @@
+
+==== PRIOR STATE ====
+
+environment: [<Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPrint'>}>}>]
+
+this: [this]
+
+state: [<Namespace {}>]
+
+arguments: [<Namespace {'name': 'testName'}>]
+
+==== FUNCTION CALL ====
+
+testName
+
+==== POST-CALL STATE ====
+
+environment: [<Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPrint'>}>}>]
+
+this: [this]
+
+state: [<Namespace {}>]
+
+arguments: [<Namespace {'name': 'testName'}>]

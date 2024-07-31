@@ -10,7 +10,17 @@
 
 {%- macro FunctionDefPrint(environment, this, state, arguments) -%}
     {#- arguments['typeSpecifier'] is unused #}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
+    {% if arguments.functionArguments == none %}
+        {% set functionArguments = namespace() %}
+        {% set arguments.functionArguments = functionArguments %}
+        {% for value in arguments['operandDefs']}
+            {% set functionArguments[value['name']] = value %}
+        {% endfor %}
+        {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
+        {% set arguments.functionArguments = none %}
+    {% else %}
+        {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
+    {% endif %}
 {%- endmacro %}
 
 {% macro FunctionDefStaticVariableInit(environment) %}

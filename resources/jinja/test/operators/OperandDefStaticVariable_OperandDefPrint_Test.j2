@@ -1,0 +1,36 @@
+{%- from "library/operators/OperandDefStaticVariable.sql" import OperandDefPrint %}
+{%- macro testPrint() %}
+\\\ testPrint
+{% for arg in varargs %}
+    {{ arg }}
+{% endfor %}
+\\\ end testPrint
+{% endmacro %}
+{%- set testOperatorHandler = namespace(print=testPrint) %}
+{%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
+{%- set this = 'this' %}
+{%- set state = namespace() %}
+{%- set arguments = namespace(name='testName') %}
+==== PRIOR STATE ====
+
+environment: [{{ environment }}]
+
+this: [{{ this }}]
+
+state: [{{ state }}]
+
+arguments: [{{ arguments }}]
+
+==== FUNCTION CALL ====
+
+{{ OperandDefPrint(environment, this, state, arguments) }}
+
+==== POST-CALL STATE ====
+
+environment: [{{ environment }}]
+
+this: [{{ this }}]
+
+state: [{{ state }}]
+
+arguments: [{{ arguments }}]
