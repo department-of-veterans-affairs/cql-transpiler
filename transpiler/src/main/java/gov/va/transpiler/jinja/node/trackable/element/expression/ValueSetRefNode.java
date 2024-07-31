@@ -4,18 +4,27 @@ import java.util.Map;
 
 import org.hl7.elm.r1.ValueSetRef;
 
+import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.trackable.element.IncludeDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
 import gov.va.transpiler.jinja.node.trackable.element.ValueSetDefNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 import gov.va.transpiler.jinja.state.State;
 
-public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements ReferenceNode {
+public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements ReferenceNode<ValueSetDefNode> {
 
-    final boolean isReferenceToExternalLibrary;
+    private final LibraryNode enclosingLibrary;
+    private final LibraryNode referencedLibrary;
 
     public ValueSetRefNode(State state, ValueSetRef cqlEquivalent) {
         super(state, cqlEquivalent);
-        isReferenceToExternalLibrary = state.getCurrentLibraryNode().isReferenceToExternalLibrary(state.getLibraryNodeForReference(getReferenceTo()));
-        if (isReferenceToExternalLibrary) { addMacroToMacroDependencies(state.getLibraryNodeForReference(((ValueSetDefNode) getReferenceTo())).getTargetFileLocation(), ((ValueSetDefNode) getReferenceTo()).getLibraryName() + referenceName());
+        enclosingLibrary = state.getCurrentLibrary();
+        if (getCqlEquivalent().getLibraryName() == null) {
+            referencedLibrary = enclosingLibrary;
+        } else {
+            // if this ValueSetRef has a library name set, it refers to an external library
+            var includeDefNode = (IncludeDefNode) enclosingLibrary.getChildByNameAndType(getCqlEquivalent().getLibraryName(), IncludeDefNode.class);
+            referencedLibrary = (LibraryNode) includeDefNode.referenceTo();
         }
     }
 
@@ -25,19 +34,26 @@ public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements Refe
     }
 
     @Override
-    public String referenceName() {
-        return getCqlEquivalent().getName().replace(' ', '_');
-    }
-
-    @Override
-    public String referenceType() {
-        return ValueSetDefNode.REFERENCE_TYPE;
+    public String referencedName() {
+        return referencedLibrary.referenceName() + getCqlEquivalent().getName();
     }
 
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'reference'", ((ValueSetDefNode) getReferenceTo()).getLibraryName() + referenceName() + "()");
+        map.put("'referenceName'", sanitizeNameForJinja(referenceTo().referenceName()));
         return map;
+    }
+
+    @Override
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        var map = super.getNodeArgumentMap();
+        map.put("'referenceTo'", referenceTo());
+        return map;
+    }
+
+    @Override
+    public ValueSetDefNode referenceTo() {
+        return (ValueSetDefNode) referencedLibrary.getChildByNameAndType(referencedName(), ValueSetDefNode.class);
     }
 }

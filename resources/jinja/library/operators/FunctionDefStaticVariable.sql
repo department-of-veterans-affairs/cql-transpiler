@@ -10,13 +10,7 @@
 
 {%- macro FunctionDefPrint(environment, this, state, arguments) -%}
     {#- arguments['typeSpecifier'] is unused #}
-    {%- set previousOperandsMatchedToFunctionArguments = state.operandsMatchedToFunctionArguments %}
-    {%- set state.operandsMatchedToFunctionArguments = {} %}
-    {%- for item in state.functionArguments %}
-        {%- do state.operandsMatchedToFunctionArguments.update({ arguments.operators[loop.index - 1].name: item }) %}
-    {%- endfor -%}
     {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
-    {%- set state.operandsMatchedToFunctionArguments = previousOperandsMatchedToFunctionArguments %}
 {%- endmacro %}
 
 {% macro FunctionDefStaticVariableInit(environment) %}

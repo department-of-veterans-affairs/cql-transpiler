@@ -1,21 +1,19 @@
 package gov.va.transpiler.jinja.node.trackable.element.expressiondef;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.hl7.elm.r1.FunctionDef;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.CQLEquivalent;
+import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.node.trackable.element.OperandDefNode;
 import gov.va.transpiler.jinja.state.State;
 
 public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
 
-    public static final String REFERENCE_TYPE = "FunctionDef";
-
-    public List<TranspilerNode> operandDefNodeList = new ArrayList<>();
     public TranspilerNode typeSpecifierNode;
 
     public FunctionDefNode(State state, FunctionDef cqlEquivalent) {
@@ -25,9 +23,13 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
     @Override
     public void addChild(TranspilerNode child) {
         if (child instanceof OperandDefNode) {
-            operandDefNodeList.add((OperandDefNode) child);
+            addNamedChild(((OperandDefNode) child).referenceName(), (OperandDefNode) child);
         } else if (child instanceof CQLEquivalent && ((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getResultTypeSpecifier()) {
-            typeSpecifierNode = child;
+            if (typeSpecifierNode == null) {
+                typeSpecifierNode = child;
+            } else {
+                throw new InvalidChildNodeException(this, child);
+            }
         } else {
             super.addChild(child);
         }
@@ -44,12 +46,7 @@ public class FunctionDefNode extends ExpressionDefNode<FunctionDef> {
     @Override
     protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
         var map = super.getNodeListArgumentMap();
-        map.put("'operators'", operandDefNodeList);
+        map.put("'operators'", getNamedChildren().get(OperandDefNode.class).entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList()));
         return map;
-    }
-
-    @Override
-    public String referenceType() {
-        return REFERENCE_TYPE;
     }
 }

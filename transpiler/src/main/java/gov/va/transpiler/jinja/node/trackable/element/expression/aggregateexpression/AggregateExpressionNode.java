@@ -7,7 +7,7 @@ import gov.va.transpiler.jinja.state.State;
 
 public class AggregateExpressionNode<T extends AggregateExpression> extends ExpressionNode<T> {
 
-    private String context;
+    private final String context;
 
     public AggregateExpressionNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);

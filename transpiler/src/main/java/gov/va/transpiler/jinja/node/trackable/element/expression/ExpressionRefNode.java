@@ -2,32 +2,36 @@ package gov.va.transpiler.jinja.node.trackable.element.expression;
 
 import java.util.Map;
 
+import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 
 import gov.va.transpiler.jinja.state.State;
+import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.trackable.element.IncludeDefNode;
+import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
 import gov.va.transpiler.jinja.node.trackable.element.expressiondef.ExpressionDefNode;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceNode;
 
-public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T> implements ReferenceNode {
+public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T> implements ReferenceNode<ExpressionDefNode<ExpressionDef>> {
 
-    final boolean isReferenceToExternalLibrary;
+    protected final LibraryNode enclosingLibrary;
+    protected final LibraryNode referencedLibrary;
 
     public ExpressionRefNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
-        isReferenceToExternalLibrary = state.getCurrentLibraryNode().isReferenceToExternalLibrary(state.getLibraryNodeForReference(getReferenceTo()));
-        if (isReferenceToExternalLibrary) {
-            addMacroToMacroDependencies(state.getLibraryNodeForReference(((ExpressionDefNode<?>) getReferenceTo())).getTargetFileLocation(), ((ExpressionDefNode<?>) getReferenceTo()).getLibraryName() + referenceName());
+        enclosingLibrary = state.getCurrentLibrary();
+        if (getCqlEquivalent().getLibraryName() == null) {
+            referencedLibrary = enclosingLibrary;
+        } else {
+            // if this ValueSetRef has a library name set, it refers to an external library
+            var includeDefNode = (IncludeDefNode) enclosingLibrary.getChildByNameAndType(getCqlEquivalent().getLibraryName(), IncludeDefNode.class);
+            referencedLibrary = (LibraryNode) includeDefNode.referenceTo();
         }
     }
 
     @Override
-    public String referenceName() {
-        return getCqlEquivalent().getName().replace(' ', '_');
-    }
-
-    @Override
-    public String referenceType() {
-        return ExpressionDefNode.REFERENCE_TYPE;
+    public String referencedName() {
+        return referencedLibrary.getCqlEquivalent().getIdentifier().getId() + getCqlEquivalent().getName();
     }
 
     @Override
@@ -38,7 +42,20 @@ public class ExpressionRefNode<T extends ExpressionRef> extends ExpressionNode<T
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'reference'", ((ExpressionDefNode<?>) getReferenceTo()).getLibraryName() + referenceName());
+        map.put("'referencedName'", sanitizeNameForJinja(referencedName()));
         return map;
+    }
+
+    @Override
+    protected Map<String, TranspilerNode> getNodeArgumentMap() {
+        var map = super.getNodeArgumentMap();
+        map.put("'referenceTo'", referenceTo());
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ExpressionDefNode<ExpressionDef> referenceTo() {
+        return (ExpressionDefNode<ExpressionDef>) referencedLibrary.getChildByNameAndType(referencedName(), ExpressionDefNode.class);
     }
 }

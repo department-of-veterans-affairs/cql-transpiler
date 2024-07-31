@@ -6,12 +6,14 @@ import java.util.List;
 import org.hl7.elm.r1.Library;
 
 import gov.va.transpiler.jinja.node.TranspilerNode;
+import gov.va.transpiler.jinja.node.utilityinterfaces.DirectPrint;
+import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
-public class LibraryNode extends ElementNode<Library> {
+public class LibraryNode extends ElementNode<Library> implements ReferenceableNode {
 
     private List<UsingDefNode> usingDefNodeList = new ArrayList<>();
     private List<IncludeDefNode> includeDefNodeList = new ArrayList<>();
@@ -20,7 +22,7 @@ public class LibraryNode extends ElementNode<Library> {
 
     public LibraryNode(State state, Library t) {
         super(state, t);
-        state.setCurrentLibraryAndAddToLibraryMap(this);
+        state.setCurrentLibrary(getCqlEquivalent().getIdentifier().getId(), getCqlEquivalent().getIdentifier().getVersion(), this);
     }
 
     @Override
@@ -39,14 +41,9 @@ public class LibraryNode extends ElementNode<Library> {
         processChildDependencies(child);
     }
 
-    public boolean isReferenceToExternalLibrary(LibraryNode libraryNode) {
-        var optional = includeDefNodeList.stream().filter(includeDefNode -> includeDefNode.getReferencedLibrary() == libraryNode).findFirst();
-        return optional.isPresent();
-    }
-
     @Override
     public String getTargetFileLocation() {
-        return getCqlEquivalent().getIdentifier().getId() == null ? "Anonymous Library" : getCqlEquivalent().getIdentifier().getVersion() == null ? getCqlEquivalent().getIdentifier().getId() : getCqlEquivalent().getIdentifier().getId() + "_" + getCqlEquivalent().getIdentifier().getVersion();
+        return getCqlEquivalent().getIdentifier().getId() == null ? "Anonymous Library" : getCqlEquivalent().getIdentifier().getVersion() == null ? sanitizeNameForJinja(referenceName()) : sanitizeNameForJinja(referenceName() + "_" + getCqlEquivalent().getIdentifier().getVersion());
     }
 
     @Override
@@ -73,8 +70,17 @@ public class LibraryNode extends ElementNode<Library> {
         // Print children
         for (var child: getChildren()) {
             // child nodes are set up as ASTs equivalent to CQL statements
-            segment.addChild(child.toSegment());
+            if (child instanceof DirectPrint) {
+                segment.addChild(((DirectPrint)child).toSegmentWrapped());
+            } else {
+                segment.addChild(child.toSegment());
+            }
         }
         return segment;
+    }
+
+    @Override
+    public String referenceName() {
+        return getCqlEquivalent().getIdentifier().getId();
     }
 }

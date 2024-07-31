@@ -5,21 +5,22 @@ import java.util.Map;
 import org.hl7.elm.r1.ExpressionDef;
 
 import gov.va.transpiler.jinja.node.trackable.element.ElementNode;
+import gov.va.transpiler.jinja.node.trackable.element.LibraryNode;
+import gov.va.transpiler.jinja.node.utilityinterfaces.DirectPrint;
 import gov.va.transpiler.jinja.node.utilityinterfaces.ReferenceableNode;
 import gov.va.transpiler.jinja.printing.Segment;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
-public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> implements ReferenceableNode {
+public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> implements ReferenceableNode, DirectPrint {
 
-    public static final String REFERENCE_TYPE = "ExpressionDef";
-    private final String libraryName;
+    private final LibraryNode enclosingLibrary;
 
     public ExpressionDefNode(State state, T cqlEquivalent) {
         super(state, cqlEquivalent);
-        state.setContext(getCqlEquivalent().getContext());
-        libraryName = state.getCurrentLibraryNode().getCqlEquivalent().getIdentifier().getId();
+        enclosingLibrary = state.getCurrentLibrary();
+        enclosingLibrary.addNamedChild(referenceName(), this);
     }
 
     @Override
@@ -31,43 +32,34 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
         map.put("'context'", "'" + getCqlEquivalent().getContext() + "'");
-        map.put("'name'", "'" + getCqlEquivalent().getName() + "'");
+        map.put("'name'", "'" + referenceName() + "'");
         return map;
     }
 
     @Override
-    public Segment toSegment() {
+    public Segment toSegmentWrapped() {
         var enclosingSegment = new Segment("");
         enclosingSegment.setPrintType(PrintType.Line);
         enclosingSegment.setLocator(getCqlEquivalent().getLocator());
         // macro segment
-        var macro = new Segment("{% macro " + getLibraryName() + referenceName() + "(" + Standards.ENVIRONMENT_NAME + ", " + Standards.STATE_NAME + ") %}", "{% endmacro %}", PrintType.Inline);
+        var macro = new Segment("{% macro " + sanitizeNameForJinja(referenceName()) + "(" + Standards.ENVIRONMENT_NAME + ", " + Standards.STATE_NAME + ") %}", "{% endmacro %}", PrintType.Inline);
         enclosingSegment.addChild(macro);
         // internal segment -- wrap the dictionary representation of this object
         String head = "{{ " + Standards.ENVIRONMENT_NAME + "." + Standards.OPERATOR_HANDLER_NAME + "." + Standards.PRINT_FUNCTION_NAME + "(" + Standards.ENVIRONMENT_NAME + ", " + Standards.ENVIRONMENT_NAME + "." + Standards.OPERATOR_HANDLER_NAME + ", " + Standards.STATE_NAME + ", ";
         String tail = ") }}";
         var internal = new Segment(head, tail, PrintType.Inline);
-        internal.addChild(super.toSegment());
+        internal.addChild(toSegment());
         macro.addChild(internal);
         return enclosingSegment;
     }
 
     @Override
-    public String referenceType() {
-        return REFERENCE_TYPE;
-    }
-
-    @Override
     public String referenceName() {
-        return getCqlEquivalent().getName().replace(' ', '_');
+        return enclosingLibrary.getCqlEquivalent().getIdentifier().getId() + getCqlEquivalent().getName();
     }
 
     @Override
     public String getTargetFileLocation() {
-        return super.getTargetFileLocation() + Standards.FOLDER_SEPARATOR +  referenceName();
-    }
-
-    public String getLibraryName() {
-        return libraryName;
+        return sanitizeNameForJinja(super.getTargetFileLocation() + Standards.FOLDER_SEPARATOR +  referenceName());
     }
 }

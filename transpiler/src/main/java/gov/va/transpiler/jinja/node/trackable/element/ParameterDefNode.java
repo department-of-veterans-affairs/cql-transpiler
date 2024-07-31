@@ -12,6 +12,11 @@ public class ParameterDefNode extends ElementNode<ParameterDef> {
     }
 
     @Override
+    public int allowedNumberOfChildren() {
+        return 1;
+    }
+
+    @Override
     public Segment toSegment() {
         // Not printable
         throw new UnsupportedOperationException();

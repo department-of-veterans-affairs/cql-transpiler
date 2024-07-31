@@ -9,7 +9,7 @@
 {%- set testOperatorHandler = namespace(print=testPrint) %}
 {%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
 {%- set this = 'this' %}
-{%- set state = namespace(functionArguments=['testFunctionArgument1', 'testFunctionArgument2'], operandsMatchedToFunctionArguments={}) %}
+{%- set state = namespace(functionArguments=['testFunctionArgument1', 'testFunctionArgument2']) %}
 {%- set arguments = namespace(typeSpecifier='testTypeSpecifier', operators=[namespace(name='testOperator1'), namespace(name='testOperator2')], child='testChild') %}
 ==== PRIOR STATE ====
 

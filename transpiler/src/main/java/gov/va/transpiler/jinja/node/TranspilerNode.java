@@ -16,33 +16,52 @@ import gov.va.transpiler.jinja.state.State;
 /**
  * Parent node for elements of the intermediate AST.
  */
-public class TranspilerNode {
+public abstract class TranspilerNode {
 
     protected static final int UNLIMITED_CHILDREN = -1;
 
-    private TranspilerNode parent;
-    private List<TranspilerNode> children = new ArrayList<>();
-    private Set<String> operatorsUsed = new LinkedHashSet<>();
-    private Map<String, Set<String>> macrosUsed = new LinkedHashMap<>();
+    private final TranspilerNode parent;
+    private final List<TranspilerNode> children = new ArrayList<>();
+    private final Map<Class<? extends TranspilerNode>, Map<String, TranspilerNode>> namedChildren = new LinkedHashMap<>();
+    private final Set<String> operatorsUsed = new LinkedHashSet<>();
+    private final Map<String, Set<String>> macrosUsed = new LinkedHashMap<>();
+
+    // this node only posesses a state while it is actively part being used by the transpiler's converter
 
     /**
-     * @param state Used to keep track of state variables. When a transpiler node is constructed, it should always set itself as the current node.
+     * @param state Used to keep track of state variables. When a transpiler node is constructed, it immediately adds the state's current node as its parent and adds itself to the state as the current node.
      */
     public TranspilerNode(State state) {
+        this.parent = state.getCurrentNode();
         state.setCurrentNode(this);
-    }
-
-    /**
-     * @param parent This node's parent, to allow transversal.
-     */
-    public void setParent(TranspilerNode parent) {
-        this.parent = parent;
     }
 
     /**
      * @return This node's parent.
      */
     public TranspilerNode getParent() {
+        return parent;
+    }
+
+    /**
+     * Searches for a parent to this node that inherits from the specified class.
+     * @param clazz class of parent to search for.
+     * @return a parent of this node that inherits from the specified class.
+     */
+    public TranspilerNode getParentOfClass(Class<? extends TranspilerNode> clazz) {
+        var parent = getParent();
+        if (parent == null) {
+            return null;
+        }
+        if (clazz.isInstance(parent)) {
+            return parent;
+        }
+        while (parent != null) {
+            if (clazz.isAssignableFrom(parent.getClass())) {
+                return parent;
+            }
+            parent = parent.getParent();
+        }
         return parent;
     }
 
@@ -103,13 +122,15 @@ public class TranspilerNode {
      * @throws InvalidChildNodeException Thrown if a child cannot be added to this node.
      */
     public void addChild(TranspilerNode child) throws InvalidChildNodeException {
-        if (child.isEnabled()) {
-            if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || getChildren().size() < allowedNumberOfChildren()) {
-                children.add(child);
-                processChildDependencies(child);
-            } else {
-                throw new InvalidChildNodeException(this, child);
-            }
+        if (this == child || child == null) {
+            throw new InvalidChildNodeException(this, child);
+        } else if (!child.isEnabled()) {
+            // Do nothing with disabled nodes
+        } else if (allowedNumberOfChildren() == UNLIMITED_CHILDREN || getChildren().size() < allowedNumberOfChildren()) {
+            children.add(child);
+            processChildDependencies(child);
+        } else {
+            throw new InvalidChildNodeException(this, child);
         }
     }
 
@@ -121,10 +142,39 @@ public class TranspilerNode {
     }
 
     /**
+     * @return gets all named children of this node.
+     */
+    protected Map<Class<? extends TranspilerNode>, Map<String, TranspilerNode>> getNamedChildren() {
+        return namedChildren;
+    }
+
+    /**
      * @return If this child has one or more generic children, this returns the first generic child added to this node. Otherwise this returns null.
      */
     protected TranspilerNode getChild() {
         return getChildren().isEmpty() ? null : getChildren().get(0);
+    }
+
+    public void addNamedChild(String name, TranspilerNode child) {
+        var classMap = namedChildren.getOrDefault(child.getClass(), new LinkedHashMap<>());
+        classMap.put(name, child);
+        namedChildren.put(child.getClass(), classMap);
+    }
+
+    public TranspilerNode getChildByNameAndType(String name, Class<? extends TranspilerNode> clazz) {
+        return namedChildren.getOrDefault(clazz, new LinkedHashMap<>()).get(name);
+    }
+
+    public TranspilerNode getNamedChildOfClassFromParentOfOtherClass(String nameOfChild, Class<? extends TranspilerNode> classOfChild, Class<? extends TranspilerNode> classOfParent) {
+        var parent = getParentOfClass(classOfParent);
+        while (parent != null) {
+            var child = parent.getChildByNameAndType(nameOfChild, classOfChild);
+            if (child != null) {
+                return child;
+            }
+            parent = parent.getParent();
+        }
+        throw new NullPointerException("No valid child node found");
     }
 
     /**
@@ -179,7 +229,7 @@ public class TranspilerNode {
      */
     protected Map<String, String> getLiteralArgumentMap() {
         Map<String, String> argumentMap = new LinkedHashMap<>();
-        argumentMap.put("'operator'", Standards.ENVIRONMENT_NAME + "." + getOperator());
+        argumentMap.put("'operator'", Standards.ENVIRONMENT_NAME + "." + sanitizeNameForJinja(getOperator()));
         return argumentMap;
     }
 
@@ -235,7 +285,6 @@ public class TranspilerNode {
             nodeListArgumentSegment.addChild(joinedSegment);
             return nodeListArgumentSegment;
         }).collect(Collectors.toList()));
-
         return argumentList;
     }
 
@@ -251,5 +300,13 @@ public class TranspilerNode {
      */
     public String getTargetFileLocation() {
         return getParent() == null ? "" : getParent().getTargetFileLocation();
+    }
+
+    /**
+     * @param name Name of variable to sanitize.
+     * @return Sanatized name that can work as a jinja variable name.
+     */
+    public String sanitizeNameForJinja(String name) {
+        return name.replace(" ", "_").replace(".", "__");
     }
 }

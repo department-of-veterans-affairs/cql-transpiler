@@ -9,6 +9,7 @@ public class ContextDefNode extends ElementNode<ContextDef> {
 
     public ContextDefNode(State state, ContextDef cqlEquivalent) {
         super(state, cqlEquivalent);
+        state.setContext(getCqlEquivalent().getName());
     }
 
     @Override
