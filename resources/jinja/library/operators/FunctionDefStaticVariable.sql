@@ -9,18 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro FunctionDefPrint(environment, this, state, arguments) -%}
-    {#- arguments['typeSpecifier'] is unused #}
-    {% if arguments.functionArguments == none %}
-        {% set functionArguments = namespace() %}
-        {% set arguments.functionArguments = functionArguments %}
-        {% for value in arguments['operandDefs']}
-            {% set functionArguments[value['name']] = value %}
-        {% endfor %}
-        {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
-        {% set arguments.functionArguments = none %}
-    {% else %}
-        {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
-    {% endif %}
+    {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
 {%- endmacro %}
 
 {% macro FunctionDefStaticVariableInit(environment) %}
