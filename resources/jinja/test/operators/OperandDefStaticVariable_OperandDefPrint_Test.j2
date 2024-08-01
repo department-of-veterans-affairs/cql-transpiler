@@ -1,11 +1,5 @@
 {%- from "library/operators/OperandDefStaticVariable.sql" import OperandDefPrint %}
-{%- macro testPrint() %}
-\\\ testPrint
-{% for arg in varargs %}
-    {{ arg }}
-{% endfor %}
-\\\ end testPrint
-{% endmacro %}
+{%- from "test/utilities/testPrint.j2" import testPrint %}
 {%- set testOperatorHandler = namespace(print=testPrint) %}
 {%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
 {%- set this = 'this' %}

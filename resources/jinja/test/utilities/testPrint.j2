@@ -1,0 +1,8 @@
+
+{%- macro testPrint() %}
+\\\ testPrint
+{% for arg in varargs %}
+    {{ arg }}
+{% endfor %}
+\\\ end testPrint
+{% endmacro %}

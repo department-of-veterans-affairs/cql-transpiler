@@ -1,10 +1,10 @@
-{%- from "library/operators/OperandRefStaticVariable.sql" import OperandRefPrint %}
+{%- from "library/operators/FunctionRefStaticVariable.sql" import FunctionRefPrint %}
 {%- from "test/utilities/testPrint.j2" import testPrint %}
 {%- set testOperatorHandler = namespace(print=testPrint) %}
 {%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
 {%- set this = 'this' %}
-{%- set state = namespace() %}
-{%- set arguments = namespace(referenceTo = {'name' : 'testName'}) %}
+{%- set state = namespace(functionArguments={'testArg1' : {'testValue' : 'testValA'},'testArg2' : {'testValue' : 'testValB'}}) %}
+{%- set arguments = namespace(children = [{'testValue' : 'testValZ'}], referenceTo={'name' : 'testFunction', 'arguments' : [{'name' : 'testArg1'}]}) %}
 ==== PRIOR STATE ====
 
 environment: [{{ environment }}]
@@ -17,7 +17,7 @@ arguments: [{{ arguments }}]
 
 ==== FUNCTION CALL ====
 
-{{ OperandRefPrint(environment, this, state, arguments) }}
+{{ FunctionRefPrint(environment, this, state, arguments) }}
 
 ==== POST-CALL STATE ====
 

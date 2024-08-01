@@ -9,17 +9,19 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro FunctionRefPrint(environment, this, state, arguments) -%}
-    {% set functionArguments = namespace() %}
-    {% set previousFunctionArguments = state.functionArguments %}
-    {% for key, value in previousFunctionArguments %}
-        {% set functionArguments[key] = value %}
-    {% endfor %}
-    {% set arguments.functionArguments = functionArguments %}
-    {% for value in arguments['functionOperators']}
-        {% set functionArguments[value['name']] = value %}
-    {% endfor %}
-    {{ arguments['reference'](environment, state) }}
-    {% set arguments.functionArguments = previousFunctionArguments %}
+    {%- if state.functionArguments %}
+        {%- set previousFunctionArguments = state.functionArguments %}
+    {%- else %}
+        {%- set previousFunctionArguments = {} %}
+        {%- set state.functionArguments = previousFunctionArguments %}
+    {%- endif %}
+    {%- set functionArguments = previousFunctionArguments.copy() %}
+    {%- for value in arguments['children'] %}
+        {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : value}) %}
+    {%- endfor %}
+    {%- set state.functionArguments = functionArguments -%}
+    {{ environment.OperatorHandler.print(environment, this, state, arguments['referenceTo']) }}
+    {%- set state.functionArguments = previousFunctionArguments %}
 {%- endmacro %}
 
 {%- macro FunctionRefStaticVariableInit(environment) %}
