@@ -1,0 +1,1 @@
+DATEDIFF(.high, .low)

@@ -12,7 +12,12 @@
     {%- set previousFunctionArguments = state.functionArguments %}
     {%- set functionArguments = previousFunctionArguments.copy() %}
     {%- for value in arguments['children'] %}
-        {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : value}) %}
+        {#- When a function argument is a reference, inline it #}
+        {%- if value.operator == environment.OperandRef %}
+            {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : functionArguments[value.name]}) %}
+        {%- else %}
+            {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : value}) %}
+        {%- endif %}
     {%- endfor %}
     {%- set state.functionArguments = functionArguments -%}
     {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['referenceTo']) }}
