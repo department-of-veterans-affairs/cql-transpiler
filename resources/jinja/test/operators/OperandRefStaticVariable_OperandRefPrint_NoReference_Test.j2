@@ -3,7 +3,7 @@
 {%- set testOperatorHandler = namespace(print=testPrint) %}
 {%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
 {%- set this = 'this' %}
-{%- set state = namespace() %}
+{%- set state = namespace(functionArguments = {}) %}
 {%- set arguments = namespace(referenceTo = {'name' : 'testName'}) %}
 ==== PRIOR STATE ====
 

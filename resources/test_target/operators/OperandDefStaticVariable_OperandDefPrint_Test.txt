@@ -5,7 +5,7 @@ environment: [<Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPr
 
 this: [this]
 
-state: [<Namespace {}>]
+state: [<Namespace {'functionArguments': {}}>]
 
 arguments: [<Namespace {'name': 'testName'}>]
 
@@ -19,6 +19,6 @@ environment: [<Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPr
 
 this: [this]
 
-state: [<Namespace {}>]
+state: [<Namespace {'functionArguments': {}}>]
 
 arguments: [<Namespace {'name': 'testName'}>]

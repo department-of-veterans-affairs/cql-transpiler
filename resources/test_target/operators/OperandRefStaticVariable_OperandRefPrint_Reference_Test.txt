@@ -16,7 +16,7 @@ arguments: [<Namespace {'referenceTo': {'name': 'testName'}}>]
 
     <Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPrint'>}>}>
 
-    this
+    <Namespace {'print': <Macro 'testPrint'>}>
 
     <Namespace {'functionArguments': {'testName': {'name': 'testValue'}}}>
 
