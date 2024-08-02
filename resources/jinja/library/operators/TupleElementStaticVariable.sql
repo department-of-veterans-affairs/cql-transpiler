@@ -11,7 +11,7 @@
 {%- macro TupleElementPrint(environment, this, state, arguments) -%}
     {%- set previousCoercionInstructions = state.coercionInstructions %}
     {%- set state.coercionInstructions = { environment.DataTypeEnum.TABLE: environment.DataTypeEnum.ENCAPSULATED, environment.DataTypeEnum.SIMPLE: environment.DataTypeEnum.ENCAPSULATED } -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }} AS {{ arguments['name'] }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} AS {{ arguments['name'] }}
     {%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro %}
 

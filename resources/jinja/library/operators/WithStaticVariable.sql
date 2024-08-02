@@ -10,7 +10,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro WithPrint(environment, this, state, arguments) -%}
-    WHERE (LET {{ environment.OperatorHandler.print(environment, this, state, arguments['child'])}} AS {{ arguments['alias'] }} SELECT {{ environment.OperatorHandler.print(environment, this, state, arguments['suchThat']) }} {{ environment.printSingleValueColumnName(environment) }})
+    WHERE (LET {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}} AS {{ arguments['alias'] }} SELECT {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['suchThat']) }} {{ environment.printSingleValueColumnName(environment) }})
 {%- endmacro %}
 
 {%- macro WithStaticVariableInit(environment) %}

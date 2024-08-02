@@ -17,10 +17,10 @@
     {%- endif -%}
     SELECT
     {%- if arguments['returnClause'] == none %} *
-    {%- else %} {{ environment.OperatorHandler.print(environment, this, state, arguments['returnClause']) }}
+    {%- else %} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['returnClause']) }}
     {%- endif %} FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }}
-    {%- if arguments['where'] != none %} WHERE {{ environment.OperatorHandler.print(environment, this, state, arguments['where']) }}{% endif %}
-    {%- if arguments['sortClause'] != none %} {{ environment.OperatorHandler.print(environment, this, state, arguments['sortClause']) }}{% endif %}
+    {%- if arguments['where'] != none %} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['where']) }}{% endif %}
+    {%- if arguments['sortClause'] != none %} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['sortClause']) }}{% endif %}
     {%- set state.coercionInstructions = previousCoercionInstructions %}
     {%- set state.insideQuery = false %}
 {%- endmacro %}

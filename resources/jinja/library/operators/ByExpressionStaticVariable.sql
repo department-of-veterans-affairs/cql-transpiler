@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro ByExpressionPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }} {{ arguments['direction'] }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} {{ arguments['direction'] }}
 {%- endmacro %}
 
 {% macro ByExpressionStaticVariableInit(environment) %}

@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro AliasedQuerySourcePrint(environment, this, state, arguments) -%}
-    ({{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}) AS {{ arguments['alias'] }}
+    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS {{ arguments['alias'] }}
 {%- endmacro %}
 
 {%- macro AliasedQuerySourceStaticVariableInit(environment) %}

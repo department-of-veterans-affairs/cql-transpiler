@@ -4,6 +4,7 @@
 {%- from "library/operators/AddStaticVariable.sql" import AddStaticVariableInit %}
 {%- from "library/operators/AfterStaticVariable.sql" import AfterStaticVariableInit %}
 {%- from "library/operators/AliasedQuerySourceStaticVariable.sql" import AliasedQuerySourceStaticVariableInit %}
+{%- from "library/operators/AliasRefStaticVariable.sql" import AliasRefStaticVariableInit %}
 {%- from "library/operators/AndStaticVariable.sql" import AndStaticVariableInit %}
 {%- from "library/operators/AsStaticVariable.sql" import AsStaticVariableInit %}
 {%- from "library/operators/BeforeStaticVariable.sql" import BeforeStaticVariableInit %}
@@ -72,6 +73,7 @@
     {%- do AddStaticVariableInit(environment) %}
     {%- do AfterStaticVariableInit(environment) %}
     {%- do AliasedQuerySourceStaticVariableInit(environment) %}
+    {%- do AliasRefStaticVariableInit(environment) %}
     {%- do AndStaticVariableInit(environment) %}
     {%- do AsStaticVariableInit(environment) %}
     {%- do BeforeStaticVariableInit(environment) %}

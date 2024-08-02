@@ -10,7 +10,7 @@
 
 {%- macro PropertyPrint(environment, this, state, arguments) -%}
     {%- if arguments['child'] != none -%}
-        {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}.{{ arguments['path'] }}
+        {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ arguments['path'] }}
     {%- elif arguments['path'] != none -%}
         {{ arguments['scope'] }}.{{ arguments['path'] }}
     {%- else -%}

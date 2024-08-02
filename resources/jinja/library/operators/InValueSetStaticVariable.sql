@@ -10,10 +10,10 @@
 
 {%- macro InValueSetPrint(environment, this, state, arguments) -%}
     /* Unsupported InValueSet
-    {%-     if arguments['child'] != none %} with child: <{{ environment.OperatorHandler.print(environment, this, state, arguments['child'])}}>
+    {%-     if arguments['child'] != none %} with child: <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}}>
     {%-     endif %}
-    {%-     if arguments['valueSetReference'] == none %} valueSetExpression: <{{ environment.OperatorHandler.print(environment, this, state, arguments['valueSetExpression'])}}>
-    {%-     else %} valueSetReference: <{{ environment.OperatorHandler.print(environment, this, state, arguments['valueSetReference'])}}>
+    {%-     if arguments['valueSetReference'] == none %} valueSetExpression: <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['valueSetExpression'])}}>
+    {%-     else %} valueSetReference: <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['valueSetReference'])}}>
     {%-     endif -%}
     */
 {%- endmacro %}

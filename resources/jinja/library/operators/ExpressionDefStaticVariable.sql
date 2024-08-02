@@ -13,7 +13,7 @@
     {%- if previousContext == none and arguments['context'] != none %}
         {%- set state.context = arguments['context'] %}
     {%- endif -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
     {%- set state.context = previousContext %}
 {%- endmacro %}
 

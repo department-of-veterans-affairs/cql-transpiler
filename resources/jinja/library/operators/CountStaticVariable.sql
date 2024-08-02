@@ -10,9 +10,9 @@
 
 {%- macro CountPrint(environment, this, state, arguments) -%}
     {%- if state.context == 'Unfiltered' -%}
-        SELECT count(*) FROM ({{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }})
+        SELECT count(*) FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
     {%- else -%}
-        SELECT {{ environment.printIDFromContext(environment, state.context) }}, count(*) FROM ({{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}) GROUP BY {{ environment.printIDFromContext(environment, state.context) }}
+        SELECT {{ environment.printIDFromContext(environment, state.context) }}, count(*) FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) GROUP BY {{ environment.printIDFromContext(environment, state.context) }}
     {%- endif %}
 {%- endmacro %}
 

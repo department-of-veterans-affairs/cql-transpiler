@@ -10,7 +10,7 @@
 {%- from "library/globals/IntervalStaticVariables.sql" import IntervalStaticVariablesInit %}
 
 {%- macro InIntervalPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['left'])}} BETWEEN {{ environment.OperatorHandler.print(environment, this, state, arguments['right']) }}.{{ environment.intervalStart }} AND {{ environment.OperatorHandler.print(environment, this, state, arguments['right']) }}.{{ environment.intervalEnd }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} BETWEEN {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalStart }} AND {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalEnd }}
 {%- endmacro %}
 
 {%- macro InIntervalStaticVariableInit(environment) %}

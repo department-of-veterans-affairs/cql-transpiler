@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro NotPrint(environment, this, state, arguments) -%}
-    NOT {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
+    NOT {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
 {%- endmacro %}
 
 {%- macro NotStaticVariableInit(environment) %}

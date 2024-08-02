@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro BeforePrint(environment, this, state, arguments) -%}
-    ({{ environment.OperatorHandler.print(environment, this, state, arguments['left'])}} < {{ environment.OperatorHandler.print(environment, this, state, arguments['right']) }})
+    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} < {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }})
 {%- endmacro %}
 
 {% macro BeforeStaticVariableInit(environment) %}

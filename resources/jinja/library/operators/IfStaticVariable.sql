@@ -12,9 +12,9 @@
     {%-     set previousCoercionInstructions = state.coercionInstructions %}
     {%-     set state.coercionInstructions = {} %}
     {#-     conditional statement should not be coerced -#}
-    IF ({{ environment.OperatorHandler.print(environment, this, state, arguments['condition'])}})
+    IF ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['condition'])}})
     {%-     set state.coercionInstructions = previousCoercionInstructions -%}
-    THEN ({{ environment.OperatorHandler.print(environment, this, state, arguments['then'])}}) ELSE ({{ environment.OperatorHandler.print(environment, this, state, arguments['else'])}})
+    THEN ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['then'])}}) ELSE ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['else'])}})
 {%- endmacro %}
 
 {%- macro IfStaticVariableInit(environment) %}

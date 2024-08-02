@@ -10,9 +10,9 @@
 
 {%- macro OperandRefPrint(environment, this, state, arguments) -%}
     {%- if state.functionArguments[arguments['referenceTo']['name']] -%}
-            {{ environment.OperatorHandler.print(environment, this, state, state.functionArguments[arguments['referenceTo']['name']]) }}
+            {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, state.functionArguments[arguments['referenceTo']['name']]) }}
     {%- else -%}
-            {{ environment.OperatorHandler.print(environment, this, state, arguments['referenceTo']) }}
+            {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['referenceTo']) }}
     {%- endif %}
 {%- endmacro %}
 

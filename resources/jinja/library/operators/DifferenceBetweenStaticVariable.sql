@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro DifferenceBetweenPrint(environment, this, state, arguments) -%}
-    DATEDIFF({{ environment.OperatorHandler.print(environment, this, state, arguments['right'])}}, {{ environment.OperatorHandler.print(environment, this, state, arguments['left']) }})
+    DATEDIFF({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right'])}}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left']) }})
 {%- endmacro %}
 
 {%- macro DifferenceBetweenStaticVariableInit(environment) %}

@@ -8,7 +8,7 @@
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
 {%- macro SingletonFromPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
 {%- endmacro %}
 
 {%- macro SingletonFromStaticVariableInit(environment) %}

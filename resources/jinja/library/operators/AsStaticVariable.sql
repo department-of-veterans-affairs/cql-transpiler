@@ -10,7 +10,7 @@
 
 {%- macro AsPrint(environment, this, state, arguments) -%}
     {#- arguments['typeSpecifier'] is unused -#}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['child'])}}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}}
 {%- endmacro %}
 
 {%- macro AsStaticVariableInit(environment) %}

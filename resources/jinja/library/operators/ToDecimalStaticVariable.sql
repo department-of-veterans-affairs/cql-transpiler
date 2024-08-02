@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro ToDecimalPrint(environment, this, state, arguments) -%}
-    (0.0 + {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }})
+    (0.0 + {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
 {%- endmacro %}
 
 {%- macro ToDecimalStaticVariableInit(environment) %}

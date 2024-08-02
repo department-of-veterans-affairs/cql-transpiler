@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro OrPrint(environment, this, state, arguments) -%}
-    ({{ environment.OperatorHandler.print(environment, this, state, arguments['left'])}} OR {{ environment.OperatorHandler.print(environment, this, state, arguments['right']) }})
+    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} OR {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }})
 {%- endmacro %}
 
 {%- macro OrStaticVariableInit(environment) %}

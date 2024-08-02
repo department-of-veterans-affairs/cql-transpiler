@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro ExistsPrint(environment, this, state, arguments) -%}
-    EXISTS ({{ environment.OperatorHandler.print(environment, this, state, arguments['child'])}})
+    EXISTS ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}})
 {%- endmacro %}
 
 {% macro ExistsStaticVariableInit(environment) %}

@@ -10,7 +10,7 @@
 {%- from "library/globals/IntervalStaticVariables.sql" import IntervalStaticVariablesInit %}
 
 {%- macro EndPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['child']) }}.{{ environment.intervalEnd }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ environment.intervalEnd }}
 {%- endmacro %}
 
 {%- macro EndStaticVariableInit(environment) %}

@@ -15,7 +15,7 @@
         {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : value}) %}
     {%- endfor %}
     {%- set state.functionArguments = functionArguments -%}
-    {{ environment.OperatorHandler.print(environment, this, state, arguments['referenceTo']) }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['referenceTo']) }}
     {%- set state.functionArguments = previousFunctionArguments %}
 {%- endmacro %}
 
