@@ -11,7 +11,7 @@
 {%- from "library/globals/IntervalStaticVariables.sql" import IntervalStaticVariablesInit %}
 
 {%- macro IntervalPrint(environment, this, state, arguments) -%}
-    SELECT struct({{ environment.OperatorHandler.print(environment, this, state, arguments['high'])}} as {{ environment.intervalEnd }}, {{ environment.OperatorHandler.print(environment, this, state, arguments['low']) }} as {{ environment.intervalStart }}) {{ printSingleValueColumnName() }}
+    SELECT struct({{ environment.OperatorHandler.print(environment, this, state, arguments['high'])}} as {{ environment.intervalEnd }}, {{ environment.OperatorHandler.print(environment, this, state, arguments['low']) }} as {{ environment.intervalStart }}) {{ environment.printSingleValueColumnName() }}
 {%- endmacro %}
 
 {%- macro IntervalStaticVariableInit(environment) %}

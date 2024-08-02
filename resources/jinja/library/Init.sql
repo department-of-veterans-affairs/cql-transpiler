@@ -44,6 +44,7 @@
 {%- from "library/operators/NegateStaticVariable.sql" import NegateStaticVariableInit %}
 {%- from "library/operators/NotStaticVariable.sql" import NotStaticVariableInit %}
 {%- from "library/operators/NullStaticVariable.sql" import NullStaticVariableInit %}
+{%- from "library/operators/OperandDefStaticVariable.sql" import OperandDefStaticVariableInit %}
 {%- from "library/operators/OperandRefStaticVariable.sql" import OperandRefStaticVariableInit %}
 {%- from "library/operators/OrStaticVariable.sql" import OrStaticVariableInit %}
 {%- from "library/operators/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
@@ -111,6 +112,7 @@
     {%- do NegateStaticVariableInit(environment) %}
     {%- do NotStaticVariableInit(environment) %}
     {%- do NullStaticVariableInit(environment) %}
+    {%- do OperandDefStaticVariableInit(environment) %}
     {%- do OperandRefStaticVariableInit(environment) %}
     {%- do OrStaticVariableInit(environment) %}
     {%- do ParameterRefStaticVariableInit(environment) %}

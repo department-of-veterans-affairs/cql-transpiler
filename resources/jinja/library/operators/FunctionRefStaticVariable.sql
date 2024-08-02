@@ -9,12 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro FunctionRefPrint(environment, this, state, arguments) -%}
-    {%- if state.functionArguments %}
-        {%- set previousFunctionArguments = state.functionArguments %}
-    {%- else %}
-        {%- set previousFunctionArguments = {} %}
-        {%- set state.functionArguments = previousFunctionArguments %}
-    {%- endif %}
+    {%- set previousFunctionArguments = state.functionArguments %}
     {%- set functionArguments = previousFunctionArguments.copy() %}
     {%- for value in arguments['children'] %}
         {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : value}) %}
