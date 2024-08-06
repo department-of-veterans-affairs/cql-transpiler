@@ -7,7 +7,13 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro RetrievePrint(environment, this, state, arguments) -%}
-    /* Retrieve with state: <{{ state }}>, arguments: <{{ arguments }}> */
+    {%- if not previousInsideSqlComment -%}
+        /*
+    {%- endif -%}
+    <Unsupported Retrieve with arguments <modeltype: {{ arguments['modelType'] }}, templateId: {{ arguments['templateId'] }}>
+    {%- if not previousInsideSqlComment -%}
+        */
+    {%- endif %}
 {%- endmacro %}
 
 {%- macro RetrieveStaticVariableInit(environment) %}

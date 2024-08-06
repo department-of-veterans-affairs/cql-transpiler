@@ -16,13 +16,10 @@
     {%- if not previousInsideSqlComment -%}
         /*
     {%- endif -%}
-        Unsupported Operator: <
-    {%- if arguments['unsupportedOperator'] != none or arguments['unsupportedOperator']|length == 0 -%}
-        {{ arguments['unsupportedOperator'] }}
-    {%- else -%}
-        {{ arguments }}
+        <Unsupported Operator: {{ arguments['unsupportedOperator'] }}
+    {%- if arguments['unsupportedOperator'] == none or arguments['unsupportedOperator']|length == 0 -%}
+         with arguments <{{ arguments }}>
     {%-  endif -%}
-        > with arguments: <{{arguments}}> with children: <[{{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }}]>
     {%- if not previousInsideSqlComment -%}
         */
     {%- endif %}

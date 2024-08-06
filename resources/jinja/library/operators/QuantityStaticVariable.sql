@@ -24,7 +24,13 @@
     {%- elif arguments['unit'] == 'millisecond' -%}
         INTERVAL {{ arguments['value'] }} MILLISECOND
     {%- else -%}
-        /* Unsupported Quantity: <{{ arguments['unit'] }}, {{ arguments['value'] }}> */
+        {%- if not previousInsideSqlComment -%}
+            /*
+        {%- endif -%}
+        <Unsupported InValQuantity with arguments <unit: {{ arguments['unit'] }}, value: {{ arguments['value'] }}>>
+        {%- if not previousInsideSqlComment -%}
+            */
+        {%- endif %}
     {%- endif %}
 {%- endmacro %}
 
