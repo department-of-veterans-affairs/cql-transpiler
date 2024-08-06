@@ -14,9 +14,10 @@
     {%- for value in arguments['children'] %}
         {#- When a function argument is a reference, inline it #}
         {%- if value.operator == environment.OperandRef %}
-            {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : functionArguments[value.name]}) %}
+            {#- OperandRefs are always references to OperandDefs #}
+            {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['referenceName'] : functionArguments[value.referencedName]}) %}
         {%- else %}
-            {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['name'] : value}) %}
+            {%- do functionArguments.update({arguments['referenceTo']['arguments'][loop.index - 1]['referenceName'] : value}) %}
         {%- endif %}
     {%- endfor %}
     {%- set state.functionArguments = functionArguments -%}

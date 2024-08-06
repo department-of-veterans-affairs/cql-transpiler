@@ -23,7 +23,7 @@ public class LetClauseNode extends ElementNode<LetClause> implements Referenceab
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'name'", "'" + referenceName() + "'");
+        map.put("'referenceName'", "'" + referenceName() + "'");
         return map;
     }
 

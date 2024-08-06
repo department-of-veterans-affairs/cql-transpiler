@@ -9,10 +9,10 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro OperandRefPrint(environment, this, state, arguments) -%}
-    {%- if state.functionArguments[arguments['name']] -%}
-            {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, state.functionArguments[arguments['name']]) }}
+    {%- if state.functionArguments[arguments['referencedName']] -%}
+            {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, state.functionArguments[arguments['referencedName']]) }}
     {%- else -%}
-            {{ arguments['name'] }}
+            {{ arguments['referencedName'] }}
     {%- endif %}
 {%- endmacro %}
 

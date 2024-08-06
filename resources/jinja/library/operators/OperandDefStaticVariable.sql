@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro OperandDefPrint(environment, this, state, arguments) -%}
-    {{ arguments['name'] }}
+    {{ arguments['referencedName'] }}
 {%- endmacro %}
 
 {%- macro OperandDefStaticVariableInit(environment) %}

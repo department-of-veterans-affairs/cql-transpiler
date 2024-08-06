@@ -33,6 +33,7 @@ public class ValueSetDefNode extends ElementNode<ValueSetDef> implements Referen
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
         map.put("'value'", "'" + getCqlEquivalent().getId() + "'");
+        map.put("'referenceName'", "'" + referenceName() + "'");
         return map;
     }
 

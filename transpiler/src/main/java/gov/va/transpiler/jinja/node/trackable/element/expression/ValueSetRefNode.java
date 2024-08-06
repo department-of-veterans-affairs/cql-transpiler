@@ -41,7 +41,7 @@ public class ValueSetRefNode extends ExpressionNode<ValueSetRef> implements Refe
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'referenceName'", sanitizeNameForJinja(referenceTo().referenceName()));
+        map.put("'referencedName'", "'" + sanitizeNameForJinja(referencedName()) + "'");
         return map;
     }
 

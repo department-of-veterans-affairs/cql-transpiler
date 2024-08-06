@@ -3,8 +3,8 @@
 {%- set testOperatorHandler = namespace(print=testPrint) %}
 {%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
 {%- set this = 'this' %}
-{%- set state = namespace(functionArguments={'testArg1' : {'testValue' : 'testValA'},'testArg2' : {'testValue' : 'testValB'}}) %}
-{%- set arguments = namespace(children = [{'testValue' : 'testValZ'}], referenceTo={'name' : 'testFunction', 'arguments' : [{'name' : 'testArg1'}]}) %}
+{%- set state = namespace(functionArguments={'testArg1' : {'testValue' : 'testValA'}, 'testArg2' : {'testValue' : 'testValB'}}) %}
+{%- set arguments = namespace(children = [{'testValue' : 'testValZ'}], referenceTo={'referenceName' : 'testFunction', 'arguments' : [{'name' : 'testArg1'}]}) %}
 ==== PRIOR STATE ====
 
 environment: [{{ environment }}]

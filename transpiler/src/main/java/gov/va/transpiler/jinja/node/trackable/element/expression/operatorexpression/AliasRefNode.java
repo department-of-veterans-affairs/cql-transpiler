@@ -17,7 +17,7 @@ public class AliasRefNode extends ExpressionNode<AliasRef> {
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'name'", "'" + getCqlEquivalent().getName() + "'");
+        map.put("'referencedName'", "'" + getCqlEquivalent().getName() + "'");
         return map;
     }
 

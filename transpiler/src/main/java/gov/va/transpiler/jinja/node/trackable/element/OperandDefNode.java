@@ -21,7 +21,7 @@ public class OperandDefNode extends ElementNode<OperandDef> implements Reference
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'name'",  "'" + referenceName() + "'");
+        map.put("'referenceName'",  "'" + referenceName() + "'");
         return map;
     }
 

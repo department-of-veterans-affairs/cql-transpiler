@@ -32,7 +32,7 @@ public class ExpressionDefNode<T extends ExpressionDef> extends ElementNode<T> i
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
         map.put("'context'", "'" + getCqlEquivalent().getContext() + "'");
-        map.put("'name'", "'" + referenceName() + "'");
+        map.put("'referenceName'", "'" + referenceName() + "'");
         return map;
     }
 

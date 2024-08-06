@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro AliasRefPrint(environment, this, state, arguments) -%}
-    {{ arguments['name'] }}
+    {{ arguments['alias'] }}
 {%- endmacro %}
 
 {%- macro AliasRefStaticVariableInit(environment) %}

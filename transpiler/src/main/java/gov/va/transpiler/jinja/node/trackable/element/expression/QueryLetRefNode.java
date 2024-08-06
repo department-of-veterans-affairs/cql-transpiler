@@ -23,7 +23,7 @@ public class QueryLetRefNode extends ExpressionNode<QueryLetRef> implements Refe
     @Override
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
-        map.put("'referenceName'", "'" + referencedName() + "'");
+        map.put("'referencedName'", "'" + referencedName() + "'");
         return map;
     }
 

@@ -4,7 +4,7 @@
 {%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
 {%- set this = 'this' %}
 {%- set state = namespace(functionArguments={'testName':{'name':'testValue'}}) %}
-{%- set arguments = namespace(referenceTo = {'name' : 'testName'}) %}
+{%- set arguments = namespace(referenceTo = {'referenceName' : 'testName'}) %}
 ==== PRIOR STATE ====
 
 environment: [{{ environment }}]

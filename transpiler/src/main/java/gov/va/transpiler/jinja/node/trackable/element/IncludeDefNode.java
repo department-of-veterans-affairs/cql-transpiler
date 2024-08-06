@@ -33,7 +33,7 @@ public class IncludeDefNode extends ElementNode<IncludeDef> implements Reference
     protected Map<String, String> getLiteralArgumentMap() {
         var map = super.getLiteralArgumentMap();
         map.put("'include'", "'" + referencedLibrary.getTargetFileLocation() + "'");
-        map.put("'includeAs'", sanitizeNameForJinja(referenceName()));
+        map.put("'referenceName'", "'" + referenceName() + "'");
         return map;
     }
 
