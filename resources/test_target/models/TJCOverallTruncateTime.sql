@@ -1,1 +1,1 @@
-DATETIMEFROMPARTS(DATEPART(YEAR, Value), DATEPART(MONTH, Value), DATEPART(DAY, Value), 0, 0, 0, 0)
+TODATETIMEOFFSET(DATETIMEFROMPARTS(DATEPART(YEAR, Value), DATEPART(MONTH, Value), DATEPART(DAY, Value), 0, 0, 0, 0), /*<Unsupported Operator: environment.TimezoneOffsetFrom*/)
