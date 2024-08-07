@@ -195,7 +195,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     public TranspilerNode visitDateTimeComponentFrom(DateTimeComponentFrom element, State state) {
         state.setCurrentCQLNode(element);
-        new UnsupportedNode(state, element);
+        new DateTimeComponentFromNode(state, element);
         return super.visitDateTimeComponentFrom(element, state);
     }
 

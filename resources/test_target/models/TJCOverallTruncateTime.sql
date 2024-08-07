@@ -1,1 +1,1 @@
-/*<Unsupported Operator: environment.DateTimeComponentFrom*/-/*<Unsupported Operator: environment.DateTimeComponentFrom*/-/*<Unsupported Operator: environment.DateTimeComponentFrom*/T0:0:0.0Z
+DATETIMEFROMPARTS(DATEPART(YEAR, Value), DATEPART(MONTH, Value), DATEPART(DAY, Value), 0, 0, 0, 0)

@@ -14,6 +14,7 @@
 {%- from "library/operators/ConcatenateStaticVariable.sql" import ConcatenateStaticVariableInit %}
 {%- from "library/operators/CountStaticVariable.sql" import CountStaticVariableInit %}
 {%- from "library/operators/DateFromStaticVariable.sql" import DateFromStaticVariableInit %}
+{%- from "library/operators/DateTimeComponentFromStaticVariable.sql" import DateTimeComponentFromStaticVariableInit %}
 {%- from "library/operators/DateTimeStaticVariable.sql" import DateTimeStaticVariableInit %}
 {%- from "library/operators/DifferenceBetweenStaticVariable.sql" import DifferenceBetweenStaticVariableInit %}
 {%- from "library/operators/DivideStaticVariable.sql" import DivideStaticVariableInit %}
@@ -83,6 +84,7 @@
     {%- do ConcatenateStaticVariableInit(environment) %}
     {%- do CountStaticVariableInit(environment) %}
     {%- do DateFromStaticVariableInit(environment) %}
+    {%- do DateTimeComponentFromStaticVariableInit(environment) %}
     {%- do DateTimeStaticVariableInit(environment) %}
     {%- do DifferenceBetweenStaticVariableInit(environment) %}
     {%- do DivideStaticVariableInit(environment) %}

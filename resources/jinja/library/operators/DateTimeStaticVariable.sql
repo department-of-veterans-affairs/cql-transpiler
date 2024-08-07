@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro DateTimePrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['year']) }}-{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['month']) }}-{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['day']) }}T{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['hour']) }}:{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['minute']) }}:{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['second']) }}.{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['millisecond']) }}Z
+    DATETIMEFROMPARTS({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['year']) }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['month']) }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['day']) }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['hour']) }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['minute']) }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['second']) }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['millisecond']) }})
 {%- endmacro %}
 
 {%- macro DateTimeStaticVariableInit(environment) %}
