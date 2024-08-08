@@ -3,15 +3,10 @@
         * OperatorHandlerStaticVariable.sql
         * ParameterRefStaticVariable.sql
 #}
-{%- from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{%- from "jinja_transpilation_libraries/sparksql/default/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
+{%- from "jinja/library/operators/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{%- from "jinja/library/operators/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
 
 {%- macro ParameterRefPrintCustomOverride(environment, this, state, arguments) -%}
-    {%- if arguments['name'] == 'Measurement_Period' -%}
-        _parameters.measurementPeriod
-    {%- else -%}
-        _parameters.{{ arguments['name'] }}
-    {%- endif %}
 {%- endmacro %}
 
 {%- macro ParameterRefCustomOverrideInit(environment) %}

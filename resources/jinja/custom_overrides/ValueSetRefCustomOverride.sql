@@ -3,11 +3,11 @@
         * OperatorHandlerStaticVariable.sql
         * ValueSetRefStaticVariable.sql
 #}
-{%- from "jinja_transpilation_libraries/sparksql/default/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{%- from "jinja_transpilation_libraries/sparksql/default/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
+{%- from "jinja/library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{%- from "jinja/library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
 
 {%- macro ValueSetRefPrintCustomOverride(environment, this, state, arguments) -%}
-    {{ arguments[value].split(':')[2] }}
+    {{ arguments['referenceTo'][value].split(':')[2] }}
 {%- endmacro %}
 
 {%- macro ValueSetRefCustomOverrideInit(environment) %}

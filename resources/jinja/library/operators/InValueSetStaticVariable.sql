@@ -9,13 +9,12 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro InValueSetPrint(environment, this, state, arguments) -%}
-    {%- if not previousInsideSqlComment -%}
-        /*
+    {%- if arguments['valueSetExpression'] -%}
+        {%- set valueSet = arguments['valueSetExpression'] %}
+    {%- else -%}
+        {%- set valueSet = arguments['valueSetReference'] %}
     {%- endif -%}
-    <Unsupported InValueSet>
-    {%- if not previousInsideSqlComment -%}
-        */
-    {%- endif %}
+    /* InValueSet check for element: <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}>, valueset <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}> */
 {%- endmacro %}
 
 {%- macro InValueSetStaticVariableInit(environment) %}

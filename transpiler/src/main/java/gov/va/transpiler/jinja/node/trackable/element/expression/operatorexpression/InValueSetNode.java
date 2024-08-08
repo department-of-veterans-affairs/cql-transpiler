@@ -5,6 +5,7 @@ import java.util.Map;
 import org.hl7.elm.r1.InValueSet;
 
 import gov.va.transpiler.jinja.node.CQLEquivalent;
+import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.state.State;
 
@@ -24,9 +25,11 @@ public class InValueSetNode extends OperatorExpressionNode<InValueSet> {
                 valueSetReferenceNode = child;
             } else if (((CQLEquivalent<?>) child).getCqlEquivalent() == getCqlEquivalent().getValuesetExpression()){
                 valueSetExpressionNode = child;
+            } else {
+                super.addChild(child);
             }
         } else {
-            super.addChild(child);
+            throw new InvalidChildNodeException(this, child);
         }
         processChildDependencies(child);
     }

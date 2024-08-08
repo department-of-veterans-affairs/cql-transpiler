@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro ValueSetRefPrint(environment, this, state, arguments) -%}
-    {{ arguments['value'] }}
+    {{ arguments['referenceTo']['value'] }}
 {%- endmacro %}
 
 {%- macro ValueSetRefStaticVariableInit(environment) %}
