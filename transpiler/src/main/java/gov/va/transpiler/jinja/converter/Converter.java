@@ -262,7 +262,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     public TranspilerNode visitFirst(First element, State state) {
         state.setCurrentCQLNode(element);
-        new UnsupportedNode(state, element);
+        new FirstNode(state, element);
         return super.visitFirst(element, state);
     }
 
@@ -374,7 +374,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     public TranspilerNode visitLast(Last element, State state) {
         state.setCurrentCQLNode(element);
-        new UnsupportedNode(state, element);
+        new LastNode(state, element);
         return super.visitLast(element, state);
     }
 

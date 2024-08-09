@@ -23,6 +23,7 @@
 {%- from "library/operators/ExistsStaticVariable.sql" import ExistsStaticVariableInit %}
 {%- from "library/operators/ExpressionDefStaticVariable.sql" import ExpressionDefStaticVariableInit %}
 {%- from "library/operators/ExpressionRefStaticVariable.sql" import ExpressionRefStaticVariableInit %}
+{%- from "library/operators/FirstStaticVariable.sql" import FirstStaticVariableInit %}
 {%- from "library/operators/FunctionDefStaticVariable.sql" import FunctionDefStaticVariableInit %}
 {%- from "library/operators/FunctionRefStaticVariable.sql" import FunctionRefStaticVariableInit %}
 {%- from "library/operators/GreaterOrEqualStaticVariable.sql" import GreaterOrEqualStaticVariableInit %}
@@ -35,6 +36,7 @@
 {%- from "library/operators/IntervalTypeSpecifierStaticVariable.sql" import IntervalTypeSpecifierStaticVariableInit %}
 {%- from "library/operators/InValueSetStaticVariable.sql" import InValueSetStaticVariableInit %}
 {%- from "library/operators/IsNullStaticVariable.sql" import IsNullStaticVariableInit %}
+{%- from "library/operators/LastStaticVariable.sql" import LastStaticVariableInit %}
 {%- from "library/operators/LessOrEqualStaticVariable.sql" import LessOrEqualStaticVariableInit %}
 {%- from "library/operators/LessStaticVariable.sql" import LessStaticVariableInit %}
 {%- from "library/operators/LetClauseStaticVariable.sql" import LetClauseStaticVariableInit %}
@@ -93,6 +95,7 @@
     {%- do ExistsStaticVariableInit(environment) %}
     {%- do ExpressionDefStaticVariableInit(environment) %}
     {%- do ExpressionRefStaticVariableInit(environment) %}
+    {%- do FirstStaticVariableInit(environment) %}
     {%- do FunctionDefStaticVariableInit(environment) %}
     {%- do FunctionRefStaticVariableInit(environment) %}
     {%- do GreaterOrEqualStaticVariableInit(environment) %}
@@ -105,6 +108,7 @@
     {%- do IntervalTypeSpecifierStaticVariableInit(environment) %}
     {%- do InValueSetStaticVariableInit(environment) %}
     {%- do IsNullStaticVariableInit(environment) %}
+    {%- do LastStaticVariableInit(environment) %}
     {%- do LessOrEqualStaticVariableInit(environment) %}
     {%- do LessStaticVariableInit(environment) %}
     {%- do LetClauseStaticVariableInit(environment) %}

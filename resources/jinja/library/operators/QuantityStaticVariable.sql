@@ -13,7 +13,7 @@
         INTERVAL {{ arguments['value'] }} YEAR
     {%- elif arguments['unit'] == 'month' -%}
         INTERVAL {{ arguments['value'] }} MONTH
-    {%- elif arguments['unit'] == 'day' -%}
+    {%- elif arguments['unit'] == 'day' or arguments['unit'] == 'days' -%}
         INTERVAL {{ arguments['value'] }} DAY
     {%- elif arguments['unit'] == 'hour' -%}
         INTERVAL {{ arguments['value'] }} HOUR
