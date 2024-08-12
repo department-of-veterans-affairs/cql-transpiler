@@ -1,7 +1,7 @@
 Reading this file requires [mermaid](https://github.com/mermaid-js/mermaid).
 
 # Main Overview
-#```mermaid
+```mermaid
 flowchart TD
 
 A[CQL Text File] -->|Java Transpiler| B[Jinja/DBT text files]
@@ -9,7 +9,7 @@ B -->C{Compilation Environment}
 C -->|test_models.py| D[SQL Files With Placeholders]
 C -->|Databricks Environment - DBT Compile| E[Valid SQL Files]
 E -->|Running against servers| F[MSSQL Measure Results]
-#```
+```
 
 # Measure Logic Transformation Overview
 
@@ -21,8 +21,9 @@ flowchart TB
             CQLToTranslate["CQL Libraries to Translate"]
         end
         JinjaText["Intermediate AST (as text)"]
-        SQL["SQL File"]
-        JinjaText --> SQL
+        cqlInEQM["Intermediate AST (as text) (inside eqm repository)"]
+        JinjaText-->|"Databricks DBT"|cqlInEQM
+        SQL["Generated SQL File"]
     end
     subgraph jvm [JVM]
         subgraph transpiler ["transpiler module"]
@@ -48,42 +49,26 @@ flowchart TB
         end
     end
     cql -->|"Transpiler.java"| CQLAsTextTranspiler
-    subgraph python [Python Environment]
-    F --> G
+    subgraph python["Local Python Environment"]
+        subgraph jinja["jinja environment"]
+            IntermediateASTAsNamespaceWithBlank["Intermediate AST (as jinja namespace) + blank execution environment namespace"]
+            IntermediateASTAsNamespaceWithOperators["Intermediate AST (as jinja namespace) + execution environment with operators"]
+            IntermediateASTAsNamespaceWithBlank -->|"Init.sql"|IntermediateASTAsNamespaceWithOperators
+            IntermediateASTAsNamespaceWithOperators -->|"SQL model file"| SQL
+        end
+        subgraph dbt["dbt environment"]
+            IntermediateASTAsDBTNamespaceWithBlank["Intermediate AST (as dbt namespace) + blank execution environment namespace"]
+            IntermediateASTAsDBTNamespaceWithOperators["Intermediate AST (as jinja namespace) + execution environment with operators"]
+            IntermediateASTAsDBTNamespaceWithOverridenOperators["Intermediate AST (as jinja namespace) + execution environment with overriden operators"]
+            IntermediateASTAsDBTNamespaceWithBlank -->|"Init.sql"|IntermediateASTAsDBTNamespaceWithOperators
+            IntermediateASTAsDBTNamespaceWithOperators -->|"InitCustomOverrides.sql"|IntermediateASTAsDBTNamespaceWithOverridenOperators
+            IntermediateASTAsDBTNamespaceWithOverridenOperators -->|"SQL model file"| SQL
+        end
+        JinjaText -->|"test_models.py"| IntermediateASTAsNamespaceWithBlank
+        cqlInEQM -->|"dbt compile"| IntermediateASTAsDBTNamespaceWithBlank
     end
 ```
 
-        CQLToTranslateJVM["CQL Libraries to translate (as text)"]
-        CQLAST["AST CQL Libraries to translate (as tree of nodes)"]
-        IntermediateASTNodes["Inter"]
-        IntermediateASTTextJVM
-
--> transpiler module | Transpiler.java
-1. CQL as text (in JVM)
--> sparcql-cql module
-1. CQL AST as tree of objects (in JVM)
--> transpiler module | Converter.java
-1. Intermediate AST as tree of objects (in JVM)
--> transpiler module | TranspilerNode.java toSegment
-1. Intermediate AST as tree of text strings (in JVM)
--> transpiler module | SegmentPrinter.java
-1. Intermediate AST as text
-1. Intermediate AST as text (on filesystem)
--> test_models.py
-1. blank environment
--> resources/jinja/library/Init.sql
-1. 'environment' namespace populated with operator implementations and helper functions
-1. <decision> compilation environment
-+ on databricks
--> resources/jinja/custom_overrides/InitCustomOverrides.sql
-1. 'environment' namespace populated with database-specific overrides for operator implementations and helper functions
--> return to main line
-+ local jinja
--> compile file from resources/jinja/test/models
-1. Intermediate AST as tree of objects (as namespace)
--> Execution of operator implementations
-? note: with operator implementations set, the intermediate AST is equivalent to a target-language AST
-1. Measure as text (in target language)
 # Unit Testing Java Code
 
 Unit tests still need to be created for Java.
