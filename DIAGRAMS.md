@@ -14,10 +14,11 @@ E -->|Running against servers| F[MSSQL Measure Results]
 # Measure Logic Transformation Overview
 
 ```mermaid
-flowchart TB
+
+flowchart TD
     subgraph fs [File System]
         subgraph cql["CQL Libraries (as text)"]
-            PrereqCQL["Prerequisite CQL Libraries"]
+            PrereqCQL["`Prerequisite CQL Libraries`"]
             CQLToTranslate["CQL Libraries to Translate"]
         end
         JinjaText["Intermediate AST (as text)"]
@@ -28,15 +29,13 @@ flowchart TB
     subgraph jvm [JVM]
         subgraph transpiler ["transpiler module"]
             subgraph sparksqlcqf ["sparksql-cqf module"]
-                subgraph externalDependencies["External Dependencies"]
+                subgraph externalDependencies["External Dependencies (See: https://github.com/cqframework/cqf)"]
                     subgraph cqlFramework["CQL Framework Libraries"]
                         libraryWorkA["CQL (as text) (in memory)"]
                         libraryWorkB["CQL (as language model (ELM))"]
                         libraryWorkC["CQL (as abstract syntax tree (AST))"]
                         libraryWorkA --> libraryWorkB --> libraryWorkC
                     end
-                    reference["See: https://github.com/cqframework/cqf"]
-                    reference .- cqlFramework
                 end
             end
             CQLAsTextTranspiler["CQL (as text) (in memory)"]
@@ -49,7 +48,7 @@ flowchart TB
         end
     end
     cql -->|"Transpiler.java"| CQLAsTextTranspiler
-    subgraph python["Local Python Environment"]
+    subgraph python["Python Environment"]
         subgraph jinja["jinja environment"]
             IntermediateASTAsNamespaceWithBlank["Intermediate AST (as jinja namespace) + blank execution environment namespace"]
             IntermediateASTAsNamespaceWithOperators["Intermediate AST (as jinja namespace) + execution environment with operators"]
@@ -66,6 +65,56 @@ flowchart TB
         end
         JinjaText -->|"test_models.py"| IntermediateASTAsNamespaceWithBlank
         cqlInEQM -->|"dbt compile"| IntermediateASTAsDBTNamespaceWithBlank
+    end
+```
+
+# Sequence Diagram
+
+```mermaid
+
+sequenceDiagram
+    activate File System
+    File System ->> File System: Add CQL Dependencies
+    File System ->> File System: Add CQL Library to Translate
+    File System ->> File System: Set CQL Library to Translate inside Transpiler.java
+    File System ->> JVM: Run Transpiler.java
+    activate JVM
+    File System ->> JVM: Load CQL files from file system
+    deactivate File System
+    JVM ->> JVM: convert CQL files to CQL AST
+    JVM ->> JVM: convert CQL AST to intermediate AST
+    JVM ->> File System: Render intermediate AST as jinja/dbt files
+    deactivate JVM
+    activate File System
+    alt running jinja locally
+    File System ->> Python Environment: run test_models.py
+    activate Python Environment
+    Python Environment ->> Jinja Environment: create jinja environment
+    activate Jinja Environment
+    File System ->> Jinja Environment: load intermediate AST
+    File System ->> Jinja Environment: load operator implementations
+    File System ->> Jinja Environment: load model files
+    Jinja Environment ->> Python Environment: render model files
+    deactivate Jinja Environment
+    Python Environment ->> File System: generate SQL files
+    deactivate Python Environment
+    else running dbt against databricks environment
+    File System ->> File System: Copy generated files to eqm repository
+    File System ->> File System: Copy jinja/dbt library files to eqm repository
+    File System ->> Databricks Environment: run dbt compile
+    activate Databricks Environment
+    File System ->> Databricks Environment: load intermediate AST
+    File System ->> Databricks Environment: load operator implementations
+    File System ->> Databricks Environment: load operator overrides
+    File System ->> Databricks Environment: load model files
+    Databricks Environment ->> File System: generate SQL files
+    File System ->> SQL Database: Run SQL files
+    activate SQL Database
+    SQL Database ->> SQL Database: get measure results
+    SQL Database ->> File System: store measure results
+    deactivate SQL Database
+    deactivate Databricks Environment
+    deactivate File System
     end
 ```
 
