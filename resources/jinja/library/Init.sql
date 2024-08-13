@@ -62,6 +62,7 @@
 {%- from "library/operators/SortClauseStaticVariable.sql" import SortClauseStaticVariableInit %}
 {%- from "library/operators/StartStaticVariable.sql" import StartStaticVariableInit %}
 {%- from "library/operators/SubtractStaticVariable.sql" import SubtractStaticVariableInit %}
+{%- from "library/operators/TimezoneOffsetFromStaticVariable.sql" import TimezoneOffsetFromStaticVariableInit %}
 {%- from "library/operators/ToDateStaticVariable.sql" import ToDateStaticVariableInit %}
 {%- from "library/operators/ToDecimalStaticVariable.sql" import ToDecimalStaticVariableInit %}
 {%- from "library/operators/TupleElementStaticVariable.sql" import TupleElementStaticVariableInit %}
@@ -134,6 +135,7 @@
     {%- do SortClauseStaticVariableInit(environment) %}
     {%- do StartStaticVariableInit(environment) %}
     {%- do SubtractStaticVariableInit(environment) %}
+    {%- do TimezoneOffsetFromStaticVariableInit(environment) %}
     {%- do ToDateStaticVariableInit(environment) %}
     {%- do ToDecimalStaticVariableInit(environment) %}
     {%- do TupleElementStaticVariableInit(environment) %}

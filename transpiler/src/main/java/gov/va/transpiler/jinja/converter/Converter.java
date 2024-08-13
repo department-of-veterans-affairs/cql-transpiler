@@ -573,7 +573,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     public TranspilerNode visitTimezoneOffsetFrom(TimezoneOffsetFrom element, State state) {
         state.setCurrentCQLNode(element);
-        new UnsupportedNode(state, element);
+        new UnaryExpressionNode<TimezoneOffsetFrom>(state, element);
         return super.visitTimezoneOffsetFrom(element, state);
     }
 
