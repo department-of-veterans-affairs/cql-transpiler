@@ -43,6 +43,8 @@
 {%- from "library/operators/ListStaticVariable.sql" import ListStaticVariableInit %}
 {%- from "library/operators/ListTypeSpecifierStaticVariable.sql" import ListTypeSpecifierStaticVariableInit %}
 {%- from "library/operators/LiteralStaticVariable.sql" import LiteralStaticVariableInit %}
+{%- from "library/operators/MaxValueStaticVariable.sql" import MaxValueStaticVariableInit %}
+{%- from "library/operators/MinValueStaticVariable.sql" import MinValueStaticVariableInit %}
 {%- from "library/operators/MultiplyStaticVariable.sql" import MultiplyStaticVariableInit %}
 {%- from "library/operators/NamedTypeSpecifierStaticVariable.sql" import NamedTypeSpecifierStaticVariableInit %}
 {%- from "library/operators/NegateStaticVariable.sql" import NegateStaticVariableInit %}
@@ -116,6 +118,8 @@
     {%- do ListStaticVariableInit(environment) %}
     {%- do ListTypeSpecifierStaticVariableInit(environment) %}
     {%- do LiteralStaticVariableInit(environment) %}
+    {%- do MaxValueStaticVariableInit(environment) %}
+    {%- do MinValueStaticVariableInit(environment) %}
     {%- do MultiplyStaticVariableInit(environment) %}
     {%- do NamedTypeSpecifierStaticVariableInit(environment) %}
     {%- do NegateStaticVariableInit(environment) %}

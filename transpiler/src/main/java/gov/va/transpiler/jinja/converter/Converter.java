@@ -430,14 +430,14 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     public TranspilerNode visitMaxValue(MaxValue element, State state) {
         state.setCurrentCQLNode(element);
-        new UnsupportedNode(state, element);
+        new MaxValueNode(state, element);
         return super.visitMaxValue(element, state);
     }
 
     @Override
     public TranspilerNode visitMinValue(MinValue element, State state) {
         state.setCurrentCQLNode(element);
-        new UnsupportedNode(state, element);
+        new MinValueNode(state, element);
         return super.visitMinValue(element, state);
     }
 
