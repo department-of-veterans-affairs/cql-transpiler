@@ -72,6 +72,7 @@
 {%- from "library/operators/TypeSpecifierStaticVariable.sql" import TypeSpecifierStaticVariableInit %}
 {%- from "library/operators/UnionStaticVariable.sql" import UnionStaticVariableInit %}
 {%- from "library/operators/UnsupportedStaticVariable.sql" import UnsupportedStaticVariableInit %}
+{%- from "library/operators/ValueSetDefStaticVariable.sql" import ValueSetDefStaticVariableInit %}
 {%- from "library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
 {%- from "library/operators/WithStaticVariable.sql" import WithStaticVariableInit %}
 
@@ -147,6 +148,7 @@
     {%- do TypeSpecifierStaticVariableInit(environment) %}
     {%- do UnionStaticVariableInit(environment) %}
     {%- do UnsupportedStaticVariableInit(environment) %}
+    {%- do ValueSetDefStaticVariableInit(environment) %}
     {%- do ValueSetRefStaticVariableInit(environment) %}
     {%- do WithStaticVariableInit(environment) %}
 {%- endmacro %}
