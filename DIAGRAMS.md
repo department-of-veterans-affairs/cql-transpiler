@@ -2,7 +2,7 @@ Reading this file requires [mermaid](https://github.com/mermaid-js/mermaid).
 
 # Simplified Overview
 ```mermaid
-flowchart LR
+flowchart TD
 
 A[CQL Text File] -->|Java Transpiler| B[Jinja/DBT text files]
 B -->C{Compilation Environment}
