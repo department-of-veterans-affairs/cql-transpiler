@@ -1,14 +1,31 @@
 Reading this file requires [mermaid](https://github.com/mermaid-js/mermaid).
 
-# Main Overview
+# Simplified Overview
 ```mermaid
-flowchart TD
+flowchart LR
 
 A[CQL Text File] -->|Java Transpiler| B[Jinja/DBT text files]
 B -->C{Compilation Environment}
 C -->|test_models.py| D[SQL Files With Placeholders]
 C -->|Databricks Environment - DBT Compile| E[Valid SQL Files]
 E -->|Running against servers| F[MSSQL Measure Results]
+```
+# Main Overview
+```mermaid
+flowchart TD
+
+subgraph java["Java"]
+    a(["Parse text"]) --> aa(["Create Logical Tree"])
+    aa --> aaa(["Convert to Query Language Semantics"])
+end
+A["CQL"] --> java
+java --> B["Query Logical Tree"]
+subgraph dbt["Jinja/DBT"]
+    i(["Parse Tree"]) --> ii(["Adapt for Dialect"])
+    ii --> iii(["Adapt for Database"])
+end
+B --> dbt
+dbt --> C["SQL"]
 ```
 
 # Measure Logic Transformation Overview
