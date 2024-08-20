@@ -12,7 +12,7 @@ E -->|Running against servers| F[MSSQL Measure Results]
 ```
 # Main Overview
 ```mermaid
-flowchart TD
+flowchart LR
 
 subgraph java["Java"]
     a(["Parse text"]) --> aa(["Create Logical Tree"])
