@@ -3,10 +3,15 @@
         * OperatorHandlerStaticVariable.sql
         * RetrieveStaticVariable.sql
 #}
-{%- from "ValueSetUtilityMacros.sql" import valuesetCodes %}
-{%- from "jinja/library/operators/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{%- from "jinja/library/operators/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
-{%- from "jinja/library/operators/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
+{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{%- from "library/operators/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
+{%- from "custom_overrides/ValueSetUtilityMacros.sql" import valuesetCodes %}
+{#- Placeholder for dbt function #}
+{%- from "custom_overrides/MockDBTFunctions.sql" import source %}
+{#- Placeholder for dbt function #}
+{%- from "custom_overrides/MockDBTFunctions.sql" import ref %}
+{#- Placeholder for dbt function #}
+{%- from "custom_overrides/MockDBTFunctions.sql" import env_var %}
 
 {%- macro RetrieveGetDBT(environment, state, valueSet, model, dataType, version, codeProperty="code") -%}
   {%- if dataType == 'patient' %}

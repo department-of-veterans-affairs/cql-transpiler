@@ -3,8 +3,8 @@
         * OperatorHandlerStaticVariable.sql
         * ValueSetRefStaticVariable.sql
 #}
-{%- from "jinja/library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{%- from "jinja/library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
+{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{%- from "library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
 
 {%- macro ValueSetRefPrintCustomOverride(environment, this, state, arguments) -%}
     {{ arguments['referenceTo'][value].split(':')[2] }}

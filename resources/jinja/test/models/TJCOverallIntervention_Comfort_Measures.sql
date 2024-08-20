@@ -1,8 +1,7 @@
-
-{%- from "library/Init.sql" import initEnvironment %}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
 {%- from "generated/TJCOverall_7__1__000.sql" import TJCOverallIntervention_Comfort_Measures %}
 
 {%- set environment = namespace() %}
-{%- do initEnvironment(environment) -%}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
 
 {{ TJCOverallIntervention_Comfort_Measures(environment, none) }}

@@ -3,11 +3,10 @@
         * OperatorHandlerStaticVariable.sql
         * ParameterRefStaticVariable.sql
 #}
-{%- from "jinja/library/operators/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{%- from "jinja/library/operators/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
+{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{%- from "library/operators/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
 
-{%- macro ParameterRefPrintCustomOverride(environment, this, state, arguments) -%}
-{%- endmacro %}
+{%- macro ParameterRefPrintCustomOverride(environment, this, state, arguments) -%}/* Parameter reference with args: <{{ arguments }}>*/{%- endmacro %}
 
 {%- macro ParameterRefCustomOverrideInit(environment) %}
     {#- initialize prerequisites #}

@@ -1,8 +1,7 @@
-
-{% from "library/Init.sql" import initEnvironment %}
-{% from "generated/MATGlobalCommonFunctions_7__0__000.sql" import MATGlobalCommonFunctionsPatient %}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated/MATGlobalCommonFunctions_7__0__000.sql" import MATGlobalCommonFunctionsPatient %}
 
 {%- set environment = namespace() %}
-{%- do initEnvironment(environment) %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
 
 {{ MATGlobalCommonFunctionsPatient(environment, none) }}

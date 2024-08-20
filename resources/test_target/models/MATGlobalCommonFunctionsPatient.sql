@@ -1,5 +1,3 @@
 
 
-
-
-/*<Unsupported Retrieve with arguments <modeltype: urn:healthit-gov:qdm:v5_6, templateId: Patient>*/
+  SELECT _dataType.*, GETDATE() _evaluatedOn, DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey, STRUCT(STRING(_ep.measurementPeriod) key, _ep.measurementPeriod measurementPeriod) _parameters FROM /* Placeholder for DBT "source" with arguments |fhirlake|common__patient| */ _dataType CROSS JOIN /* Placeholder for DBT "ref" with arguments |system__evaluation_period| */ _ep

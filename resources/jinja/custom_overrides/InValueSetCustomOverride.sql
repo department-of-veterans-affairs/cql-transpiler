@@ -3,9 +3,9 @@
         * OperatorHandlerStaticVariable.sql
         * InValueSetStaticVariable.sql
 #}
-{%- from "ValueSetUtilityMacros.sql" import valuesetCodes %}
-{%- from "jinja/library/operators/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
-{%- from "jinja/library/operators/InValueSetStaticVariable.sql" import InValueSetStaticVariableInit %}
+{%- from "custom_overrides/ValueSetUtilityMacros.sql" import valuesetCodes %}
+{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
+{%- from "library/operators/InValueSetStaticVariable.sql" import InValueSetStaticVariableInit %}
 
 {%- macro InValueSetPrintCustomOverride(environment, this, state, arguments) -%}
     {%- if arguments['valueSetExpression'] -%}

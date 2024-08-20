@@ -1,8 +1,7 @@
-
-{%- from "library/Init.sql" import initEnvironment %}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
 {%- from "generated/TJCOverall_7__1__000.sql" import TJCOverallHospitalizationWithObservationLengthofStay %}
 
 {%- set environment = namespace() %}
-{%- do initEnvironment(environment) -%}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
 
 {{ TJCOverallHospitalizationWithObservationLengthofStay(environment, none) }}
