@@ -1,6 +1,5 @@
-
 {%- macro OperatorClassGetDataType(environment, this, carrier, state, arguments) %}
-{%-     set carrier.value = this.defaultDataType %}
+    {%- set carrier.value = this.defaultDataType %}
 {%- endmacro %}
 
 {%- macro OperatorClassPrint(environment, this, state, arguments) -%}
@@ -26,7 +25,7 @@
     {%- set operatorNamespace.print = OperatorClassPrint %}
 {%- endmacro %}
 
-{%- macro OperatorClassInit(environment) -%}
+{%- macro OperatorClassInit(environment) %}
     {%- set OperatorClass = namespace() %}
     {%- set OperatorClass.construct = OperatorClassConstruct %}
     {%- set environment.OperatorClass = OperatorClass %}

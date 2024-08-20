@@ -12,7 +12,7 @@
     EXISTS ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}})
 {%- endmacro %}
 
-{% macro ExistsStaticVariableInit(environment) %}
+{%- macro ExistsStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
     {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}

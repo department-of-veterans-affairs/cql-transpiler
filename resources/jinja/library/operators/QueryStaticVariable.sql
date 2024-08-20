@@ -1,9 +1,3 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
 {%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
@@ -15,10 +9,7 @@
     {%- if arguments['letClauseList']|length > 0 -%}
         LET {{ environment.printOperatorsFromList(environment, state, arguments['letClauseList'], ", ") }} 
     {%- endif -%}
-    SELECT
-    {%- if arguments['returnClause'] == none %} *
-    {%- else %} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['returnClause']) }}
-    {%- endif %} FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }}
+    SELECT {% if arguments['returnClause'] == none %}*{% else %}{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['returnClause']) }}{%- endif %} FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }}
     {%- if arguments['where'] != none %} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['where']) }}{% endif %}
     {%- if arguments['sortClause'] != none %} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['sortClause']) }}{% endif %}
     {%- set state.coercionInstructions = previousCoercionInstructions %}

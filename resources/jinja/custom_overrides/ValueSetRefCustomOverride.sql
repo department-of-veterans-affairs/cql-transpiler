@@ -1,8 +1,3 @@
-{#    
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * ValueSetRefStaticVariable.sql
-#}
 {%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
 

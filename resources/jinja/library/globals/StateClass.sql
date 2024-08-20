@@ -6,7 +6,7 @@
     {%- set stateNamespace.insideSqlComment = false %}
 {%- endmacro %}
 
-{%- macro StateClassInit(environment) -%}
+{%- macro StateClassInit(environment) %}
     {%- set StateClass = namespace() %}
     {%- set StateClass.construct = StateClassConstruct %}
     {%- set environment.StateClass = StateClass %}

@@ -1,6 +1,4 @@
-{#-
-    Loads operators into environment
-#}
+{#- Loads operators into environment #}
 {%- from "library/operators/AddStaticVariable.sql" import AddStaticVariableInit %}
 {%- from "library/operators/AfterStaticVariable.sql" import AfterStaticVariableInit %}
 {%- from "library/operators/AliasedQuerySourceStaticVariable.sql" import AliasedQuerySourceStaticVariableInit %}

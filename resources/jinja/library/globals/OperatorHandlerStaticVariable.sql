@@ -1,10 +1,6 @@
-{#-    
-    Environment prerequisites:
-        * OperatorHandlerClass.sql
-#}
 {%- from "library/globals/OperatorHandlerClass.sql" import OperatorHandlerClassInit %}
 
-{% macro OperatorHandlerStaticVariableInit(environment) -%}
+{%- macro OperatorHandlerStaticVariableInit(environment) -%}
     {#- initialize prerequisites #}
     {%-  do OperatorHandlerClassInit(environment) %}
     {#- initialize member variables #}

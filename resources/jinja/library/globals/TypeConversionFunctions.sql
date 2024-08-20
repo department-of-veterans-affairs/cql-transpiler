@@ -1,18 +1,11 @@
-{#-
-    Environment prerequisites:
-        * StandardFunctions.sql
-        * ContextHandlingFunctions.sql
-#}
 {%- from "library/globals/StandardFunctions.sql" import StandardFunctionsInit %}
 {%- from "library/globals/ContextHandlingFunctions.sql" import ContextHandlingFunctionsInit %}
 {%- from "library/globals/ListPrintingFunctions.sql" import ListPrintingFunctionsInit %}
 
-{# Wraps SQL statement in a collect block #}
+{#- Wraps SQL statement in a collect block #}
 {%- macro collect(environment, context, toCollect) -%}
-    SELECT collect_list(struct(*)) AS {{ environment.printSingleValueColumnName(environment) }} FROM ({{ toCollect }})
-    {%- if context != 'Unfiltered' %} GROUP BY {{ environment.printIDFromContext(environment, context) }}
-    {%- endif %}
-{% endmacro %}
+    SELECT collect_list(struct(*)) AS {{ environment.printSingleValueColumnName(environment) }} FROM ({{ toCollect }}){%- if context != 'Unfiltered' %} GROUP BY {{ environment.printIDFromContext(environment, context) }}{% endif %}
+{%- endmacro %}
 
 {#- Wraps SQL statement in a decollect block #}
 {%- macro decollect(environment, context, toDecollect) -%}
@@ -44,7 +37,7 @@
     {%- endif %}
 {%- endmacro %}
 
-{% macro TypeConversionFunctionsInit(environment) -%}
+{%- macro TypeConversionFunctionsInit(environment) %}
     {#- initialize prerequisites #}
     {%- do StandardFunctionsInit(environment) %}
     {%- do ContextHandlingFunctionsInit(environment) %}

@@ -14,7 +14,7 @@
     first_value({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
 {%- endmacro %}
 
-{% macro FirstStaticVariableInit(environment) %}
+{%- macro FirstStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
     {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}

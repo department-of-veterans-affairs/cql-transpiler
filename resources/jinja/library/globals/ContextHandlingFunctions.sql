@@ -1,4 +1,3 @@
-
 {#- Prints the id matching the current context #}
 {%- macro printIDFromContext(environment, context) -%}
     {{ context }}id

@@ -1,8 +1,3 @@
-{#-
-    Environment prerequisites:
-        * StateClass.sql
-        * TypeConversionFunctions.sql
-#}
 {%- from "library/globals/StateClass.sql" import StateClassInit %}
 {%- from "library/globals/TypeConversionFunctions.sql" import TypeConversionFunctionsInit %}
 

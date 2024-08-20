@@ -12,7 +12,7 @@
     {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
 {%- endmacro %}
 
-{% macro FunctionDefStaticVariableInit(environment) %}
+{%- macro FunctionDefStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
     {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}

@@ -11,7 +11,7 @@
     {%- endfor %}
 {%- endmacro %}
 
-{# Prints operators from a list, delimiting them with a joiner #}
+{#- Prints operators from a list, delimiting them with a joiner #}
 {%- macro printOperatorsFromList(environment, state, listOfArgumentsToPrint, joiner) %}
     {%- set ns = namespace(first = true) %}
     {%- for item in listOfArgumentsToPrint %}
@@ -24,7 +24,7 @@
     {%- endfor %}
 {%- endmacro %}
 
-{% macro ListPrintingFunctionsInit(environment) -%}
+{%- macro ListPrintingFunctionsInit(environment) -%}
     {%- set environment.printItemsFromList = printItemsFromList %}
     {%- set environment.printOperatorsFromList = printOperatorsFromList %}
 {%- endmacro %}

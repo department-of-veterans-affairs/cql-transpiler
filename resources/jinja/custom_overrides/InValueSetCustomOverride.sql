@@ -1,8 +1,3 @@
-{#    
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * InValueSetStaticVariable.sql
-#}
 {%- from "custom_overrides/ValueSetUtilityMacros.sql" import valuesetCodes %}
 {%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/operators/InValueSetStaticVariable.sql" import InValueSetStaticVariableInit %}
