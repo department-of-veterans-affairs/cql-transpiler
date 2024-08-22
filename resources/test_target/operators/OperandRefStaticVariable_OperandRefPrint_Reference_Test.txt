@@ -7,22 +7,10 @@ this: [this]
 
 state: [<Namespace {'functionArguments': {'testName': {'name': 'testValue'}}}>]
 
-arguments: [<Namespace {'referenceTo': {'name': 'testName'}}>]
+arguments: [<Namespace {'referenceTo': {'referenceName': 'testName'}}>]
 
 ==== FUNCTION CALL ====
 
-
-\\\ testPrint
-
-    <Namespace {'OperatorHandler': <Namespace {'print': <Macro 'testPrint'>}>}>
-
-    <Namespace {'print': <Macro 'testPrint'>}>
-
-    <Namespace {'functionArguments': {'testName': {'name': 'testValue'}}}>
-
-    {'name': 'testValue'}
-
-\\\ end testPrint
 
 
 ==== POST-CALL STATE ====
@@ -33,4 +21,4 @@ this: [this]
 
 state: [<Namespace {'functionArguments': {'testName': {'name': 'testValue'}}}>]
 
-arguments: [<Namespace {'referenceTo': {'name': 'testName'}}>]
+arguments: [<Namespace {'referenceTo': {'referenceName': 'testName'}}>]

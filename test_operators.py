@@ -7,7 +7,7 @@ from render_jinja_file import render_jinja_file
 # creates the jinja environment
 resources_folder = "resources/"
 jinja_subfolder = 'jinja/'
-test_subfolder = 'test/'
+test_subfolder = 'jinja_only/test/'
 operator_subfolder = 'operators/'
 target_subfolder = "test_target/"
 environment = Environment(loader = FileSystemLoader(resources_folder + jinja_subfolder))

@@ -1,0 +1,30 @@
+{%- from "library/operators/FunctionRefStaticVariable.sql" import FunctionRefPrint %}
+{%- from "jinja_only/test/utilities/testPrint.j2" import testPrint %}
+{%- set testOperatorHandler = namespace(print=testPrint) %}
+{%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
+{%- set this = 'this' %}
+{%- set state = namespace(functionArguments={'testArg1' : {'testValue' : 'testValA'}, 'testArg2' : {'testValue' : 'testValB'}}) %}
+{%- set arguments = namespace(children = [{'testValue' : 'testValZ'}], referenceTo={'referenceName' : 'testFunction', 'arguments' : [{'name' : 'testArg1'}]}) %}
+==== PRIOR STATE ====
+
+environment: [{{ environment }}]
+
+this: [{{ this }}]
+
+state: [{{ state }}]
+
+arguments: [{{ arguments }}]
+
+==== FUNCTION CALL ====
+
+{{ FunctionRefPrint(environment, this, state, arguments) }}
+
+==== POST-CALL STATE ====
+
+environment: [{{ environment }}]
+
+this: [{{ this }}]
+
+state: [{{ state }}]
+
+arguments: [{{ arguments }}]

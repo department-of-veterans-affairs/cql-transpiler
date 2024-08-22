@@ -1,10 +1,10 @@
-{%- from "library/operators/OperandDefStaticVariable.sql" import OperandDefPrint %}
-{%- from "test/utilities/testPrint.j2" import testPrint %}
+{%- from "library/operators/FunctionDefStaticVariable.sql" import FunctionDefPrint %}
+{%- from "jinja_only/test/utilities/testPrint.j2" import testPrint %}
 {%- set testOperatorHandler = namespace(print=testPrint) %}
 {%- set environment = namespace(OperatorHandler=testOperatorHandler) %}
 {%- set this = 'this' %}
 {%- set state = namespace(functionArguments = {}) %}
-{%- set arguments = namespace(name='testName') %}
+{%- set arguments = namespace(child = {}) %}
 ==== PRIOR STATE ====
 
 environment: [{{ environment }}]
@@ -17,7 +17,7 @@ arguments: [{{ arguments }}]
 
 ==== FUNCTION CALL ====
 
-{{ OperandDefPrint(environment, this, state, arguments) }}
+{{ FunctionDefPrint(environment, this, state, arguments) }}
 
 ==== POST-CALL STATE ====
 

@@ -7,7 +7,7 @@ this: [this]
 
 state: [<Namespace {'functionArguments': {}}>]
 
-arguments: [<Namespace {'children': [{'testValue': 'foo'}], 'referenceTo': {'name': 'testFunction', 'arguments': [{'name': 'bar'}]}}>]
+arguments: [<Namespace {'children': [{'testValue': 'foo'}], 'referenceTo': {'referenceName': 'testFunction', 'arguments': [{'name': 'bar'}]}}>]
 
 ==== FUNCTION CALL ====
 
@@ -18,9 +18,9 @@ arguments: [<Namespace {'children': [{'testValue': 'foo'}], 'referenceTo': {'nam
 
     <Namespace {'print': <Macro 'testPrint'>}>
 
-    <Namespace {'functionArguments': {'bar': {'testValue': 'foo'}}}>
+    <Namespace {'functionArguments': {Undefined: Undefined}}>
 
-    {'name': 'testFunction', 'arguments': [{'name': 'bar'}]}
+    {'referenceName': 'testFunction', 'arguments': [{'name': 'bar'}]}
 
 \\\ end testPrint
 
@@ -33,4 +33,4 @@ this: [this]
 
 state: [<Namespace {'functionArguments': {}}>]
 
-arguments: [<Namespace {'children': [{'testValue': 'foo'}], 'referenceTo': {'name': 'testFunction', 'arguments': [{'name': 'bar'}]}}>]
+arguments: [<Namespace {'children': [{'testValue': 'foo'}], 'referenceTo': {'referenceName': 'testFunction', 'arguments': [{'name': 'bar'}]}}>]
