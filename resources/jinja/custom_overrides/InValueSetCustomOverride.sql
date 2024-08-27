@@ -8,7 +8,7 @@
     {%- else -%}
         {%- set valueSet = arguments['valueSetReference'] %}
     {%- endif -%}
-    EXISTS (SELECT code FROM {{ valuesetCodes(environment, state, valueSet, asOfDate) }} WHERE code = {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
+    EXISTS (SELECT codes.code AS code FROM ({{ valuesetCodes(environment, state, valueSet, asOfDate) }}) WHERE code = {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
 {%- endmacro %}
 
 {%- macro InValueSetCustomOverrideInit(environment) %}
