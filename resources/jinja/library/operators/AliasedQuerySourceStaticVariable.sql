@@ -3,7 +3,10 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro AliasedQuerySourcePrint(environment, this, state, arguments) -%}
+    {%- set previousCoercionInstructions = state.coercionInstructions %}
+    {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
     ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS {{ arguments['alias'] }}
+    {%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro %}
 
 {%- macro AliasedQuerySourceStaticVariableInit(environment) %}
@@ -16,4 +19,5 @@
     {%- set environment.AliasedQuerySource = AliasedQuerySource %}
     {%- do environment.OperatorClass.construct(environment, none, environment.AliasedQuerySource) %}
     {%- set AliasedQuerySource.print = AliasedQuerySourcePrint %}
+    {%- set AliasedQuerySource.defaultDataType = environment.DataTypeEnum.TABLE %}
 {%- endmacro %}

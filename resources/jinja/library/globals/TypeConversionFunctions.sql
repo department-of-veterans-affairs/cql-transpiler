@@ -9,7 +9,7 @@
 
 {#- Wraps SQL statement in a decollect block #}
 {%- macro decollect(environment, context, toDecollect) -%}
-    SELECT col.* FROM (SELECT explode(*) FROM ({{ toDecollect }}))
+    SELECT col.* FROM (explode({{ toDecollect }}))
 {%- endmacro %}
 
 {#- Wraps SQL statement in an encapsulate block #}
