@@ -20,21 +20,18 @@
 {#- Coerces the first applicable child of this node into the correct type #}
 {%- macro coerce(environment, originalType, targetType, state, arguments) %}
     {%- set previousCoercionInstructions = state.coercionInstructions %}
-    {%- if targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.SIMPLE %}
-        {%- set state.coercionInstructions = {} -%}
+    {%- set state.coercionInstructions = {} -%}
+    {%- if targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.SIMPLE -%}
         {{ encapsulate(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
-        {%- set state.coercionInstructions = previousCoercionInstructions %}
-    {%- elif targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.TABLE %}
-        {%- set state.coercionInstructions = {} -%}
+    {%- elif targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.TABLE -%}
         {{ collect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
-        {%- set state.coercionInstructions = previousCoercionInstructions %}
-    {%- elif targetType == environment.DataTypeEnum.TABLE and originalType == environment.DataTypeEnum.ENCAPSULATED %}
-        {%- set state.coercionInstructions = {} -%}
+    {%- elif targetType == environment.DataTypeEnum.TABLE and originalType == environment.DataTypeEnum.ENCAPSULATED -%}
         {{ decollect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
-        {%- set state.coercionInstructions = previousCoercionInstructions %}
     {%- else -%}
+        {%- set state.coercionInstructions = previousCoercionInstructions -%}
         {{ arguments['operator'].print(environment, arguments['operator'], state, arguments) }}
     {%- endif %}
+    {%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro %}
 
 {%- macro TypeConversionFunctionsInit(environment) %}
