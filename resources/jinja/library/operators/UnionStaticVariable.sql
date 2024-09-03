@@ -11,8 +11,10 @@
 {%- macro UnionPrint(environment, this, state, arguments) -%}
     {%- set previousCoercionInstructions = state.coercionInstructions %}
     {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
-    {{ environment.printOperatorsFromList(environment, state, arguments['children'], ' UNION ') }}
+    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['children'][0]) }}) FULL JOIN ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['children'][1])}}) ON 1=0
     {%- set state.coercionInstructions = previousCoercionInstructions %}
+    {#- TODO: support for nary unions (only supports binary) #}
+    {#- TODO: support for resolving equivalent items between tables (Unions when we detect the same data type, full joins (on primary key?) otherwise) #}
 {%- endmacro %}
 
 {%- macro UnionStaticVariableInit(environment) %}
