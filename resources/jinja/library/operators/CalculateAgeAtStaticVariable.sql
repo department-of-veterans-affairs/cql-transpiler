@@ -9,7 +9,8 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro CalculateAgeAtPrint(environment, this, state, arguments) -%}
-    floor(months_between({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right'])}}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left']) }}) / 12)
+    /* Unsupported operator CalculateAgeAt with arguments: {{ arguments }} */
+    {#- floor(months_between({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right'])}}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left']) }}) / 12 #}
 {%- endmacro %}
 
 {%- macro CalculateAgeAtStaticVariableInit(environment) %}

@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro ToDatePrint(environment, this, state, arguments) -%}
-    to_date({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
+    /* Unsupported operator ToDate with arguments {{ arguments }} */
 {%- endmacro %}
 
 {%- macro ToDateStaticVariableInit(environment) %}
