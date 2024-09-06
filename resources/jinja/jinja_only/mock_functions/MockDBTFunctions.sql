@@ -1,11 +1,23 @@
+{%- macro printMockDBTFunction(name, arguments) -%}
+    {{ '{{ ' }}
+    {%- if arguments == none or arguments|length == 0 -%}
+        {{ name }}()
+    {%- elif arguments|length == 1 -%}
+        {{ name }}('{{ arguments[0] }}')
+    {%- else -%}
+        {{ name }}{{ arguments }}
+    {%- endif -%}
+    {{ ' }}' }}
+{%- endmacro %}
+
 {%- macro source() -%}
-    /* Placeholder for DBT "source" with arguments |{% for arg in varargs %}{{ arg }}|{% endfor %} */
+    {{ printMockDBTFunction('source', varargs) }}
 {%- endmacro %}
 
 {%- macro ref() -%}
-    /* Placeholder for DBT "ref" with arguments |{% for arg in varargs %}{{ arg }}|{% endfor %} */
+    {{ printMockDBTFunction('ref', varargs) }}
 {%- endmacro %}
 
 {%- macro env_var() -%}
-    /* Placeholder for DBT "env_var" with arguments |{% for arg in varargs %}{{ arg }}|{% endfor %} */
+    {{ printMockDBTFunction('env_var', varargs) }}
 {%- endmacro %}
