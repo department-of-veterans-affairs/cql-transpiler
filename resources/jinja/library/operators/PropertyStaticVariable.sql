@@ -10,7 +10,11 @@
 
 {%- macro PropertyPrint(environment, this, state, arguments) -%}
     {%- if arguments['child'] != none -%}
-        {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ arguments['path'] }}
+        {%- if arguments['child']['operator']['defaultDataType'] == environment.DataTypeEnum.SIMPLE -%}
+            {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ arguments['path'] }}
+        {%- else -%}
+            SELECT {{ arguments['path'] }} FROM {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
+        {%- endif %}
     {%- elif arguments['path'] != none -%}
         {{ arguments['scope'] }}.{{ arguments['path'] }}
     {%- else -%}
