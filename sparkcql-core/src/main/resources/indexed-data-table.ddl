@@ -1,1 +1,0 @@
-patientId STRING,primaryCode STRING,primaryStartDate TIMESTAMP,primaryEndDate TIMESTAMP,data STRUCT<${dataTypeSchema}>
