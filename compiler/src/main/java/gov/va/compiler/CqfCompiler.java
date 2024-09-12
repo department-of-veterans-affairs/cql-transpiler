@@ -1,4 +1,4 @@
-package gov.va.sparkcql.cqf.compiler;
+package gov.va.compiler;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -8,10 +8,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import gov.va.sparkcql.cqf.domain.CqlSource;
 import org.cqframework.cql.cql2elm.*;
 import org.hl7.elm.r1.Library;
 import org.hl7.elm.r1.VersionedIdentifier;
+
+import gov.va.compiler.domain.CqlSource;
 
 public class CqfCompiler {
 

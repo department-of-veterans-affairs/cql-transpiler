@@ -1,4 +1,4 @@
-package gov.va.sparkcql.cqf.domain;
+package gov.va.compiler.domain;
 
 import org.hl7.elm.r1.VersionedIdentifier;
 

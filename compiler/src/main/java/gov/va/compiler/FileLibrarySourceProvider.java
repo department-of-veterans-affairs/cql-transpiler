@@ -1,4 +1,4 @@
-package gov.va.sparkcql.cqf.compiler;
+package gov.va.compiler;
 
 import org.cqframework.cql.cql2elm.LibrarySourceProvider;
 import org.hl7.elm.r1.VersionedIdentifier;

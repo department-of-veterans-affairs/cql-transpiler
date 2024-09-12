@@ -1,4 +1,4 @@
-package gov.va.sparkcql.cqf.compiler;
+package gov.va.compiler;
 
 import java.util.List;
 import java.util.stream.Collectors;

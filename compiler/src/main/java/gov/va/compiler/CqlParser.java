@@ -1,4 +1,4 @@
-package gov.va.sparkcql.cqf.compiler;
+package gov.va.compiler;
 
 import org.hl7.elm.r1.VersionedIdentifier;
 

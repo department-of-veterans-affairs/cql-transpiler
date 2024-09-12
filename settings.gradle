@@ -1,7 +1,5 @@
-rootProject.name = 'sparkcql'
+rootProject.name = 'cql-transpiler'
 include(
-    'sparkcql-core',
-    'sparkcql-cqf',
-    'sparkcql-cqf-shadow',
+    'compiler',
     'transpiler'
 )

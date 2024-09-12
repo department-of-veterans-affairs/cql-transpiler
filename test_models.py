@@ -3,7 +3,7 @@
 import os
 from jinja2 import Environment, FileSystemLoader
 from render_jinja_file import render_jinja_file
-        
+
 # creates the jinja environment
 resources_folder = "resources/"
 jinja_subfolder = 'jinja/'

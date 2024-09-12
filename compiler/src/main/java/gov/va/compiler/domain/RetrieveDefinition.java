@@ -1,4 +1,4 @@
-package gov.va.sparkcql.cqf.domain;
+package gov.va.compiler.domain;
 
 import org.hl7.elm.r1.Retrieve;
 import org.hl7.elm.r1.ValueSetRef;
@@ -98,7 +98,7 @@ public class RetrieveDefinition implements Serializable {
         return Objects.hash(dataType, templateId, filters);
     }
 
-    public enum Comparator implements Serializable {
+    public enum Comparator {
         EQUALS,
         NOT_EQUALS,
         GREATER_THAN,
