@@ -11,7 +11,6 @@ import gov.va.transpiler.jinja.node.InvalidChildNodeException;
 import gov.va.transpiler.jinja.state.State;
 
 public class RetrieveNode extends ExpressionNode<Retrieve> {
-    // TODO: arguments included in the original CQL node are missing from the list of simple arguments
 
     public TranspilerNode valueSetNode;
 
@@ -57,6 +56,8 @@ public class RetrieveNode extends ExpressionNode<Retrieve> {
         map.put("'resultTypeLabel'", resultTypeLabel);
         map.put("'codeComparator'", getCqlEquivalent().getCodeComparator() == null ? "none" : "'" + getCqlEquivalent().getCodeComparator() + "'");
         map.put("'codeProperty'", getCqlEquivalent().getCodeProperty() == null ? "none" : "'" + getCqlEquivalent().getCodeProperty() + "'");
+        map.put("'codeSearch'", getCqlEquivalent().getCodeSearch() == null ? "none" : "'" + getCqlEquivalent().getCodeSearch() + "'");
+        map.put("'valueSetProperty'", getCqlEquivalent().getValueSetProperty() == null ? "none" : "'" + getCqlEquivalent().getValueSetProperty() + "'");
         return map;
     }
 

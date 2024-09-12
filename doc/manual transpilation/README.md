@@ -1,0 +1,1 @@
+This folder contains CQL manually transpiled to SparkSQL for reference use.

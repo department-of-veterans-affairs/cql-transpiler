@@ -8,7 +8,6 @@ import gov.va.transpiler.jinja.node.trackable.element.expression.ExpressionNode;
 import gov.va.transpiler.jinja.state.State;
 
 public class AliasRefNode extends ExpressionNode<AliasRef> {
-    // TODO: include source (AlaisedQuerySource) as nested operator tree inside output
 
     public AliasRefNode(State state, AliasRef cqlEquivalent) {
         super(state, cqlEquivalent);

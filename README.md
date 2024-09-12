@@ -41,9 +41,16 @@ The CQL-to-jinja portion of the transpiler assumes that a macros file exists con
 
 ### Design - CQL-to-Jinja
 
-Java portion of the transpiler.
+The "transpiler" module and specifically the "Transpiler" class are the entry point into the transpiler. The main function of the program:
 
-[TODO]
+#### Overview
+
+1. Loads CQL text files into memory
+1. Supplies the loaded files to the sparkcql-cqf module
+1. The sparkcql-cql module invokes the cqlframework library code
+1. The cqlframework library code creates an AST (Abstract Syntax Tree) for the supplied CQL
+1. The transpiler module transverses the CQL AST to create a customized, intermediate AST
+1. The transpiler module transverses the Intermediate AST to render it as jinja/DBT text.
 
 ### Design - Jinja-to-Target
 
@@ -61,7 +68,7 @@ To create a function that returns one or more values, create a macro that accept
 
 ##### State
 
-The jinja AST does not assume any particular behavior from the State class. The State class exists for the macro file's use.
+The jinja AST rendering process does not assume any particular behavior from the State class. The State class exists for the macro file's use.
 
 ##### Operator
 
