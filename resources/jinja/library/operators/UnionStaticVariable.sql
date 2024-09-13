@@ -9,11 +9,12 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro UnionPrint(environment, this, state, arguments) -%}
-    {%- set previousCoercionInstructions = state.coercionInstructions %}
-    {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
-    SELECT * FROM ({{ environment.printOperatorsFromList(environment, state, arguments['children'], ') FULL JOIN (') }}) ON 1=0
-    {%- set state.coercionInstructions = previousCoercionInstructions %}
-    {#- TODO: support for resolving equivalent items between tables (Unions when we detect the same data type, full joins (on primary key?) otherwise) #}
+    {%- if arguments['mixed'] == 'true' -%}
+        {#- TODO: have full joins happnen on some sort of primary key, if possible -#}
+        SELECT * FROM (SELECT * FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ') FULL JOIN (SELECT * FROM ') }}) ON 1=0
+    {%- else -%}
+        (SELECT * FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ') UNION (SELECT * FROM ') }})
+    {%- endif %}
 {%- endmacro %}
 
 {%- macro UnionStaticVariableInit(environment) %}

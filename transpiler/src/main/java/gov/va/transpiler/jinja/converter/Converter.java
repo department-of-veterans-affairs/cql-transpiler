@@ -636,7 +636,7 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     @Override
     public TranspilerNode visitUnion(Union element, State state) {
         state.setCurrentCQLNode(element);
-        new NaryExpressionNode<Union>(state, element);
+        new UnionNode(state, element);
         return super.visitUnion(element, state);
     }
 
