@@ -1,6 +1,6 @@
 {#- Prints the id matching the current context #}
 {%- macro printIDFromContext(environment, context) -%}
-    {{ context }}id
+    {{ {"Patient": "patientId"}[context] | default("cannotPrintIdFor_" ~ context) }}
 {%- endmacro %}
 
 {%- macro ContextHandlingFunctionsInit(environment) -%}

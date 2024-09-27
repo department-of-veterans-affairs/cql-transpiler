@@ -7,6 +7,7 @@
     {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
     ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS {{ arguments['alias'] }}
     {%- set state.coercionInstructions = previousCoercionInstructions %}
+    {%- set state.aliasContext = arguments['alias'] %}
 {%- endmacro %}
 
 {%- macro AliasedQuerySourceStaticVariableInit(environment) %}

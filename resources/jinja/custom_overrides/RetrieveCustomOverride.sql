@@ -14,7 +14,7 @@
     {%- else %}
         {%- set dataTypeReference = model ~ "__" ~ dataType ~ "_" ~ version %}
     {%- endif -%}
-    /* Retrieve with arguments: ({% if valueSet == none %}{{ [none, model, dataType, version, codeProperty ] }}{% else %}{{ [valueSet['referenceTo']['value'], model, dataType, version, codeProperty ] }}{% endif %}) begins */SELECT _dataType.*, GETDATE() _evaluatedOn, DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey, STRUCT(STRING(_ep.measurementPeriod) key, _ep.measurementPeriod measurementPeriod) _parameters FROM {{ source("fhirlake", dataTypeReference) }} _dataType CROSS JOIN {{ ref("system__evaluation_period") }} _ep{% if valueSet %} WHERE EXISTS (SELECT * FROM (SELECT explode(codes) codes FROM ({{ valuesetCodes(environment, state, valueSet, asOfDate) }})) AS _vs WHERE {{ "_dataType." ~ codeProperty }}.code = _vs.codes.code AND {{ "_dataType." ~ codeProperty }}.system = _vs.codes.system){% endif %}/* Retrieve ends */
+    SELECT _dataType.*, GETDATE() _evaluatedOn, DATE_TRUNC('MM', _ep.measurementPeriod.high) _partitionKey, STRUCT(STRING(_ep.measurementPeriod) key, _ep.measurementPeriod measurementPeriod) _parameters FROM {{ source("fhirlake", dataTypeReference) }} _dataType CROSS JOIN {{ ref("system__evaluation_period") }} _ep{% if valueSet %} WHERE EXISTS (SELECT * FROM (SELECT explode(codes) codes FROM ({{ valuesetCodes(environment, state, valueSet, asOfDate) }})) AS _vs WHERE {{ "_dataType." ~ codeProperty }}.code = _vs.codes.code AND {{ "_dataType." ~ codeProperty }}.system = _vs.codes.system){% endif %}
 {%- endmacro %}
 
 {%- macro RetrievePrintCustomOverride(environment, this, state, arguments) -%}

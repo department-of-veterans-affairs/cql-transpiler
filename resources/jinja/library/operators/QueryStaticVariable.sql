@@ -6,10 +6,12 @@
     {%- set state.insideQuery = true %}
     {%- set previousCoercionInstructions = state.coercionInstructions %}
     {%- set state.coercionInstructions = {} %}
+    {%- set state.aliasContext = none %}
     {%- if arguments['letClauseList']|length > 0 %}LET {{ environment.printOperatorsFromList(environment, state, arguments['letClauseList'], ", ") }} {% endif -%}
     SELECT {% if arguments['returnClause'] == none %}*{% else %}{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['returnClause']) }}{%- endif %} FROM {% set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } %}{{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }}{%- set state.coercionInstructions = {} %}
     {%- if arguments['where'] != none %} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['where']) }}{% endif %}
     {%- if arguments['sortClause'] != none %} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['sortClause']) }}{% endif %}
+    {%- set state.aliasContext = none %}
     {%- set state.coercionInstructions = previousCoercionInstructions %}
     {%- set state.insideQuery = false %}
 {%- endmacro %}
