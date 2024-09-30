@@ -100,8 +100,8 @@ The macros file that targets SparkSQL implements its behavior using the followin
 State - namespace
     + coercionInstructions - Dictionary<String, String> (scoped)
     + context - String (scoped)
-    + insideQuery - Boolean (scoped)
-    + functionArguments - Dictionary<String, Dictionary<String, ?> (scoped)
+    + functionArguments - Dictionary<String, Dictionary<String, ?>> (scoped)
+    + aliasContext - String
 
 note: "scoped" variables should be stored and reset before descending into any branch of the AST where they're modified.
 To do so, use the following pattern:

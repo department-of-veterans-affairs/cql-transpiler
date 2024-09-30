@@ -9,14 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro TypeSpecifierClassPrint(environment, this, state, arguments) -%}
-    {%- set previousInsideSqlComment = state.insideSqlComment %}
-    {%- set state.insideSqlComment = true %}
-    {%- if not previousInsideSqlComment -%}
-        /*
-    {%- endif %} Type specifier operator: <{{ this.name }}> with children:[{{ environment.printOperatorsFromList(environment, state, arguments['children'], ", ") }}]
-    {%- if not previousInsideSqlComment %} */
-    {%- endif %}
-    {%- set state.insideSqlComment = previousInsideSqlComment %}
+    /* Type specifier operator: <{{ this.name }}> with arguments: {{ arguments }} */
 {%- endmacro %}
 
 {%- macro TypeSpecifierClassConstruct(environment, state, typeSpecifierNamestate) %}

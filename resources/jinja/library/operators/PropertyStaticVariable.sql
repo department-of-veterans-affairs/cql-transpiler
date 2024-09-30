@@ -13,7 +13,7 @@
         {%- if arguments['child']['operator']['defaultDataType'] == environment.DataTypeEnum.SIMPLE -%}
             {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ arguments['path'] }}
         {%- else -%}
-            SELECT {{ arguments['path'] }} FROM {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
+            (SELECT {{ arguments['path'] }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}))
         {%- endif %}
     {%- elif arguments['path'] != none -%}
         {{ arguments['scope'] }}.{{ arguments['path'] }}

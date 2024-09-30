@@ -1,9 +1,9 @@
 {%- macro StateClassConstruct(environment, stateNamespace) %}
     {%- set stateNamespace.coercionInstructions = {} %}
     {%- set stateNamespace.context = none %}
-    {%- set stateNamespace.insideQuery = false %}
+    {%- set stateNamespace.wrapSubqueries = false %}
     {%- set stateNamespace.functionArguments = {} %}
-    {%- set stateNamespace.insideSqlComment = false %}
+    {%- set stateNamespace.aliasContext = none %}
 {%- endmacro %}
 
 {%- macro StateClassInit(environment) %}

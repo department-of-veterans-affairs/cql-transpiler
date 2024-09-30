@@ -9,7 +9,11 @@
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
 {%- macro SingletonFromPrint(environment, this, state, arguments) -%}
-    SELECT * FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS SingletonFrom WHERE SingletonFrom.{{ environment.printIDFromContext(environment, state.context) }} = {% if state.aliasContext %}{{ state.aliasContext}}.{{ environment.printIDFromContext(environment, state.context) }}{% else %}/* no alias context defined */{% endif %} LIMIT 1
+    {%- if state.aliasContext -%}
+        SELECT * FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS SingletonFrom WHERE SingletonFrom.{{ environment.printIDFromContext(environment, state.context) }} = {{ state.aliasContext}}.{{ environment.printIDFromContext(environment, state.context) }} LIMIT 1
+    {%- else -%}
+        SELECT * FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS SingletonFrom /* no alias context defined; unable to narrow down SingletonFrom */ LIMIT 1
+    {%- endif -%}
 {%- endmacro %}
 
 {%- macro SingletonFromStaticVariableInit(environment) %}

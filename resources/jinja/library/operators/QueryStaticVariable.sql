@@ -3,7 +3,6 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro QueryPrint(environment, this, state, arguments) -%}
-    {%- set state.insideQuery = true %}
     {%- set previousCoercionInstructions = state.coercionInstructions %}
     {%- set state.coercionInstructions = {} %}
     {%- set state.aliasContext = none %}
@@ -13,7 +12,6 @@
     {%- if arguments['sortClause'] != none %} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['sortClause']) }}{% endif %}
     {%- set state.aliasContext = none %}
     {%- set state.coercionInstructions = previousCoercionInstructions %}
-    {%- set state.insideQuery = false %}
 {%- endmacro %}
 
 {%- macro QueryStaticVariableInit(environment) %}

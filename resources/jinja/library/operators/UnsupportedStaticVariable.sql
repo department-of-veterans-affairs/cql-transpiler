@@ -14,14 +14,7 @@
     {%- set previousInsideSqlComment = state.insideSqlComment %}
     {%- set state.insideSqlComment = true %}
     {%- if not previousInsideSqlComment -%}
-        /*
-    {%- endif -%}
-        <Unsupported Operator: {{ arguments['unsupportedOperator'] }}
-    {%- if arguments['unsupportedOperator'] == none or arguments['unsupportedOperator']|length == 0 -%}
-         with arguments <{{ arguments }}>
-    {%-  endif -%}
-    {%- if not previousInsideSqlComment -%}
-        */
+        /* Unsupported Operator: {{ arguments['unsupportedOperator'] }} with arguments <{{ arguments }}> */
     {%- endif %}
     {%- set state.insideSqlComment = previousInsideSqlComment %}
 {%- endmacro %}
