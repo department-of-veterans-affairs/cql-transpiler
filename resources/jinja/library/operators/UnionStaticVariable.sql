@@ -11,7 +11,7 @@
 {%- macro UnionPrint(environment, this, state, arguments) -%}
     {%- if arguments['mixed'] == 'true' -%}
         {#- TODO: have full joins happnen on some sort of primary key, if possible -#}
-        SELECT * FROM (SELECT * FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ') FULL JOIN (SELECT * FROM ') }}) ON 1=0
+        SELECT * FROM (SELECT * FROM ({{ environment.printOperatorsFromList(environment, state, arguments['children'], ')) FULL JOIN (SELECT * FROM ( ') }}) ON 1=0
     {%- else -%}
         (SELECT * FROM {{ environment.printOperatorsFromList(environment, state, arguments['children'], ') UNION (SELECT * FROM ') }})
     {%- endif %}
