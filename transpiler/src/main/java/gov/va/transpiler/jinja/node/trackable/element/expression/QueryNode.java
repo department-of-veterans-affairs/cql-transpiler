@@ -9,6 +9,7 @@ import org.hl7.elm.r1.Query;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.node.CQLEquivalent;
 import gov.va.transpiler.jinja.node.trackable.element.LetClauseNode;
+import gov.va.transpiler.jinja.node.trackable.element.RelationshipClauseNode;
 import gov.va.transpiler.jinja.state.State;
 
 public class QueryNode extends ExpressionNode<Query> {
@@ -17,6 +18,7 @@ public class QueryNode extends ExpressionNode<Query> {
     public TranspilerNode returnClauseNode;
     public TranspilerNode sortClauseNode;
     public List<TranspilerNode> letClauseNodeList = new ArrayList<>();
+    public List<TranspilerNode> relationshipClauseNodeList = new ArrayList<>();
 
     public QueryNode(State state, Query cqlEquivalent) {
         super(state, cqlEquivalent);
@@ -32,6 +34,8 @@ public class QueryNode extends ExpressionNode<Query> {
             whereNode = child;
         } else if (child instanceof LetClauseNode) {
             letClauseNodeList.add((LetClauseNode) child);
+        } else if (child instanceof RelationshipClauseNode) {
+            relationshipClauseNodeList.add((RelationshipClauseNode<?>) child);
         } else {
             super.addChild(child);
         }
@@ -51,6 +55,7 @@ public class QueryNode extends ExpressionNode<Query> {
     protected Map<String, List<TranspilerNode>> getNodeListArgumentMap() {
         var map = super.getNodeListArgumentMap();
         map.put("'letClauseList'", letClauseNodeList);
+        map.put("'relationshipClauseList'", relationshipClauseNodeList);
         return map;
     }
 }

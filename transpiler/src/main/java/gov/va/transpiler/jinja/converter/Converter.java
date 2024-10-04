@@ -396,7 +396,13 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     public TranspilerNode visitLetClause(LetClause element, State state) {
         state.setCurrentCQLNode(element);
         new LetClauseNode(state, element);
-        return super.visitLetClause(element, state);
+        // super.visitLetClause has a nonstandard format, so do all the expected steps here
+        var result = defaultResult(element, state);
+        if (element.getExpression() != null) {
+            var childResult = visitElement(element.getExpression(), state);
+            result = aggregateResult(result, childResult);
+        }
+        return result;
     }
 
     @Override

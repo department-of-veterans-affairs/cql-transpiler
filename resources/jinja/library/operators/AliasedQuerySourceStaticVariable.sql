@@ -3,11 +3,8 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro AliasedQuerySourcePrint(environment, this, state, arguments) -%}
-    {%- set previousCoercionInstructions = state.coercionInstructions %}
-    {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
-    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS {{ arguments['alias'] }}
-    {%- set state.coercionInstructions = previousCoercionInstructions %}
-    {%- set state.aliasContext = arguments['alias'] %}
+    {#- QueryStaticVariable QueryPrint assumes responsiblity for handling AliasedQuerySource alias printing -#}
+    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
 {%- endmacro %}
 
 {%- macro AliasedQuerySourceStaticVariableInit(environment) %}
