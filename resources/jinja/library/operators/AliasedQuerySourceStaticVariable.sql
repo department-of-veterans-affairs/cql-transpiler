@@ -4,7 +4,7 @@
 
 {%- macro AliasedQuerySourcePrint(environment, this, state, arguments) -%}
     {#- QueryStaticVariable QueryPrint assumes responsiblity for handling AliasedQuerySource alias printing -#}
-    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
 {%- endmacro %}
 
 {%- macro AliasedQuerySourceStaticVariableInit(environment) %}
