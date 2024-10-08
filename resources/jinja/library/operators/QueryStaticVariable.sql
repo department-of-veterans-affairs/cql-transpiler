@@ -12,9 +12,16 @@
     {%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro -%}
 
+{%- macro queryStaticVariableWrapFundementalSourceInRelationshipClause(environment, this, state, source, returnClause, relationshipClause) -%}
+    SELECT * FROM ({{ queryStaticVariablePrintFundamentalSource(environment, this, state, source, returnClause) }} AS _source SEMI JOIN {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, relationshipClause) }})
+{%- endmacro -%}
+
 {%- macro queryStaticVariableWrapSourceInRelationshipClauses(environment, this, state, source, returnClause, relationshipClauses) -%}
-    {#- TODO -#}
-    /* Relationship clause functionality unsupported */
+    {%- if relationshipClauses|length > 1 -%}
+        SELECT * FROM ({{ queryStaticVariableWrapSourceInRelationshipClauses(environment, this, state, source, returnClause, relationshipClauses[0:relationshipClauses|length - 2]) }} AS _source SEMI JOIN {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, relationshipClause) }})
+    {%- else -%}
+        {{ queryStaticVariableWrapFundementalSourceInRelationshipClause(environment, this, state, source, returnClause, relationshipClauses[0]) }}
+    {%- endif %}
 {%- endmacro -%}
 
 {%- macro queryStaticVariableWrapSourceInAlias(environment, this, state, source, returnClause, alias, relationshipClauses) -%}

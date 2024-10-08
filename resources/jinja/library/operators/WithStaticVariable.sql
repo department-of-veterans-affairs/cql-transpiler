@@ -10,8 +10,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro WithPrint(environment, this, state, arguments) -%}
-    {#- TODO -#}
-    /* SEMI JOIN {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}} AS {{ arguments['alias'] }} ON ... {{ arguments['alias'] }}.{{ environment.printSingleValueColumnName(environment) }} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['suchThat']) }} */
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}} AS {{ arguments['alias'] }} ON _source.{{ environment.printIDFromContext(environment) }} = {{ arguments['alias'] }}.{{ environment.printIDFromContext(environment) }} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['suchThat']) }}
 {%- endmacro %}
 
 {%- macro WithStaticVariableInit(environment) %}
