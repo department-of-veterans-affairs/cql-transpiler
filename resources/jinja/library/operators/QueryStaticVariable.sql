@@ -7,8 +7,8 @@
     {%- if returnClause == none %}SELECT * FROM {% else %}SELECT {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, returnClause) }} FROM {% endif %}
     {#- print the source clause. Parts of the source may previously have been encapsulated #}
     {%- set previousCoercionInstructions = state.coercionInstructions -%}
+    {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
     ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, source) }})
-    {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } %}
     {%- set state.coercionInstructions = previousCoercionInstructions %}
 {%- endmacro -%}
 
