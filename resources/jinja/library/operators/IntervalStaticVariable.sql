@@ -11,7 +11,11 @@
 {%- from "library/globals/IntervalStaticVariables.sql" import IntervalStaticVariablesInit %}
 
 {%- macro IntervalPrint(environment, this, state, arguments) -%}
-    SELECT struct({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['high'])}} as {{ environment.intervalEnd }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['low']) }} as {{ environment.intervalStart }}) {{ environment.printSingleValueColumnName() }}
+    {%- if arguments['lowClosedExpression'] or arguments['highClosedExpression'] -%}
+        /* currently only open intervals are supported */
+    {%- else -%}
+        SELECT struct({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['high'])}} AS {{ environment.intervalEnd }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['low']) }} AS {{ environment.intervalStart }}) {{ environment.printSingleValueColumnName() }}
+    {%- endif -%}
 {%- endmacro %}
 
 {%- macro IntervalStaticVariableInit(environment) %}

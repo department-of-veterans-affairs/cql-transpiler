@@ -10,6 +10,8 @@
 {%- from "library/globals/IntervalStaticVariables.sql" import IntervalStaticVariablesInit %}
 
 {%- macro StartPrint(environment, this, state, arguments) -%}
+    {%- set carrier = namespace() %}
+    {%- do arguments['child']['operator'].getDataType(environment, arguments['child']['operator'], carrier, state, arguments['child']['arguments']) -%}
     {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ environment.intervalStart }}
 {%- endmacro %}
 

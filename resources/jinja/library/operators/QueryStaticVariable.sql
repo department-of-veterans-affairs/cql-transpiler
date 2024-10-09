@@ -4,7 +4,14 @@
 
 {%- macro queryStaticVariablePrintFundamentalSource(environment, this, state, source, returnClause) -%}
     {#- print the return clause #}
-    {%- if returnClause == none %}SELECT * FROM {% else %}SELECT {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, returnClause) }} FROM {% endif %}
+    {%- if returnClause -%}
+        {%- set previousCoercionInstructions = state.coercionInstructions %}
+        {%- set state.coercionInstructions = {} -%}
+        SELECT ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, returnClause) }}) FROM {# -#}
+        {%- set state.coercionInstructions = previousCoercionInstructions %}
+    {%- else -%}
+        SELECT * FROM {# -#}
+    {%- endif %}
     {#- print the source clause. Parts of the source may previously have been encapsulated #}
     {%- set previousCoercionInstructions = state.coercionInstructions -%}
     {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
@@ -61,8 +68,12 @@
         {%- endif %}
         {#- print the core of a query -#}
         {{ queryStaticVariablePrintSource(environment, this, state, arguments['children'][0], arguments['returnClause'], state.aliasContext, arguments['relationshipClauseList']) }}
-        {%- if arguments['where'] != none %} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['where']) }}{% endif %}
-        {%- if arguments['sortClause'] != none %} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['sortClause']) }}{% endif %}
+        {%- if arguments['where'] != none %}
+            {#- #} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['where']) }}
+        {%- endif %}
+        {%- if arguments['sortClause'] != none %}
+            {#- #} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['sortClause']) }}
+        {%- endif %}
         {%- set state.aliasContext = previousAliasContext %}
         {%- set state.coercionInstructions = previousCoercionInstructions %}
     {%- endif %}

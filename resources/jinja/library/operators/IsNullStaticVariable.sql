@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro IsNullPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} AS {{ arguments['alias'] }} SUCH THAT {{ arguments['suchThat'] }}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} IS NULL
 {%- endmacro %}
 
 {%- macro IsNullStaticVariableInit(environment) %}

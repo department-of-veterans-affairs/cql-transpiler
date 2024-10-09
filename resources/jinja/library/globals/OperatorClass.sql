@@ -1,5 +1,12 @@
+{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
 {%- macro OperatorClassGetDataType(environment, this, carrier, state, arguments) %}
     {%- set carrier.value = this.defaultDataType %}
+    {%- if carrier.value == environment.DataTypeEnum.INHERITED and arguments and arguments['child'] %}
+        {% set carrier.value = arguments['child']['operator'].getDataType(environment, arguments['child']['operator'], carrier, state, arguments['child']) %}
+    {%- elif carrier.value == environment.DataTypeEnum.INHERITED and arguments and arguments['referenceTo'] %}
+            {% set carrier.value = arguments['referenceTo']['operator'].getDataType(environment, arguments['referenceTo']['operator'], carrier, state, arguments['referenceTo']) %}
+    {%- endif %}
 {%- endmacro %}
 
 {%- macro OperatorClassPrint(environment, this, state, arguments) -%}
@@ -26,6 +33,9 @@
 {%- endmacro %}
 
 {%- macro OperatorClassInit(environment) %}
+    {#-  initialize prerequisites #}
+    {%- do DataTypeEnumInit(environment) %}
+    {#-  initialize OperatorClass #}
     {%- set OperatorClass = namespace() %}
     {%- set OperatorClass.construct = OperatorClassConstruct %}
     {%- set environment.OperatorClass = OperatorClass %}

@@ -10,7 +10,9 @@
 
 {%- macro PropertyPrint(environment, this, state, arguments) -%}
     {%- if arguments['child'] != none -%}
-        {%- if arguments['child']['operator']['defaultDataType'] == environment.DataTypeEnum.SIMPLE -%}
+        {%- set carrier = namespace() %}
+        {%- do arguments['child']['operator'].getDataType(environment, arguments['child']['operator'], carrier, state, arguments['child']['arguments']) %}
+        {%- if carrier.value == environment.DataTypeEnum.SIMPLE -%}
             {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ arguments['path'] }}
         {%- else -%}
             (SELECT {{ arguments['path'] }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}))

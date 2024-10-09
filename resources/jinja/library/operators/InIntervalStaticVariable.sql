@@ -10,7 +10,20 @@
 {%- from "library/globals/IntervalStaticVariables.sql" import IntervalStaticVariablesInit %}
 
 {%- macro InIntervalPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} BETWEEN {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalStart }} AND {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalEnd }}
+    {%- set carrier = namespace() %}
+    {%- do arguments['right']['operator'].getDataType(environment, arguments['right']['operator'], carrier, state, arguments['right']['arguments']) %}
+    {%- if carrier.value == environment.DataTypeEnum.SIMPLE -%}
+        {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} BETWEEN {# -#}
+        {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalStart }} {# -#}
+        AND {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalEnd }}
+    {%- else -%}
+        {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} BETWEEN {# -#}
+        {%- set previousCoercionInstructions = state.coercionInstructions -%}
+        {%- set state.coercionInstructions = { environment.DataTypeEnum.SIMPLE: environment.DataTypeEnum.ENCAPSULATED } -%}
+        (SELECT {{ environment.intervalStart }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }})) {# -#}
+        AND (SELECT {{ environment.intervalEnd }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}))
+        {%- set state.coercionInstructions = previousCoercionInstructions %}
+    {%- endif %}
 {%- endmacro %}
 
 {%- macro InIntervalStaticVariableInit(environment) %}
