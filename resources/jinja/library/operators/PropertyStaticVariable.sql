@@ -1,21 +1,44 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
+{%- macro PropertyAllowsSelectFromAccessType(environment, this, carrier, state, arguments) %}
+    {%- if arguments['child'] -%}
+            {%- do arguments['child']['operator'].allowsSelectFromAccessType(environment, arguments['child']['operator'], carrier, state, arguments['child']) %}
+    {%- else %}
+            {%- set carrier.value = false %}
+    {%- endif %}
+{%- endmacro %}
+
+{%- macro PropertyAllowsDotPropertyAccessType(environment, this, carrier, state, arguments) %}
+    {%- if arguments['child'] -%}
+        {%- do arguments['child']['operator'].allowsDotPropertyAccessType(environment, arguments['child']['operator'], carrier, state, arguments['child']) %}
+    {%- else -%}
+        {%- set carrier.value = true %}
+    {%- endif %}
+{%- endmacro %}
+
+{%- macro PropertyClassGetDataType(environment, this, carrier, state, arguments) %}
+    {%- set carrier.value = this.defaultDataType %}
+    {%- if child -%}
+        {%- do environment.OperatorClass.getDataType(environment, this, carrier, state, arguments) %}
+    {%- else -%}
+        {%- set carrier.value = environment.DataTypeEnum.UNDETERMINED %}
+    {%- endif %}
+{%- endmacro %}
 
 {%- macro PropertyPrint(environment, this, state, arguments) -%}
     {%- if arguments['child'] != none -%}
-        {%- set carrier = namespace() %}
-        {%- do arguments['child']['operator'].getDataType(environment, arguments['child']['operator'], carrier, state, arguments['child']['arguments']) %}
-        {%- if carrier.value == environment.DataTypeEnum.SIMPLE -%}
+        {%- set dotPropertyCarrier = namespace() %}
+        {%- do arguments['child']['operator'].allowsDotPropertyAccessType(environment, arguments['child']['operator'], dotPropertyCarrier, state, arguments['child']) %}
+        {%- if dotPropertyCarrier.value -%}
             {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}.{{ arguments['path'] }}
         {%- else -%}
-            (SELECT {{ arguments['path'] }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}))
+            {%- set selectFromCarrier = namespace() %}
+            {%- do arguments['child']['operator'].allowsSelectFromAccessType(environment, arguments['child']['operator'], selectFromCarrier, state, arguments['child']) %}
+            {%- if selectFromCarrier.value -%}
+                (SELECT {{ arguments['path'] }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}))
+            {%- else -%}
+                /* unable to determine access type for child of Property with path {{ arguments['path'] }} */ -> {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
+            {%- endif %}
         {%- endif %}
     {%- elif arguments['path'] != none -%}
         {{ arguments['scope'] }}.{{ arguments['path'] }}
@@ -26,13 +49,13 @@
 
 {%- macro PropertyStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {# initialize member variables #}
     {%- set Property = namespace() %}
     {%- set environment.Property = Property %}
     {%- do environment.OperatorClass.construct(environment, none, environment.Property) %}
-    {%- set Property.defaultDataType = environment.DataTypeEnum.ENCAPSULATED %}
+    {%- set Property.allowsSelectFromAccessType = PropertyAllowsSelectFromAccessType %}
+    {%- set Property.allowsDotPropertyAccessType = PropertyAllowsDotPropertyAccessType %}
+    {%- set Property.getDataType = PropertyClassGetDataType %}
     {%- set Property.print = PropertyPrint %}
 {%- endmacro %}

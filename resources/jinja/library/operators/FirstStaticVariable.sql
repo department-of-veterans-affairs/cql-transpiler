@@ -1,26 +1,20 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
 {%- macro FirstPrint(environment, this, state, arguments) -%}
     {%- if arguments['orderBy'] -%}
-        /* unsupported argument in 'First' orderBy:<{{ arguments['orderBy'] }}>*/
+        /* todo -- First -- support orderBy */
+    {%- else -%}
+        first_value({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
     {%- endif -%}
-    first_value({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }})
 {%- endmacro %}
 
 {%- macro FirstStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
     {#- initialize member variables #}
     {%- set First = namespace() %}
     {%- set environment.First = First %}
     {%- do environment.OperatorClass.construct(environment, none, environment.First) %}
+    {%- set First.allowsSelectFromAccessTypeByDefault = true %}
     {%- set First.print = FirstPrint %}
 {%- endmacro %}

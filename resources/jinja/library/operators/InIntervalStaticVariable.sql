@@ -1,36 +1,32 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 {%- from "library/globals/IntervalStaticVariables.sql" import IntervalStaticVariablesInit %}
 
 {%- macro InIntervalPrint(environment, this, state, arguments) -%}
-    {%- set carrier = namespace() %}
-    {%- do arguments['right']['operator'].getDataType(environment, arguments['right']['operator'], carrier, state, arguments['right']['arguments']) %}
-    {%- if carrier.value == environment.DataTypeEnum.SIMPLE -%}
-        {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} BETWEEN {# -#}
+    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} BETWEEN {# -#}
+    {#- determine how to retrieve information from the interval #}
+    {%- set dotPropertyAccessCarrier = namespace() %}
+    {%- do arguments['right']['operator'].allowsDotPropertyAccessType(environment, arguments['right']['operator'], dotPropertyAccessCarrier, state, arguments['right']) %}
+    {%- if dotPropertyAccessCarrier.value -%}
         {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalStart }} {# -#}
         AND {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}.{{ environment.intervalEnd }}
     {%- else -%}
-        {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['left'])}} BETWEEN {# -#}
-        {%- set previousCoercionInstructions = state.coercionInstructions -%}
-        {%- set state.coercionInstructions = { environment.DataTypeEnum.SIMPLE: environment.DataTypeEnum.ENCAPSULATED } -%}
-        (SELECT {{ environment.intervalStart }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }})) {# -#}
-        AND (SELECT {{ environment.intervalEnd }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}))
-        {%- set state.coercionInstructions = previousCoercionInstructions %}
-    {%- endif %}
+        {%- set selectFromAccessCarrier = namespace() %}
+        {%- do arguments['right']['operator'].allowsSelectFromAccessType(environment, arguments['right']['operator'], selectFromAccessCarrier, state, arguments['right']) %}
+        {%- if selectFromAccessCarrier.value -%}
+            (SELECT {{ environment.intervalStart }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }})) {# -#}
+            AND (SELECT {{ environment.intervalEnd }} FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}))
+        {%- else -%}
+            {#- We need to coerce the right operator -#}
+            {%- set dataTypeCarrier = namespace() %}
+            {%- do arguments['right']['operator'].getDataType(environment, arguments['right']['operator'], dataTypeCarrier, state, arguments['right']) -%}
+            /* todo -- InInterval support for intervals with no set access type and data type {{ dataTypeCarrier.value }} */ -> {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['right']) }}
+        {%- endif -%}
+    {%- endif -%}
 {%- endmacro %}
 
 {%- macro InIntervalStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {%- do IntervalStaticVariablesInit(environment) %}
     {#- initialize member variables #}
     {%- set InInterval = namespace() %}

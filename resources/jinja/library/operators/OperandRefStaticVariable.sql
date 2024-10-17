@@ -1,12 +1,22 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
+{%- macro OperandRefAllowsSelectFromAccessType(environment, this, carrier, state, arguments) %}
+    {%- if state.functionArguments[arguments['referencedName']] -%}
+        {%- do state.functionArguments[arguments['referencedName']]['operator'].allowsSelectFromAccessType(environment, state.functionArguments[arguments['referencedName']]['operator'], carrier, state, state.functionArguments[arguments['referencedName']]) %}
+    {%- else -%}
+        {#- Enable select from access type for readability when printing function definitions -#}
+        {%- set carrier.value = true %}
+    {%- endif %}
+{%- endmacro %}
+
+{%- macro OperandRefAllowsDotPropertyAccessType(environment, this, carrier, state, arguments) %}
+    {%- if state.functionArguments[arguments['referencedName']] -%}
+        {%- do state.functionArguments[arguments['referencedName']]['operator'].allowsDotPropertyAccessType(environment, state.functionArguments[arguments['referencedName']]['operator'], carrier, state, state.functionArguments[arguments['referencedName']]) %}
+    {%- else -%}
+        {#- Enable dot property access type for readability when printing function definitions -#}
+        {%- set carrier.value = true %}
+    {%- endif %}
+{%- endmacro %}
 
 {%- macro OperandRefPrint(environment, this, state, arguments) -%}
     {%- if state.functionArguments[arguments['referencedName']] -%}
@@ -18,13 +28,13 @@
 
 {%- macro OperandRefStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {#- initialize member variables #}
     {%- set OperandRef = namespace() %}
     {%- set environment.OperandRef = OperandRef %}
     {%- do environment.OperatorClass.construct(environment, none, environment.OperandRef) %}
+    {%- set OperandRef.allowsSelectFromAccessType = OperandRefAllowsSelectFromAccessType %}
+    {%- set OperandRef.allowsDotPropertyAccessType = OperandRefAllowsDotPropertyAccessType %}
     {%- set OperandRef.defaultDataType = environment.DataTypeEnum.INHERITED %}
     {%- set OperandRef.print = OperandRefPrint %}
 {%- endmacro %}

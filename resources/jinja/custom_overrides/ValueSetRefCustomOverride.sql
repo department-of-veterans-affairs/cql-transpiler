@@ -1,4 +1,3 @@
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/operators/ValueSetRefStaticVariable.sql" import ValueSetRefStaticVariableInit %}
 
 {%- macro ValueSetRefPrintCustomOverride(environment, this, state, arguments) -%}
@@ -7,7 +6,6 @@
 
 {%- macro ValueSetRefCustomOverrideInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do ValueSetRefStaticVariableInit(environment) %}
     {# initialize member variables #}
     {%- set ValueSetRef = environment.ValueSetRef %}

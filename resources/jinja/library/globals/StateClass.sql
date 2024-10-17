@@ -1,5 +1,4 @@
 {%- macro StateClassConstruct(environment, stateNamespace) %}
-    {%- set stateNamespace.coercionInstructions = {} %}
     {%- set stateNamespace.context = none %}
     {%- set stateNamespace.wrapSubqueries = false %}
     {%- set stateNamespace.functionArguments = {} %}

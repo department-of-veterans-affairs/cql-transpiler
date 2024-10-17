@@ -1,12 +1,12 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
+{%- macro ExpressionDefAllowsSelectFromAccessType(environment, this, carrier, state, arguments) %}
+    {%- do arguments['child']['operator'].allowsSelectFromAccessType(environment, arguments['child']['operator'], carrier, state, arguments['child']) %}
+{%- endmacro %}
+
+{%- macro ExpressionDefAllowsDotPropertyAccessType(environment, this, carrier, state, arguments) %}
+    {%- do arguments['child']['operator'].allowsDotPropertyAccessType(environment, arguments['child']['operator'], carrier, state, arguments['child']) %}
+{%- endmacro %}
 
 {%- macro ExpressionDefPrint(environment, this, state, arguments) %}
     {%- set previousContext = state.context %}
@@ -19,13 +19,13 @@
 
 {%- macro ExpressionDefStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {#- initialize member variables #}
     {%- set ExpressionDef = namespace() %}
     {%- set environment.ExpressionDef = ExpressionDef %}
     {%- do environment.OperatorClass.construct(environment, none, environment.ExpressionDef) %}
+    {%- set ExpressionDef.allowsSelectFromAccessType = ExpressionDefAllowsSelectFromAccessType %}
+    {%- set ExpressionDef.allowsDotPropertyAccessType = ExpressionDefAllowsDotPropertyAccessType %}
     {%- set ExpressionDef.defaultDataType = environment.DataTypeEnum.INHERITED %}
     {%- set ExpressionDef.print = ExpressionDefPrint %}
 {%- endmacro %}

@@ -1,9 +1,3 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
 {%- from "library/globals/StandardFunctions.sql" import StandardFunctionsInit %}
 {%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
@@ -12,9 +6,9 @@
 
 {%- macro IntervalPrint(environment, this, state, arguments) -%}
     {%- if arguments['lowClosedExpression'] or arguments['highClosedExpression'] -%}
-        /* currently only open intervals are supported */
+        /* todo -- Interval -- support open intervals */
     {%- else -%}
-        SELECT struct({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['high'])}} AS {{ environment.intervalEnd }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['low']) }} AS {{ environment.intervalStart }}) {{ environment.printSingleValueColumnName() }}
+        struct({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['high'])}} AS {{ environment.intervalEnd }}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['low']) }} AS {{ environment.intervalStart }})
     {%- endif -%}
 {%- endmacro %}
 
@@ -29,6 +23,6 @@
     {%- set Interval = namespace() %}
     {%- set environment.Interval = Interval %}
     {%- do environment.OperatorClass.construct(environment, none, environment.Interval) %}
-    {%- set Interval.defaultDataType = environment.DataTypeEnum.ENCAPSULATED %}
+    {%- set Interval.allowsSelectFromAccessTypeByDefault = true %}
     {%- set Interval.print = IntervalPrint %}
 {%- endmacro %}

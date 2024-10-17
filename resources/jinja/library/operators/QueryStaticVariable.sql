@@ -1,22 +1,17 @@
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+{%- from "library/globals/TypeConversionFunctions.sql" import TypeConversionFunctionsInit %}
 
 {%- macro queryStaticVariablePrintFundamentalSource(environment, this, state, source, returnClause) -%}
     {#- print the return clause #}
     {%- if returnClause -%}
-        {%- set previousCoercionInstructions = state.coercionInstructions %}
-        {%- set state.coercionInstructions = {} -%}
         SELECT ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, returnClause) }}) FROM {# -#}
-        {%- set state.coercionInstructions = previousCoercionInstructions %}
     {%- else -%}
         SELECT * FROM {# -#}
     {%- endif %}
     {#- print the source clause. Parts of the source may previously have been encapsulated #}
-    {%- set previousCoercionInstructions = state.coercionInstructions -%}
-    {%- set state.coercionInstructions = { environment.DataTypeEnum.ENCAPSULATED: environment.DataTypeEnum.TABLE } -%}
-    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, source) }})
-    {%- set state.coercionInstructions = previousCoercionInstructions %}
+    {%- set operatorDataTypeEnumCarrier = namespace() %}
+    {%- do source['operator'].getDataType(environment, source['operator'], operatorDataTypeEnumCarrier, state, source) -%}
+    {{ environment.coerce(environment, operatorDataTypeEnumCarrier.value, environment.DataTypeEnum.TABLE, state, source) }}
 {%- endmacro -%}
 
 {%- macro queryStaticVariableWrapFundementalSourceInRelationshipClause(environment, this, state, source, returnClause, relationshipClause) -%}
@@ -56,8 +51,6 @@
     {%- if arguments['children']|length > 1 -%}
         /* multi-souce queries are not currently supported */
     {%- else -%}
-        {%- set previousCoercionInstructions = state.coercionInstructions %}
-        {%- set state.coercionInstructions = {} %}
         {%- set previousAliasContext = state.aliasContext %}
         {%- set state.aliasContext = none %}
         {#- prefix with LET clauses, if any #}
@@ -75,19 +68,18 @@
             {#- #} {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['sortClause']) }}
         {%- endif %}
         {%- set state.aliasContext = previousAliasContext %}
-        {%- set state.coercionInstructions = previousCoercionInstructions %}
     {%- endif %}
 {%- endmacro %}
 
 {%- macro QueryStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
+    {%- do TypeConversionFunctionsInit(environment) %}
     {#- initialize member variables #}
     {%- set Query = namespace() %}
     {%- set environment.Query = Query %}
     {%- do environment.OperatorClass.construct(environment, none, environment.Query) %}
+    {%- set Query.allowsSelectFromAccessTypeByDefault = true %}
     {%- set Query.defaultDataType = environment.DataTypeEnum.TABLE %}
     {%- set Query.print = QueryPrint %}
 {%- endmacro %}

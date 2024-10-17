@@ -1,4 +1,3 @@
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/operators/RetrieveStaticVariable.sql" import RetrieveStaticVariableInit %}
 {%- from "custom_overrides/ValueSetUtilityMacros.sql" import valuesetCodes %}
 {#- Placeholder for dbt function #}
@@ -36,7 +35,6 @@
 
 {%- macro RetrieveCustomOverrideInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do RetrieveStaticVariableInit(environment) %}
     {#- initialize member variables #}
     {%- set Retrieve = environment.Retrieve %}

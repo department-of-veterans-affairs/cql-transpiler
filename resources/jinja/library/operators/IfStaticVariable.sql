@@ -1,32 +1,24 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
+{%- macro IfAllowsSelectFromAccessType(environment, this, carrier, state, arguments) %}
+    {%- do arguments['then']['operator'].allowsSelectFromAccessType(environment, arguments['then']['operator'], carrier, state, arguments['then']) and arguments['else']['operator'].allowsSelectFromAccessType(environment, arguments['else']['operator'], carrier, state, arguments['else']) %}
+{%- endmacro %}
 
 {%- macro IfPrint(environment, this, state, arguments) -%}
-    {%-     set previousCoercionInstructions = state.coercionInstructions %}
-    {%-     set state.coercionInstructions = {} %}
-    {#-     conditional statement should not be coerced -#}
     IF ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['condition'])}}) {# -#}
-    {%-     set state.coercionInstructions = previousCoercionInstructions -%}
     THEN ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['then'])}}) {# -#}
     ELSE ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['else'])}})
 {%- endmacro %}
 
 {%- macro IfStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {#- initialize member variables #}
     {%- set If = namespace() %}
     {%- set environment.If = If %}
     {%- do environment.OperatorClass.construct(environment, none, environment.If) %}
-    {%- set If.defaultDataType = environment.DataTypeEnum.ENCAPSULATED %}
+    {%- set If.allowsSelectFromAccessType = IfAllowsSelectFromAccessType %}
+    {#- TODO: it should be possible to determine the data type of an if statement by looking at its then/else statement #}
+    {%- set If.defaultDataType = environment.DataTypeEnum.UNDETERMINED %}
     {%- set If.print = IfPrint %}
 {%- endmacro %}

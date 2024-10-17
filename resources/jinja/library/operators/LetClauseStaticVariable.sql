@@ -1,12 +1,12 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
+{%- macro LetClauseAllowsSelectFromAccessType(environment, this, carrier, state, arguments) %}
+    {%- do arguments['child']['operator'].allowsSelectFromAccessType(environment, arguments['child']['operator'], carrier, state, arguments['child']) %}
+{%- endmacro %}
+
+{%- macro LetClauseAllowsDotPropertyAccessType(environment, this, carrier, state, arguments) %}
+    {%- do arguments['child']['operator'].allowsDotPropertyAccessType(environment, arguments['child']['operator'], carrier, state, arguments['child']) %}
+{%- endmacro %}
 
 {%- macro LetClausePrint(environment, this, state, arguments) -%}
     {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} AS {{ arguments['referenceName'] }}
@@ -14,13 +14,13 @@
 
 {%- macro LetClauseStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {# initialize member variables #}
     {%- set LetClause = namespace() %}
     {%- set environment.LetClause = LetClause %}
     {%- do environment.OperatorClass.construct(environment, none, environment.LetClause) %}
+    {%- set LetClause.allowsSelectFromAccessType = LetClauseAllowsSelectFromAccessType %}
+    {%- set LetClause.allowsDotPropertyAccessType = LetClauseAllowsDotPropertyAccessType %}
     {%- set LetClause.defaultDataType = environment.DataTypeEnum.INHERITED %}
     {%- set LetClause.print = LetClausePrint %}
 {%- endmacro %}

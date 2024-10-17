@@ -4,7 +4,6 @@
     {%- set DataTypeEnum.ENCAPSULATED = 'encapsulated' %}
     {%- set DataTypeEnum.TABLE = 'table' %}
     {%- set DataTypeEnum.INHERITED = 'inherited' %}
-    {%- set DataTypeEnum.STATEMENT = 'statement' %}
-    {%- set DataTypeEnum.UNKNOWN = 'unknown' %}
+    {%- set DataTypeEnum.UNDETERMINED = 'undetermined' %}
     {%- set environment.DataTypeEnum = DataTypeEnum %}
 {%- endmacro %}

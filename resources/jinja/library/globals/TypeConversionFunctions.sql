@@ -12,26 +12,20 @@
     SELECT col.* FROM (explode({{ toDecollect }}))
 {%- endmacro %}
 
-{#- Wraps SQL statement in an encapsulate block #}
-{%- macro encapsulate(environment, context, toEncapsulate) -%}
-    SELECT {{ toEncapsulate }} {{ environment.printSingleValueColumnName(environment) }}
-{%- endmacro %}
-
-{#- Coerces the first applicable child of this node into the correct type #}
+{#- Handles collection/decollection of tables #}
 {%- macro coerce(environment, originalType, targetType, state, arguments) %}
-    {%- set previousCoercionInstructions = state.coercionInstructions %}
-    {%- set state.coercionInstructions = {} -%}
-    {%- if targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.SIMPLE -%}
-        {{ encapsulate(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
-    {%- elif targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.TABLE -%}
-        {{ collect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
-    {%- elif targetType == environment.DataTypeEnum.TABLE and originalType == environment.DataTypeEnum.ENCAPSULATED -%}
-        {{ decollect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
-    {%- else -%}
-        {%- set state.coercionInstructions = previousCoercionInstructions -%}
+    {%- if originalType == environment.DataTypeEnum.UNDETERMINED -%}
+        /* warning -- cannot coerce object of undetermined type to {{ targetType }} type */ {#- -#}
         {{ arguments['operator'].print(environment, arguments['operator'], state, arguments) }}
-    {%- endif %}
-    {%- set state.coercionInstructions = previousCoercionInstructions %}
+    {%- else -%}
+        {%- if targetType == environment.DataTypeEnum.ENCAPSULATED and originalType == environment.DataTypeEnum.TABLE -%}
+            {{ collect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
+        {%- elif targetType == environment.DataTypeEnum.TABLE and originalType == environment.DataTypeEnum.ENCAPSULATED -%}
+            {{ decollect(environment, context, arguments['operator'].print(environment, arguments['operator'], state, arguments)) }}
+        {%- else -%}
+            {{ arguments['operator'].print(environment, arguments['operator'], state, arguments) }}
+        {%- endif %}
+    {%- endif -%}
 {%- endmacro %}
 
 {%- macro TypeConversionFunctionsInit(environment) %}

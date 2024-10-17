@@ -98,7 +98,6 @@ The macros file that targets SparkSQL implements its behavior using the followin
 #### State
 
 State - namespace
-    + coercionInstructions - Dictionary<String, String> (scoped)
     + context - String (scoped)
     + functionArguments - Dictionary<String, Dictionary<String, ?>> (scoped)
     + aliasContext - String

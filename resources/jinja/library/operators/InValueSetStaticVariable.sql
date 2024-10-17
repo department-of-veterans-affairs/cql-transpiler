@@ -1,9 +1,3 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
 {%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
@@ -14,7 +8,7 @@
     {%- else -%}
         {%- set valueSet = arguments['valueSetReference'] %}
     {%- endif -%}
-    /* InValueSet check for element: <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}>, valueset <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}> */
+    /* todo -- InValueSet -- check for element: <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}>, valueset <{{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, valueSet) }}> */
 {%- endmacro %}
 
 {%- macro InValueSetStaticVariableInit(environment) %}

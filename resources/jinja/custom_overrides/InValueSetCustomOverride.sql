@@ -1,5 +1,4 @@
 {%- from "custom_overrides/ValueSetUtilityMacros.sql" import valuesetCodes %}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/operators/InValueSetStaticVariable.sql" import InValueSetStaticVariableInit %}
 
 {%- macro InValueSetPrintCustomOverride(environment, this, state, arguments) -%}
@@ -13,7 +12,6 @@
 
 {%- macro InValueSetCustomOverrideInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do InValueSetStaticVariableInit(environment) %}
     {# initialize member variables #}
     {%- set InValueSet = environment.InValueSet %}

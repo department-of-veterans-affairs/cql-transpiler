@@ -1,16 +1,9 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-#}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 {%- from "library/globals/ContextHandlingFunctions.sql" import ContextHandlingFunctionsInit %}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
 {%- macro SingletonFromPrint(environment, this, state, arguments) -%}
     {%- if state.aliasContext -%}
-        SELECT * FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS SingletonFrom WHERE SingletonFrom.{{ environment.printIDFromContext(environment, state.context) }} = {{ state.aliasContext}}.{{ environment.printIDFromContext(environment, state.context) }} LIMIT 1
+        SELECT * FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS SingletonFrom WHERE SingletonFrom.{{ environment.printIDFromContext(environment, state.context) }} = {{ state.aliasContext }}.{{ environment.printIDFromContext(environment, state.context) }} LIMIT 1
     {%- else -%}
         SELECT * FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}) AS SingletonFrom /* no alias context defined; unable to narrow down SingletonFrom */ LIMIT 1
     {%- endif -%}
@@ -18,13 +11,13 @@
 
 {%- macro SingletonFromStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {%- do ContextHandlingFunctionsInit(environment) %}
     {#- initialize member variables #}
     {%- set SingletonFrom = namespace() %}
-    {%- do environment.OperatorClass.construct(environment, none, SingletonFrom) %}
-    {%- set SingletonFrom.print = SingletonFromPrint %}
     {%- set environment.SingletonFrom = SingletonFrom %}
+    {%- do environment.OperatorClass.construct(environment, none, SingletonFrom) %}
+    {%- set SingletonFrom.allowsSelectFromAccessTypeByDefault = true %}
+    {%- set SingletonFrom.defaultDataType = environment.DataTypeEnum.TABLE %}
+    {%- set SingletonFrom.print = SingletonFromPrint %}
 {%- endmacro %}

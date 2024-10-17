@@ -1,4 +1,3 @@
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/operators/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
 
 {%- macro ParameterRefPrintCustomOverride(environment, this, state, arguments) -%}
@@ -12,9 +11,11 @@
 
 {%- macro ParameterRefCustomOverrideInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do ParameterRefStaticVariableInit(environment) %}
     {#- initialize member variables #}
     {%- set ParameterRef = environment.ParameterRef %}
+    {#- TODO: is there some way to programatically determine the possible access types of a parameter? -#}
+    {%- set ParameterRef.allowsDotPropertyAccessTypeByDefault = true %}
+    {%- set ParameterRef.allowsSelectFromAccessTypeByDefault = true %}
     {%- set ParameterRef.print = ParameterRefPrintCustomOverride %}
 {%- endmacro %}

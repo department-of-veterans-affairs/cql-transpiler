@@ -1,12 +1,12 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
+{%- macro FunctionRefAllowsSelectFromAccessType(environment, this, carrier, state, arguments) %}
+    {%- do arguments['referenceTo']['operator'].allowsSelectFromAccessType(environment, arguments['referenceTo']['operator'], carrier, state, arguments['referenceTo']) %}
+{%- endmacro %}
+
+{%- macro FunctionRefAllowsDotPropertyAccessType(environment, this, carrier, state, arguments) %}
+    {%- do arguments['referenceTo']['operator'].allowsDotPropertyAccessType(environment, arguments['referenceTo']['operator'], carrier, state, arguments['referenceTo']) %}
+{%- endmacro %}
 
 {%- macro FunctionRefPrint(environment, this, state, arguments) -%}
     {%- set previousFunctionArguments = state.functionArguments %}
@@ -27,13 +27,13 @@
 
 {%- macro FunctionRefStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {#- initialize member variables #}
     {%- set FunctionRef = namespace() %}
     {%- set environment.FunctionRef = FunctionRef %}
     {%- do environment.OperatorClass.construct(environment, none, environment.FunctionRef) %}
+    {%- set FunctionRef.allowsSelectFromAccessType = FunctionRefAllowsSelectFromAccessType %}
+    {%- set FunctionRef.allowsDotPropertyAccessType = FunctionRefAllowsDotPropertyAccessType %}
     {%- set FunctionRef.defaultDataType = environment.DataTypeEnum.INHERITED %}
     {%- set FunctionRef.print = FunctionRefPrint %}
 {%- endmacro %}

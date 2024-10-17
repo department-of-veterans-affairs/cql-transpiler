@@ -1,12 +1,4 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro LiteralPrint(environment, this, state, arguments) -%}
     {%- if arguments['type'] == 'Integer' -%}
@@ -14,15 +6,13 @@
     {%- elif arguments['type'] == 'String' -%}
         '{{ arguments['value'] }}'
     {%- else -%}
-        {{ arguments['type'] }}::{{ arguments['value'] }}
+        /* todo -- Literal -- support literal {{ arguments['type'] }}::{{ arguments['value'] }} */
     {%- endif %}
 {%- endmacro %}
 
 {%- macro LiteralStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {#- initialize member variables #}
     {%- set Literal = namespace() %}
     {%- set environment.Literal = Literal %}

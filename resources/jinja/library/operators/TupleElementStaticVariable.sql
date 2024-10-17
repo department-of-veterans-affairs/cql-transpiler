@@ -1,29 +1,34 @@
-{#-
-    Environment prerequisites:
-        * OperatorHandlerStaticVariable.sql
-        * OperatorClass.sql
-        * DataTypeEnum.sql
-#}
-{%- from "library/globals/OperatorHandlerStaticVariable.sql" import OperatorHandlerStaticVariableInit %}
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
-{%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
+
+
+{%- macro PropertyClassGetDataType(environment, this, carrier, state, arguments) %}
+    {%- set carrier.value = this.defaultDataType %}
+    {%- do environment.OperatorClass.getDataType(environment, this, carrier, state, arguments) %}
+    {%- if carrier.value == environment.DataTypeEnum.UNDETERMINED -%}
+        {%- set carrier.value = environment.DataTypeEnum.UNDETERMINED %}
+    {%- else -%}
+        {%- set carrier.value = environment.DataTypeEnum.ENCAPSULATED %}
+    {%- endif %}
+{%- endmacro %}
 
 {%- macro TupleElementPrint(environment, this, state, arguments) -%}
-    {%- set previousCoercionInstructions = state.coercionInstructions %}
-    {%- set state.coercionInstructions = { environment.DataTypeEnum.TABLE: environment.DataTypeEnum.ENCAPSULATED, environment.DataTypeEnum.SIMPLE: environment.DataTypeEnum.ENCAPSULATED } -%}
-    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} AS {{ arguments['name'] }}
-    {%- set state.coercionInstructions = previousCoercionInstructions %}
+    {%- set operatorDataTypeEnumCarrier = namespace() %}
+    {%- do arguments['child']['operator'].getDataType(environment, arguments['child']['operator'], operatorDataTypeEnumCarrier, state, arguments['child']) -%}
+    {%- if carrier.value == SIMPLE -%}
+        (SELECT {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} {{ environment.printSingleValueColumnName() }}) {# -#}
+    {%- else -%}
+        {{ environment.coerce(environment, operatorDataTypeEnumCarrier.value, environment.DataTypeEnum.ENCAPSULATED, state, arguments['child']) }} {# -#}
+    {%- endif %}
+    AS {{ arguments['name'] }}
 {%- endmacro %}
 
 {%- macro TupleElementStaticVariableInit(environment) %}
     {#- initialize prerequisites #}
-    {%- do OperatorHandlerStaticVariableInit(environment) %}
     {%- do OperatorClassInit(environment) %}
-    {%- do DataTypeEnumInit(environment) %}
     {#- initialize member variables #}
     {%- set TupleElement = namespace() %}
     {%- set environment.TupleElement = TupleElement %}
     {%- do environment.OperatorClass.construct(environment, none, environment.TupleElement) %}
-    {%- set TupleElement.defaultDataType = environment.DataTypeEnum.ENCAPSULATED %}
+    {%- set TupleElement.allowsSelectFromAccessTypeByDefault = true %}
     {%- set TupleElement.print = TupleElementPrint %}
 {%- endmacro %}

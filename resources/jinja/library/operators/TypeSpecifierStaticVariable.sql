@@ -1,7 +1,3 @@
-{#-
-    Environment prerequisites:
-        * TypeSpecifierClass.sql
-#}
 {%- from "library/operators/TypeSpecifierClass.sql" import TypeSpecifierClassInit %}
 
 {%- macro TypeSpecifierStaticVariableInit(environment) %}
@@ -10,6 +6,6 @@
     {# initialize member variables #}
     {%- set TypeSpecifier = namespace() %}
     {%- set environment.TypeSpecifier = TypeSpecifier %}
-    ronment, none, environment.TypeSpecifier) %}
+    {%- do environment.TypeSpecifierClass.construct(environment, none, environment.TypeSpecifier) %}
     {%- set TypeSpecifier.name = 'TypeSpecifier' %}
 {%- endmacro %}
