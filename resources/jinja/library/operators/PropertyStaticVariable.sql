@@ -16,7 +16,7 @@
     {%- endif %}
 {%- endmacro %}
 
-{%- macro PropertyClassGetDataType(environment, this, carrier, state, arguments) %}
+{%- macro PropertyGetDataType(environment, this, carrier, state, arguments) %}
     {%- set carrier.value = this.defaultDataType %}
     {%- if child -%}
         {%- do environment.OperatorClass.getDataType(environment, this, carrier, state, arguments) %}
@@ -56,6 +56,6 @@
     {%- do environment.OperatorClass.construct(environment, none, environment.Property) %}
     {%- set Property.allowsSelectFromAccessType = PropertyAllowsSelectFromAccessType %}
     {%- set Property.allowsDotPropertyAccessType = PropertyAllowsDotPropertyAccessType %}
-    {%- set Property.getDataType = PropertyClassGetDataType %}
+    {%- set Property.getDataType = PropertyGetDataType %}
     {%- set Property.print = PropertyPrint %}
 {%- endmacro %}

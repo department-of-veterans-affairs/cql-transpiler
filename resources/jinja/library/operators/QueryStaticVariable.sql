@@ -11,7 +11,7 @@
     {#- print the source clause. Parts of the source may previously have been encapsulated #}
     {%- set operatorDataTypeEnumCarrier = namespace() %}
     {%- do source['operator'].getDataType(environment, source['operator'], operatorDataTypeEnumCarrier, state, source) -%}
-    {{ environment.coerce(environment, operatorDataTypeEnumCarrier.value, environment.DataTypeEnum.TABLE, state, source) }}
+    ({{ environment.coerce(environment, operatorDataTypeEnumCarrier.value, environment.DataTypeEnum.TABLE, state, source) }})
 {%- endmacro -%}
 
 {%- macro queryStaticVariableWrapFundementalSourceInRelationshipClause(environment, this, state, source, returnClause, relationshipClause) -%}

@@ -1,7 +1,7 @@
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
 
-{%- macro PropertyClassGetDataType(environment, this, carrier, state, arguments) %}
+{%- macro TupleElementGetDataType(environment, this, carrier, state, arguments) %}
     {%- set carrier.value = this.defaultDataType %}
     {%- do environment.OperatorClass.getDataType(environment, this, carrier, state, arguments) %}
     {%- if carrier.value == environment.DataTypeEnum.UNDETERMINED -%}
@@ -30,5 +30,6 @@
     {%- set environment.TupleElement = TupleElement %}
     {%- do environment.OperatorClass.construct(environment, none, environment.TupleElement) %}
     {%- set TupleElement.allowsSelectFromAccessTypeByDefault = true %}
+    {%- set TupleElement.getDataType = TupleElementGetDataType %}
     {%- set TupleElement.print = TupleElementPrint %}
 {%- endmacro %}
