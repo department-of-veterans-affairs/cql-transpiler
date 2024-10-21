@@ -9,7 +9,7 @@
 {%- from "library/globals/DataTypeEnum.sql" import DataTypeEnumInit %}
 
 {%- macro CoalescePrint(environment, this, state, arguments) -%}
-    coalesce({{ environment.printOperatorsFromList(environment, state, arguments['children'], ', ') }})
+    COALESCE({{ environment.printOperatorsFromList(environment, state, arguments['children'], ', ') }})
 {%- endmacro %}
 
 {%- macro CoalesceStaticVariableInit(environment) %}

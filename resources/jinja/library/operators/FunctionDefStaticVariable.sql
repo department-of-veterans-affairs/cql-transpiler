@@ -9,7 +9,12 @@
 {%- endmacro %}
 
 {%- macro FunctionDefPrint(environment, this, state, arguments) -%}
+    {%- set previousContext = state.context %}
+    {%- if previousContext == none and arguments['context'] != none %}
+        {%- set state.context = arguments['context'] %}
+    {%- endif -%}
     {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
+    {%- set state.context = previousContext %}
 {%- endmacro %}
 
 {%- macro FunctionDefStaticVariableInit(environment) %}
