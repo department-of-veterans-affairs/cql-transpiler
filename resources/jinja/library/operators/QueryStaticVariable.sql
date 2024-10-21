@@ -7,11 +7,8 @@
         SELECT ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, returnClause) }}) FROM {# -#}
     {%- else -%}
         SELECT * FROM {# -#}
-    {%- endif %}
-    {#- print the source clause. Parts of the source may previously have been encapsulated #}
-    {%- set operatorDataTypeEnumCarrier = namespace() %}
-    {%- do source['operator'].getDataType(environment, source['operator'], operatorDataTypeEnumCarrier, state, source) -%}
-    ({{ environment.coerce(environment, operatorDataTypeEnumCarrier.value, environment.DataTypeEnum.TABLE, state, source) }})
+    {%- endif -%}
+    ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, source) }})
 {%- endmacro -%}
 
 {%- macro queryStaticVariableWrapFundementalSourceInRelationshipClause(environment, this, state, source, returnClause, relationshipClause) -%}

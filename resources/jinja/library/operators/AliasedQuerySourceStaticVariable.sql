@@ -2,7 +2,10 @@
 
 {%- macro AliasedQuerySourcePrint(environment, this, state, arguments) -%}
     {#- QueryStaticVariable QueryPrint assumes responsiblity for handling AliasedQuerySource alias printing -#}
-    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
+    {#- Parts of the source may previously have been encapsulated #}
+    {%- set carrier = namespace() %}
+    {%- do arguments['child']['operator'].getDataType(environment, arguments['child']['operator'], carrier, state, arguments['child']) -%}
+    {{ environment.coerce(environment, carrier.value, environment.DataTypeEnum.TABLE, state, arguments['child']) }}
 {%- endmacro %}
 
 {%- macro AliasedQuerySourceStaticVariableInit(environment) %}

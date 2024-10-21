@@ -16,15 +16,6 @@
     {%- endif %}
 {%- endmacro %}
 
-{%- macro PropertyGetDataType(environment, this, carrier, state, arguments) %}
-    {%- set carrier.value = this.defaultDataType %}
-    {%- if child -%}
-        {%- do environment.OperatorClass.getDataType(environment, this, carrier, state, arguments) %}
-    {%- else -%}
-        {%- set carrier.value = environment.DataTypeEnum.UNDETERMINED %}
-    {%- endif %}
-{%- endmacro %}
-
 {%- macro PropertyPrint(environment, this, state, arguments) -%}
     {%- if arguments['child'] != none -%}
         {%- set dotPropertyCarrier = namespace() %}
@@ -56,6 +47,6 @@
     {%- do environment.OperatorClass.construct(environment, none, environment.Property) %}
     {%- set Property.allowsSelectFromAccessType = PropertyAllowsSelectFromAccessType %}
     {%- set Property.allowsDotPropertyAccessType = PropertyAllowsDotPropertyAccessType %}
-    {%- set Property.getDataType = PropertyGetDataType %}
+    {%- set Property.defaultDataType = environment.DataTypeEnum.ENCAPSULATED %}
     {%- set Property.print = PropertyPrint %}
 {%- endmacro %}
