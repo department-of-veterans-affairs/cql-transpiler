@@ -9,7 +9,10 @@
 {%- endmacro %}
 
 {%- macro LetClausePrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }} AS {{ arguments['referenceName'] }}
+    {%- set carrier = namespace() %}
+    {%- do arguments['child']['operator'].getDataType(environment, arguments['child']['operator'], carrier, state, arguments['child']) -%}
+    {%- if carrier.value == environment.DataTypeEnum.SIMPLE %}/* Warning: CQL let clauses allow simple values, but Databricks SQL with clauses have to be table-valued */{% endif -%}
+    {{ arguments['referenceName'] }} AS {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child']) }}
 {%- endmacro %}
 
 {%- macro LetClauseStaticVariableInit(environment) %}

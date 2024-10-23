@@ -51,7 +51,9 @@
         {%- set previousAliasContext = state.aliasContext %}
         {%- set state.aliasContext = none %}
         {#- prefix with LET clauses, if any #}
-        {%- if arguments['letClauseList']|length > 0 %}LET {{ environment.printOperatorsFromList(environment, state, arguments['letClauseList'], ", ") }} {% endif -%}
+        {%- if arguments['letClauseList']|length > 0 -%}
+            WITH {{ environment.printOperatorsFromList(environment, state, arguments['letClauseList'], ", ") }} {# -#}
+        {%- endif -%}
         {#- this function assumes responsiblity for handling AliasedQuerySource alias printing #}
         {%- if arguments['children'][0]['alias'] -%}
             {%- set state.aliasContext = arguments['children'][0]['alias'] %}
