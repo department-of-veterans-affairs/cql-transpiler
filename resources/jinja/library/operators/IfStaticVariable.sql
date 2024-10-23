@@ -5,9 +5,7 @@
 {%- endmacro %}
 
 {%- macro IfPrint(environment, this, state, arguments) -%}
-    IF ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['condition'])}}) {# -#}
-    THEN ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['then'])}}) {# -#}
-    ELSE ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['else'])}})
+    IF({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['condition'])}}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['then'])}}, {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['else'])}})
 {%- endmacro %}
 
 {%- macro IfStaticVariableInit(environment) %}

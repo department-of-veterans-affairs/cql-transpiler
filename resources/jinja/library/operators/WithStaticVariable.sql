@@ -2,7 +2,7 @@
 {%- from "library/globals/OperatorClass.sql" import OperatorClassInit %}
 
 {%- macro WithPrint(environment, this, state, arguments) -%}
-    {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}} AS {{ arguments['alias'] }} ON _source.{{ environment.printIDFromContext(environment, state.context) }} = {{ arguments['alias'] }}.{{ environment.printIDFromContext(environment, state.context) }} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['suchThat']) }}
+    (SELECT * FROM ({{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['child'])}})) AS {{ arguments['alias'] }} ON _source.{{ environment.printIDFromContext(environment, state.context) }} = {{ arguments['alias'] }}.{{ environment.printIDFromContext(environment, state.context) }} WHERE {{ environment.OperatorHandler.print(environment, environment.OperatorHandler, state, arguments['suchThat']) }}
 {%- endmacro %}
 
 {%- macro WithStaticVariableInit(environment) %}
