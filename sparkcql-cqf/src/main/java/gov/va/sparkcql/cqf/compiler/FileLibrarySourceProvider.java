@@ -6,27 +6,51 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileLibrarySourceProvider implements LibrarySourceProvider {
 
-    private Map<VersionedIdentifier, String> cqlLibraries;
+    private String path;
+    protected List<String> sources;
 
     public FileLibrarySourceProvider(String path) {
-        cqlLibraries = listFilesRecursively(new File(path))
-            .filter(f -> !f.isDirectory())
-            .filter(f -> f.getName().endsWith("cql"))
-            .map(file -> readFile(file))
-            .collect(Collectors.toMap(fileAsString -> CqlParser.parseVersionedIdentifier(fileAsString), fileAsString -> fileAsString));
+        this.path = path;
+        if (path == null || path.isEmpty()) {
+            sources = List.of();
+        } else {
+            this.sources = findFiles(path)
+                    .map(this::readFile)
+                    .collect(Collectors.toList());
+        }
     }
 
-    /**
-     * @param rootPath Root path to look for files in
-     * @return Stream of files
-     */
+    @Override
+    public InputStream getLibrarySource(VersionedIdentifier libraryIdentifier) {
+        validate();
+        return sources.stream()
+                .filter(source -> CqlParser.parseVersionedIdentifier(source).equals(libraryIdentifier))
+                .map(source -> new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8)))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Unable to find " + libraryIdentifier.toString() + " in repository."));
+    }
+
+    private void validate() {
+        if (this.sources.isEmpty()) {
+            throw new RuntimeException("Attempted to read from an empty repository. Check location '" + path + "'.");
+        }
+    }
+
+    private Stream<String> findFiles(String rootPath) {
+        var fileList = listFilesRecursively(new File(rootPath)).filter(f -> !f.isDirectory());
+        var extFilter = fileList;
+        extFilter = fileList.filter(f -> f.getName().endsWith("cql"));
+        return extFilter.map(File::getAbsolutePath);
+    }
+
     private Stream<File> listFilesRecursively(File rootPath) {
         var rootFiles = rootPath.listFiles();
         if (rootFiles == null) {
@@ -37,17 +61,11 @@ public class FileLibrarySourceProvider implements LibrarySourceProvider {
         return Stream.concat(fileAndFolderList.stream(), descendants.stream());
     }
 
-    private String readFile(File file) {
+    private String readFile(String path) {
         try {
-            return java.nio.file.Files.readString(file.toPath());
+            return java.nio.file.Files.readString(Path.of(path));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public InputStream getLibrarySource(VersionedIdentifier libraryIdentifier) {
-        var libraryContents = cqlLibraries.get(libraryIdentifier);
-        return libraryContents == null ? null : new ByteArrayInputStream(libraryContents.getBytes());
     }
 }

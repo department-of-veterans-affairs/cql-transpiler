@@ -31,4 +31,3 @@ gradle-app.setting
 # Python
 **/__pycache__
 **/.mypy_cache
-.venv/
