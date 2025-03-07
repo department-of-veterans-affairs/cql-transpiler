@@ -1,0 +1,39 @@
+{# original CQL begins -#}
+/*
+define "Denominator Exclusion":
+  /*Excludes encounters of patients with cancer pain or who are receiving palliative or hospice care at the time of the encounter or who are receiving medication for opioid use disorder, have sickle cell disease, or who are discharged to another inpatient care facility or discharged against medical advice, or expire during the inpatient stay*/
+  
+  "Inpatient Encounters with an Opioid or Benzodiazepine at Discharge" InpatientEncounter
+    where exists ( ["Diagnosis": "Cancer Related Pain"] Cancer
+        where Cancer.prevalencePeriod overlaps day of InpatientEncounter.relevantPeriod
+    )
+      or exists ( ["Diagnosis": "Sickle Cell Disease with and without Crisis"] SickleCellDisease
+          where SickleCellDisease.prevalencePeriod overlaps InpatientEncounter.relevantPeriod
+      )
+      or exists ( InpatientEncounter.diagnoses Diagnosis
+          where Diagnosis.code in "Cancer Related Pain"
+      )
+      or exists ( ["Diagnosis": "Opioid Use Disorder"] OUD
+          where start of OUD.prevalencePeriod before day of end of InpatientEncounter.relevantPeriod
+      )
+      or exists ( "Treatment for Opioid Use Disorders" OUDTreatment
+          where Coalesce(start of Global."NormalizeInterval"(OUDTreatment.relevantDatetime, OUDTreatment.relevantPeriod), OUDTreatment.authorDatetime) during day of InpatientEncounter.relevantPeriod
+      )
+      or exists ( "Intervention Palliative or Hospice Care" PalliativeOrHospiceCare
+          where Coalesce(start of Global."NormalizeInterval"(PalliativeOrHospiceCare.relevantDatetime, PalliativeOrHospiceCare.relevantPeriod), PalliativeOrHospiceCare.authorDatetime) during Global."HospitalizationWithObservation" ( InpatientEncounter )
+      )
+      or ( InpatientEncounter.dischargeDisposition in "Discharge To Acute Care Facility"
+          or InpatientEncounter.dischargeDisposition in "Hospice Care Referral or Admission"
+          or InpatientEncounter.dischargeDisposition in "Patient Expired"
+          or InpatientEncounter.dischargeDisposition in "Left Against Medical Advice"
+      )
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/SafeUseofOpioidsConcurrentPrescribing_7__0__000.j2" import SafeUseofOpioidsConcurrentPrescribingDenominator_Exclusion %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ SafeUseofOpioidsConcurrentPrescribingDenominator_Exclusion(environment, none) }}

@@ -1,0 +1,19 @@
+{# original CQL begins -#}
+/*
+define "Inpatient Encounters with an Opioid or Benzodiazepine at Discharge":
+  /*Captures encounters of patients with an opioid(s), benzodiazepine, or a combination of these medications at discharge*/
+  
+  "Inpatient Encounter with Age Greater than or Equal to 18" InpatientEncounter
+    with ( ["Medication, Discharge": "Schedule II, III and IV Opioid Medications"]
+      union ["Medication, Discharge": "Schedule IV Benzodiazepines"] ) OpioidOrBenzodiazepineDischargeMedication
+      such that OpioidOrBenzodiazepineDischargeMedication.authorDatetime during day of InpatientEncounter.relevantPeriod
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/SafeUseofOpioidsConcurrentPrescribing_7__0__000.j2" import SafeUseofOpioidsConcurrentPrescribingInpatient_Encounters_with_an_Opioid_or_Benzodiazepine_at_Discharge %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ SafeUseofOpioidsConcurrentPrescribingInpatient_Encounters_with_an_Opioid_or_Benzodiazepine_at_Discharge(environment, none) }}

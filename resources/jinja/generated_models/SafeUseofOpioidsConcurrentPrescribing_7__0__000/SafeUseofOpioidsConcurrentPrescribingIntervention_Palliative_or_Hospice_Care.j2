@@ -1,0 +1,15 @@
+{# original CQL begins -#}
+/*
+define "Intervention Palliative or Hospice Care":
+  ["Intervention, Order": "Palliative or Hospice Care"]
+    union ["Intervention, Performed": "Palliative or Hospice Care"]
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/SafeUseofOpioidsConcurrentPrescribing_7__0__000.j2" import SafeUseofOpioidsConcurrentPrescribingIntervention_Palliative_or_Hospice_Care %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ SafeUseofOpioidsConcurrentPrescribingIntervention_Palliative_or_Hospice_Care(environment, none) }}

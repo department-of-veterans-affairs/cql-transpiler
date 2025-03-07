@@ -1,0 +1,994 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<QualityMeasureDocument xmlns="urn:hl7-org:v3" xmlns:cql-ext="urn:hhs-cql:hqmf-n1-extensions:v1"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+      <!--
+            **************************************************************
+            Measure Details Section
+            **************************************************************
+        -->
+
+      <typeId extension="POQM_HD000001UV02" root="2.16.840.1.113883.1.3"/>
+   <templateId>
+      <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.1.2"/>
+   </templateId>
+   <id root="2c928082-894a-3fb9-0189-98b58f4b0f06"/>
+   <code code="57024-2" codeSystem="2.16.840.1.113883.6.1">
+      <displayName value="Health Quality Measure Document"/>
+   </code>
+   <title value="Safe Use of Opioids - Concurrent Prescribing"/>
+   <text
+         value="Proportion of inpatient hospitalizations for patients 18 years of age and older prescribed, or continued on, two or more opioids or an opioid and benzodiazepine concurrently at discharge"/>
+   <statusCode code="COMPLETED"/>
+   <setId root="33b40c00-909a-4490-8093-999fbcdc3480"/>
+   <versionNumber value="7.0.000"/>
+   <author>
+      <responsibleParty classCode="ASSIGNED">
+         <representedResponsibleOrganization classCode="ORG" determinerCode="INSTANCE">
+            <id>
+               <item root="2.16.840.1.113883.3.1240"/>
+            </id>
+            <name>
+               <item>
+                  <part value="Mathematica"/>
+               </item>
+            </name>
+         </representedResponsibleOrganization>
+      </responsibleParty>
+   </author>
+   <custodian>
+      <responsibleParty classCode="ASSIGNED">
+         <representedResponsibleOrganization classCode="ORG" determinerCode="INSTANCE">
+            <id>
+               <item root="93"/>
+            </id>
+            <name>
+               <item>
+                  <part value="Centers for Medicare &amp; Medicaid Services (CMS)"/>
+               </item>
+            </name>
+         </representedResponsibleOrganization>
+      </responsibleParty>
+   </custodian>
+   <!--Schedule IV Benzodiazepines-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1125.1"/>
+         <title value="Schedule IV Benzodiazepines"/>
+      </valueSet>
+   </definition>
+   <!--ONC Administrative Sex-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1"/>
+         <title value="ONC Administrative Sex"/>
+      </valueSet>
+   </definition>
+   <!--Observation Services-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1111.143"/>
+         <title value="Observation Services"/>
+      </valueSet>
+   </definition>
+   <!--Schedule II, III and IV Opioid Medications-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1046.241"/>
+         <title value="Schedule II, III and IV Opioid Medications"/>
+      </valueSet>
+   </definition>
+   <!--Sickle Cell Disease with and without Crisis-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1111.175"/>
+         <title value="Sickle Cell Disease with and without Crisis"/>
+      </valueSet>
+   </definition>
+   <!--Ethnicity-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.114222.4.11.837"/>
+         <title value="Ethnicity"/>
+      </valueSet>
+   </definition>
+   <!--Palliative or Hospice Care-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113883.3.600.1.1579"/>
+         <title value="Palliative or Hospice Care"/>
+      </valueSet>
+   </definition>
+   <!--Medications for Opioid Use Disorder (MOUD)-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1046.269"/>
+         <title value="Medications for Opioid Use Disorder (MOUD)"/>
+      </valueSet>
+   </definition>
+   <!--Opioid Medication Assisted Treatment (MAT)-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1111.177"/>
+         <title value="Opioid Medication Assisted Treatment (MAT)"/>
+      </valueSet>
+   </definition>
+   <!--Emergency Department Visit-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113883.3.117.1.7.1.292"/>
+         <title value="Emergency Department Visit"/>
+      </valueSet>
+   </definition>
+   <!--Opioid Use Disorder-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1111.171"/>
+         <title value="Opioid Use Disorder"/>
+      </valueSet>
+   </definition>
+   <!--Race-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.114222.4.11.836"/>
+         <title value="Race"/>
+      </valueSet>
+   </definition>
+   <!--Encounter Inpatient-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113883.3.666.5.307"/>
+         <title value="Encounter Inpatient"/>
+      </valueSet>
+   </definition>
+   <!--Cancer Related Pain-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1111.180"/>
+         <title value="Cancer Related Pain"/>
+      </valueSet>
+   </definition>
+   <!--Payer Type-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.114222.4.11.3591"/>
+         <title value="Payer Type"/>
+      </valueSet>
+   </definition>
+   <!--Hospice Care Referral or Admission-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113762.1.4.1116.365"/>
+         <title value="Hospice Care Referral or Admission"/>
+      </valueSet>
+   </definition>
+   <!--Discharge To Acute Care Facility-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113883.3.117.1.7.1.87"/>
+         <title value="Discharge To Acute Care Facility"/>
+      </valueSet>
+   </definition>
+   <!--Left Against Medical Advice-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113883.3.117.1.7.1.308"/>
+         <title value="Left Against Medical Advice"/>
+      </valueSet>
+   </definition>
+   <!--Patient Expired-->
+     	 <definition>
+      <valueSet classCode="OBS" moodCode="DEF">
+         <id root="2.16.840.1.113883.3.117.1.7.1.309"/>
+         <title value="Patient Expired"/>
+      </valueSet>
+   </definition>
+   <relatedDocument typeCode="COMP">
+      <expressionDocument>
+         <id root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+         <text mediaType="text/cql">
+            <reference value="https://emeasuretool.cms.gov/libraries/33b40c00-909a-4490-8093-999fbcdc3480/CMS506-v7-0-000-QDM-5-6.cql"/>
+            <translation mediaType="application/elm+xml">
+               <reference value="https://emeasuretool.cms.gov/libraries/33b40c00-909a-4490-8093-999fbcdc3480/CMS506-v7-0-000-QDM-5-6.xml"/>
+            </translation>
+            <translation mediaType="application/elm+json">
+               <reference value="https://emeasuretool.cms.gov/libraries/33b40c00-909a-4490-8093-999fbcdc3480/CMS506-v7-0-000-QDM-5-6.json"/>
+            </translation>
+         </text>
+         <setId extension="33b40c00-909a-4490-8093-999fbcdc3480"
+                identifierName="SafeUseofOpioidsConcurrentPrescribing"
+                root="https://emeasuretool.cms.gov/libraries"/>
+         <versionNumber value="7.0.000"/>
+      </expressionDocument>
+   </relatedDocument>
+   <relatedDocument typeCode="COMP">
+      <expressionDocument>
+         <id root="8a6d042a8c5931d0018c6e282a31073d"/>
+         <text mediaType="text/cql">
+            <reference value="https://emeasuretool.cms.gov/libraries/8bdc0a19-b210-4a58-8a07-f5d95a34eca9/MATGlobalCommonFunctionsQDM-v8-0-000-QDM-5-6.cql"/>
+            <translation mediaType="application/elm+xml">
+               <reference value="https://emeasuretool.cms.gov/libraries/8bdc0a19-b210-4a58-8a07-f5d95a34eca9/MATGlobalCommonFunctionsQDM-v8-0-000-QDM-5-6.xml"/>
+            </translation>
+            <translation mediaType="application/elm+json">
+               <reference value="https://emeasuretool.cms.gov/libraries/8bdc0a19-b210-4a58-8a07-f5d95a34eca9/MATGlobalCommonFunctionsQDM-v8-0-000-QDM-5-6.json"/>
+            </translation>
+         </text>
+         <setId extension="8bdc0a19-b210-4a58-8a07-f5d95a34eca9"
+                identifierName="MATGlobalCommonFunctionsQDM"
+                root="https://emeasuretool.cms.gov/libraries"/>
+         <versionNumber value="8.0.000"/>
+      </expressionDocument>
+   </relatedDocument>
+   <controlVariable>
+      <measurePeriod>
+         <id extension="measureperiod" root="09c97a82-49a1-4764-8161-10773faa1119"/>
+         <code code="MSRTP" codeSystem="2.16.840.1.113883.5.4">
+            <originalText value="Measurement Period"/>
+         </code>
+         <value xsi:type="PIVL_TS">
+            <phase highClosed="true" lowClosed="true">
+               <low value="20240101"/>
+               <width unit="a" value="1" xsi:type="PQ"/>
+            </phase>
+            <period unit="a" value="1"/>
+         </value>
+      </measurePeriod>
+   </controlVariable>
+   <subjectOf>
+      <measureAttribute>
+         <code nullFlavor="OTH">
+            <originalText value="eCQM Identifier (Measure Authoring Tool)"/>
+         </code>
+         <value mediaType="text/plain" value="506" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code nullFlavor="OTH">
+            <originalText value="CBE Number"/>
+         </code>
+         <value mediaType="text/plain" value="3316e" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="COPY" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Copyright"/>
+         </code>
+         <value mediaType="text/plain"
+                value="Limited proprietary coding is contained in the Measure specifications for user convenience. Users of proprietary code sets should obtain all necessary licenses from the owners of the code sets. Mathematica disclaims all liability for use or accuracy of any third-party codes contained in the specifications.&#xA;&#xA;CPT(R) contained in the measure specifications is copyright 2004-2023 American Medical Association. LOINC(R) copyright 2004-2023 Regenstrief Institute, Inc. This material contains SNOMED Clinical Terms(R) (SNOMED CT[R]) copyright 2004-2023 International Health Terminology Standards Development Organisation. ICD-10 copyright 2023 World Health Organization. All Rights Reserved."
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="DISC" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Disclaimer"/>
+         </code>
+         <value mediaType="text/plain"
+                value="These performance measures are not clinical guidelines, do not establish a standard of medical care, and have not been tested for all potential applications.&#xA;&#xA;THE MEASURES AND SPECIFICATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND.&#xA;&#xA;Due to technical limitations, registered trademarks are indicated by (R) or [R] and unregistered trademarks are indicated by (TM) or [TM]."
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="MSRSCORE" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Measure Scoring"/>
+         </code>
+         <value code="PROPOR" codeSystem="2.16.840.1.113883.5.1063" xsi:type="CD">
+            <displayName value="Proportion"/>
+         </value>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="MSRTYPE" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Measure Type"/>
+         </code>
+         <value code="PROCESS" codeSystem="2.16.840.1.113883.5.1063" xsi:type="CD">
+            <displayName value="PROCESS"/>
+         </value>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="STRAT" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Stratification"/>
+         </code>
+         <value mediaType="text/plain" value="None" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="MSRADJ" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Risk Adjustment"/>
+         </code>
+         <value mediaType="text/plain" value="None" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="MSRAGG" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Rate Aggregation"/>
+         </code>
+         <value mediaType="text/plain" value="None" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="RAT" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Rationale"/>
+         </code>
+         <value mediaType="text/plain"
+                value="Unintentional opioid overdose fatalities have become a major public health concern in the United States (Rudd et al., 2016). Reducing the number of unintentional overdoses has become a priority for numerous federal organizations including, but not limited to, the Centers for Disease Control and Prevention (CDC), the Federal Interagency Workgroup for Opioid Adverse Drug Events, and the Substance Abuse and Mental Health Services Administration. &#xA;&#xA;Concurrent prescriptions of opioids or opioids and benzodiazepines places patients at a greater risk of unintentional overdose due to the increased risk of respiratory depression (Dowell, Haegerich, &amp; Chou, 2016; Dowell, Ragan, Jones, Baldwin, &amp; Chou, 2022). An analysis of national prescribing patterns shows that more than half of patients who received an opioid prescription in 2009 had filled another opioid prescription within the previous 30 days (National Institute on Drug Abuse, 2011). Studies of multiple claims and prescription databases have shown that between 5%-15% of patients receive concurrent opioid prescriptions and 5%-20% of patients receive concurrent opioid and benzodiazepine prescriptions across various settings (Liu et al., 2013; Mack et al., 2015, Park et al., 2015). Patients who have multiple opioid prescriptions have an increased risk for overdose (Jena et al., 2014). Rates of fatal overdose are ten times higher in patients who are co-dispensed opioid analgesics and benzodiazepines than opioids alone (Dasgupta et al., 2015). The number of opioid overdose deaths involving benzodiazepines increased 14% on average each year from 2006 to 2011, while the number of opioid analgesic overdose deaths not involving benzodiazepines did not change significantly (Jones &amp; McAninch, 2015). Furthermore, concurrent use of benzodiazepines with opioids was prevalent in 31%-51% of fatal overdoses (Dowell, Haegerich, &amp; Chou, 2016). One study found that eliminating concurrent use of opioids and benzodiazepines could reduce the risk of opioid overdose-related emergency department (ED) and inpatient visits by 15% and potentially could have prevented an estimated 2,630 deaths related to opioid painkiller overdoses in 2015 (Sun et al., 2017). &#xA;&#xA;A study on The Opioid Safety Initiative in the Veterans Health Administration (VHA), which includes an opioid and benzodiazepine concurrent prescribing measure that this measure is based on, was associated with a decrease of 20.67% overall and 0.86% patients per month (781 patients per month) receiving concurrent benzodiazepine with an opioid among all adult VHA patients who filled outpatient opioid prescriptions from October 2012 to September 2014 (Lin et al., 2017).&#xA;&#xA;Adopting a measure that calculates the proportion of patients with two or more opioids or opioids and benzodiazepines concurrently has the potential to reduce preventable mortality and reduce the costs associated with adverse events related to opioid use by (1) encouraging providers to identify patients with concurrent prescriptions of opioids or opioids and benzodiazepines and (2) discouraging providers from prescribing two or more opioids or opioids and benzodiazepines concurrently."
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="CRS" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Clinical Recommendation Statement"/>
+         </code>
+         <value mediaType="text/plain"
+                value="The CDC Clinical Practice Guideline for Prescribing Opioids for Pain — United States, 2022 recommends that clinicians should:&#xA;- “[Use strategies minimizing] opioid use…for both opioid-naïve and opioid-tolerant patients with acute pain when possible. If patients receiving long-term opioid therapy require additional medication for acute pain, nonopioid medications should be used when possible.”&#xA;- ”Use particular caution when prescribing opioid pain medication and benzodiazepines concurrently.&quot;&#xA;- “Review increased risks for respiratory depression when opioids are taken with benzodiazepines, other sedatives, alcohol, nonprescribed or illicit drugs (e.g., heroin), or other opioids (see Recommendations 8 and 11)”&#xA;- “Closely monitor patients who are unable to taper and who continue on high-dose or otherwise high-risk opioid regimens (e.g., opioids prescribed concurrently with benzodiazepines) and should work with patients to mitigate overdose risk (e.g., by providing overdose education and naloxone) (see Recommendation 8).”&#xA;- &quot;Discuss information from the PDMP with the patient and confirm that the patient is aware of any additional prescriptions.”&#xA;- “Discuss safety concerns, including increased risk for respiratory depression and overdose, with patients found to be receiving overlapping prescription opioids from multiple clinicians who are not coordinating the patient’s care or patients who are receiving medications that increase risk when combined with opioids (e.g., benzodiazepines) (see Recommendation 11), and offer naloxone (see Recommendation 8).&quot;&#xA;- &quot;Discuss safety concerns with other clinicians who are prescribing controlled substances for the patient. Ideally, clinicians should first discuss concerns with the patient and inform them that they plan to coordinate care with their other clinicians to improve the patient’s safety.”&#xA;&#xA;In addition to the 2022 CDC Clinical Practice Guideline for Prescribing Opioids for Pain, opioid prescribing guidelines issued by various state agencies and professional societies for various settings agree with the recommendation to avoid concurrently prescribing opioids  (American Academy of Emergency Medicine (AAEM), 2013; and Washington Agency Medical Directors’ Group (WAMDG), 2015), and opioids and benzodiazepines (WAMDG, 2015; American Society of Interventional Pain Physicians (ASIPP), 2012;, and New York City Department Of Health and Mental Hygiene (NYC DPOMH), 2013) whenever possible as the combination of these medications may potentiate opioid-induced respiratory depression."
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="IDUR" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Improvement Notation"/>
+         </code>
+         <value mediaType="text/plain" value="Improvement noted as a decrease in the rate"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONAmerican Academy of Emergency Medicine (AAEM). (2013). Emergency department opioid-prescribing guidelines for the treatment of non-cancer-related pain. Retrieved from https://www.aaem.org/UserFiles/file/Emergency-Department-Opoid-Prescribing-Guidelines.pdf"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONAmerican Society of Interventional Pain Physicians (ASIPP). (2012). Guidelines for responsible opioid prescribing in chronic non-cancer pain; Part 2-guidance. Retrieved from https://pubmed.ncbi.nlm.nih.gov/22786449/"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONDasgupta, N., Jonsson Funk, M., Proescholdbell, S., et al. (2015, September). Cohort study of the impact of high-dose opioid analgesics on overdose mortality. Pain Medicine. Retrieved from http://onlinelibrary.wiley.com/doi/10.1111/pme.12907/abstract"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONDowell, D., Haegerich, T., &amp; Chou, R. (2016). CDC guideline for prescribing opioids for chronic pain—United States, 2016. Morbidity and Mortality Weekly Report (MMWR) Recommendations and Reports, 65. Retrieved from CDC Guideline for prescribing opioids for chronic pain—United States, 2016 | MWWR"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONDowell D., Ragan K., Jones C., Baldwin G., Chou R. (2022), CDC Clinical Practice Guideline for Prescribing Opioids for Pain — United States, 2022. Morbidity and Mortality Weekly Report (MMWR) Recomm Rep 2022;71(No. RR-3):1–95. DOI: http://dx.doi.org/10.15585/mmwr.rr7103a1"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONJena, A., Goldman, D., Schaeffer, L. D., et al. (2014). Opioid prescribing by multiple providers in Medicare: Retrospective observational study of insurance claims. BMJ, 348, g1393. DOI: 10.1136/bmj.g1393"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONJones, C., &amp; McAninch, J. (2015). Emergency department visits and overdose deaths from combined use of opioids and benzodiazepines. American Journal of Preventive Medicine, 49(4), pp. 493-501. Retrieved from https://www.sciencedirect.com/science/article/pii/S0749379715001634?via%3Dihub"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONLin, L. A., Bohnert, A. S., Kerns, R. D., et al. (2017). Impact of the opioid safety initiative on opioid-related prescribing in veterans. Pain, 158(5), 833–839. Retrieved from https://www.ncbi.nlm.nih.gov/pubmed/28240996"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONLiu, Y., Logan, J., Paulozzi, L., et al. (2013). Potential misuse and inappropriate prescription practices involving opioid analgesics. American Journal of Managed Care, 19(8), 648–665. Retrieved from http://www.ajmc.com/journals/issue/2013/2013-1-vol19-n8/Potential-Misuse-and-Inappropriate-Prescription-Practices-Involving-Opioid-Analgesics/"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONMack, K., Zhang, K., Paulozzi, L., et al. (2015, February). Prescription practices involving opioid analgesics among Americans with Medicaid, 2010. Journal of Health Care for the Poor and Underserved, 26(1), 182–198. Retrieved from http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4365785"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONNational Institute on Drug Abuse. (2011). Analysis of opioid prescription  practices finds areas of concern. Retrieved from https://www.nih.gov/news-events/news-releases/analysis-opioid-prescription-practices-finds-areas-concern"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONNew York City (NYC) Department of Health and Mental Hygiene (NYC DOHMH). (2013). Opioid prescribing resource for emergency department. Retrieved from https://www1.nyc.gov/site/doh/providers/health-topics/opioid-prescribing-resources-for-emergency-departments.page"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONPark, T., Saitz, R., Ganoczy, D., et al. (2015). Benzodiazepine-prescribing patterns and deaths from drug overdose among U.S. veterans receiving opioid analgesics: Case-cohort study. BMJ, 350, h2698. Retrieved from http://www.bmj.com/content/350/bmj.h2698"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONRudd, R., Aleshire, N., Zibbell, J., et al. (2016, January). Increases in drug and opioid overdose deaths—United States, 2000–2014. Morbidity and Mortality Weekly Report, 64(50), 1378–1382. Retrieved from http://www.cdc.gov/mmwr/preview/mmwrhtml/mm6450a3.htm"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONSun, E., Dixit, A., Humphreys, K., et al. (2017). Association between concurrent use of prescription opioids and benzodiazepines and overdose: Retrospective analysis. BMJ, 356, j760. Retrieved from&#xA;http://www.bmj.com/content/356/bmj.j760"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="REF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Reference"/>
+         </code>
+         <value mediaType="text/plain"
+                value="CITATIONWashington Agency Medical Directors’ Group (WAMDG). (2015). Interagency guideline on prescribing opioids for pain, Part II: Prescribing opioids in the acute and subacute phase. Retrieved from http://www.agencymeddirectors.wa.gov/Files/2015AMDGOpioidGuideline.pdf"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="DEF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Definition"/>
+         </code>
+         <value mediaType="text/plain"
+                value="For the purpose of this measure, the following are defined as:&#xA;&#xA;- Opioid: Schedule II, III and IV Opioid Medications that do not include naloxone. &#xA;&#xA;- Benzodiazepine: Schedule IV benzodiazepine medications.&#xA;&#xA;- Medications for Opioid Use Disorder: Methadone, buprenorphine and buprenorphine in combination with naloxone. &#xA;&#xA;- Prescribed: The intent of the measure is to capture opioid and/or benzodiazepine medications continued or ordered at discharge&#xA;&#xA;- Numerator criteria: Two or more unique orders for opioids, or an opioid and benzodiazepine at discharge"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="GUIDE" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Guidance"/>
+         </code>
+         <value mediaType="text/plain"
+                value="Clinician judgement, clinical appropriateness, or both may indicate concurrent prescribing of two unique opioids or an opioid and benzodiazepine is medically necessary, thus the measure is not expected to have a zero rate. &#xA;&#xA;Inpatient hospitalizations with discharge medications of a new or continuing opioid or a new or continuing benzodiazepine prescription should be included in the initial population. &#xA;&#xA;Inpatient hospitalizations with discharge medications of two or more new or continuing opioids or new or continuing opioid and benzodiazepine resulting in concurrent therapy at discharge should be included in the numerator. Each benzodiazepine and opioid included on the medication discharge list is considered a unique prescription.&#xA;&#xA;The denominator population includes patients with inpatient hospitalizations and patients from Acute Hospital Care at Home programs, who are treated and billed as inpatients but receive care in their home.&#xA;&#xA;This eCQM is an episode-based measure. An episode is defined as each inpatient hospitalization or encounter that ends during the measurement period.&#xA;&#xA;This version of the eCQM uses QDM version 5.6. Please refer to the eCQI Resource Center (https://ecqi.healthit.gov/qdm) for more information on the QDM."
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="TRANF" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Transmission Format"/>
+         </code>
+         <value mediaType="text/plain" value="TBD" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="IPOP" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Initial Population"/>
+         </code>
+         <value mediaType="text/plain"
+                value="Inpatient hospitalizations that end during the measurement period, where the patient is 18 years of age and older at the start of the encounter and prescribed one or more new or continuing opioid or benzodiazepine at discharge"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="DENOM" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Denominator"/>
+         </code>
+         <value mediaType="text/plain" value="Equals Initial Population" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="DENEX" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Denominator Exclusions"/>
+         </code>
+         <value mediaType="text/plain"
+                value="Inpatient hospitalizations where patients have cancer pain that begins prior to or during the encounter or are ordered or are receiving palliative or hospice care (including comfort measures, terminal care, and dying care) during the hospitalization or in an emergency department encounter or observation stay immediately prior to hospitalization, patients receiving medication for opioid use disorder, patients with sickle cell disease, patients discharged to another inpatient care facility or left against medical advice, and patients who expire during the inpatient stay"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="NUMER" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Numerator"/>
+         </code>
+         <value mediaType="text/plain"
+                value="Inpatient hospitalizations where the patient is prescribed or continuing to take two or more opioids or an opioid and benzodiazepine at discharge"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="NUMEX" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Numerator Exclusions"/>
+         </code>
+         <value mediaType="text/plain" value="Not Applicable" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="DENEXCEP" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Denominator Exceptions"/>
+         </code>
+         <value mediaType="text/plain" value="None" xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <subjectOf>
+      <measureAttribute>
+         <code code="SDE" codeSystem="2.16.840.1.113883.5.4">
+            <displayName value="Supplemental Data Elements"/>
+         </code>
+         <value mediaType="text/plain"
+                value="For every patient evaluated by this measure also identify payer, race, ethnicity and sex"
+                xsi:type="ED"/>
+      </measureAttribute>
+   </subjectOf>
+   <componentOf>
+      <qualityMeasureSet classCode="ACT">
+         <id root="33b40c00-909a-4490-8093-999fbcdc3480"/>
+         <title value=""/>
+      </qualityMeasureSet>
+   </componentOf>
+   <!--Data Criteria Section-->
+   <component>
+      <dataCriteriaSection>
+         <templateId>
+            <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.2.6"/>
+         </templateId>
+         <code code="57025-9" codeSystem="2.16.840.1.113883.6.1"/>
+         <title value="Data Criteria Section"/>
+         <text/>
+         <entry typeCode="DRIV">
+            <localVariableName value="ScheduleIVBenzodiazepines_MedicationDischarge_D1S1N"/>
+            <substanceAdministrationCriteria classCode="SBADM" moodCode="RQO">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.48"/>
+               </templateId>
+               <id extension="ScheduleIVBenzodiazepines_MedicationDischarge"
+                   root="965986d3-08b3-4245-9f2b-0a51483a6440"/>
+               <code code="10183-2" codeSystem="2.16.840.1.113883.6.1"/>
+               <title value="Medication, Discharge"/>
+               <statusCode code="ACTIVE"/>
+			            <participation typeCode="CSM">
+                  <role classCode="MANU">
+                     <playingManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+                        <code valueSet="2.16.840.1.113762.1.4.1125.1"/>
+                     </playingManufacturedMaterial>
+                  </role>
+               </participation>
+		          </substanceAdministrationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="ONCAdministrativeSex_PatientCharacteristicSex_LQgUQ"/>
+            <observationCriteria classCode="OBS" moodCode="EVN">
+               <templateId>
+                  <item extension="2017-05-01" root="2.16.840.1.113883.10.20.28.4.55"/>
+               </templateId>
+               <id extension="ONCAdministrativeSex_PatientCharacteristicSex"
+                   root="92b0b35c-858c-4f69-97ef-aa2fb73d831d"/>
+               <code code="263495000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                  <displayName value="Gender"/>
+               </code>
+               <title value="Patient Characteristic Sex"/>
+               <statusCode code="COMPLETED"/>
+               <value valueSet="2.16.840.1.113762.1.4.1" xsi:type="CD"/>
+            </observationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="ObservationServices_EncounterPerformed_hBLmn"/>
+            <encounterCriteria classCode="ENC" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.5"/>
+               </templateId>
+               <id extension="ObservationServices_EncounterPerformed"
+                   root="215b8958-753d-4e97-88e4-80e69c50bd14"/>
+               <code valueSet="2.16.840.1.113762.1.4.1111.143"/>
+               <title value="Encounter, Performed"/>
+               <statusCode code="COMPLETED"/>
+            </encounterCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="ScheduleIIIIIandIVOpioidMedications_MedicationDischarge_ZT4B0"/>
+            <substanceAdministrationCriteria classCode="SBADM" moodCode="RQO">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.48"/>
+               </templateId>
+               <id extension="ScheduleIIIIIandIVOpioidMedications_MedicationDischarge"
+                   root="a2a24726-7583-4e0d-833f-3f6cb7e5ce77"/>
+               <code code="10183-2" codeSystem="2.16.840.1.113883.6.1"/>
+               <title value="Medication, Discharge"/>
+               <statusCode code="ACTIVE"/>
+			            <participation typeCode="CSM">
+                  <role classCode="MANU">
+                     <playingManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+                        <code valueSet="2.16.840.1.113762.1.4.1046.241"/>
+                     </playingManufacturedMaterial>
+                  </role>
+               </participation>
+		          </substanceAdministrationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="SickleCellDiseasewithandwithoutCrisis_Diagnosis_Gd06X"/>
+            <observationCriteria classCode="OBS" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.110"/>
+               </templateId>
+               <id extension="SickleCellDiseasewithandwithoutCrisis_Diagnosis"
+                   root="a88d09d1-d2f0-40d8-b943-26546f2d586a"/>
+               <code code="282291009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                  <displayName value="Diagnosis"/>
+               </code>
+               <title value="Diagnosis"/>
+               <statusCode code="COMPLETED"/>
+               <value valueSet="2.16.840.1.113762.1.4.1111.175" xsi:type="CD"/>
+            </observationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="Ethnicity_PatientCharacteristicEthnicity_nFEIo"/>
+            <observationCriteria classCode="OBS" moodCode="EVN">
+               <templateId>
+                  <item extension="2017-05-01" root="2.16.840.1.113883.10.20.28.4.56"/>
+               </templateId>
+               <id extension="Ethnicity_PatientCharacteristicEthnicity"
+                   root="2217d167-3752-46ac-89de-70a1fd30b1ae"/>
+               <code code="54133-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC">
+                  <displayName value="Ethnicity"/>
+               </code>
+               <title value="Patient Characteristic Ethnicity"/>
+               <statusCode code="COMPLETED"/>
+               <value valueSet="2.16.840.1.114222.4.11.837" xsi:type="CD"/>
+            </observationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="PalliativeorHospiceCare_InterventionOrder_0eKan"/>
+            <actCriteria classCode="ACT" moodCode="RQO">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.35"/>
+               </templateId>
+               <id extension="PalliativeorHospiceCare_InterventionOrder"
+                   root="8e1be859-e48e-43ac-a877-b0036a1a72f1"/>
+               <code valueSet="2.16.840.1.113883.3.600.1.1579"/>
+               <title value="Intervention, Order"/>
+               <statusCode code="ACTIVE"/>
+            </actCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="PalliativeorHospiceCare_InterventionPerformed_2P92Z"/>
+            <actCriteria classCode="ACT" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.36"/>
+               </templateId>
+               <id extension="PalliativeorHospiceCare_InterventionPerformed"
+                   root="8e1be859-e48e-43ac-a877-b0036a1a72f1"/>
+               <code valueSet="2.16.840.1.113883.3.600.1.1579"/>
+               <title value="Intervention, Performed"/>
+               <statusCode code="COMPLETED"/>
+            </actCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="MedicationsforOpioidUseDisorder(MOUD)_MedicationActive_HklLu"/>
+            <substanceAdministrationCriteria classCode="SBADM" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.44"/>
+               </templateId>
+               <id extension="MedicationsforOpioidUseDisorder(MOUD)_MedicationActive"
+                   root="6c2ed8dd-5825-446e-a6c7-8845eee1933f"/>
+               <title value="Medication, Active"/>
+               <statusCode code="ACTIVE"/>
+			            <participation typeCode="CSM">
+                  <role classCode="MANU">
+                     <playingMaterial classCode="MMAT" determinerCode="KIND">
+                        <code valueSet="2.16.840.1.113762.1.4.1046.269"/>
+                     </playingMaterial>
+                  </role>
+               </participation>
+		          </substanceAdministrationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="MedicationsforOpioidUseDisorder(MOUD)_MedicationOrder_KBDYZ"/>
+            <substanceAdministrationCriteria classCode="SBADM" moodCode="RQO">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.51"/>
+               </templateId>
+               <id extension="MedicationsforOpioidUseDisorder(MOUD)_MedicationOrder"
+                   root="6c2ed8dd-5825-446e-a6c7-8845eee1933f"/>
+               <title value="Medication, Order"/>
+               <statusCode code="ACTIVE"/>
+			            <participation typeCode="CSM">
+                  <role classCode="MANU">
+                     <playingMaterial classCode="MMAT" determinerCode="KIND">
+                        <code valueSet="2.16.840.1.113762.1.4.1046.269"/>
+                     </playingMaterial>
+                  </role>
+               </participation>
+		          </substanceAdministrationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="OpioidMedicationAssistedTreatment(MAT)_InterventionPerformed_D37mF"/>
+            <actCriteria classCode="ACT" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.36"/>
+               </templateId>
+               <id extension="OpioidMedicationAssistedTreatment(MAT)_InterventionPerformed"
+                   root="75473199-3a2b-4dd5-8462-12489926bc79"/>
+               <code valueSet="2.16.840.1.113762.1.4.1111.177"/>
+               <title value="Intervention, Performed"/>
+               <statusCode code="COMPLETED"/>
+            </actCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="EmergencyDepartmentVisit_EncounterPerformed_mTUm7"/>
+            <encounterCriteria classCode="ENC" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.5"/>
+               </templateId>
+               <id extension="EmergencyDepartmentVisit_EncounterPerformed"
+                   root="943fd468-a486-47eb-bcef-69bbc31a73a0"/>
+               <code valueSet="2.16.840.1.113883.3.117.1.7.1.292"/>
+               <title value="Encounter, Performed"/>
+               <statusCode code="COMPLETED"/>
+            </encounterCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="OpioidUseDisorder_Diagnosis_AQGCU"/>
+            <observationCriteria classCode="OBS" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.110"/>
+               </templateId>
+               <id extension="OpioidUseDisorder_Diagnosis"
+                   root="611fc85d-364b-4cd6-b308-60734ab82058"/>
+               <code code="282291009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                  <displayName value="Diagnosis"/>
+               </code>
+               <title value="Diagnosis"/>
+               <statusCode code="COMPLETED"/>
+               <value valueSet="2.16.840.1.113762.1.4.1111.171" xsi:type="CD"/>
+            </observationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="Race_PatientCharacteristicRace_4JYp9"/>
+            <observationCriteria classCode="OBS" moodCode="EVN">
+               <templateId>
+                  <item extension="2017-05-01" root="2.16.840.1.113883.10.20.28.4.59"/>
+               </templateId>
+               <id extension="Race_PatientCharacteristicRace"
+                   root="b9753fe6-119d-4313-9e51-fe3969c98f19"/>
+               <code code="32624-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC">
+                  <displayName value="Race"/>
+               </code>
+               <title value="Patient Characteristic Race"/>
+               <statusCode code="COMPLETED"/>
+               <value valueSet="2.16.840.1.114222.4.11.836" xsi:type="CD"/>
+            </observationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="EncounterInpatient_EncounterPerformed_0HuXn"/>
+            <encounterCriteria classCode="ENC" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.5"/>
+               </templateId>
+               <id extension="EncounterInpatient_EncounterPerformed"
+                   root="c8060e96-dc7d-4780-a5cd-0aff93854cf3"/>
+               <code valueSet="2.16.840.1.113883.3.666.5.307"/>
+               <title value="Encounter, Performed"/>
+               <statusCode code="COMPLETED"/>
+            </encounterCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="CancerRelatedPain_Diagnosis_rJHTg"/>
+            <observationCriteria classCode="OBS" moodCode="EVN">
+               <templateId>
+                  <item extension="2021-02-01" root="2.16.840.1.113883.10.20.28.4.110"/>
+               </templateId>
+               <id extension="CancerRelatedPain_Diagnosis"
+                   root="cb5e59c9-433b-4256-9fe9-7a831cfb906a"/>
+               <code code="282291009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                  <displayName value="Diagnosis"/>
+               </code>
+               <title value="Diagnosis"/>
+               <statusCode code="COMPLETED"/>
+               <value valueSet="2.16.840.1.113762.1.4.1111.180" xsi:type="CD"/>
+            </observationCriteria>
+         </entry>
+         <entry typeCode="DRIV">
+            <localVariableName value="PayerType_PatientCharacteristicPayer_wezQ0"/>
+            <observationCriteria classCode="OBS" moodCode="EVN">
+               <templateId>
+                  <item extension="2017-05-01" root="2.16.840.1.113883.10.20.28.4.58"/>
+               </templateId>
+               <id extension="PayerType_PatientCharacteristicPayer"
+                   root="8d009e5d-13ae-431d-98ba-81005c031005"/>
+               <code code="48768-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC">
+                  <displayName value="Payer Type"/>
+               </code>
+               <title value="Patient Characteristic Payer"/>
+               <statusCode code="COMPLETED"/>
+               <value valueSet="2.16.840.1.114222.4.11.3591" xsi:type="CD"/>
+            </observationCriteria>
+         </entry>
+      </dataCriteriaSection>
+   </component>
+   <component>
+      <populationCriteriaSection>
+         <templateId>
+            <item extension="2017-08-01" root="2.16.840.1.113883.10.20.28.2.7"/>
+         </templateId>
+         <id extension="PopulationCriteria1" root="705DB6DE-DC86-4A11-BE5C-CF6A00106163"/>
+         <code code="57026-7" codeSystem="2.16.840.1.113883.6.1"/>
+         <title value="Population Criteria Section"/>
+         <text/>
+         <component typeCode="COMP">
+            <initialPopulationCriteria classCode="OBS" moodCode="EVN">
+               <id extension="initialPopulation" root="062F953F-F0BA-4FF5-8A4A-1FBE40001DF1"/>
+               <code code="IPOP" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;Initial Population&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </initialPopulationCriteria>
+         </component>
+         <component typeCode="COMP">
+            <denominatorCriteria classCode="OBS" moodCode="EVN">
+               <id extension="denominator" root="EF6E2AD8-693F-431E-BC01-0AE627B101BF"/>
+               <code code="DENOM" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;Denominator&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </denominatorCriteria>
+         </component>
+         <component typeCode="COMP">
+            <denominatorExclusionCriteria classCode="OBS" moodCode="EVN">
+               <id extension="denominatorExclusions" root="91F42BC6-FECA-4DD1-BA7D-B8CCD265D10B"/>
+               <code code="DENEX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;Denominator Exclusion&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </denominatorExclusionCriteria>
+         </component>
+         <component typeCode="COMP">
+            <numeratorCriteria classCode="OBS" moodCode="EVN">
+               <id extension="numerator" root="C920F16A-B0EF-418C-99F3-853393783797"/>
+               <code code="NUMER" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;Numerator&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </numeratorCriteria>
+         </component>
+         <component typeCode="COMP">
+            <cql-ext:supplementalDataElement>
+               <id extension="Supplemental Data Elements"
+                   root="7C51A185-C670-4B48-8DCB-5590E16F75DA"/>
+               <code code="SDE" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;SDE Ethnicity&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </cql-ext:supplementalDataElement>
+         </component>
+         <component typeCode="COMP">
+            <cql-ext:supplementalDataElement>
+               <id extension="Supplemental Data Elements"
+                   root="15DDAD65-C776-42E0-B5C9-C75276FF22A0"/>
+               <code code="SDE" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;SDE Race&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </cql-ext:supplementalDataElement>
+         </component>
+         <component typeCode="COMP">
+            <cql-ext:supplementalDataElement>
+               <id extension="Supplemental Data Elements"
+                   root="ED42DF5E-4987-4449-ABC7-FEC87DBB2FD7"/>
+               <code code="SDE" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;SDE Sex&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </cql-ext:supplementalDataElement>
+         </component>
+         <component typeCode="COMP">
+            <cql-ext:supplementalDataElement>
+               <id extension="Supplemental Data Elements"
+                   root="38FF6C66-E2D7-4DA6-BAFF-03F45B31D5F1"/>
+               <code code="SDE" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code"/>
+               <precondition typeCode="PRCN">
+                  <criteriaReference classCode="OBS" moodCode="EVN">
+                     <id extension="SafeUseofOpioidsConcurrentPrescribing.&quot;SDE Payer&quot;"
+                         root="C81AEBEF-F83D-4BFF-89AA-374E6BC3E336"/>
+                  </criteriaReference>
+               </precondition>
+            </cql-ext:supplementalDataElement>
+         </component>
+      </populationCriteriaSection>
+   </component>
+</QualityMeasureDocument>

@@ -316,6 +316,6 @@ public abstract class TranspilerNode {
      * @return Sanatized name that can work as a jinja variable name.
      */
     public String sanitizeNameForJinja(String name) {
-        return name.replace(" ", "_").replace(".", "__");
+        return name.replace(" ", "_").replace(".", "__").replace("(", "_LP_").replace(")", "_RP_").replace(",", "_COMMA_").replace(":", "_COLON_").replace("-", "_DASH_").replace("/", "_SLASH_").replace(">", "_GT_").replace("<", "_LT_").replace("=", "_EQ_").replace("!", "_BANG_").replace("?", "_QMARK_").replace("&", "_AMP_").replace("|", "_PIPE_").replace("+", "_PLUS_").replace("*", "_STAR_").replace("%", "_PERCENT_").replace("^", "_CARET_").replace("~", "_TILDE_").replace("`", "_BACKTICK_").replace("'", "_SINGLEQUOTE_").replace("\"", "_DOUBLEQUOTE_");
     }
 }

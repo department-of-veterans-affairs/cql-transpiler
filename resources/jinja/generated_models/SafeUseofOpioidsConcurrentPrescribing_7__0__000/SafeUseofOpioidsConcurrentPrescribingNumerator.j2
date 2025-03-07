@@ -1,0 +1,28 @@
+{# original CQL begins -#}
+/*
+define "Numerator":
+  /*Encounters of patients prescribed two or more opioids or an opioid and benzodiazepine at discharge.
+  */
+  
+  ( "Inpatient Encounters with an Opioid or Benzodiazepine at Discharge" InpatientEncounter
+      where ( Count(["Medication, Discharge": "Schedule II, III and IV Opioid Medications"] Opioids
+            where Opioids.authorDatetime during day of InpatientEncounter.relevantPeriod
+            return distinct Opioids.code
+        ) >= 2
+      )
+        or exists ( ["Medication, Discharge": "Schedule II, III and IV Opioid Medications"] OpioidsDischarge
+            where OpioidsDischarge.authorDatetime during day of InpatientEncounter.relevantPeriod
+              and exists ["Medication, Discharge": "Schedule IV Benzodiazepines"] BenzodiazepinesDischarge
+                where BenzodiazepinesDischarge.authorDatetime during day of InpatientEncounter.relevantPeriod
+        )
+  )
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/SafeUseofOpioidsConcurrentPrescribing_7__0__000.j2" import SafeUseofOpioidsConcurrentPrescribingNumerator %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ SafeUseofOpioidsConcurrentPrescribingNumerator(environment, none) }}

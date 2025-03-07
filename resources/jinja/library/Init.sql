@@ -57,6 +57,7 @@
 {%- from "library/operators/OperandDefStaticVariable.sql" import OperandDefStaticVariableInit %}
 {%- from "library/operators/OperandRefStaticVariable.sql" import OperandRefStaticVariableInit %}
 {%- from "library/operators/OrStaticVariable.sql" import OrStaticVariableInit %}
+{%- from "library/operators/OverlapsStaticVariable.sql" import OverlapsStaticVariableInit %}
 {%- from "library/operators/ParameterRefStaticVariable.sql" import ParameterRefStaticVariableInit %}
 {%- from "library/operators/PropertyStaticVariable.sql" import PropertyStaticVariableInit %}
 {%- from "library/operators/QuantityStaticVariable.sql" import QuantityStaticVariableInit %}
@@ -136,6 +137,7 @@
     {%- do OperandDefStaticVariableInit(environment) %}
     {%- do OperandRefStaticVariableInit(environment) %}
     {%- do OrStaticVariableInit(environment) %}
+    {%- do OverlapsStaticVariableInit(environment) %}
     {%- do ParameterRefStaticVariableInit(environment) %}
     {%- do PropertyStaticVariableInit(environment) %}
     {%- do QuantityStaticVariableInit(environment) %}

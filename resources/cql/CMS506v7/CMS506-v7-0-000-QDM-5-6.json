@@ -1,0 +1,3309 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorOptions" : "EnableAnnotations,EnableLocators,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+         "type" : "CqlToElmInfo"
+      }, {
+         "type" : "Annotation",
+         "s" : {
+            "r" : "240",
+            "s" : [ {
+               "value" : [ "","library SafeUseofOpioidsConcurrentPrescribing version '7.0.000'" ]
+            } ]
+         }
+      } ],
+      "identifier" : {
+         "id" : "SafeUseofOpioidsConcurrentPrescribing",
+         "version" : "7.0.000"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1"
+         }, {
+            "localId" : "1",
+            "locator" : "3:1-3:23",
+            "localIdentifier" : "QDM",
+            "uri" : "urn:healthit-gov:qdm:v5_6",
+            "version" : "5.6",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "1",
+                  "s" : [ {
+                     "value" : [ "","using " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "QDM" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'5.6'" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "includes" : {
+         "def" : [ {
+            "localId" : "2",
+            "locator" : "5:1-5:67",
+            "localIdentifier" : "Global",
+            "path" : "MATGlobalCommonFunctionsQDM",
+            "version" : "8.0.000",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "2",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "MATGlobalCommonFunctionsQDM" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'8.0.000'"," called ","Global" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "parameters" : {
+         "def" : [ {
+            "localId" : "21",
+            "locator" : "24:1-24:49",
+            "name" : "Measurement Period",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "21",
+                  "s" : [ {
+                     "value" : [ "","parameter ","\"Measurement Period\""," " ]
+                  }, {
+                     "r" : "20",
+                     "s" : [ {
+                        "value" : [ "Interval<" ]
+                     }, {
+                        "r" : "19",
+                        "s" : [ {
+                           "value" : [ "DateTime" ]
+                        } ]
+                     }, {
+                        "value" : [ ">" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "parameterTypeSpecifier" : {
+               "localId" : "20",
+               "locator" : "24:32-24:49",
+               "type" : "IntervalTypeSpecifier",
+               "pointType" : {
+                  "localId" : "19",
+                  "locator" : "24:41-24:48",
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier"
+               }
+            }
+         } ]
+      },
+      "valueSets" : {
+         "def" : [ {
+            "localId" : "3",
+            "locator" : "7:1-7:72",
+            "name" : "Cancer Related Pain",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1111.180",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "3",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Cancer Related Pain\"",": ","'urn:oid:2.16.840.1.113762.1.4.1111.180'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "4",
+            "locator" : "8:1-8:87",
+            "name" : "Discharge To Acute Care Facility",
+            "id" : "urn:oid:2.16.840.1.113883.3.117.1.7.1.87",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "4",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Discharge To Acute Care Facility\"",": ","'urn:oid:2.16.840.1.113883.3.117.1.7.1.87'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "5",
+            "locator" : "9:1-9:58",
+            "name" : "Ethnicity",
+            "id" : "urn:oid:2.16.840.1.114222.4.11.837",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "5",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Ethnicity\"",": ","'urn:oid:2.16.840.1.114222.4.11.837'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "6",
+            "locator" : "10:1-10:87",
+            "name" : "Hospice Care Referral or Admission",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1116.365",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "6",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Hospice Care Referral or Admission\"",": ","'urn:oid:2.16.840.1.113762.1.4.1116.365'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "7",
+            "locator" : "11:1-11:83",
+            "name" : "Left Against Medical Advice",
+            "id" : "urn:oid:2.16.840.1.113883.3.117.1.7.1.308",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "7",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Left Against Medical Advice\"",": ","'urn:oid:2.16.840.1.113883.3.117.1.7.1.308'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "8",
+            "locator" : "12:1-12:95",
+            "name" : "Medications for Opioid Use Disorder (MOUD)",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1046.269",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "8",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Medications for Opioid Use Disorder (MOUD)\"",": ","'urn:oid:2.16.840.1.113762.1.4.1046.269'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "9",
+            "locator" : "13:1-13:68",
+            "name" : "ONC Administrative Sex",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "9",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"ONC Administrative Sex\"",": ","'urn:oid:2.16.840.1.113762.1.4.1'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "10",
+            "locator" : "14:1-14:95",
+            "name" : "Opioid Medication Assisted Treatment (MAT)",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1111.177",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "10",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Opioid Medication Assisted Treatment (MAT)\"",": ","'urn:oid:2.16.840.1.113762.1.4.1111.177'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "11",
+            "locator" : "15:1-15:72",
+            "name" : "Opioid Use Disorder",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1111.171",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "11",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Opioid Use Disorder\"",": ","'urn:oid:2.16.840.1.113762.1.4.1111.171'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "12",
+            "locator" : "16:1-16:79",
+            "name" : "Palliative or Hospice Care",
+            "id" : "urn:oid:2.16.840.1.113883.3.600.1.1579",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "12",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Palliative or Hospice Care\"",": ","'urn:oid:2.16.840.1.113883.3.600.1.1579'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "13",
+            "locator" : "17:1-17:71",
+            "name" : "Patient Expired",
+            "id" : "urn:oid:2.16.840.1.113883.3.117.1.7.1.309",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "13",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Patient Expired\"",": ","'urn:oid:2.16.840.1.113883.3.117.1.7.1.309'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "14",
+            "locator" : "18:1-18:60",
+            "name" : "Payer Type",
+            "id" : "urn:oid:2.16.840.1.114222.4.11.3591",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "14",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Payer Type\"",": ","'urn:oid:2.16.840.1.114222.4.11.3591'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "15",
+            "locator" : "19:1-19:53",
+            "name" : "Race",
+            "id" : "urn:oid:2.16.840.1.114222.4.11.836",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "15",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Race\"",": ","'urn:oid:2.16.840.1.114222.4.11.836'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "16",
+            "locator" : "20:1-20:95",
+            "name" : "Schedule II, III and IV Opioid Medications",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1046.241",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "16",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Schedule II, III and IV Opioid Medications\"",": ","'urn:oid:2.16.840.1.113762.1.4.1046.241'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "17",
+            "locator" : "21:1-21:78",
+            "name" : "Schedule IV Benzodiazepines",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1125.1",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "17",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Schedule IV Benzodiazepines\"",": ","'urn:oid:2.16.840.1.113762.1.4.1125.1'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "18",
+            "locator" : "22:1-22:96",
+            "name" : "Sickle Cell Disease with and without Crisis",
+            "id" : "urn:oid:2.16.840.1.113762.1.4.1111.175",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "18",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Sickle Cell Disease with and without Crisis\"",": ","'urn:oid:2.16.840.1.113762.1.4.1111.175'" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "locator" : "26:1-26:15",
+            "name" : "Patient"
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "locator" : "26:1-26:15",
+            "name" : "Patient",
+            "context" : "Patient",
+            "expression" : {
+               "type" : "SingletonFrom",
+               "operand" : {
+                  "locator" : "26:1-26:15",
+                  "dataType" : "{urn:healthit-gov:qdm:v5_6}Patient",
+                  "templateId" : "Patient",
+                  "type" : "Retrieve"
+               }
+            }
+         }, {
+            "localId" : "32",
+            "locator" : "31:1-33:90",
+            "name" : "Inpatient Encounter with Age Greater than or Equal to 18",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "32",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Inpatient Encounter with Age Greater than or Equal to 18\"",":\n  " ]
+                  }, {
+                     "r" : "31",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "23",
+                           "s" : [ {
+                              "r" : "22",
+                              "s" : [ {
+                                 "s" : [ {
+                                    "value" : [ "Global",".","\"Inpatient Encounter\"" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","InpatientHospitalEncounter" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "30",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "30",
+                           "s" : [ {
+                              "r" : "28",
+                              "s" : [ {
+                                 "value" : [ "AgeInYearsAt","(" ]
+                              }, {
+                                 "r" : "27",
+                                 "s" : [ {
+                                    "value" : [ "date from " ]
+                                 }, {
+                                    "r" : "26",
+                                    "s" : [ {
+                                       "value" : [ "start of " ]
+                                    }, {
+                                       "r" : "25",
+                                       "s" : [ {
+                                          "r" : "24",
+                                          "s" : [ {
+                                             "value" : [ "InpatientHospitalEncounter" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "." ]
+                                       }, {
+                                          "r" : "25",
+                                          "s" : [ {
+                                             "value" : [ "relevantPeriod" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           }, {
+                              "r" : "29",
+                              "value" : [ " ",">="," ","18" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "31",
+               "locator" : "32:3-33:90",
+               "type" : "Query",
+               "source" : [ {
+                  "localId" : "23",
+                  "locator" : "32:3-32:57",
+                  "alias" : "InpatientHospitalEncounter",
+                  "expression" : {
+                     "localId" : "22",
+                     "locator" : "32:3-32:30",
+                     "name" : "Inpatient Encounter",
+                     "libraryName" : "Global",
+                     "type" : "ExpressionRef"
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "30",
+                  "locator" : "33:5-33:90",
+                  "type" : "GreaterOrEqual",
+                  "operand" : [ {
+                     "localId" : "28",
+                     "locator" : "33:11-33:84",
+                     "precision" : "Year",
+                     "type" : "CalculateAgeAt",
+                     "operand" : [ {
+                        "type" : "ToDate",
+                        "operand" : {
+                           "path" : "birthDatetime",
+                           "type" : "Property",
+                           "source" : {
+                              "name" : "Patient",
+                              "type" : "ExpressionRef"
+                           }
+                        }
+                     }, {
+                        "localId" : "27",
+                        "locator" : "33:24-33:83",
+                        "type" : "DateFrom",
+                        "operand" : {
+                           "localId" : "26",
+                           "locator" : "33:34-33:83",
+                           "type" : "Start",
+                           "operand" : {
+                              "localId" : "25",
+                              "locator" : "33:43-33:83",
+                              "path" : "relevantPeriod",
+                              "scope" : "InpatientHospitalEncounter",
+                              "type" : "Property"
+                           }
+                        }
+                     } ]
+                  }, {
+                     "localId" : "29",
+                     "locator" : "33:89-33:90",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "18",
+                     "type" : "Literal"
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "46",
+            "locator" : "89:1-95:120",
+            "name" : "Inpatient Encounters with an Opioid or Benzodiazepine at Discharge",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "46",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Inpatient Encounters with an Opioid or Benzodiazepine at Discharge\"",":\n  /*Captures encounters of patients with an opioid(s), benzodiazepine, or a combination of these medications at discharge*/\n  \n  " ]
+                  }, {
+                     "r" : "45",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "34",
+                           "s" : [ {
+                              "r" : "33",
+                              "s" : [ {
+                                 "s" : [ {
+                                    "value" : [ "\"Inpatient Encounter with Age Greater than or Equal to 18\"" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","InpatientEncounter" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "44",
+                        "s" : [ {
+                           "value" : [ "with " ]
+                        }, {
+                           "r" : "38",
+                           "s" : [ {
+                              "r" : "37",
+                              "s" : [ {
+                                 "value" : [ "( " ]
+                              }, {
+                                 "r" : "37",
+                                 "s" : [ {
+                                    "r" : "35",
+                                    "s" : [ {
+                                       "value" : [ "[","\"Medication, Discharge\"",": " ]
+                                    }, {
+                                       "s" : [ {
+                                          "value" : [ "\"Schedule II, III and IV Opioid Medications\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "]" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n      union " ]
+                                 }, {
+                                    "r" : "36",
+                                    "s" : [ {
+                                       "value" : [ "[","\"Medication, Discharge\"",": " ]
+                                    }, {
+                                       "s" : [ {
+                                          "value" : [ "\"Schedule IV Benzodiazepines\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "]" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " )" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","OpioidOrBenzodiazepineDischargeMedication" ]
+                           } ]
+                        }, {
+                           "value" : [ "\n      such that " ]
+                        }, {
+                           "r" : "43",
+                           "s" : [ {
+                              "r" : "40",
+                              "s" : [ {
+                                 "r" : "39",
+                                 "s" : [ {
+                                    "value" : [ "OpioidOrBenzodiazepineDischargeMedication" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "40",
+                                 "s" : [ {
+                                    "value" : [ "authorDatetime" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "r" : "43",
+                              "value" : [ " ","during day of"," " ]
+                           }, {
+                              "r" : "42",
+                              "s" : [ {
+                                 "r" : "41",
+                                 "s" : [ {
+                                    "value" : [ "InpatientEncounter" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "42",
+                                 "s" : [ {
+                                    "value" : [ "relevantPeriod" ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "45",
+               "locator" : "92:3-95:120",
+               "type" : "Query",
+               "source" : [ {
+                  "localId" : "34",
+                  "locator" : "92:3-92:79",
+                  "alias" : "InpatientEncounter",
+                  "expression" : {
+                     "localId" : "33",
+                     "locator" : "92:3-92:60",
+                     "name" : "Inpatient Encounter with Age Greater than or Equal to 18",
+                     "type" : "ExpressionRef"
+                  }
+               } ],
+               "relationship" : [ {
+                  "localId" : "44",
+                  "locator" : "93:5-95:120",
+                  "alias" : "OpioidOrBenzodiazepineDischargeMedication",
+                  "type" : "With",
+                  "expression" : {
+                     "localId" : "37",
+                     "locator" : "93:10-94:70",
+                     "type" : "Union",
+                     "operand" : [ {
+                        "localId" : "35",
+                        "locator" : "93:12-93:82",
+                        "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationDischarge",
+                        "templateId" : "PositiveMedicationDischarge",
+                        "codeProperty" : "code",
+                        "codeComparator" : "in",
+                        "type" : "Retrieve",
+                        "codes" : {
+                           "locator" : "93:38-93:81",
+                           "name" : "Schedule II, III and IV Opioid Medications",
+                           "preserve" : true,
+                           "type" : "ValueSetRef"
+                        }
+                     }, {
+                        "localId" : "36",
+                        "locator" : "94:13-94:68",
+                        "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationDischarge",
+                        "templateId" : "PositiveMedicationDischarge",
+                        "codeProperty" : "code",
+                        "codeComparator" : "in",
+                        "type" : "Retrieve",
+                        "codes" : {
+                           "locator" : "94:39-94:67",
+                           "name" : "Schedule IV Benzodiazepines",
+                           "preserve" : true,
+                           "type" : "ValueSetRef"
+                        }
+                     } ]
+                  },
+                  "suchThat" : {
+                     "localId" : "43",
+                     "locator" : "95:17-95:120",
+                     "precision" : "Day",
+                     "type" : "In",
+                     "operand" : [ {
+                        "localId" : "40",
+                        "locator" : "95:17-95:72",
+                        "path" : "authorDatetime",
+                        "scope" : "OpioidOrBenzodiazepineDischargeMedication",
+                        "type" : "Property"
+                     }, {
+                        "localId" : "42",
+                        "locator" : "95:88-95:120",
+                        "path" : "relevantPeriod",
+                        "scope" : "InpatientEncounter",
+                        "type" : "Property"
+                     } ]
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "48",
+            "locator" : "39:1-40:70",
+            "name" : "Initial Population",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "48",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Initial Population\"",":\n  " ]
+                  }, {
+                     "r" : "47",
+                     "s" : [ {
+                        "value" : [ "\"Inpatient Encounters with an Opioid or Benzodiazepine at Discharge\"" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "47",
+               "locator" : "40:3-40:70",
+               "name" : "Inpatient Encounters with an Opioid or Benzodiazepine at Discharge",
+               "type" : "ExpressionRef"
+            }
+         }, {
+            "localId" : "50",
+            "locator" : "28:1-29:22",
+            "name" : "Denominator",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "50",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Denominator\"",":\n  " ]
+                  }, {
+                     "r" : "49",
+                     "s" : [ {
+                        "value" : [ "\"Initial Population\"" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "49",
+               "locator" : "29:3-29:22",
+               "name" : "Initial Population",
+               "type" : "ExpressionRef"
+            }
+         }, {
+            "localId" : "54",
+            "locator" : "35:1-37:67",
+            "name" : "Intervention Palliative or Hospice Care",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "54",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Intervention Palliative or Hospice Care\"",":\n  " ]
+                  }, {
+                     "r" : "53",
+                     "s" : [ {
+                        "r" : "51",
+                        "s" : [ {
+                           "value" : [ "[","\"Intervention, Order\"",": " ]
+                        }, {
+                           "s" : [ {
+                              "value" : [ "\"Palliative or Hospice Care\"" ]
+                           } ]
+                        }, {
+                           "value" : [ "]" ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    union " ]
+                     }, {
+                        "r" : "52",
+                        "s" : [ {
+                           "value" : [ "[","\"Intervention, Performed\"",": " ]
+                        }, {
+                           "s" : [ {
+                              "value" : [ "\"Palliative or Hospice Care\"" ]
+                           } ]
+                        }, {
+                           "value" : [ "]" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "53",
+               "locator" : "36:3-37:67",
+               "type" : "Union",
+               "operand" : [ {
+                  "type" : "As",
+                  "operand" : {
+                     "localId" : "51",
+                     "locator" : "36:3-36:55",
+                     "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveInterventionOrder",
+                     "templateId" : "PositiveInterventionOrder",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "codes" : {
+                        "locator" : "36:27-36:54",
+                        "name" : "Palliative or Hospice Care",
+                        "preserve" : true,
+                        "type" : "ValueSetRef"
+                     }
+                  },
+                  "asTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "type" : "ChoiceTypeSpecifier",
+                        "choice" : [ {
+                           "name" : "{urn:healthit-gov:qdm:v5_6}PositiveInterventionPerformed",
+                           "type" : "NamedTypeSpecifier"
+                        }, {
+                           "name" : "{urn:healthit-gov:qdm:v5_6}PositiveInterventionOrder",
+                           "type" : "NamedTypeSpecifier"
+                        } ]
+                     }
+                  }
+               }, {
+                  "type" : "As",
+                  "operand" : {
+                     "localId" : "52",
+                     "locator" : "37:11-37:67",
+                     "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveInterventionPerformed",
+                     "templateId" : "PositiveInterventionPerformed",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "codes" : {
+                        "locator" : "37:39-37:66",
+                        "name" : "Palliative or Hospice Care",
+                        "preserve" : true,
+                        "type" : "ValueSetRef"
+                     }
+                  },
+                  "asTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "type" : "ChoiceTypeSpecifier",
+                        "choice" : [ {
+                           "name" : "{urn:healthit-gov:qdm:v5_6}PositiveInterventionPerformed",
+                           "type" : "NamedTypeSpecifier"
+                        }, {
+                           "name" : "{urn:healthit-gov:qdm:v5_6}PositiveInterventionOrder",
+                           "type" : "NamedTypeSpecifier"
+                        } ]
+                     }
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "93",
+            "locator" : "42:1-47:202",
+            "name" : "Treatment for Opioid Use Disorders",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "93",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Treatment for Opioid Use Disorders\"",":\n  " ]
+                  }, {
+                     "r" : "92",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "58",
+                           "s" : [ {
+                              "r" : "57",
+                              "s" : [ {
+                                 "value" : [ "( " ]
+                              }, {
+                                 "r" : "57",
+                                 "s" : [ {
+                                    "r" : "55",
+                                    "s" : [ {
+                                       "value" : [ "[","\"Medication, Active\"",": " ]
+                                    }, {
+                                       "s" : [ {
+                                          "value" : [ "\"Medications for Opioid Use Disorder (MOUD)\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "]" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n    union " ]
+                                 }, {
+                                    "r" : "56",
+                                    "s" : [ {
+                                       "value" : [ "[","\"Medication, Order\"",": " ]
+                                    }, {
+                                       "s" : [ {
+                                          "value" : [ "\"Medications for Opioid Use Disorder (MOUD)\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "]" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " )" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","MedicationTreatment" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "91",
+                        "s" : [ {
+                           "value" : [ "with " ]
+                        }, {
+                           "r" : "60",
+                           "s" : [ {
+                              "r" : "59",
+                              "s" : [ {
+                                 "r" : "59",
+                                 "s" : [ {
+                                    "value" : [ "[","\"Intervention, Performed\"",": " ]
+                                 }, {
+                                    "s" : [ {
+                                       "value" : [ "\"Opioid Medication Assisted Treatment (MAT)\"" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "]" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","MAT" ]
+                           } ]
+                        }, {
+                           "value" : [ "\n      such that " ]
+                        }, {
+                           "r" : "90",
+                           "s" : [ {
+                              "r" : "77",
+                              "s" : [ {
+                                 "r" : "70",
+                                 "s" : [ {
+                                    "value" : [ "Coalesce","(" ]
+                                 }, {
+                                    "r" : "67",
+                                    "s" : [ {
+                                       "value" : [ "start of " ]
+                                    }, {
+                                       "r" : "66",
+                                       "s" : [ {
+                                          "r" : "61",
+                                          "s" : [ {
+                                             "value" : [ "Global" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "." ]
+                                       }, {
+                                          "r" : "66",
+                                          "s" : [ {
+                                             "value" : [ "\"NormalizeInterval\"","(" ]
+                                          }, {
+                                             "r" : "63",
+                                             "s" : [ {
+                                                "r" : "62",
+                                                "s" : [ {
+                                                   "value" : [ "MedicationTreatment" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "." ]
+                                             }, {
+                                                "r" : "63",
+                                                "s" : [ {
+                                                   "value" : [ "relevantDatetime" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ ", " ]
+                                          }, {
+                                             "r" : "65",
+                                             "s" : [ {
+                                                "r" : "64",
+                                                "s" : [ {
+                                                   "value" : [ "MedicationTreatment" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "." ]
+                                             }, {
+                                                "r" : "65",
+                                                "s" : [ {
+                                                   "value" : [ "relevantPeriod" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ ")" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ", " ]
+                                 }, {
+                                    "r" : "69",
+                                    "s" : [ {
+                                       "r" : "68",
+                                       "s" : [ {
+                                          "value" : [ "MedicationTreatment" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "69",
+                                       "s" : [ {
+                                          "value" : [ "authorDatetime" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ")" ]
+                                 } ]
+                              }, {
+                                 "r" : "77",
+                                 "value" : [ " ","during day of"," " ]
+                              }, {
+                                 "r" : "76",
+                                 "s" : [ {
+                                    "r" : "71",
+                                    "s" : [ {
+                                       "value" : [ "Global" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "." ]
+                                 }, {
+                                    "r" : "76",
+                                    "s" : [ {
+                                       "value" : [ "\"NormalizeInterval\""," ( " ]
+                                    }, {
+                                       "r" : "73",
+                                       "s" : [ {
+                                          "r" : "72",
+                                          "s" : [ {
+                                             "value" : [ "MAT" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "." ]
+                                       }, {
+                                          "r" : "73",
+                                          "s" : [ {
+                                             "value" : [ "relevantDatetime" ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ ", " ]
+                                    }, {
+                                       "r" : "75",
+                                       "s" : [ {
+                                          "r" : "74",
+                                          "s" : [ {
+                                             "value" : [ "MAT" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "." ]
+                                       }, {
+                                          "r" : "75",
+                                          "s" : [ {
+                                             "value" : [ "relevantPeriod" ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ " )" ]
+                                    } ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ "\n        and " ]
+                           }, {
+                              "r" : "89",
+                              "s" : [ {
+                                 "r" : "87",
+                                 "s" : [ {
+                                    "value" : [ "Coalesce","(" ]
+                                 }, {
+                                    "r" : "84",
+                                    "s" : [ {
+                                       "value" : [ "start of " ]
+                                    }, {
+                                       "r" : "83",
+                                       "s" : [ {
+                                          "r" : "78",
+                                          "s" : [ {
+                                             "value" : [ "Global" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "." ]
+                                       }, {
+                                          "r" : "83",
+                                          "s" : [ {
+                                             "value" : [ "\"NormalizeInterval\"","(" ]
+                                          }, {
+                                             "r" : "80",
+                                             "s" : [ {
+                                                "r" : "79",
+                                                "s" : [ {
+                                                   "value" : [ "MedicationTreatment" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "." ]
+                                             }, {
+                                                "r" : "80",
+                                                "s" : [ {
+                                                   "value" : [ "relevantDatetime" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ ", " ]
+                                          }, {
+                                             "r" : "82",
+                                             "s" : [ {
+                                                "r" : "81",
+                                                "s" : [ {
+                                                   "value" : [ "MedicationTreatment" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "." ]
+                                             }, {
+                                                "r" : "82",
+                                                "s" : [ {
+                                                   "value" : [ "relevantPeriod" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ ")" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ", " ]
+                                 }, {
+                                    "r" : "86",
+                                    "s" : [ {
+                                       "r" : "85",
+                                       "s" : [ {
+                                          "value" : [ "MedicationTreatment" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "86",
+                                       "s" : [ {
+                                          "value" : [ "authorDatetime" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ")" ]
+                                 } ]
+                              }, {
+                                 "r" : "89",
+                                 "value" : [ " ","during day of"," " ]
+                              }, {
+                                 "r" : "88",
+                                 "s" : [ {
+                                    "value" : [ "\"Measurement Period\"" ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "92",
+               "locator" : "43:3-47:202",
+               "type" : "Query",
+               "source" : [ {
+                  "localId" : "58",
+                  "locator" : "43:3-44:99",
+                  "alias" : "MedicationTreatment",
+                  "expression" : {
+                     "localId" : "57",
+                     "locator" : "43:3-44:79",
+                     "type" : "Union",
+                     "operand" : [ {
+                        "type" : "As",
+                        "operand" : {
+                           "localId" : "55",
+                           "locator" : "43:5-43:72",
+                           "dataType" : "{urn:healthit-gov:qdm:v5_6}MedicationActive",
+                           "codeProperty" : "code",
+                           "codeComparator" : "in",
+                           "type" : "Retrieve",
+                           "codes" : {
+                              "locator" : "43:28-43:71",
+                              "name" : "Medications for Opioid Use Disorder (MOUD)",
+                              "preserve" : true,
+                              "type" : "ValueSetRef"
+                           }
+                        },
+                        "asTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "type" : "ChoiceTypeSpecifier",
+                              "choice" : [ {
+                                 "name" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationOrder",
+                                 "type" : "NamedTypeSpecifier"
+                              }, {
+                                 "name" : "{urn:healthit-gov:qdm:v5_6}MedicationActive",
+                                 "type" : "NamedTypeSpecifier"
+                              } ]
+                           }
+                        }
+                     }, {
+                        "type" : "As",
+                        "operand" : {
+                           "localId" : "56",
+                           "locator" : "44:11-44:77",
+                           "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationOrder",
+                           "templateId" : "PositiveMedicationOrder",
+                           "codeProperty" : "code",
+                           "codeComparator" : "in",
+                           "type" : "Retrieve",
+                           "codes" : {
+                              "locator" : "44:33-44:76",
+                              "name" : "Medications for Opioid Use Disorder (MOUD)",
+                              "preserve" : true,
+                              "type" : "ValueSetRef"
+                           }
+                        },
+                        "asTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "type" : "ChoiceTypeSpecifier",
+                              "choice" : [ {
+                                 "name" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationOrder",
+                                 "type" : "NamedTypeSpecifier"
+                              }, {
+                                 "name" : "{urn:healthit-gov:qdm:v5_6}MedicationActive",
+                                 "type" : "NamedTypeSpecifier"
+                              } ]
+                           }
+                        }
+                     } ]
+                  }
+               } ],
+               "relationship" : [ {
+                  "localId" : "91",
+                  "locator" : "45:5-47:202",
+                  "alias" : "MAT",
+                  "type" : "With",
+                  "expression" : {
+                     "localId" : "59",
+                     "locator" : "45:10-45:82",
+                     "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveInterventionPerformed",
+                     "templateId" : "PositiveInterventionPerformed",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "codes" : {
+                        "locator" : "45:38-45:81",
+                        "name" : "Opioid Medication Assisted Treatment (MAT)",
+                        "preserve" : true,
+                        "type" : "ValueSetRef"
+                     }
+                  },
+                  "suchThat" : {
+                     "localId" : "90",
+                     "locator" : "46:17-47:202",
+                     "type" : "And",
+                     "operand" : [ {
+                        "localId" : "77",
+                        "locator" : "46:17-46:257",
+                        "precision" : "Day",
+                        "type" : "In",
+                        "operand" : [ {
+                           "localId" : "70",
+                           "locator" : "46:17-46:171",
+                           "type" : "Coalesce",
+                           "operand" : [ {
+                              "localId" : "67",
+                              "locator" : "46:26-46:134",
+                              "type" : "Start",
+                              "operand" : {
+                                 "localId" : "66",
+                                 "locator" : "46:35-46:134",
+                                 "name" : "NormalizeInterval",
+                                 "libraryName" : "Global",
+                                 "type" : "FunctionRef",
+                                 "operand" : [ {
+                                    "localId" : "63",
+                                    "locator" : "46:62-46:97",
+                                    "path" : "relevantDatetime",
+                                    "scope" : "MedicationTreatment",
+                                    "type" : "Property"
+                                 }, {
+                                    "localId" : "65",
+                                    "locator" : "46:100-46:133",
+                                    "path" : "relevantPeriod",
+                                    "scope" : "MedicationTreatment",
+                                    "type" : "Property"
+                                 } ]
+                              }
+                           }, {
+                              "localId" : "69",
+                              "locator" : "46:137-46:170",
+                              "path" : "authorDatetime",
+                              "scope" : "MedicationTreatment",
+                              "type" : "Property"
+                           } ]
+                        }, {
+                           "localId" : "76",
+                           "locator" : "46:187-46:257",
+                           "name" : "NormalizeInterval",
+                           "libraryName" : "Global",
+                           "type" : "FunctionRef",
+                           "operand" : [ {
+                              "localId" : "73",
+                              "locator" : "46:216-46:235",
+                              "path" : "relevantDatetime",
+                              "scope" : "MAT",
+                              "type" : "Property"
+                           }, {
+                              "localId" : "75",
+                              "locator" : "46:238-46:255",
+                              "path" : "relevantPeriod",
+                              "scope" : "MAT",
+                              "type" : "Property"
+                           } ]
+                        } ]
+                     }, {
+                        "localId" : "89",
+                        "locator" : "47:13-47:202",
+                        "precision" : "Day",
+                        "type" : "In",
+                        "operand" : [ {
+                           "localId" : "87",
+                           "locator" : "47:13-47:167",
+                           "type" : "Coalesce",
+                           "operand" : [ {
+                              "localId" : "84",
+                              "locator" : "47:22-47:130",
+                              "type" : "Start",
+                              "operand" : {
+                                 "localId" : "83",
+                                 "locator" : "47:31-47:130",
+                                 "name" : "NormalizeInterval",
+                                 "libraryName" : "Global",
+                                 "type" : "FunctionRef",
+                                 "operand" : [ {
+                                    "localId" : "80",
+                                    "locator" : "47:58-47:93",
+                                    "path" : "relevantDatetime",
+                                    "scope" : "MedicationTreatment",
+                                    "type" : "Property"
+                                 }, {
+                                    "localId" : "82",
+                                    "locator" : "47:96-47:129",
+                                    "path" : "relevantPeriod",
+                                    "scope" : "MedicationTreatment",
+                                    "type" : "Property"
+                                 } ]
+                              }
+                           }, {
+                              "localId" : "86",
+                              "locator" : "47:133-47:166",
+                              "path" : "authorDatetime",
+                              "scope" : "MedicationTreatment",
+                              "type" : "Property"
+                           } ]
+                        }, {
+                           "localId" : "88",
+                           "locator" : "47:183-47:202",
+                           "name" : "Measurement Period",
+                           "type" : "ParameterRef"
+                        } ]
+                     } ]
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "95",
+            "locator" : "49:1-50:51",
+            "name" : "SDE Ethnicity",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "95",
+                  "s" : [ {
+                     "value" : [ "","define ","\"SDE Ethnicity\"",":\n  " ]
+                  }, {
+                     "r" : "94",
+                     "s" : [ {
+                        "value" : [ "[","\"Patient Characteristic Ethnicity\"",": " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "\"Ethnicity\"" ]
+                        } ]
+                     }, {
+                        "value" : [ "]" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "94",
+               "locator" : "50:3-50:51",
+               "dataType" : "{urn:healthit-gov:qdm:v5_6}PatientCharacteristicEthnicity",
+               "codeProperty" : "code",
+               "codeComparator" : "in",
+               "type" : "Retrieve",
+               "codes" : {
+                  "locator" : "50:40-50:50",
+                  "name" : "Ethnicity",
+                  "preserve" : true,
+                  "type" : "ValueSetRef"
+               }
+            }
+         }, {
+            "localId" : "97",
+            "locator" : "52:1-53:41",
+            "name" : "SDE Race",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "97",
+                  "s" : [ {
+                     "value" : [ "","define ","\"SDE Race\"",":\n  " ]
+                  }, {
+                     "r" : "96",
+                     "s" : [ {
+                        "value" : [ "[","\"Patient Characteristic Race\"",": " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "\"Race\"" ]
+                        } ]
+                     }, {
+                        "value" : [ "]" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "96",
+               "locator" : "53:3-53:41",
+               "dataType" : "{urn:healthit-gov:qdm:v5_6}PatientCharacteristicRace",
+               "codeProperty" : "code",
+               "codeComparator" : "in",
+               "type" : "Retrieve",
+               "codes" : {
+                  "locator" : "53:35-53:40",
+                  "name" : "Race",
+                  "preserve" : true,
+                  "type" : "ValueSetRef"
+               }
+            }
+         }, {
+            "localId" : "99",
+            "locator" : "55:1-56:58",
+            "name" : "SDE Sex",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "99",
+                  "s" : [ {
+                     "value" : [ "","define ","\"SDE Sex\"",":\n  " ]
+                  }, {
+                     "r" : "98",
+                     "s" : [ {
+                        "value" : [ "[","\"Patient Characteristic Sex\"",": " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "\"ONC Administrative Sex\"" ]
+                        } ]
+                     }, {
+                        "value" : [ "]" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "98",
+               "locator" : "56:3-56:58",
+               "dataType" : "{urn:healthit-gov:qdm:v5_6}PatientCharacteristicSex",
+               "codeProperty" : "code",
+               "codeComparator" : "in",
+               "type" : "Retrieve",
+               "codes" : {
+                  "locator" : "56:34-56:57",
+                  "name" : "ONC Administrative Sex",
+                  "preserve" : true,
+                  "type" : "ValueSetRef"
+               }
+            }
+         }, {
+            "localId" : "101",
+            "locator" : "58:1-59:48",
+            "name" : "SDE Payer",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "101",
+                  "s" : [ {
+                     "value" : [ "","define ","\"SDE Payer\"",":\n  " ]
+                  }, {
+                     "r" : "100",
+                     "s" : [ {
+                        "value" : [ "[","\"Patient Characteristic Payer\"",": " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "\"Payer Type\"" ]
+                        } ]
+                     }, {
+                        "value" : [ "]" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "100",
+               "locator" : "59:3-59:48",
+               "dataType" : "{urn:healthit-gov:qdm:v5_6}PatientCharacteristicPayer",
+               "codeProperty" : "code",
+               "codeComparator" : "in",
+               "type" : "Retrieve",
+               "codes" : {
+                  "locator" : "59:36-59:47",
+                  "name" : "Payer Type",
+                  "preserve" : true,
+                  "type" : "ValueSetRef"
+               }
+            }
+         }, {
+            "localId" : "202",
+            "locator" : "61:1-87:7",
+            "name" : "Denominator Exclusion",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "202",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Denominator Exclusion\"",":\n  /*Excludes encounters of patients with cancer pain or who are receiving palliative or hospice care at the time of the encounter or who are receiving medication for opioid use disorder, have sickle cell disease, or who are discharged to another inpatient care facility or discharged against medical advice, or expire during the inpatient stay*/\n  \n  " ]
+                  }, {
+                     "r" : "201",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "103",
+                           "s" : [ {
+                              "r" : "102",
+                              "s" : [ {
+                                 "s" : [ {
+                                    "value" : [ "\"Inpatient Encounters with an Opioid or Benzodiazepine at Discharge\"" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","InpatientEncounter" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "200",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "200",
+                           "s" : [ {
+                              "r" : "180",
+                              "s" : [ {
+                                 "r" : "161",
+                                 "s" : [ {
+                                    "r" : "143",
+                                    "s" : [ {
+                                       "r" : "131",
+                                       "s" : [ {
+                                          "r" : "122",
+                                          "s" : [ {
+                                             "r" : "112",
+                                             "s" : [ {
+                                                "value" : [ "exists " ]
+                                             }, {
+                                                "r" : "111",
+                                                "s" : [ {
+                                                   "value" : [ "( " ]
+                                                }, {
+                                                   "r" : "111",
+                                                   "s" : [ {
+                                                      "s" : [ {
+                                                         "r" : "105",
+                                                         "s" : [ {
+                                                            "r" : "104",
+                                                            "s" : [ {
+                                                               "r" : "104",
+                                                               "s" : [ {
+                                                                  "value" : [ "[","\"Diagnosis\"",": " ]
+                                                               }, {
+                                                                  "s" : [ {
+                                                                     "value" : [ "\"Cancer Related Pain\"" ]
+                                                                  } ]
+                                                               }, {
+                                                                  "value" : [ "]" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ " ","Cancer" ]
+                                                         } ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "\n        " ]
+                                                   }, {
+                                                      "r" : "110",
+                                                      "s" : [ {
+                                                         "value" : [ "where " ]
+                                                      }, {
+                                                         "r" : "110",
+                                                         "s" : [ {
+                                                            "r" : "107",
+                                                            "s" : [ {
+                                                               "r" : "106",
+                                                               "s" : [ {
+                                                                  "value" : [ "Cancer" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "107",
+                                                               "s" : [ {
+                                                                  "value" : [ "prevalencePeriod" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "r" : "110",
+                                                            "value" : [ " ","overlaps day of"," " ]
+                                                         }, {
+                                                            "r" : "109",
+                                                            "s" : [ {
+                                                               "r" : "108",
+                                                               "s" : [ {
+                                                                  "value" : [ "InpatientEncounter" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "109",
+                                                               "s" : [ {
+                                                                  "value" : [ "relevantPeriod" ]
+                                                               } ]
+                                                            } ]
+                                                         } ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ "\n    )" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "\n      or " ]
+                                          }, {
+                                             "r" : "121",
+                                             "s" : [ {
+                                                "value" : [ "exists " ]
+                                             }, {
+                                                "r" : "120",
+                                                "s" : [ {
+                                                   "value" : [ "( " ]
+                                                }, {
+                                                   "r" : "120",
+                                                   "s" : [ {
+                                                      "s" : [ {
+                                                         "r" : "114",
+                                                         "s" : [ {
+                                                            "r" : "113",
+                                                            "s" : [ {
+                                                               "r" : "113",
+                                                               "s" : [ {
+                                                                  "value" : [ "[","\"Diagnosis\"",": " ]
+                                                               }, {
+                                                                  "s" : [ {
+                                                                     "value" : [ "\"Sickle Cell Disease with and without Crisis\"" ]
+                                                                  } ]
+                                                               }, {
+                                                                  "value" : [ "]" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ " ","SickleCellDisease" ]
+                                                         } ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "\n          " ]
+                                                   }, {
+                                                      "r" : "119",
+                                                      "s" : [ {
+                                                         "value" : [ "where " ]
+                                                      }, {
+                                                         "r" : "119",
+                                                         "s" : [ {
+                                                            "r" : "116",
+                                                            "s" : [ {
+                                                               "r" : "115",
+                                                               "s" : [ {
+                                                                  "value" : [ "SickleCellDisease" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "116",
+                                                               "s" : [ {
+                                                                  "value" : [ "prevalencePeriod" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "r" : "119",
+                                                            "value" : [ " ","overlaps"," " ]
+                                                         }, {
+                                                            "r" : "118",
+                                                            "s" : [ {
+                                                               "r" : "117",
+                                                               "s" : [ {
+                                                                  "value" : [ "InpatientEncounter" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "118",
+                                                               "s" : [ {
+                                                                  "value" : [ "relevantPeriod" ]
+                                                               } ]
+                                                            } ]
+                                                         } ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ "\n      )" ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "\n      or " ]
+                                       }, {
+                                          "r" : "130",
+                                          "s" : [ {
+                                             "value" : [ "exists " ]
+                                          }, {
+                                             "r" : "129",
+                                             "s" : [ {
+                                                "value" : [ "( " ]
+                                             }, {
+                                                "r" : "129",
+                                                "s" : [ {
+                                                   "s" : [ {
+                                                      "r" : "124",
+                                                      "s" : [ {
+                                                         "r" : "123",
+                                                         "s" : [ {
+                                                            "s" : [ {
+                                                               "value" : [ "InpatientEncounter",".","diagnoses" ]
+                                                            } ]
+                                                         } ]
+                                                      }, {
+                                                         "value" : [ " ","Diagnosis" ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ "\n          " ]
+                                                }, {
+                                                   "r" : "128",
+                                                   "s" : [ {
+                                                      "value" : [ "where " ]
+                                                   }, {
+                                                      "r" : "128",
+                                                      "s" : [ {
+                                                         "r" : "126",
+                                                         "s" : [ {
+                                                            "r" : "125",
+                                                            "s" : [ {
+                                                               "value" : [ "Diagnosis" ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ "." ]
+                                                         }, {
+                                                            "r" : "126",
+                                                            "s" : [ {
+                                                               "value" : [ "code" ]
+                                                            } ]
+                                                         } ]
+                                                      }, {
+                                                         "value" : [ " in " ]
+                                                      }, {
+                                                         "r" : "127",
+                                                         "s" : [ {
+                                                            "value" : [ "\"Cancer Related Pain\"" ]
+                                                         } ]
+                                                      } ]
+                                                   } ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "\n      )" ]
+                                             } ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n      or " ]
+                                    }, {
+                                       "r" : "142",
+                                       "s" : [ {
+                                          "value" : [ "exists " ]
+                                       }, {
+                                          "r" : "141",
+                                          "s" : [ {
+                                             "value" : [ "( " ]
+                                          }, {
+                                             "r" : "141",
+                                             "s" : [ {
+                                                "s" : [ {
+                                                   "r" : "133",
+                                                   "s" : [ {
+                                                      "r" : "132",
+                                                      "s" : [ {
+                                                         "r" : "132",
+                                                         "s" : [ {
+                                                            "value" : [ "[","\"Diagnosis\"",": " ]
+                                                         }, {
+                                                            "s" : [ {
+                                                               "value" : [ "\"Opioid Use Disorder\"" ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ "]" ]
+                                                         } ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ " ","OUD" ]
+                                                   } ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "\n          " ]
+                                             }, {
+                                                "r" : "140",
+                                                "s" : [ {
+                                                   "value" : [ "where " ]
+                                                }, {
+                                                   "r" : "140",
+                                                   "s" : [ {
+                                                      "r" : "136",
+                                                      "s" : [ {
+                                                         "value" : [ "start of " ]
+                                                      }, {
+                                                         "r" : "135",
+                                                         "s" : [ {
+                                                            "r" : "134",
+                                                            "s" : [ {
+                                                               "value" : [ "OUD" ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ "." ]
+                                                         }, {
+                                                            "r" : "135",
+                                                            "s" : [ {
+                                                               "value" : [ "prevalencePeriod" ]
+                                                            } ]
+                                                         } ]
+                                                      } ]
+                                                   }, {
+                                                      "r" : "140",
+                                                      "value" : [ " ","before day of"," " ]
+                                                   }, {
+                                                      "r" : "139",
+                                                      "s" : [ {
+                                                         "value" : [ "end of " ]
+                                                      }, {
+                                                         "r" : "138",
+                                                         "s" : [ {
+                                                            "r" : "137",
+                                                            "s" : [ {
+                                                               "value" : [ "InpatientEncounter" ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ "." ]
+                                                         }, {
+                                                            "r" : "138",
+                                                            "s" : [ {
+                                                               "value" : [ "relevantPeriod" ]
+                                                            } ]
+                                                         } ]
+                                                      } ]
+                                                   } ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "\n      )" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n      or " ]
+                                 }, {
+                                    "r" : "160",
+                                    "s" : [ {
+                                       "value" : [ "exists " ]
+                                    }, {
+                                       "r" : "159",
+                                       "s" : [ {
+                                          "value" : [ "( " ]
+                                       }, {
+                                          "r" : "159",
+                                          "s" : [ {
+                                             "s" : [ {
+                                                "r" : "145",
+                                                "s" : [ {
+                                                   "r" : "144",
+                                                   "s" : [ {
+                                                      "s" : [ {
+                                                         "value" : [ "\"Treatment for Opioid Use Disorders\"" ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ " ","OUDTreatment" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "\n          " ]
+                                          }, {
+                                             "r" : "158",
+                                             "s" : [ {
+                                                "value" : [ "where " ]
+                                             }, {
+                                                "r" : "158",
+                                                "s" : [ {
+                                                   "r" : "155",
+                                                   "s" : [ {
+                                                      "value" : [ "Coalesce","(" ]
+                                                   }, {
+                                                      "r" : "152",
+                                                      "s" : [ {
+                                                         "value" : [ "start of " ]
+                                                      }, {
+                                                         "r" : "151",
+                                                         "s" : [ {
+                                                            "r" : "146",
+                                                            "s" : [ {
+                                                               "value" : [ "Global" ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ "." ]
+                                                         }, {
+                                                            "r" : "151",
+                                                            "s" : [ {
+                                                               "value" : [ "\"NormalizeInterval\"","(" ]
+                                                            }, {
+                                                               "r" : "148",
+                                                               "s" : [ {
+                                                                  "r" : "147",
+                                                                  "s" : [ {
+                                                                     "value" : [ "OUDTreatment" ]
+                                                                  } ]
+                                                               }, {
+                                                                  "value" : [ "." ]
+                                                               }, {
+                                                                  "r" : "148",
+                                                                  "s" : [ {
+                                                                     "value" : [ "relevantDatetime" ]
+                                                                  } ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ ", " ]
+                                                            }, {
+                                                               "r" : "150",
+                                                               "s" : [ {
+                                                                  "r" : "149",
+                                                                  "s" : [ {
+                                                                     "value" : [ "OUDTreatment" ]
+                                                                  } ]
+                                                               }, {
+                                                                  "value" : [ "." ]
+                                                               }, {
+                                                                  "r" : "150",
+                                                                  "s" : [ {
+                                                                     "value" : [ "relevantPeriod" ]
+                                                                  } ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ ")" ]
+                                                            } ]
+                                                         } ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ ", " ]
+                                                   }, {
+                                                      "r" : "154",
+                                                      "s" : [ {
+                                                         "r" : "153",
+                                                         "s" : [ {
+                                                            "value" : [ "OUDTreatment" ]
+                                                         } ]
+                                                      }, {
+                                                         "value" : [ "." ]
+                                                      }, {
+                                                         "r" : "154",
+                                                         "s" : [ {
+                                                            "value" : [ "authorDatetime" ]
+                                                         } ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ ")" ]
+                                                   } ]
+                                                }, {
+                                                   "r" : "158",
+                                                   "value" : [ " ","during day of"," " ]
+                                                }, {
+                                                   "r" : "157",
+                                                   "s" : [ {
+                                                      "r" : "156",
+                                                      "s" : [ {
+                                                         "value" : [ "InpatientEncounter" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "." ]
+                                                   }, {
+                                                      "r" : "157",
+                                                      "s" : [ {
+                                                         "value" : [ "relevantPeriod" ]
+                                                      } ]
+                                                   } ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "\n      )" ]
+                                       } ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ "\n      or " ]
+                              }, {
+                                 "r" : "179",
+                                 "s" : [ {
+                                    "value" : [ "exists " ]
+                                 }, {
+                                    "r" : "178",
+                                    "s" : [ {
+                                       "value" : [ "( " ]
+                                    }, {
+                                       "r" : "178",
+                                       "s" : [ {
+                                          "s" : [ {
+                                             "r" : "163",
+                                             "s" : [ {
+                                                "r" : "162",
+                                                "s" : [ {
+                                                   "s" : [ {
+                                                      "value" : [ "\"Intervention Palliative or Hospice Care\"" ]
+                                                   } ]
+                                                } ]
+                                             }, {
+                                                "value" : [ " ","PalliativeOrHospiceCare" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "\n          " ]
+                                       }, {
+                                          "r" : "177",
+                                          "s" : [ {
+                                             "value" : [ "where " ]
+                                          }, {
+                                             "r" : "177",
+                                             "s" : [ {
+                                                "r" : "173",
+                                                "s" : [ {
+                                                   "value" : [ "Coalesce","(" ]
+                                                }, {
+                                                   "r" : "170",
+                                                   "s" : [ {
+                                                      "value" : [ "start of " ]
+                                                   }, {
+                                                      "r" : "169",
+                                                      "s" : [ {
+                                                         "r" : "164",
+                                                         "s" : [ {
+                                                            "value" : [ "Global" ]
+                                                         } ]
+                                                      }, {
+                                                         "value" : [ "." ]
+                                                      }, {
+                                                         "r" : "169",
+                                                         "s" : [ {
+                                                            "value" : [ "\"NormalizeInterval\"","(" ]
+                                                         }, {
+                                                            "r" : "166",
+                                                            "s" : [ {
+                                                               "r" : "165",
+                                                               "s" : [ {
+                                                                  "value" : [ "PalliativeOrHospiceCare" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "166",
+                                                               "s" : [ {
+                                                                  "value" : [ "relevantDatetime" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ ", " ]
+                                                         }, {
+                                                            "r" : "168",
+                                                            "s" : [ {
+                                                               "r" : "167",
+                                                               "s" : [ {
+                                                                  "value" : [ "PalliativeOrHospiceCare" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "168",
+                                                               "s" : [ {
+                                                                  "value" : [ "relevantPeriod" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ ")" ]
+                                                         } ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ ", " ]
+                                                }, {
+                                                   "r" : "172",
+                                                   "s" : [ {
+                                                      "r" : "171",
+                                                      "s" : [ {
+                                                         "value" : [ "PalliativeOrHospiceCare" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "." ]
+                                                   }, {
+                                                      "r" : "172",
+                                                      "s" : [ {
+                                                         "value" : [ "authorDatetime" ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ ")" ]
+                                                } ]
+                                             }, {
+                                                "r" : "177",
+                                                "value" : [ " ","during"," " ]
+                                             }, {
+                                                "r" : "176",
+                                                "s" : [ {
+                                                   "r" : "174",
+                                                   "s" : [ {
+                                                      "value" : [ "Global" ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ "." ]
+                                                }, {
+                                                   "r" : "176",
+                                                   "s" : [ {
+                                                      "value" : [ "\"HospitalizationWithObservation\""," ( " ]
+                                                   }, {
+                                                      "r" : "175",
+                                                      "s" : [ {
+                                                         "value" : [ "InpatientEncounter" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ " )" ]
+                                                   } ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n      )" ]
+                                    } ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ "\n      or " ]
+                           }, {
+                              "r" : "199",
+                              "s" : [ {
+                                 "value" : [ "( " ]
+                              }, {
+                                 "r" : "199",
+                                 "s" : [ {
+                                    "r" : "194",
+                                    "s" : [ {
+                                       "r" : "189",
+                                       "s" : [ {
+                                          "r" : "184",
+                                          "s" : [ {
+                                             "r" : "182",
+                                             "s" : [ {
+                                                "r" : "181",
+                                                "s" : [ {
+                                                   "value" : [ "InpatientEncounter" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "." ]
+                                             }, {
+                                                "r" : "182",
+                                                "s" : [ {
+                                                   "value" : [ "dischargeDisposition" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ " in " ]
+                                          }, {
+                                             "r" : "183",
+                                             "s" : [ {
+                                                "value" : [ "\"Discharge To Acute Care Facility\"" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "\n          or " ]
+                                       }, {
+                                          "r" : "188",
+                                          "s" : [ {
+                                             "r" : "186",
+                                             "s" : [ {
+                                                "r" : "185",
+                                                "s" : [ {
+                                                   "value" : [ "InpatientEncounter" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "." ]
+                                             }, {
+                                                "r" : "186",
+                                                "s" : [ {
+                                                   "value" : [ "dischargeDisposition" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ " in " ]
+                                          }, {
+                                             "r" : "187",
+                                             "s" : [ {
+                                                "value" : [ "\"Hospice Care Referral or Admission\"" ]
+                                             } ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n          or " ]
+                                    }, {
+                                       "r" : "193",
+                                       "s" : [ {
+                                          "r" : "191",
+                                          "s" : [ {
+                                             "r" : "190",
+                                             "s" : [ {
+                                                "value" : [ "InpatientEncounter" ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "." ]
+                                          }, {
+                                             "r" : "191",
+                                             "s" : [ {
+                                                "value" : [ "dischargeDisposition" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ " in " ]
+                                       }, {
+                                          "r" : "192",
+                                          "s" : [ {
+                                             "value" : [ "\"Patient Expired\"" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n          or " ]
+                                 }, {
+                                    "r" : "198",
+                                    "s" : [ {
+                                       "r" : "196",
+                                       "s" : [ {
+                                          "r" : "195",
+                                          "s" : [ {
+                                             "value" : [ "InpatientEncounter" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "." ]
+                                       }, {
+                                          "r" : "196",
+                                          "s" : [ {
+                                             "value" : [ "dischargeDisposition" ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ " in " ]
+                                    }, {
+                                       "r" : "197",
+                                       "s" : [ {
+                                          "value" : [ "\"Left Against Medical Advice\"" ]
+                                       } ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ "\n      )" ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "201",
+               "locator" : "64:3-87:7",
+               "type" : "Query",
+               "source" : [ {
+                  "localId" : "103",
+                  "locator" : "64:3-64:89",
+                  "alias" : "InpatientEncounter",
+                  "expression" : {
+                     "localId" : "102",
+                     "locator" : "64:3-64:70",
+                     "name" : "Inpatient Encounters with an Opioid or Benzodiazepine at Discharge",
+                     "type" : "ExpressionRef"
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "200",
+                  "locator" : "65:5-87:7",
+                  "type" : "Or",
+                  "operand" : [ {
+                     "localId" : "180",
+                     "locator" : "65:11-82:7",
+                     "type" : "Or",
+                     "operand" : [ {
+                        "localId" : "161",
+                        "locator" : "65:11-79:7",
+                        "type" : "Or",
+                        "operand" : [ {
+                           "localId" : "143",
+                           "locator" : "65:11-76:7",
+                           "type" : "Or",
+                           "operand" : [ {
+                              "localId" : "131",
+                              "locator" : "65:11-73:7",
+                              "type" : "Or",
+                              "operand" : [ {
+                                 "localId" : "122",
+                                 "locator" : "65:11-70:7",
+                                 "type" : "Or",
+                                 "operand" : [ {
+                                    "localId" : "112",
+                                    "locator" : "65:11-67:5",
+                                    "type" : "Exists",
+                                    "operand" : {
+                                       "localId" : "111",
+                                       "locator" : "65:18-67:5",
+                                       "type" : "Query",
+                                       "source" : [ {
+                                          "localId" : "105",
+                                          "locator" : "65:20-65:62",
+                                          "alias" : "Cancer",
+                                          "expression" : {
+                                             "localId" : "104",
+                                             "locator" : "65:20-65:55",
+                                             "dataType" : "{urn:healthit-gov:qdm:v5_6}Diagnosis",
+                                             "codeProperty" : "code",
+                                             "codeComparator" : "in",
+                                             "type" : "Retrieve",
+                                             "codes" : {
+                                                "locator" : "65:34-65:54",
+                                                "name" : "Cancer Related Pain",
+                                                "preserve" : true,
+                                                "type" : "ValueSetRef"
+                                             }
+                                          }
+                                       } ],
+                                       "relationship" : [ ],
+                                       "where" : {
+                                          "localId" : "110",
+                                          "locator" : "66:9-66:87",
+                                          "precision" : "Day",
+                                          "type" : "Overlaps",
+                                          "operand" : [ {
+                                             "localId" : "107",
+                                             "locator" : "66:15-66:37",
+                                             "path" : "prevalencePeriod",
+                                             "scope" : "Cancer",
+                                             "type" : "Property"
+                                          }, {
+                                             "localId" : "109",
+                                             "locator" : "66:55-66:87",
+                                             "path" : "relevantPeriod",
+                                             "scope" : "InpatientEncounter",
+                                             "type" : "Property"
+                                          } ]
+                                       }
+                                    }
+                                 }, {
+                                    "localId" : "121",
+                                    "locator" : "68:10-70:7",
+                                    "type" : "Exists",
+                                    "operand" : {
+                                       "localId" : "120",
+                                       "locator" : "68:17-70:7",
+                                       "type" : "Query",
+                                       "source" : [ {
+                                          "localId" : "114",
+                                          "locator" : "68:19-68:96",
+                                          "alias" : "SickleCellDisease",
+                                          "expression" : {
+                                             "localId" : "113",
+                                             "locator" : "68:19-68:78",
+                                             "dataType" : "{urn:healthit-gov:qdm:v5_6}Diagnosis",
+                                             "codeProperty" : "code",
+                                             "codeComparator" : "in",
+                                             "type" : "Retrieve",
+                                             "codes" : {
+                                                "locator" : "68:33-68:77",
+                                                "name" : "Sickle Cell Disease with and without Crisis",
+                                                "preserve" : true,
+                                                "type" : "ValueSetRef"
+                                             }
+                                          }
+                                       } ],
+                                       "relationship" : [ ],
+                                       "where" : {
+                                          "localId" : "119",
+                                          "locator" : "69:11-69:93",
+                                          "type" : "Overlaps",
+                                          "operand" : [ {
+                                             "localId" : "116",
+                                             "locator" : "69:17-69:50",
+                                             "path" : "prevalencePeriod",
+                                             "scope" : "SickleCellDisease",
+                                             "type" : "Property"
+                                          }, {
+                                             "localId" : "118",
+                                             "locator" : "69:61-69:93",
+                                             "path" : "relevantPeriod",
+                                             "scope" : "InpatientEncounter",
+                                             "type" : "Property"
+                                          } ]
+                                       }
+                                    }
+                                 } ]
+                              }, {
+                                 "localId" : "130",
+                                 "locator" : "71:10-73:7",
+                                 "type" : "Exists",
+                                 "operand" : {
+                                    "localId" : "129",
+                                    "locator" : "71:17-73:7",
+                                    "type" : "Query",
+                                    "source" : [ {
+                                       "localId" : "124",
+                                       "locator" : "71:19-71:56",
+                                       "alias" : "Diagnosis",
+                                       "expression" : {
+                                          "localId" : "123",
+                                          "locator" : "71:19-71:46",
+                                          "path" : "diagnoses",
+                                          "scope" : "InpatientEncounter",
+                                          "type" : "Property"
+                                       }
+                                    } ],
+                                    "relationship" : [ ],
+                                    "where" : {
+                                       "localId" : "128",
+                                       "locator" : "72:11-72:55",
+                                       "type" : "InValueSet",
+                                       "code" : {
+                                          "localId" : "126",
+                                          "locator" : "72:17-72:30",
+                                          "path" : "code",
+                                          "scope" : "Diagnosis",
+                                          "type" : "Property"
+                                       },
+                                       "valueset" : {
+                                          "localId" : "127",
+                                          "locator" : "72:35-72:55",
+                                          "name" : "Cancer Related Pain",
+                                          "preserve" : true
+                                       }
+                                    }
+                                 }
+                              } ]
+                           }, {
+                              "localId" : "142",
+                              "locator" : "74:10-76:7",
+                              "type" : "Exists",
+                              "operand" : {
+                                 "localId" : "141",
+                                 "locator" : "74:17-76:7",
+                                 "type" : "Query",
+                                 "source" : [ {
+                                    "localId" : "133",
+                                    "locator" : "74:19-74:58",
+                                    "alias" : "OUD",
+                                    "expression" : {
+                                       "localId" : "132",
+                                       "locator" : "74:19-74:54",
+                                       "dataType" : "{urn:healthit-gov:qdm:v5_6}Diagnosis",
+                                       "codeProperty" : "code",
+                                       "codeComparator" : "in",
+                                       "type" : "Retrieve",
+                                       "codes" : {
+                                          "locator" : "74:33-74:53",
+                                          "name" : "Opioid Use Disorder",
+                                          "preserve" : true,
+                                          "type" : "ValueSetRef"
+                                       }
+                                    }
+                                 } ],
+                                 "relationship" : [ ],
+                                 "where" : {
+                                    "localId" : "140",
+                                    "locator" : "75:11-75:100",
+                                    "precision" : "Day",
+                                    "type" : "Before",
+                                    "operand" : [ {
+                                       "localId" : "136",
+                                       "locator" : "75:17-75:45",
+                                       "type" : "Start",
+                                       "operand" : {
+                                          "localId" : "135",
+                                          "locator" : "75:26-75:45",
+                                          "path" : "prevalencePeriod",
+                                          "scope" : "OUD",
+                                          "type" : "Property"
+                                       }
+                                    }, {
+                                       "localId" : "139",
+                                       "locator" : "75:61-75:100",
+                                       "type" : "End",
+                                       "operand" : {
+                                          "localId" : "138",
+                                          "locator" : "75:68-75:100",
+                                          "path" : "relevantPeriod",
+                                          "scope" : "InpatientEncounter",
+                                          "type" : "Property"
+                                       }
+                                    } ]
+                                 }
+                              }
+                           } ]
+                        }, {
+                           "localId" : "160",
+                           "locator" : "77:10-79:7",
+                           "type" : "Exists",
+                           "operand" : {
+                              "localId" : "159",
+                              "locator" : "77:17-79:7",
+                              "type" : "Query",
+                              "source" : [ {
+                                 "localId" : "145",
+                                 "locator" : "77:19-77:67",
+                                 "alias" : "OUDTreatment",
+                                 "expression" : {
+                                    "localId" : "144",
+                                    "locator" : "77:19-77:54",
+                                    "name" : "Treatment for Opioid Use Disorders",
+                                    "type" : "ExpressionRef"
+                                 }
+                              } ],
+                              "relationship" : [ ],
+                              "where" : {
+                                 "localId" : "158",
+                                 "locator" : "78:11-78:198",
+                                 "precision" : "Day",
+                                 "type" : "In",
+                                 "operand" : [ {
+                                    "localId" : "155",
+                                    "locator" : "78:17-78:150",
+                                    "type" : "Coalesce",
+                                    "operand" : [ {
+                                       "localId" : "152",
+                                       "locator" : "78:26-78:120",
+                                       "type" : "Start",
+                                       "operand" : {
+                                          "localId" : "151",
+                                          "locator" : "78:35-78:120",
+                                          "name" : "NormalizeInterval",
+                                          "libraryName" : "Global",
+                                          "type" : "FunctionRef",
+                                          "operand" : [ {
+                                             "localId" : "148",
+                                             "locator" : "78:62-78:90",
+                                             "path" : "relevantDatetime",
+                                             "scope" : "OUDTreatment",
+                                             "type" : "Property"
+                                          }, {
+                                             "localId" : "150",
+                                             "locator" : "78:93-78:119",
+                                             "path" : "relevantPeriod",
+                                             "scope" : "OUDTreatment",
+                                             "type" : "Property"
+                                          } ]
+                                       }
+                                    }, {
+                                       "localId" : "154",
+                                       "locator" : "78:123-78:149",
+                                       "path" : "authorDatetime",
+                                       "scope" : "OUDTreatment",
+                                       "type" : "Property"
+                                    } ]
+                                 }, {
+                                    "localId" : "157",
+                                    "locator" : "78:166-78:198",
+                                    "path" : "relevantPeriod",
+                                    "scope" : "InpatientEncounter",
+                                    "type" : "Property"
+                                 } ]
+                              }
+                           }
+                        } ]
+                     }, {
+                        "localId" : "179",
+                        "locator" : "80:10-82:7",
+                        "type" : "Exists",
+                        "operand" : {
+                           "localId" : "178",
+                           "locator" : "80:17-82:7",
+                           "type" : "Query",
+                           "source" : [ {
+                              "localId" : "163",
+                              "locator" : "80:19-80:83",
+                              "alias" : "PalliativeOrHospiceCare",
+                              "expression" : {
+                                 "localId" : "162",
+                                 "locator" : "80:19-80:59",
+                                 "name" : "Intervention Palliative or Hospice Care",
+                                 "type" : "ExpressionRef"
+                              }
+                           } ],
+                           "relationship" : [ ],
+                           "where" : {
+                              "localId" : "177",
+                              "locator" : "81:11-81:253",
+                              "type" : "In",
+                              "operand" : [ {
+                                 "localId" : "173",
+                                 "locator" : "81:17-81:183",
+                                 "type" : "Coalesce",
+                                 "operand" : [ {
+                                    "localId" : "170",
+                                    "locator" : "81:26-81:142",
+                                    "type" : "Start",
+                                    "operand" : {
+                                       "localId" : "169",
+                                       "locator" : "81:35-81:142",
+                                       "name" : "NormalizeInterval",
+                                       "libraryName" : "Global",
+                                       "type" : "FunctionRef",
+                                       "operand" : [ {
+                                          "localId" : "166",
+                                          "locator" : "81:62-81:101",
+                                          "path" : "relevantDatetime",
+                                          "scope" : "PalliativeOrHospiceCare",
+                                          "type" : "Property"
+                                       }, {
+                                          "localId" : "168",
+                                          "locator" : "81:104-81:141",
+                                          "path" : "relevantPeriod",
+                                          "scope" : "PalliativeOrHospiceCare",
+                                          "type" : "Property"
+                                       } ]
+                                    }
+                                 }, {
+                                    "localId" : "172",
+                                    "locator" : "81:145-81:182",
+                                    "path" : "authorDatetime",
+                                    "scope" : "PalliativeOrHospiceCare",
+                                    "type" : "Property"
+                                 } ]
+                              }, {
+                                 "localId" : "176",
+                                 "locator" : "81:192-81:253",
+                                 "name" : "HospitalizationWithObservation",
+                                 "libraryName" : "Global",
+                                 "type" : "FunctionRef",
+                                 "operand" : [ {
+                                    "localId" : "175",
+                                    "locator" : "81:234-81:251",
+                                    "name" : "InpatientEncounter",
+                                    "type" : "AliasRef"
+                                 } ]
+                              } ]
+                           }
+                        }
+                     } ]
+                  }, {
+                     "localId" : "199",
+                     "locator" : "83:10-87:7",
+                     "type" : "Or",
+                     "operand" : [ {
+                        "localId" : "194",
+                        "locator" : "83:12-85:73",
+                        "type" : "Or",
+                        "operand" : [ {
+                           "localId" : "189",
+                           "locator" : "83:12-84:92",
+                           "type" : "Or",
+                           "operand" : [ {
+                              "localId" : "184",
+                              "locator" : "83:12-83:88",
+                              "type" : "InValueSet",
+                              "code" : {
+                                 "localId" : "182",
+                                 "locator" : "83:12-83:50",
+                                 "path" : "dischargeDisposition",
+                                 "scope" : "InpatientEncounter",
+                                 "type" : "Property"
+                              },
+                              "valueset" : {
+                                 "localId" : "183",
+                                 "locator" : "83:55-83:88",
+                                 "name" : "Discharge To Acute Care Facility",
+                                 "preserve" : true
+                              }
+                           }, {
+                              "localId" : "188",
+                              "locator" : "84:14-84:92",
+                              "type" : "InValueSet",
+                              "code" : {
+                                 "localId" : "186",
+                                 "locator" : "84:14-84:52",
+                                 "path" : "dischargeDisposition",
+                                 "scope" : "InpatientEncounter",
+                                 "type" : "Property"
+                              },
+                              "valueset" : {
+                                 "localId" : "187",
+                                 "locator" : "84:57-84:92",
+                                 "name" : "Hospice Care Referral or Admission",
+                                 "preserve" : true
+                              }
+                           } ]
+                        }, {
+                           "localId" : "193",
+                           "locator" : "85:14-85:73",
+                           "type" : "InValueSet",
+                           "code" : {
+                              "localId" : "191",
+                              "locator" : "85:14-85:52",
+                              "path" : "dischargeDisposition",
+                              "scope" : "InpatientEncounter",
+                              "type" : "Property"
+                           },
+                           "valueset" : {
+                              "localId" : "192",
+                              "locator" : "85:57-85:73",
+                              "name" : "Patient Expired",
+                              "preserve" : true
+                           }
+                        } ]
+                     }, {
+                        "localId" : "198",
+                        "locator" : "86:14-86:85",
+                        "type" : "InValueSet",
+                        "code" : {
+                           "localId" : "196",
+                           "locator" : "86:14-86:52",
+                           "path" : "dischargeDisposition",
+                           "scope" : "InpatientEncounter",
+                           "type" : "Property"
+                        },
+                        "valueset" : {
+                           "localId" : "197",
+                           "locator" : "86:57-86:85",
+                           "name" : "Left Against Medical Advice",
+                           "preserve" : true
+                        }
+                     } ]
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "240",
+            "locator" : "97:1-112:3",
+            "name" : "Numerator",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "240",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Numerator\"",":\n  /*Encounters of patients prescribed two or more opioids or an opioid and benzodiazepine at discharge.\n  */\n  \n  " ]
+                  }, {
+                     "r" : "239",
+                     "s" : [ {
+                        "value" : [ "( " ]
+                     }, {
+                        "r" : "239",
+                        "s" : [ {
+                           "s" : [ {
+                              "r" : "204",
+                              "s" : [ {
+                                 "r" : "203",
+                                 "s" : [ {
+                                    "s" : [ {
+                                       "value" : [ "\"Inpatient Encounters with an Opioid or Benzodiazepine at Discharge\"" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " ","InpatientEncounter" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n      " ]
+                        }, {
+                           "r" : "238",
+                           "s" : [ {
+                              "value" : [ "where " ]
+                           }, {
+                              "r" : "238",
+                              "s" : [ {
+                                 "r" : "218",
+                                 "s" : [ {
+                                    "value" : [ "( " ]
+                                 }, {
+                                    "r" : "218",
+                                    "s" : [ {
+                                       "r" : "216",
+                                       "s" : [ {
+                                          "value" : [ "Count","(" ]
+                                       }, {
+                                          "r" : "215",
+                                          "s" : [ {
+                                             "s" : [ {
+                                                "r" : "206",
+                                                "s" : [ {
+                                                   "r" : "205",
+                                                   "s" : [ {
+                                                      "r" : "205",
+                                                      "s" : [ {
+                                                         "value" : [ "[","\"Medication, Discharge\"",": " ]
+                                                      }, {
+                                                         "s" : [ {
+                                                            "value" : [ "\"Schedule II, III and IV Opioid Medications\"" ]
+                                                         } ]
+                                                      }, {
+                                                         "value" : [ "]" ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ " ","Opioids" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "\n            " ]
+                                          }, {
+                                             "r" : "211",
+                                             "s" : [ {
+                                                "value" : [ "where " ]
+                                             }, {
+                                                "r" : "211",
+                                                "s" : [ {
+                                                   "r" : "208",
+                                                   "s" : [ {
+                                                      "r" : "207",
+                                                      "s" : [ {
+                                                         "value" : [ "Opioids" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "." ]
+                                                   }, {
+                                                      "r" : "208",
+                                                      "s" : [ {
+                                                         "value" : [ "authorDatetime" ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "r" : "211",
+                                                   "value" : [ " ","during day of"," " ]
+                                                }, {
+                                                   "r" : "210",
+                                                   "s" : [ {
+                                                      "r" : "209",
+                                                      "s" : [ {
+                                                         "value" : [ "InpatientEncounter" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "." ]
+                                                   }, {
+                                                      "r" : "210",
+                                                      "s" : [ {
+                                                         "value" : [ "relevantPeriod" ]
+                                                      } ]
+                                                   } ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "\n            " ]
+                                          }, {
+                                             "r" : "214",
+                                             "s" : [ {
+                                                "value" : [ "return distinct " ]
+                                             }, {
+                                                "r" : "213",
+                                                "s" : [ {
+                                                   "r" : "212",
+                                                   "s" : [ {
+                                                      "value" : [ "Opioids" ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ "." ]
+                                                }, {
+                                                   "r" : "213",
+                                                   "s" : [ {
+                                                      "value" : [ "code" ]
+                                                   } ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "\n        )" ]
+                                       } ]
+                                    }, {
+                                       "r" : "217",
+                                       "value" : [ " ",">="," ","2" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n      )" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "\n        or " ]
+                              }, {
+                                 "r" : "237",
+                                 "s" : [ {
+                                    "value" : [ "exists " ]
+                                 }, {
+                                    "r" : "236",
+                                    "s" : [ {
+                                       "value" : [ "( " ]
+                                    }, {
+                                       "r" : "236",
+                                       "s" : [ {
+                                          "s" : [ {
+                                             "r" : "220",
+                                             "s" : [ {
+                                                "r" : "219",
+                                                "s" : [ {
+                                                   "r" : "219",
+                                                   "s" : [ {
+                                                      "value" : [ "[","\"Medication, Discharge\"",": " ]
+                                                   }, {
+                                                      "s" : [ {
+                                                         "value" : [ "\"Schedule II, III and IV Opioid Medications\"" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "]" ]
+                                                   } ]
+                                                } ]
+                                             }, {
+                                                "value" : [ " ","OpioidsDischarge" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "\n            " ]
+                                       }, {
+                                          "r" : "235",
+                                          "s" : [ {
+                                             "value" : [ "where " ]
+                                          }, {
+                                             "r" : "235",
+                                             "s" : [ {
+                                                "r" : "225",
+                                                "s" : [ {
+                                                   "r" : "222",
+                                                   "s" : [ {
+                                                      "r" : "221",
+                                                      "s" : [ {
+                                                         "value" : [ "OpioidsDischarge" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "." ]
+                                                   }, {
+                                                      "r" : "222",
+                                                      "s" : [ {
+                                                         "value" : [ "authorDatetime" ]
+                                                      } ]
+                                                   } ]
+                                                }, {
+                                                   "r" : "225",
+                                                   "value" : [ " ","during day of"," " ]
+                                                }, {
+                                                   "r" : "224",
+                                                   "s" : [ {
+                                                      "r" : "223",
+                                                      "s" : [ {
+                                                         "value" : [ "InpatientEncounter" ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "." ]
+                                                   }, {
+                                                      "r" : "224",
+                                                      "s" : [ {
+                                                         "value" : [ "relevantPeriod" ]
+                                                      } ]
+                                                   } ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "\n              and " ]
+                                             }, {
+                                                "r" : "234",
+                                                "s" : [ {
+                                                   "value" : [ "exists " ]
+                                                }, {
+                                                   "r" : "233",
+                                                   "s" : [ {
+                                                      "s" : [ {
+                                                         "r" : "227",
+                                                         "s" : [ {
+                                                            "r" : "226",
+                                                            "s" : [ {
+                                                               "r" : "226",
+                                                               "s" : [ {
+                                                                  "value" : [ "[","\"Medication, Discharge\"",": " ]
+                                                               }, {
+                                                                  "s" : [ {
+                                                                     "value" : [ "\"Schedule IV Benzodiazepines\"" ]
+                                                                  } ]
+                                                               }, {
+                                                                  "value" : [ "]" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "value" : [ " ","BenzodiazepinesDischarge" ]
+                                                         } ]
+                                                      } ]
+                                                   }, {
+                                                      "value" : [ "\n                " ]
+                                                   }, {
+                                                      "r" : "232",
+                                                      "s" : [ {
+                                                         "value" : [ "where " ]
+                                                      }, {
+                                                         "r" : "232",
+                                                         "s" : [ {
+                                                            "r" : "229",
+                                                            "s" : [ {
+                                                               "r" : "228",
+                                                               "s" : [ {
+                                                                  "value" : [ "BenzodiazepinesDischarge" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "229",
+                                                               "s" : [ {
+                                                                  "value" : [ "authorDatetime" ]
+                                                               } ]
+                                                            } ]
+                                                         }, {
+                                                            "r" : "232",
+                                                            "value" : [ " ","during day of"," " ]
+                                                         }, {
+                                                            "r" : "231",
+                                                            "s" : [ {
+                                                               "r" : "230",
+                                                               "s" : [ {
+                                                                  "value" : [ "InpatientEncounter" ]
+                                                               } ]
+                                                            }, {
+                                                               "value" : [ "." ]
+                                                            }, {
+                                                               "r" : "231",
+                                                               "s" : [ {
+                                                                  "value" : [ "relevantPeriod" ]
+                                                               } ]
+                                                            } ]
+                                                         } ]
+                                                      } ]
+                                                   } ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n        )" ]
+                                    } ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n  )" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "239",
+               "locator" : "101:3-112:3",
+               "type" : "Query",
+               "source" : [ {
+                  "localId" : "204",
+                  "locator" : "101:5-101:91",
+                  "alias" : "InpatientEncounter",
+                  "expression" : {
+                     "localId" : "203",
+                     "locator" : "101:5-101:72",
+                     "name" : "Inpatient Encounters with an Opioid or Benzodiazepine at Discharge",
+                     "type" : "ExpressionRef"
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "238",
+                  "locator" : "102:7-111:9",
+                  "type" : "Or",
+                  "operand" : [ {
+                     "localId" : "218",
+                     "locator" : "102:13-106:7",
+                     "type" : "GreaterOrEqual",
+                     "operand" : [ {
+                        "localId" : "216",
+                        "locator" : "102:15-105:9",
+                        "type" : "Count",
+                        "source" : {
+                           "localId" : "215",
+                           "locator" : "102:21-104:40",
+                           "type" : "Query",
+                           "source" : [ {
+                              "localId" : "206",
+                              "locator" : "102:21-102:99",
+                              "alias" : "Opioids",
+                              "expression" : {
+                                 "localId" : "205",
+                                 "locator" : "102:21-102:91",
+                                 "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationDischarge",
+                                 "templateId" : "PositiveMedicationDischarge",
+                                 "codeProperty" : "code",
+                                 "codeComparator" : "in",
+                                 "type" : "Retrieve",
+                                 "codes" : {
+                                    "locator" : "102:47-102:90",
+                                    "name" : "Schedule II, III and IV Opioid Medications",
+                                    "preserve" : true,
+                                    "type" : "ValueSetRef"
+                                 }
+                              }
+                           } ],
+                           "relationship" : [ ],
+                           "where" : {
+                              "localId" : "211",
+                              "locator" : "103:13-103:88",
+                              "precision" : "Day",
+                              "type" : "In",
+                              "operand" : [ {
+                                 "localId" : "208",
+                                 "locator" : "103:19-103:40",
+                                 "path" : "authorDatetime",
+                                 "scope" : "Opioids",
+                                 "type" : "Property"
+                              }, {
+                                 "localId" : "210",
+                                 "locator" : "103:56-103:88",
+                                 "path" : "relevantPeriod",
+                                 "scope" : "InpatientEncounter",
+                                 "type" : "Property"
+                              } ]
+                           },
+                           "return" : {
+                              "localId" : "214",
+                              "locator" : "104:13-104:40",
+                              "distinct" : true,
+                              "expression" : {
+                                 "localId" : "213",
+                                 "locator" : "104:29-104:40",
+                                 "path" : "code",
+                                 "scope" : "Opioids",
+                                 "type" : "Property"
+                              }
+                           }
+                        }
+                     }, {
+                        "localId" : "217",
+                        "locator" : "105:14",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                        "value" : "2",
+                        "type" : "Literal"
+                     } ]
+                  }, {
+                     "localId" : "237",
+                     "locator" : "107:12-111:9",
+                     "type" : "Exists",
+                     "operand" : {
+                        "localId" : "236",
+                        "locator" : "107:19-111:9",
+                        "type" : "Query",
+                        "source" : [ {
+                           "localId" : "220",
+                           "locator" : "107:21-107:108",
+                           "alias" : "OpioidsDischarge",
+                           "expression" : {
+                              "localId" : "219",
+                              "locator" : "107:21-107:91",
+                              "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationDischarge",
+                              "templateId" : "PositiveMedicationDischarge",
+                              "codeProperty" : "code",
+                              "codeComparator" : "in",
+                              "type" : "Retrieve",
+                              "codes" : {
+                                 "locator" : "107:47-107:90",
+                                 "name" : "Schedule II, III and IV Opioid Medications",
+                                 "preserve" : true,
+                                 "type" : "ValueSetRef"
+                              }
+                           }
+                        } ],
+                        "relationship" : [ ],
+                        "where" : {
+                           "localId" : "235",
+                           "locator" : "108:13-110:109",
+                           "type" : "And",
+                           "operand" : [ {
+                              "localId" : "225",
+                              "locator" : "108:19-108:97",
+                              "precision" : "Day",
+                              "type" : "In",
+                              "operand" : [ {
+                                 "localId" : "222",
+                                 "locator" : "108:19-108:49",
+                                 "path" : "authorDatetime",
+                                 "scope" : "OpioidsDischarge",
+                                 "type" : "Property"
+                              }, {
+                                 "localId" : "224",
+                                 "locator" : "108:65-108:97",
+                                 "path" : "relevantPeriod",
+                                 "scope" : "InpatientEncounter",
+                                 "type" : "Property"
+                              } ]
+                           }, {
+                              "localId" : "234",
+                              "locator" : "109:19-110:109",
+                              "type" : "Exists",
+                              "operand" : {
+                                 "localId" : "233",
+                                 "locator" : "109:26-110:109",
+                                 "type" : "Query",
+                                 "source" : [ {
+                                    "localId" : "227",
+                                    "locator" : "109:26-109:106",
+                                    "alias" : "BenzodiazepinesDischarge",
+                                    "expression" : {
+                                       "localId" : "226",
+                                       "locator" : "109:26-109:81",
+                                       "dataType" : "{urn:healthit-gov:qdm:v5_6}PositiveMedicationDischarge",
+                                       "templateId" : "PositiveMedicationDischarge",
+                                       "codeProperty" : "code",
+                                       "codeComparator" : "in",
+                                       "type" : "Retrieve",
+                                       "codes" : {
+                                          "locator" : "109:52-109:80",
+                                          "name" : "Schedule IV Benzodiazepines",
+                                          "preserve" : true,
+                                          "type" : "ValueSetRef"
+                                       }
+                                    }
+                                 } ],
+                                 "relationship" : [ ],
+                                 "where" : {
+                                    "localId" : "232",
+                                    "locator" : "110:17-110:109",
+                                    "precision" : "Day",
+                                    "type" : "In",
+                                    "operand" : [ {
+                                       "localId" : "229",
+                                       "locator" : "110:23-110:61",
+                                       "path" : "authorDatetime",
+                                       "scope" : "BenzodiazepinesDischarge",
+                                       "type" : "Property"
+                                    }, {
+                                       "localId" : "231",
+                                       "locator" : "110:77-110:109",
+                                       "path" : "relevantPeriod",
+                                       "scope" : "InpatientEncounter",
+                                       "type" : "Property"
+                                    } ]
+                                 }
+                              }
+                           } ]
+                        }
+                     }
+                  } ]
+               }
+            }
+         } ]
+      }
+   }
+}

@@ -1,0 +1,15 @@
+{# original CQL begins -#}
+/*
+define "Inpatient Encounter with Age Greater than or Equal to 18":
+  Global."Inpatient Encounter" InpatientHospitalEncounter
+    where AgeInYearsAt(date from start of InpatientHospitalEncounter.relevantPeriod) >= 18
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/SafeUseofOpioidsConcurrentPrescribing_7__0__000.j2" import SafeUseofOpioidsConcurrentPrescribingInpatient_Encounter_with_Age_Greater_than_or_Equal_to_18 %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ SafeUseofOpioidsConcurrentPrescribingInpatient_Encounter_with_Age_Greater_than_or_Equal_to_18(environment, none) }}

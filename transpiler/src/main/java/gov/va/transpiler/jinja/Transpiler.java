@@ -29,30 +29,32 @@ public class Transpiler {
         Standards.setTargetLanguage(target);
 
         // read the contents of the file to text
-        var cqlLibraryToTranspile = "CMS104-v12-0-000-QDM-5-6.cql";
-        String cqlLibraryToTranspileAsText = Files.readString(Paths.get(librarySource + cqlLibraryToTranspile));
-
-        // Compile CQL text files into a CQL AST in memory
-        var libraryList = compiler.compile(cqlLibraryToTranspileAsText);
-
-        // Transforms the CQL AST into an intermediate AST that keeps track of all information needed to generate SQL ASTs
-        var converter = new Converter();        
-        var state = new State();
-        var convertedLibraries = new ArrayList<TranspilerNode>();
-        for (Library library : libraryList) {
-            var outputNode = converter.convert(library, state);
-            convertedLibraries.add(outputNode);
+        String[] cqlLibrariesToTranspile = {"CMS104-v12-0-000-QDM-5-6.cql", "CMS506v7/CMS506-v7-0-000-QDM-5-6.cql"};
+        for (var cqlLibraryToTranspile: cqlLibrariesToTranspile) {
+                String cqlLibraryToTranspileAsText = Files.readString(Paths.get(librarySource + cqlLibraryToTranspile));
+        
+                // Compile CQL text files into a CQL AST in memory
+                var libraryList = compiler.compile(cqlLibraryToTranspileAsText);
+        
+                // Transforms the CQL AST into an intermediate AST that keeps track of all information needed to generate SQL ASTs
+                var converter = new Converter();        
+                var state = new State();
+                var convertedLibraries = new ArrayList<TranspilerNode>();
+                for (Library library : libraryList) {
+                    var outputNode = converter.convert(library, state);
+                    convertedLibraries.add(outputNode);
+                }
+                var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cqlLibraryToTranspileAsText);
+        
+                // Renders the intermediate AST as a set of Jinja files
+                var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
+                for (var mapped : convertedLibraries) {
+                   segmentPrinter.toFiles(mapped.toSegment(), jinjaTarget + Standards.GENERATED_INTERMEDIATE_AST_FOLDER);
+                }
+        
+                // Creates model files for the intermediate ASTs
+                var modelFilePrinter = new ModelFilePrinter();
+                modelFilePrinter.printModels(state.getModelTracking(), jinjaTarget, cqlFileContentRetriever, printFunctions);
         }
-        var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cqlLibraryToTranspileAsText);
-
-        // Renders the intermediate AST as a set of Jinja files
-        var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
-        for (var mapped : convertedLibraries) {
-           segmentPrinter.toFiles(mapped.toSegment(), jinjaTarget + Standards.GENERATED_INTERMEDIATE_AST_FOLDER);
-        }
-
-        // Creates model files for the intermediate ASTs
-        var modelFilePrinter = new ModelFilePrinter();
-        modelFilePrinter.printModels(state.getModelTracking(), jinjaTarget, cqlFileContentRetriever, printFunctions);
     }
 }

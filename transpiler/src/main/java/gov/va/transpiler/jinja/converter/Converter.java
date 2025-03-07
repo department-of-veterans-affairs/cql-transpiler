@@ -476,6 +476,13 @@ public class Converter extends ElmBaseLibraryVisitor<TranspilerNode, State> {
     }
 
     @Override
+    public TranspilerNode visitOverlaps(Overlaps element, State state) {
+        state.setCurrentCQLNode(element);
+        new BinaryExpressionNode<Overlaps>(state, element);
+        return super.visitOverlaps(element, state);
+    }
+
+    @Override
     public TranspilerNode visitParameterDef(ParameterDef element, State state) {
         state.setCurrentCQLNode(element);
         new ParameterDefNode(state, element);

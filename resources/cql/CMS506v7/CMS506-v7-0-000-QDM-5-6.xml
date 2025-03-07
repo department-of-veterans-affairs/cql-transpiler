@@ -1,0 +1,1626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="urn:hl7-org:elm:r1" xmlns:t="urn:hl7-org:elm-types:r1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fhir="http://hl7.org/fhir" xmlns:qdm43="urn:healthit-gov:qdm:v4_3" xmlns:qdm53="urn:healthit-gov:qdm:v5_3" xmlns:a="urn:hl7-org:cql-annotations:r1">
+   <annotation translatorOptions="EnableAnnotations,EnableLocators,DisableListDemotion,DisableListPromotion,DisableMethodInvocation" xsi:type="a:CqlToElmInfo"/>
+   <annotation xsi:type="a:Annotation">
+      <a:s r="240">
+         <a:s>library SafeUseofOpioidsConcurrentPrescribing version '7.0.000'</a:s>
+      </a:s>
+   </annotation>
+   <identifier id="SafeUseofOpioidsConcurrentPrescribing" version="7.0.000"/>
+   <schemaIdentifier id="urn:hl7-org:elm" version="r1"/>
+   <usings>
+      <def localIdentifier="System" uri="urn:hl7-org:elm-types:r1"/>
+      <def localId="1" locator="3:1-3:23" localIdentifier="QDM" uri="urn:healthit-gov:qdm:v5_6" version="5.6">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="1">
+               <a:s>using </a:s>
+               <a:s>
+                  <a:s>QDM</a:s>
+               </a:s>
+               <a:s> version '5.6'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+   </usings>
+   <includes>
+      <def localId="2" locator="5:1-5:67" localIdentifier="Global" path="MATGlobalCommonFunctionsQDM" version="8.0.000">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="2">
+               <a:s>include </a:s>
+               <a:s>
+                  <a:s>MATGlobalCommonFunctionsQDM</a:s>
+               </a:s>
+               <a:s> version '8.0.000' called Global</a:s>
+            </a:s>
+         </annotation>
+      </def>
+   </includes>
+   <parameters>
+      <def localId="21" locator="24:1-24:49" name="Measurement Period" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="21">
+               <a:s>parameter &quot;Measurement Period&quot; </a:s>
+               <a:s r="20">
+                  <a:s>Interval&lt;</a:s>
+                  <a:s r="19">
+                     <a:s>DateTime</a:s>
+                  </a:s>
+                  <a:s>></a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <parameterTypeSpecifier localId="20" locator="24:32-24:49" xsi:type="IntervalTypeSpecifier">
+            <pointType localId="19" locator="24:41-24:48" name="t:DateTime" xsi:type="NamedTypeSpecifier"/>
+         </parameterTypeSpecifier>
+      </def>
+   </parameters>
+   <valueSets>
+      <def localId="3" locator="7:1-7:72" name="Cancer Related Pain" id="urn:oid:2.16.840.1.113762.1.4.1111.180" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="3">
+               <a:s>valueset &quot;Cancer Related Pain&quot;: 'urn:oid:2.16.840.1.113762.1.4.1111.180'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="4" locator="8:1-8:87" name="Discharge To Acute Care Facility" id="urn:oid:2.16.840.1.113883.3.117.1.7.1.87" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="4">
+               <a:s>valueset &quot;Discharge To Acute Care Facility&quot;: 'urn:oid:2.16.840.1.113883.3.117.1.7.1.87'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="5" locator="9:1-9:58" name="Ethnicity" id="urn:oid:2.16.840.1.114222.4.11.837" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="5">
+               <a:s>valueset &quot;Ethnicity&quot;: 'urn:oid:2.16.840.1.114222.4.11.837'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="6" locator="10:1-10:87" name="Hospice Care Referral or Admission" id="urn:oid:2.16.840.1.113762.1.4.1116.365" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="6">
+               <a:s>valueset &quot;Hospice Care Referral or Admission&quot;: 'urn:oid:2.16.840.1.113762.1.4.1116.365'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="7" locator="11:1-11:83" name="Left Against Medical Advice" id="urn:oid:2.16.840.1.113883.3.117.1.7.1.308" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="7">
+               <a:s>valueset &quot;Left Against Medical Advice&quot;: 'urn:oid:2.16.840.1.113883.3.117.1.7.1.308'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="8" locator="12:1-12:95" name="Medications for Opioid Use Disorder (MOUD)" id="urn:oid:2.16.840.1.113762.1.4.1046.269" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="8">
+               <a:s>valueset &quot;Medications for Opioid Use Disorder (MOUD)&quot;: 'urn:oid:2.16.840.1.113762.1.4.1046.269'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="9" locator="13:1-13:68" name="ONC Administrative Sex" id="urn:oid:2.16.840.1.113762.1.4.1" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="9">
+               <a:s>valueset &quot;ONC Administrative Sex&quot;: 'urn:oid:2.16.840.1.113762.1.4.1'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="10" locator="14:1-14:95" name="Opioid Medication Assisted Treatment (MAT)" id="urn:oid:2.16.840.1.113762.1.4.1111.177" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="10">
+               <a:s>valueset &quot;Opioid Medication Assisted Treatment (MAT)&quot;: 'urn:oid:2.16.840.1.113762.1.4.1111.177'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="11" locator="15:1-15:72" name="Opioid Use Disorder" id="urn:oid:2.16.840.1.113762.1.4.1111.171" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="11">
+               <a:s>valueset &quot;Opioid Use Disorder&quot;: 'urn:oid:2.16.840.1.113762.1.4.1111.171'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="12" locator="16:1-16:79" name="Palliative or Hospice Care" id="urn:oid:2.16.840.1.113883.3.600.1.1579" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="12">
+               <a:s>valueset &quot;Palliative or Hospice Care&quot;: 'urn:oid:2.16.840.1.113883.3.600.1.1579'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="13" locator="17:1-17:71" name="Patient Expired" id="urn:oid:2.16.840.1.113883.3.117.1.7.1.309" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="13">
+               <a:s>valueset &quot;Patient Expired&quot;: 'urn:oid:2.16.840.1.113883.3.117.1.7.1.309'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="14" locator="18:1-18:60" name="Payer Type" id="urn:oid:2.16.840.1.114222.4.11.3591" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="14">
+               <a:s>valueset &quot;Payer Type&quot;: 'urn:oid:2.16.840.1.114222.4.11.3591'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="15" locator="19:1-19:53" name="Race" id="urn:oid:2.16.840.1.114222.4.11.836" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="15">
+               <a:s>valueset &quot;Race&quot;: 'urn:oid:2.16.840.1.114222.4.11.836'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="16" locator="20:1-20:95" name="Schedule II, III and IV Opioid Medications" id="urn:oid:2.16.840.1.113762.1.4.1046.241" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="16">
+               <a:s>valueset &quot;Schedule II, III and IV Opioid Medications&quot;: 'urn:oid:2.16.840.1.113762.1.4.1046.241'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="17" locator="21:1-21:78" name="Schedule IV Benzodiazepines" id="urn:oid:2.16.840.1.113762.1.4.1125.1" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="17">
+               <a:s>valueset &quot;Schedule IV Benzodiazepines&quot;: 'urn:oid:2.16.840.1.113762.1.4.1125.1'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+      <def localId="18" locator="22:1-22:96" name="Sickle Cell Disease with and without Crisis" id="urn:oid:2.16.840.1.113762.1.4.1111.175" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="18">
+               <a:s>valueset &quot;Sickle Cell Disease with and without Crisis&quot;: 'urn:oid:2.16.840.1.113762.1.4.1111.175'</a:s>
+            </a:s>
+         </annotation>
+      </def>
+   </valueSets>
+   <contexts>
+      <def locator="26:1-26:15" name="Patient"/>
+   </contexts>
+   <statements>
+      <def locator="26:1-26:15" name="Patient" context="Patient">
+         <expression xsi:type="SingletonFrom">
+            <operand locator="26:1-26:15" xmlns:ns0="urn:healthit-gov:qdm:v5_6" dataType="ns0:Patient" templateId="Patient" xsi:type="Retrieve"/>
+         </expression>
+      </def>
+      <def localId="32" locator="31:1-33:90" name="Inpatient Encounter with Age Greater than or Equal to 18" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="32">
+               <a:s>define &quot;Inpatient Encounter with Age Greater than or Equal to 18&quot;:
+  </a:s>
+               <a:s r="31">
+                  <a:s>
+                     <a:s r="23">
+                        <a:s r="22">
+                           <a:s>
+                              <a:s>Global.&quot;Inpatient Encounter&quot;</a:s>
+                           </a:s>
+                        </a:s>
+                        <a:s> InpatientHospitalEncounter</a:s>
+                     </a:s>
+                  </a:s>
+                  <a:s>
+    </a:s>
+                  <a:s r="30">
+                     <a:s>where </a:s>
+                     <a:s r="30">
+                        <a:s r="28">
+                           <a:s>AgeInYearsAt(</a:s>
+                           <a:s r="27">
+                              <a:s>date from </a:s>
+                              <a:s r="26">
+                                 <a:s>start of </a:s>
+                                 <a:s r="25">
+                                    <a:s r="24">
+                                       <a:s>InpatientHospitalEncounter</a:s>
+                                    </a:s>
+                                    <a:s>.</a:s>
+                                    <a:s r="25">
+                                       <a:s>relevantPeriod</a:s>
+                                    </a:s>
+                                 </a:s>
+                              </a:s>
+                           </a:s>
+                           <a:s>)</a:s>
+                        </a:s>
+                        <a:s r="29"> >= 18</a:s>
+                     </a:s>
+                  </a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="31" locator="32:3-33:90" xsi:type="Query">
+            <source localId="23" locator="32:3-32:57" alias="InpatientHospitalEncounter">
+               <expression localId="22" locator="32:3-32:30" name="Inpatient Encounter" libraryName="Global" xsi:type="ExpressionRef"/>
+            </source>
+            <where localId="30" locator="33:5-33:90" xsi:type="GreaterOrEqual">
+               <operand localId="28" locator="33:11-33:84" precision="Year" xsi:type="CalculateAgeAt">
+                  <operand xsi:type="ToDate">
+                     <operand path="birthDatetime" xsi:type="Property">
+                        <source name="Patient" xsi:type="ExpressionRef"/>
+                     </operand>
+                  </operand>
+                  <operand localId="27" locator="33:24-33:83" xsi:type="DateFrom">
+                     <operand localId="26" locator="33:34-33:83" xsi:type="Start">
+                        <operand localId="25" locator="33:43-33:83" path="relevantPeriod" scope="InpatientHospitalEncounter" xsi:type="Property"/>
+                     </operand>
+                  </operand>
+               </operand>
+               <operand localId="29" locator="33:89-33:90" valueType="t:Integer" value="18" xsi:type="Literal"/>
+            </where>
+         </expression>
+      </def>
+      <def localId="46" locator="89:1-95:120" name="Inpatient Encounters with an Opioid or Benzodiazepine at Discharge" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="46">
+               <a:s>define &quot;Inpatient Encounters with an Opioid or Benzodiazepine at Discharge&quot;:
+  /*Captures encounters of patients with an opioid(s), benzodiazepine, or a combination of these medications at discharge*/
+  
+  </a:s>
+               <a:s r="45">
+                  <a:s>
+                     <a:s r="34">
+                        <a:s r="33">
+                           <a:s>
+                              <a:s>&quot;Inpatient Encounter with Age Greater than or Equal to 18&quot;</a:s>
+                           </a:s>
+                        </a:s>
+                        <a:s> InpatientEncounter</a:s>
+                     </a:s>
+                  </a:s>
+                  <a:s>
+    </a:s>
+                  <a:s r="44">
+                     <a:s>with </a:s>
+                     <a:s r="38">
+                        <a:s r="37">
+                           <a:s>( </a:s>
+                           <a:s r="37">
+                              <a:s r="35">
+                                 <a:s>[&quot;Medication, Discharge&quot;: </a:s>
+                                 <a:s>
+                                    <a:s>&quot;Schedule II, III and IV Opioid Medications&quot;</a:s>
+                                 </a:s>
+                                 <a:s>]</a:s>
+                              </a:s>
+                              <a:s>
+      union </a:s>
+                              <a:s r="36">
+                                 <a:s>[&quot;Medication, Discharge&quot;: </a:s>
+                                 <a:s>
+                                    <a:s>&quot;Schedule IV Benzodiazepines&quot;</a:s>
+                                 </a:s>
+                                 <a:s>]</a:s>
+                              </a:s>
+                           </a:s>
+                           <a:s> )</a:s>
+                        </a:s>
+                        <a:s> OpioidOrBenzodiazepineDischargeMedication</a:s>
+                     </a:s>
+                     <a:s>
+      such that </a:s>
+                     <a:s r="43">
+                        <a:s r="40">
+                           <a:s r="39">
+                              <a:s>OpioidOrBenzodiazepineDischargeMedication</a:s>
+                           </a:s>
+                           <a:s>.</a:s>
+                           <a:s r="40">
+                              <a:s>authorDatetime</a:s>
+                           </a:s>
+                        </a:s>
+                        <a:s r="43"> during day of </a:s>
+                        <a:s r="42">
+                           <a:s r="41">
+                              <a:s>InpatientEncounter</a:s>
+                           </a:s>
+                           <a:s>.</a:s>
+                           <a:s r="42">
+                              <a:s>relevantPeriod</a:s>
+                           </a:s>
+                        </a:s>
+                     </a:s>
+                  </a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="45" locator="92:3-95:120" xsi:type="Query">
+            <source localId="34" locator="92:3-92:79" alias="InpatientEncounter">
+               <expression localId="33" locator="92:3-92:60" name="Inpatient Encounter with Age Greater than or Equal to 18" xsi:type="ExpressionRef"/>
+            </source>
+            <relationship localId="44" locator="93:5-95:120" alias="OpioidOrBenzodiazepineDischargeMedication" xsi:type="With">
+               <expression localId="37" locator="93:10-94:70" xsi:type="Union">
+                  <operand localId="35" locator="93:12-93:82" xmlns:ns1="urn:healthit-gov:qdm:v5_6" dataType="ns1:PositiveMedicationDischarge" templateId="PositiveMedicationDischarge" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                     <codes locator="93:38-93:81" name="Schedule II, III and IV Opioid Medications" preserve="true" xsi:type="ValueSetRef"/>
+                  </operand>
+                  <operand localId="36" locator="94:13-94:68" xmlns:ns2="urn:healthit-gov:qdm:v5_6" dataType="ns2:PositiveMedicationDischarge" templateId="PositiveMedicationDischarge" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                     <codes locator="94:39-94:67" name="Schedule IV Benzodiazepines" preserve="true" xsi:type="ValueSetRef"/>
+                  </operand>
+               </expression>
+               <suchThat localId="43" locator="95:17-95:120" precision="Day" xsi:type="In">
+                  <operand localId="40" locator="95:17-95:72" path="authorDatetime" scope="OpioidOrBenzodiazepineDischargeMedication" xsi:type="Property"/>
+                  <operand localId="42" locator="95:88-95:120" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+               </suchThat>
+            </relationship>
+         </expression>
+      </def>
+      <def localId="48" locator="39:1-40:70" name="Initial Population" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="48">
+               <a:s>define &quot;Initial Population&quot;:
+  </a:s>
+               <a:s r="47">
+                  <a:s>&quot;Inpatient Encounters with an Opioid or Benzodiazepine at Discharge&quot;</a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="47" locator="40:3-40:70" name="Inpatient Encounters with an Opioid or Benzodiazepine at Discharge" xsi:type="ExpressionRef"/>
+      </def>
+      <def localId="50" locator="28:1-29:22" name="Denominator" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="50">
+               <a:s>define &quot;Denominator&quot;:
+  </a:s>
+               <a:s r="49">
+                  <a:s>&quot;Initial Population&quot;</a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="49" locator="29:3-29:22" name="Initial Population" xsi:type="ExpressionRef"/>
+      </def>
+      <def localId="54" locator="35:1-37:67" name="Intervention Palliative or Hospice Care" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="54">
+               <a:s>define &quot;Intervention Palliative or Hospice Care&quot;:
+  </a:s>
+               <a:s r="53">
+                  <a:s r="51">
+                     <a:s>[&quot;Intervention, Order&quot;: </a:s>
+                     <a:s>
+                        <a:s>&quot;Palliative or Hospice Care&quot;</a:s>
+                     </a:s>
+                     <a:s>]</a:s>
+                  </a:s>
+                  <a:s>
+    union </a:s>
+                  <a:s r="52">
+                     <a:s>[&quot;Intervention, Performed&quot;: </a:s>
+                     <a:s>
+                        <a:s>&quot;Palliative or Hospice Care&quot;</a:s>
+                     </a:s>
+                     <a:s>]</a:s>
+                  </a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="53" locator="36:3-37:67" xsi:type="Union">
+            <operand xsi:type="As">
+               <operand localId="51" locator="36:3-36:55" xmlns:ns3="urn:healthit-gov:qdm:v5_6" dataType="ns3:PositiveInterventionOrder" templateId="PositiveInterventionOrder" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                  <codes locator="36:27-36:54" name="Palliative or Hospice Care" preserve="true" xsi:type="ValueSetRef"/>
+               </operand>
+               <asTypeSpecifier xsi:type="ListTypeSpecifier">
+                  <elementType xsi:type="ChoiceTypeSpecifier">
+                     <choice xmlns:ns4="urn:healthit-gov:qdm:v5_6" name="ns4:PositiveInterventionPerformed" xsi:type="NamedTypeSpecifier"/>
+                     <choice xmlns:ns5="urn:healthit-gov:qdm:v5_6" name="ns5:PositiveInterventionOrder" xsi:type="NamedTypeSpecifier"/>
+                  </elementType>
+               </asTypeSpecifier>
+            </operand>
+            <operand xsi:type="As">
+               <operand localId="52" locator="37:11-37:67" xmlns:ns6="urn:healthit-gov:qdm:v5_6" dataType="ns6:PositiveInterventionPerformed" templateId="PositiveInterventionPerformed" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                  <codes locator="37:39-37:66" name="Palliative or Hospice Care" preserve="true" xsi:type="ValueSetRef"/>
+               </operand>
+               <asTypeSpecifier xsi:type="ListTypeSpecifier">
+                  <elementType xsi:type="ChoiceTypeSpecifier">
+                     <choice xmlns:ns7="urn:healthit-gov:qdm:v5_6" name="ns7:PositiveInterventionPerformed" xsi:type="NamedTypeSpecifier"/>
+                     <choice xmlns:ns8="urn:healthit-gov:qdm:v5_6" name="ns8:PositiveInterventionOrder" xsi:type="NamedTypeSpecifier"/>
+                  </elementType>
+               </asTypeSpecifier>
+            </operand>
+         </expression>
+      </def>
+      <def localId="93" locator="42:1-47:202" name="Treatment for Opioid Use Disorders" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="93">
+               <a:s>define &quot;Treatment for Opioid Use Disorders&quot;:
+  </a:s>
+               <a:s r="92">
+                  <a:s>
+                     <a:s r="58">
+                        <a:s r="57">
+                           <a:s>( </a:s>
+                           <a:s r="57">
+                              <a:s r="55">
+                                 <a:s>[&quot;Medication, Active&quot;: </a:s>
+                                 <a:s>
+                                    <a:s>&quot;Medications for Opioid Use Disorder (MOUD)&quot;</a:s>
+                                 </a:s>
+                                 <a:s>]</a:s>
+                              </a:s>
+                              <a:s>
+    union </a:s>
+                              <a:s r="56">
+                                 <a:s>[&quot;Medication, Order&quot;: </a:s>
+                                 <a:s>
+                                    <a:s>&quot;Medications for Opioid Use Disorder (MOUD)&quot;</a:s>
+                                 </a:s>
+                                 <a:s>]</a:s>
+                              </a:s>
+                           </a:s>
+                           <a:s> )</a:s>
+                        </a:s>
+                        <a:s> MedicationTreatment</a:s>
+                     </a:s>
+                  </a:s>
+                  <a:s>
+    </a:s>
+                  <a:s r="91">
+                     <a:s>with </a:s>
+                     <a:s r="60">
+                        <a:s r="59">
+                           <a:s r="59">
+                              <a:s>[&quot;Intervention, Performed&quot;: </a:s>
+                              <a:s>
+                                 <a:s>&quot;Opioid Medication Assisted Treatment (MAT)&quot;</a:s>
+                              </a:s>
+                              <a:s>]</a:s>
+                           </a:s>
+                        </a:s>
+                        <a:s> MAT</a:s>
+                     </a:s>
+                     <a:s>
+      such that </a:s>
+                     <a:s r="90">
+                        <a:s r="77">
+                           <a:s r="70">
+                              <a:s>Coalesce(</a:s>
+                              <a:s r="67">
+                                 <a:s>start of </a:s>
+                                 <a:s r="66">
+                                    <a:s r="61">
+                                       <a:s>Global</a:s>
+                                    </a:s>
+                                    <a:s>.</a:s>
+                                    <a:s r="66">
+                                       <a:s>&quot;NormalizeInterval&quot;(</a:s>
+                                       <a:s r="63">
+                                          <a:s r="62">
+                                             <a:s>MedicationTreatment</a:s>
+                                          </a:s>
+                                          <a:s>.</a:s>
+                                          <a:s r="63">
+                                             <a:s>relevantDatetime</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>, </a:s>
+                                       <a:s r="65">
+                                          <a:s r="64">
+                                             <a:s>MedicationTreatment</a:s>
+                                          </a:s>
+                                          <a:s>.</a:s>
+                                          <a:s r="65">
+                                             <a:s>relevantPeriod</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>)</a:s>
+                                    </a:s>
+                                 </a:s>
+                              </a:s>
+                              <a:s>, </a:s>
+                              <a:s r="69">
+                                 <a:s r="68">
+                                    <a:s>MedicationTreatment</a:s>
+                                 </a:s>
+                                 <a:s>.</a:s>
+                                 <a:s r="69">
+                                    <a:s>authorDatetime</a:s>
+                                 </a:s>
+                              </a:s>
+                              <a:s>)</a:s>
+                           </a:s>
+                           <a:s r="77"> during day of </a:s>
+                           <a:s r="76">
+                              <a:s r="71">
+                                 <a:s>Global</a:s>
+                              </a:s>
+                              <a:s>.</a:s>
+                              <a:s r="76">
+                                 <a:s>&quot;NormalizeInterval&quot; ( </a:s>
+                                 <a:s r="73">
+                                    <a:s r="72">
+                                       <a:s>MAT</a:s>
+                                    </a:s>
+                                    <a:s>.</a:s>
+                                    <a:s r="73">
+                                       <a:s>relevantDatetime</a:s>
+                                    </a:s>
+                                 </a:s>
+                                 <a:s>, </a:s>
+                                 <a:s r="75">
+                                    <a:s r="74">
+                                       <a:s>MAT</a:s>
+                                    </a:s>
+                                    <a:s>.</a:s>
+                                    <a:s r="75">
+                                       <a:s>relevantPeriod</a:s>
+                                    </a:s>
+                                 </a:s>
+                                 <a:s> )</a:s>
+                              </a:s>
+                           </a:s>
+                        </a:s>
+                        <a:s>
+        and </a:s>
+                        <a:s r="89">
+                           <a:s r="87">
+                              <a:s>Coalesce(</a:s>
+                              <a:s r="84">
+                                 <a:s>start of </a:s>
+                                 <a:s r="83">
+                                    <a:s r="78">
+                                       <a:s>Global</a:s>
+                                    </a:s>
+                                    <a:s>.</a:s>
+                                    <a:s r="83">
+                                       <a:s>&quot;NormalizeInterval&quot;(</a:s>
+                                       <a:s r="80">
+                                          <a:s r="79">
+                                             <a:s>MedicationTreatment</a:s>
+                                          </a:s>
+                                          <a:s>.</a:s>
+                                          <a:s r="80">
+                                             <a:s>relevantDatetime</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>, </a:s>
+                                       <a:s r="82">
+                                          <a:s r="81">
+                                             <a:s>MedicationTreatment</a:s>
+                                          </a:s>
+                                          <a:s>.</a:s>
+                                          <a:s r="82">
+                                             <a:s>relevantPeriod</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>)</a:s>
+                                    </a:s>
+                                 </a:s>
+                              </a:s>
+                              <a:s>, </a:s>
+                              <a:s r="86">
+                                 <a:s r="85">
+                                    <a:s>MedicationTreatment</a:s>
+                                 </a:s>
+                                 <a:s>.</a:s>
+                                 <a:s r="86">
+                                    <a:s>authorDatetime</a:s>
+                                 </a:s>
+                              </a:s>
+                              <a:s>)</a:s>
+                           </a:s>
+                           <a:s r="89"> during day of </a:s>
+                           <a:s r="88">
+                              <a:s>&quot;Measurement Period&quot;</a:s>
+                           </a:s>
+                        </a:s>
+                     </a:s>
+                  </a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="92" locator="43:3-47:202" xsi:type="Query">
+            <source localId="58" locator="43:3-44:99" alias="MedicationTreatment">
+               <expression localId="57" locator="43:3-44:79" xsi:type="Union">
+                  <operand xsi:type="As">
+                     <operand localId="55" locator="43:5-43:72" xmlns:ns9="urn:healthit-gov:qdm:v5_6" dataType="ns9:MedicationActive" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                        <codes locator="43:28-43:71" name="Medications for Opioid Use Disorder (MOUD)" preserve="true" xsi:type="ValueSetRef"/>
+                     </operand>
+                     <asTypeSpecifier xsi:type="ListTypeSpecifier">
+                        <elementType xsi:type="ChoiceTypeSpecifier">
+                           <choice xmlns:ns10="urn:healthit-gov:qdm:v5_6" name="ns10:PositiveMedicationOrder" xsi:type="NamedTypeSpecifier"/>
+                           <choice xmlns:ns11="urn:healthit-gov:qdm:v5_6" name="ns11:MedicationActive" xsi:type="NamedTypeSpecifier"/>
+                        </elementType>
+                     </asTypeSpecifier>
+                  </operand>
+                  <operand xsi:type="As">
+                     <operand localId="56" locator="44:11-44:77" xmlns:ns12="urn:healthit-gov:qdm:v5_6" dataType="ns12:PositiveMedicationOrder" templateId="PositiveMedicationOrder" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                        <codes locator="44:33-44:76" name="Medications for Opioid Use Disorder (MOUD)" preserve="true" xsi:type="ValueSetRef"/>
+                     </operand>
+                     <asTypeSpecifier xsi:type="ListTypeSpecifier">
+                        <elementType xsi:type="ChoiceTypeSpecifier">
+                           <choice xmlns:ns13="urn:healthit-gov:qdm:v5_6" name="ns13:PositiveMedicationOrder" xsi:type="NamedTypeSpecifier"/>
+                           <choice xmlns:ns14="urn:healthit-gov:qdm:v5_6" name="ns14:MedicationActive" xsi:type="NamedTypeSpecifier"/>
+                        </elementType>
+                     </asTypeSpecifier>
+                  </operand>
+               </expression>
+            </source>
+            <relationship localId="91" locator="45:5-47:202" alias="MAT" xsi:type="With">
+               <expression localId="59" locator="45:10-45:82" xmlns:ns15="urn:healthit-gov:qdm:v5_6" dataType="ns15:PositiveInterventionPerformed" templateId="PositiveInterventionPerformed" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                  <codes locator="45:38-45:81" name="Opioid Medication Assisted Treatment (MAT)" preserve="true" xsi:type="ValueSetRef"/>
+               </expression>
+               <suchThat localId="90" locator="46:17-47:202" xsi:type="And">
+                  <operand localId="77" locator="46:17-46:257" precision="Day" xsi:type="In">
+                     <operand localId="70" locator="46:17-46:171" xsi:type="Coalesce">
+                        <operand localId="67" locator="46:26-46:134" xsi:type="Start">
+                           <operand localId="66" locator="46:35-46:134" name="NormalizeInterval" libraryName="Global" xsi:type="FunctionRef">
+                              <operand localId="63" locator="46:62-46:97" path="relevantDatetime" scope="MedicationTreatment" xsi:type="Property"/>
+                              <operand localId="65" locator="46:100-46:133" path="relevantPeriod" scope="MedicationTreatment" xsi:type="Property"/>
+                           </operand>
+                        </operand>
+                        <operand localId="69" locator="46:137-46:170" path="authorDatetime" scope="MedicationTreatment" xsi:type="Property"/>
+                     </operand>
+                     <operand localId="76" locator="46:187-46:257" name="NormalizeInterval" libraryName="Global" xsi:type="FunctionRef">
+                        <operand localId="73" locator="46:216-46:235" path="relevantDatetime" scope="MAT" xsi:type="Property"/>
+                        <operand localId="75" locator="46:238-46:255" path="relevantPeriod" scope="MAT" xsi:type="Property"/>
+                     </operand>
+                  </operand>
+                  <operand localId="89" locator="47:13-47:202" precision="Day" xsi:type="In">
+                     <operand localId="87" locator="47:13-47:167" xsi:type="Coalesce">
+                        <operand localId="84" locator="47:22-47:130" xsi:type="Start">
+                           <operand localId="83" locator="47:31-47:130" name="NormalizeInterval" libraryName="Global" xsi:type="FunctionRef">
+                              <operand localId="80" locator="47:58-47:93" path="relevantDatetime" scope="MedicationTreatment" xsi:type="Property"/>
+                              <operand localId="82" locator="47:96-47:129" path="relevantPeriod" scope="MedicationTreatment" xsi:type="Property"/>
+                           </operand>
+                        </operand>
+                        <operand localId="86" locator="47:133-47:166" path="authorDatetime" scope="MedicationTreatment" xsi:type="Property"/>
+                     </operand>
+                     <operand localId="88" locator="47:183-47:202" name="Measurement Period" xsi:type="ParameterRef"/>
+                  </operand>
+               </suchThat>
+            </relationship>
+         </expression>
+      </def>
+      <def localId="95" locator="49:1-50:51" name="SDE Ethnicity" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="95">
+               <a:s>define &quot;SDE Ethnicity&quot;:
+  </a:s>
+               <a:s r="94">
+                  <a:s>[&quot;Patient Characteristic Ethnicity&quot;: </a:s>
+                  <a:s>
+                     <a:s>&quot;Ethnicity&quot;</a:s>
+                  </a:s>
+                  <a:s>]</a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="94" locator="50:3-50:51" xmlns:ns16="urn:healthit-gov:qdm:v5_6" dataType="ns16:PatientCharacteristicEthnicity" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+            <codes locator="50:40-50:50" name="Ethnicity" preserve="true" xsi:type="ValueSetRef"/>
+         </expression>
+      </def>
+      <def localId="97" locator="52:1-53:41" name="SDE Race" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="97">
+               <a:s>define &quot;SDE Race&quot;:
+  </a:s>
+               <a:s r="96">
+                  <a:s>[&quot;Patient Characteristic Race&quot;: </a:s>
+                  <a:s>
+                     <a:s>&quot;Race&quot;</a:s>
+                  </a:s>
+                  <a:s>]</a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="96" locator="53:3-53:41" xmlns:ns17="urn:healthit-gov:qdm:v5_6" dataType="ns17:PatientCharacteristicRace" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+            <codes locator="53:35-53:40" name="Race" preserve="true" xsi:type="ValueSetRef"/>
+         </expression>
+      </def>
+      <def localId="99" locator="55:1-56:58" name="SDE Sex" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="99">
+               <a:s>define &quot;SDE Sex&quot;:
+  </a:s>
+               <a:s r="98">
+                  <a:s>[&quot;Patient Characteristic Sex&quot;: </a:s>
+                  <a:s>
+                     <a:s>&quot;ONC Administrative Sex&quot;</a:s>
+                  </a:s>
+                  <a:s>]</a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="98" locator="56:3-56:58" xmlns:ns18="urn:healthit-gov:qdm:v5_6" dataType="ns18:PatientCharacteristicSex" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+            <codes locator="56:34-56:57" name="ONC Administrative Sex" preserve="true" xsi:type="ValueSetRef"/>
+         </expression>
+      </def>
+      <def localId="101" locator="58:1-59:48" name="SDE Payer" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="101">
+               <a:s>define &quot;SDE Payer&quot;:
+  </a:s>
+               <a:s r="100">
+                  <a:s>[&quot;Patient Characteristic Payer&quot;: </a:s>
+                  <a:s>
+                     <a:s>&quot;Payer Type&quot;</a:s>
+                  </a:s>
+                  <a:s>]</a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="100" locator="59:3-59:48" xmlns:ns19="urn:healthit-gov:qdm:v5_6" dataType="ns19:PatientCharacteristicPayer" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+            <codes locator="59:36-59:47" name="Payer Type" preserve="true" xsi:type="ValueSetRef"/>
+         </expression>
+      </def>
+      <def localId="202" locator="61:1-87:7" name="Denominator Exclusion" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="202">
+               <a:s>define &quot;Denominator Exclusion&quot;:
+  /*Excludes encounters of patients with cancer pain or who are receiving palliative or hospice care at the time of the encounter or who are receiving medication for opioid use disorder, have sickle cell disease, or who are discharged to another inpatient care facility or discharged against medical advice, or expire during the inpatient stay*/
+  
+  </a:s>
+               <a:s r="201">
+                  <a:s>
+                     <a:s r="103">
+                        <a:s r="102">
+                           <a:s>
+                              <a:s>&quot;Inpatient Encounters with an Opioid or Benzodiazepine at Discharge&quot;</a:s>
+                           </a:s>
+                        </a:s>
+                        <a:s> InpatientEncounter</a:s>
+                     </a:s>
+                  </a:s>
+                  <a:s>
+    </a:s>
+                  <a:s r="200">
+                     <a:s>where </a:s>
+                     <a:s r="200">
+                        <a:s r="180">
+                           <a:s r="161">
+                              <a:s r="143">
+                                 <a:s r="131">
+                                    <a:s r="122">
+                                       <a:s r="112">
+                                          <a:s>exists </a:s>
+                                          <a:s r="111">
+                                             <a:s>( </a:s>
+                                             <a:s r="111">
+                                                <a:s>
+                                                   <a:s r="105">
+                                                      <a:s r="104">
+                                                         <a:s r="104">
+                                                            <a:s>[&quot;Diagnosis&quot;: </a:s>
+                                                            <a:s>
+                                                               <a:s>&quot;Cancer Related Pain&quot;</a:s>
+                                                            </a:s>
+                                                            <a:s>]</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s> Cancer</a:s>
+                                                   </a:s>
+                                                </a:s>
+                                                <a:s>
+        </a:s>
+                                                <a:s r="110">
+                                                   <a:s>where </a:s>
+                                                   <a:s r="110">
+                                                      <a:s r="107">
+                                                         <a:s r="106">
+                                                            <a:s>Cancer</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="107">
+                                                            <a:s>prevalencePeriod</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s r="110"> overlaps day of </a:s>
+                                                      <a:s r="109">
+                                                         <a:s r="108">
+                                                            <a:s>InpatientEncounter</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="109">
+                                                            <a:s>relevantPeriod</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s>
+    )</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>
+      or </a:s>
+                                       <a:s r="121">
+                                          <a:s>exists </a:s>
+                                          <a:s r="120">
+                                             <a:s>( </a:s>
+                                             <a:s r="120">
+                                                <a:s>
+                                                   <a:s r="114">
+                                                      <a:s r="113">
+                                                         <a:s r="113">
+                                                            <a:s>[&quot;Diagnosis&quot;: </a:s>
+                                                            <a:s>
+                                                               <a:s>&quot;Sickle Cell Disease with and without Crisis&quot;</a:s>
+                                                            </a:s>
+                                                            <a:s>]</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s> SickleCellDisease</a:s>
+                                                   </a:s>
+                                                </a:s>
+                                                <a:s>
+          </a:s>
+                                                <a:s r="119">
+                                                   <a:s>where </a:s>
+                                                   <a:s r="119">
+                                                      <a:s r="116">
+                                                         <a:s r="115">
+                                                            <a:s>SickleCellDisease</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="116">
+                                                            <a:s>prevalencePeriod</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s r="119"> overlaps </a:s>
+                                                      <a:s r="118">
+                                                         <a:s r="117">
+                                                            <a:s>InpatientEncounter</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="118">
+                                                            <a:s>relevantPeriod</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s>
+      )</a:s>
+                                          </a:s>
+                                       </a:s>
+                                    </a:s>
+                                    <a:s>
+      or </a:s>
+                                    <a:s r="130">
+                                       <a:s>exists </a:s>
+                                       <a:s r="129">
+                                          <a:s>( </a:s>
+                                          <a:s r="129">
+                                             <a:s>
+                                                <a:s r="124">
+                                                   <a:s r="123">
+                                                      <a:s>
+                                                         <a:s>InpatientEncounter.diagnoses</a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                   <a:s> Diagnosis</a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s>
+          </a:s>
+                                             <a:s r="128">
+                                                <a:s>where </a:s>
+                                                <a:s r="128">
+                                                   <a:s r="126">
+                                                      <a:s r="125">
+                                                         <a:s>Diagnosis</a:s>
+                                                      </a:s>
+                                                      <a:s>.</a:s>
+                                                      <a:s r="126">
+                                                         <a:s>code</a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                   <a:s> in </a:s>
+                                                   <a:s r="127">
+                                                      <a:s>&quot;Cancer Related Pain&quot;</a:s>
+                                                   </a:s>
+                                                </a:s>
+                                             </a:s>
+                                          </a:s>
+                                          <a:s>
+      )</a:s>
+                                       </a:s>
+                                    </a:s>
+                                 </a:s>
+                                 <a:s>
+      or </a:s>
+                                 <a:s r="142">
+                                    <a:s>exists </a:s>
+                                    <a:s r="141">
+                                       <a:s>( </a:s>
+                                       <a:s r="141">
+                                          <a:s>
+                                             <a:s r="133">
+                                                <a:s r="132">
+                                                   <a:s r="132">
+                                                      <a:s>[&quot;Diagnosis&quot;: </a:s>
+                                                      <a:s>
+                                                         <a:s>&quot;Opioid Use Disorder&quot;</a:s>
+                                                      </a:s>
+                                                      <a:s>]</a:s>
+                                                   </a:s>
+                                                </a:s>
+                                                <a:s> OUD</a:s>
+                                             </a:s>
+                                          </a:s>
+                                          <a:s>
+          </a:s>
+                                          <a:s r="140">
+                                             <a:s>where </a:s>
+                                             <a:s r="140">
+                                                <a:s r="136">
+                                                   <a:s>start of </a:s>
+                                                   <a:s r="135">
+                                                      <a:s r="134">
+                                                         <a:s>OUD</a:s>
+                                                      </a:s>
+                                                      <a:s>.</a:s>
+                                                      <a:s r="135">
+                                                         <a:s>prevalencePeriod</a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                </a:s>
+                                                <a:s r="140"> before day of </a:s>
+                                                <a:s r="139">
+                                                   <a:s>end of </a:s>
+                                                   <a:s r="138">
+                                                      <a:s r="137">
+                                                         <a:s>InpatientEncounter</a:s>
+                                                      </a:s>
+                                                      <a:s>.</a:s>
+                                                      <a:s r="138">
+                                                         <a:s>relevantPeriod</a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                </a:s>
+                                             </a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>
+      )</a:s>
+                                    </a:s>
+                                 </a:s>
+                              </a:s>
+                              <a:s>
+      or </a:s>
+                              <a:s r="160">
+                                 <a:s>exists </a:s>
+                                 <a:s r="159">
+                                    <a:s>( </a:s>
+                                    <a:s r="159">
+                                       <a:s>
+                                          <a:s r="145">
+                                             <a:s r="144">
+                                                <a:s>
+                                                   <a:s>&quot;Treatment for Opioid Use Disorders&quot;</a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s> OUDTreatment</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>
+          </a:s>
+                                       <a:s r="158">
+                                          <a:s>where </a:s>
+                                          <a:s r="158">
+                                             <a:s r="155">
+                                                <a:s>Coalesce(</a:s>
+                                                <a:s r="152">
+                                                   <a:s>start of </a:s>
+                                                   <a:s r="151">
+                                                      <a:s r="146">
+                                                         <a:s>Global</a:s>
+                                                      </a:s>
+                                                      <a:s>.</a:s>
+                                                      <a:s r="151">
+                                                         <a:s>&quot;NormalizeInterval&quot;(</a:s>
+                                                         <a:s r="148">
+                                                            <a:s r="147">
+                                                               <a:s>OUDTreatment</a:s>
+                                                            </a:s>
+                                                            <a:s>.</a:s>
+                                                            <a:s r="148">
+                                                               <a:s>relevantDatetime</a:s>
+                                                            </a:s>
+                                                         </a:s>
+                                                         <a:s>, </a:s>
+                                                         <a:s r="150">
+                                                            <a:s r="149">
+                                                               <a:s>OUDTreatment</a:s>
+                                                            </a:s>
+                                                            <a:s>.</a:s>
+                                                            <a:s r="150">
+                                                               <a:s>relevantPeriod</a:s>
+                                                            </a:s>
+                                                         </a:s>
+                                                         <a:s>)</a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                </a:s>
+                                                <a:s>, </a:s>
+                                                <a:s r="154">
+                                                   <a:s r="153">
+                                                      <a:s>OUDTreatment</a:s>
+                                                   </a:s>
+                                                   <a:s>.</a:s>
+                                                   <a:s r="154">
+                                                      <a:s>authorDatetime</a:s>
+                                                   </a:s>
+                                                </a:s>
+                                                <a:s>)</a:s>
+                                             </a:s>
+                                             <a:s r="158"> during day of </a:s>
+                                             <a:s r="157">
+                                                <a:s r="156">
+                                                   <a:s>InpatientEncounter</a:s>
+                                                </a:s>
+                                                <a:s>.</a:s>
+                                                <a:s r="157">
+                                                   <a:s>relevantPeriod</a:s>
+                                                </a:s>
+                                             </a:s>
+                                          </a:s>
+                                       </a:s>
+                                    </a:s>
+                                    <a:s>
+      )</a:s>
+                                 </a:s>
+                              </a:s>
+                           </a:s>
+                           <a:s>
+      or </a:s>
+                           <a:s r="179">
+                              <a:s>exists </a:s>
+                              <a:s r="178">
+                                 <a:s>( </a:s>
+                                 <a:s r="178">
+                                    <a:s>
+                                       <a:s r="163">
+                                          <a:s r="162">
+                                             <a:s>
+                                                <a:s>&quot;Intervention Palliative or Hospice Care&quot;</a:s>
+                                             </a:s>
+                                          </a:s>
+                                          <a:s> PalliativeOrHospiceCare</a:s>
+                                       </a:s>
+                                    </a:s>
+                                    <a:s>
+          </a:s>
+                                    <a:s r="177">
+                                       <a:s>where </a:s>
+                                       <a:s r="177">
+                                          <a:s r="173">
+                                             <a:s>Coalesce(</a:s>
+                                             <a:s r="170">
+                                                <a:s>start of </a:s>
+                                                <a:s r="169">
+                                                   <a:s r="164">
+                                                      <a:s>Global</a:s>
+                                                   </a:s>
+                                                   <a:s>.</a:s>
+                                                   <a:s r="169">
+                                                      <a:s>&quot;NormalizeInterval&quot;(</a:s>
+                                                      <a:s r="166">
+                                                         <a:s r="165">
+                                                            <a:s>PalliativeOrHospiceCare</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="166">
+                                                            <a:s>relevantDatetime</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s>, </a:s>
+                                                      <a:s r="168">
+                                                         <a:s r="167">
+                                                            <a:s>PalliativeOrHospiceCare</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="168">
+                                                            <a:s>relevantPeriod</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s>)</a:s>
+                                                   </a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s>, </a:s>
+                                             <a:s r="172">
+                                                <a:s r="171">
+                                                   <a:s>PalliativeOrHospiceCare</a:s>
+                                                </a:s>
+                                                <a:s>.</a:s>
+                                                <a:s r="172">
+                                                   <a:s>authorDatetime</a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s>)</a:s>
+                                          </a:s>
+                                          <a:s r="177"> during </a:s>
+                                          <a:s r="176">
+                                             <a:s r="174">
+                                                <a:s>Global</a:s>
+                                             </a:s>
+                                             <a:s>.</a:s>
+                                             <a:s r="176">
+                                                <a:s>&quot;HospitalizationWithObservation&quot; ( </a:s>
+                                                <a:s r="175">
+                                                   <a:s>InpatientEncounter</a:s>
+                                                </a:s>
+                                                <a:s> )</a:s>
+                                             </a:s>
+                                          </a:s>
+                                       </a:s>
+                                    </a:s>
+                                 </a:s>
+                                 <a:s>
+      )</a:s>
+                              </a:s>
+                           </a:s>
+                        </a:s>
+                        <a:s>
+      or </a:s>
+                        <a:s r="199">
+                           <a:s>( </a:s>
+                           <a:s r="199">
+                              <a:s r="194">
+                                 <a:s r="189">
+                                    <a:s r="184">
+                                       <a:s r="182">
+                                          <a:s r="181">
+                                             <a:s>InpatientEncounter</a:s>
+                                          </a:s>
+                                          <a:s>.</a:s>
+                                          <a:s r="182">
+                                             <a:s>dischargeDisposition</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s> in </a:s>
+                                       <a:s r="183">
+                                          <a:s>&quot;Discharge To Acute Care Facility&quot;</a:s>
+                                       </a:s>
+                                    </a:s>
+                                    <a:s>
+          or </a:s>
+                                    <a:s r="188">
+                                       <a:s r="186">
+                                          <a:s r="185">
+                                             <a:s>InpatientEncounter</a:s>
+                                          </a:s>
+                                          <a:s>.</a:s>
+                                          <a:s r="186">
+                                             <a:s>dischargeDisposition</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s> in </a:s>
+                                       <a:s r="187">
+                                          <a:s>&quot;Hospice Care Referral or Admission&quot;</a:s>
+                                       </a:s>
+                                    </a:s>
+                                 </a:s>
+                                 <a:s>
+          or </a:s>
+                                 <a:s r="193">
+                                    <a:s r="191">
+                                       <a:s r="190">
+                                          <a:s>InpatientEncounter</a:s>
+                                       </a:s>
+                                       <a:s>.</a:s>
+                                       <a:s r="191">
+                                          <a:s>dischargeDisposition</a:s>
+                                       </a:s>
+                                    </a:s>
+                                    <a:s> in </a:s>
+                                    <a:s r="192">
+                                       <a:s>&quot;Patient Expired&quot;</a:s>
+                                    </a:s>
+                                 </a:s>
+                              </a:s>
+                              <a:s>
+          or </a:s>
+                              <a:s r="198">
+                                 <a:s r="196">
+                                    <a:s r="195">
+                                       <a:s>InpatientEncounter</a:s>
+                                    </a:s>
+                                    <a:s>.</a:s>
+                                    <a:s r="196">
+                                       <a:s>dischargeDisposition</a:s>
+                                    </a:s>
+                                 </a:s>
+                                 <a:s> in </a:s>
+                                 <a:s r="197">
+                                    <a:s>&quot;Left Against Medical Advice&quot;</a:s>
+                                 </a:s>
+                              </a:s>
+                           </a:s>
+                           <a:s>
+      )</a:s>
+                        </a:s>
+                     </a:s>
+                  </a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="201" locator="64:3-87:7" xsi:type="Query">
+            <source localId="103" locator="64:3-64:89" alias="InpatientEncounter">
+               <expression localId="102" locator="64:3-64:70" name="Inpatient Encounters with an Opioid or Benzodiazepine at Discharge" xsi:type="ExpressionRef"/>
+            </source>
+            <where localId="200" locator="65:5-87:7" xsi:type="Or">
+               <operand localId="180" locator="65:11-82:7" xsi:type="Or">
+                  <operand localId="161" locator="65:11-79:7" xsi:type="Or">
+                     <operand localId="143" locator="65:11-76:7" xsi:type="Or">
+                        <operand localId="131" locator="65:11-73:7" xsi:type="Or">
+                           <operand localId="122" locator="65:11-70:7" xsi:type="Or">
+                              <operand localId="112" locator="65:11-67:5" xsi:type="Exists">
+                                 <operand localId="111" locator="65:18-67:5" xsi:type="Query">
+                                    <source localId="105" locator="65:20-65:62" alias="Cancer">
+                                       <expression localId="104" locator="65:20-65:55" xmlns:ns20="urn:healthit-gov:qdm:v5_6" dataType="ns20:Diagnosis" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                                          <codes locator="65:34-65:54" name="Cancer Related Pain" preserve="true" xsi:type="ValueSetRef"/>
+                                       </expression>
+                                    </source>
+                                    <where localId="110" locator="66:9-66:87" precision="Day" xsi:type="Overlaps">
+                                       <operand localId="107" locator="66:15-66:37" path="prevalencePeriod" scope="Cancer" xsi:type="Property"/>
+                                       <operand localId="109" locator="66:55-66:87" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+                                    </where>
+                                 </operand>
+                              </operand>
+                              <operand localId="121" locator="68:10-70:7" xsi:type="Exists">
+                                 <operand localId="120" locator="68:17-70:7" xsi:type="Query">
+                                    <source localId="114" locator="68:19-68:96" alias="SickleCellDisease">
+                                       <expression localId="113" locator="68:19-68:78" xmlns:ns21="urn:healthit-gov:qdm:v5_6" dataType="ns21:Diagnosis" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                                          <codes locator="68:33-68:77" name="Sickle Cell Disease with and without Crisis" preserve="true" xsi:type="ValueSetRef"/>
+                                       </expression>
+                                    </source>
+                                    <where localId="119" locator="69:11-69:93" xsi:type="Overlaps">
+                                       <operand localId="116" locator="69:17-69:50" path="prevalencePeriod" scope="SickleCellDisease" xsi:type="Property"/>
+                                       <operand localId="118" locator="69:61-69:93" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+                                    </where>
+                                 </operand>
+                              </operand>
+                           </operand>
+                           <operand localId="130" locator="71:10-73:7" xsi:type="Exists">
+                              <operand localId="129" locator="71:17-73:7" xsi:type="Query">
+                                 <source localId="124" locator="71:19-71:56" alias="Diagnosis">
+                                    <expression localId="123" locator="71:19-71:46" path="diagnoses" scope="InpatientEncounter" xsi:type="Property"/>
+                                 </source>
+                                 <where localId="128" locator="72:11-72:55" xsi:type="InValueSet">
+                                    <code localId="126" locator="72:17-72:30" path="code" scope="Diagnosis" xsi:type="Property"/>
+                                    <valueset localId="127" locator="72:35-72:55" name="Cancer Related Pain" preserve="true"/>
+                                 </where>
+                              </operand>
+                           </operand>
+                        </operand>
+                        <operand localId="142" locator="74:10-76:7" xsi:type="Exists">
+                           <operand localId="141" locator="74:17-76:7" xsi:type="Query">
+                              <source localId="133" locator="74:19-74:58" alias="OUD">
+                                 <expression localId="132" locator="74:19-74:54" xmlns:ns22="urn:healthit-gov:qdm:v5_6" dataType="ns22:Diagnosis" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                                    <codes locator="74:33-74:53" name="Opioid Use Disorder" preserve="true" xsi:type="ValueSetRef"/>
+                                 </expression>
+                              </source>
+                              <where localId="140" locator="75:11-75:100" precision="Day" xsi:type="Before">
+                                 <operand localId="136" locator="75:17-75:45" xsi:type="Start">
+                                    <operand localId="135" locator="75:26-75:45" path="prevalencePeriod" scope="OUD" xsi:type="Property"/>
+                                 </operand>
+                                 <operand localId="139" locator="75:61-75:100" xsi:type="End">
+                                    <operand localId="138" locator="75:68-75:100" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+                                 </operand>
+                              </where>
+                           </operand>
+                        </operand>
+                     </operand>
+                     <operand localId="160" locator="77:10-79:7" xsi:type="Exists">
+                        <operand localId="159" locator="77:17-79:7" xsi:type="Query">
+                           <source localId="145" locator="77:19-77:67" alias="OUDTreatment">
+                              <expression localId="144" locator="77:19-77:54" name="Treatment for Opioid Use Disorders" xsi:type="ExpressionRef"/>
+                           </source>
+                           <where localId="158" locator="78:11-78:198" precision="Day" xsi:type="In">
+                              <operand localId="155" locator="78:17-78:150" xsi:type="Coalesce">
+                                 <operand localId="152" locator="78:26-78:120" xsi:type="Start">
+                                    <operand localId="151" locator="78:35-78:120" name="NormalizeInterval" libraryName="Global" xsi:type="FunctionRef">
+                                       <operand localId="148" locator="78:62-78:90" path="relevantDatetime" scope="OUDTreatment" xsi:type="Property"/>
+                                       <operand localId="150" locator="78:93-78:119" path="relevantPeriod" scope="OUDTreatment" xsi:type="Property"/>
+                                    </operand>
+                                 </operand>
+                                 <operand localId="154" locator="78:123-78:149" path="authorDatetime" scope="OUDTreatment" xsi:type="Property"/>
+                              </operand>
+                              <operand localId="157" locator="78:166-78:198" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+                           </where>
+                        </operand>
+                     </operand>
+                  </operand>
+                  <operand localId="179" locator="80:10-82:7" xsi:type="Exists">
+                     <operand localId="178" locator="80:17-82:7" xsi:type="Query">
+                        <source localId="163" locator="80:19-80:83" alias="PalliativeOrHospiceCare">
+                           <expression localId="162" locator="80:19-80:59" name="Intervention Palliative or Hospice Care" xsi:type="ExpressionRef"/>
+                        </source>
+                        <where localId="177" locator="81:11-81:253" xsi:type="In">
+                           <operand localId="173" locator="81:17-81:183" xsi:type="Coalesce">
+                              <operand localId="170" locator="81:26-81:142" xsi:type="Start">
+                                 <operand localId="169" locator="81:35-81:142" name="NormalizeInterval" libraryName="Global" xsi:type="FunctionRef">
+                                    <operand localId="166" locator="81:62-81:101" path="relevantDatetime" scope="PalliativeOrHospiceCare" xsi:type="Property"/>
+                                    <operand localId="168" locator="81:104-81:141" path="relevantPeriod" scope="PalliativeOrHospiceCare" xsi:type="Property"/>
+                                 </operand>
+                              </operand>
+                              <operand localId="172" locator="81:145-81:182" path="authorDatetime" scope="PalliativeOrHospiceCare" xsi:type="Property"/>
+                           </operand>
+                           <operand localId="176" locator="81:192-81:253" name="HospitalizationWithObservation" libraryName="Global" xsi:type="FunctionRef">
+                              <operand localId="175" locator="81:234-81:251" name="InpatientEncounter" xsi:type="AliasRef"/>
+                           </operand>
+                        </where>
+                     </operand>
+                  </operand>
+               </operand>
+               <operand localId="199" locator="83:10-87:7" xsi:type="Or">
+                  <operand localId="194" locator="83:12-85:73" xsi:type="Or">
+                     <operand localId="189" locator="83:12-84:92" xsi:type="Or">
+                        <operand localId="184" locator="83:12-83:88" xsi:type="InValueSet">
+                           <code localId="182" locator="83:12-83:50" path="dischargeDisposition" scope="InpatientEncounter" xsi:type="Property"/>
+                           <valueset localId="183" locator="83:55-83:88" name="Discharge To Acute Care Facility" preserve="true"/>
+                        </operand>
+                        <operand localId="188" locator="84:14-84:92" xsi:type="InValueSet">
+                           <code localId="186" locator="84:14-84:52" path="dischargeDisposition" scope="InpatientEncounter" xsi:type="Property"/>
+                           <valueset localId="187" locator="84:57-84:92" name="Hospice Care Referral or Admission" preserve="true"/>
+                        </operand>
+                     </operand>
+                     <operand localId="193" locator="85:14-85:73" xsi:type="InValueSet">
+                        <code localId="191" locator="85:14-85:52" path="dischargeDisposition" scope="InpatientEncounter" xsi:type="Property"/>
+                        <valueset localId="192" locator="85:57-85:73" name="Patient Expired" preserve="true"/>
+                     </operand>
+                  </operand>
+                  <operand localId="198" locator="86:14-86:85" xsi:type="InValueSet">
+                     <code localId="196" locator="86:14-86:52" path="dischargeDisposition" scope="InpatientEncounter" xsi:type="Property"/>
+                     <valueset localId="197" locator="86:57-86:85" name="Left Against Medical Advice" preserve="true"/>
+                  </operand>
+               </operand>
+            </where>
+         </expression>
+      </def>
+      <def localId="240" locator="97:1-112:3" name="Numerator" context="Patient" accessLevel="Public">
+         <annotation xsi:type="a:Annotation">
+            <a:s r="240">
+               <a:s>define &quot;Numerator&quot;:
+  /*Encounters of patients prescribed two or more opioids or an opioid and benzodiazepine at discharge.
+  */
+  
+  </a:s>
+               <a:s r="239">
+                  <a:s>( </a:s>
+                  <a:s r="239">
+                     <a:s>
+                        <a:s r="204">
+                           <a:s r="203">
+                              <a:s>
+                                 <a:s>&quot;Inpatient Encounters with an Opioid or Benzodiazepine at Discharge&quot;</a:s>
+                              </a:s>
+                           </a:s>
+                           <a:s> InpatientEncounter</a:s>
+                        </a:s>
+                     </a:s>
+                     <a:s>
+      </a:s>
+                     <a:s r="238">
+                        <a:s>where </a:s>
+                        <a:s r="238">
+                           <a:s r="218">
+                              <a:s>( </a:s>
+                              <a:s r="218">
+                                 <a:s r="216">
+                                    <a:s>Count(</a:s>
+                                    <a:s r="215">
+                                       <a:s>
+                                          <a:s r="206">
+                                             <a:s r="205">
+                                                <a:s r="205">
+                                                   <a:s>[&quot;Medication, Discharge&quot;: </a:s>
+                                                   <a:s>
+                                                      <a:s>&quot;Schedule II, III and IV Opioid Medications&quot;</a:s>
+                                                   </a:s>
+                                                   <a:s>]</a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s> Opioids</a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>
+            </a:s>
+                                       <a:s r="211">
+                                          <a:s>where </a:s>
+                                          <a:s r="211">
+                                             <a:s r="208">
+                                                <a:s r="207">
+                                                   <a:s>Opioids</a:s>
+                                                </a:s>
+                                                <a:s>.</a:s>
+                                                <a:s r="208">
+                                                   <a:s>authorDatetime</a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s r="211"> during day of </a:s>
+                                             <a:s r="210">
+                                                <a:s r="209">
+                                                   <a:s>InpatientEncounter</a:s>
+                                                </a:s>
+                                                <a:s>.</a:s>
+                                                <a:s r="210">
+                                                   <a:s>relevantPeriod</a:s>
+                                                </a:s>
+                                             </a:s>
+                                          </a:s>
+                                       </a:s>
+                                       <a:s>
+            </a:s>
+                                       <a:s r="214">
+                                          <a:s>return distinct </a:s>
+                                          <a:s r="213">
+                                             <a:s r="212">
+                                                <a:s>Opioids</a:s>
+                                             </a:s>
+                                             <a:s>.</a:s>
+                                             <a:s r="213">
+                                                <a:s>code</a:s>
+                                             </a:s>
+                                          </a:s>
+                                       </a:s>
+                                    </a:s>
+                                    <a:s>
+        )</a:s>
+                                 </a:s>
+                                 <a:s r="217"> >= 2</a:s>
+                              </a:s>
+                              <a:s>
+      )</a:s>
+                           </a:s>
+                           <a:s>
+        or </a:s>
+                           <a:s r="237">
+                              <a:s>exists </a:s>
+                              <a:s r="236">
+                                 <a:s>( </a:s>
+                                 <a:s r="236">
+                                    <a:s>
+                                       <a:s r="220">
+                                          <a:s r="219">
+                                             <a:s r="219">
+                                                <a:s>[&quot;Medication, Discharge&quot;: </a:s>
+                                                <a:s>
+                                                   <a:s>&quot;Schedule II, III and IV Opioid Medications&quot;</a:s>
+                                                </a:s>
+                                                <a:s>]</a:s>
+                                             </a:s>
+                                          </a:s>
+                                          <a:s> OpioidsDischarge</a:s>
+                                       </a:s>
+                                    </a:s>
+                                    <a:s>
+            </a:s>
+                                    <a:s r="235">
+                                       <a:s>where </a:s>
+                                       <a:s r="235">
+                                          <a:s r="225">
+                                             <a:s r="222">
+                                                <a:s r="221">
+                                                   <a:s>OpioidsDischarge</a:s>
+                                                </a:s>
+                                                <a:s>.</a:s>
+                                                <a:s r="222">
+                                                   <a:s>authorDatetime</a:s>
+                                                </a:s>
+                                             </a:s>
+                                             <a:s r="225"> during day of </a:s>
+                                             <a:s r="224">
+                                                <a:s r="223">
+                                                   <a:s>InpatientEncounter</a:s>
+                                                </a:s>
+                                                <a:s>.</a:s>
+                                                <a:s r="224">
+                                                   <a:s>relevantPeriod</a:s>
+                                                </a:s>
+                                             </a:s>
+                                          </a:s>
+                                          <a:s>
+              and </a:s>
+                                          <a:s r="234">
+                                             <a:s>exists </a:s>
+                                             <a:s r="233">
+                                                <a:s>
+                                                   <a:s r="227">
+                                                      <a:s r="226">
+                                                         <a:s r="226">
+                                                            <a:s>[&quot;Medication, Discharge&quot;: </a:s>
+                                                            <a:s>
+                                                               <a:s>&quot;Schedule IV Benzodiazepines&quot;</a:s>
+                                                            </a:s>
+                                                            <a:s>]</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s> BenzodiazepinesDischarge</a:s>
+                                                   </a:s>
+                                                </a:s>
+                                                <a:s>
+                </a:s>
+                                                <a:s r="232">
+                                                   <a:s>where </a:s>
+                                                   <a:s r="232">
+                                                      <a:s r="229">
+                                                         <a:s r="228">
+                                                            <a:s>BenzodiazepinesDischarge</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="229">
+                                                            <a:s>authorDatetime</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                      <a:s r="232"> during day of </a:s>
+                                                      <a:s r="231">
+                                                         <a:s r="230">
+                                                            <a:s>InpatientEncounter</a:s>
+                                                         </a:s>
+                                                         <a:s>.</a:s>
+                                                         <a:s r="231">
+                                                            <a:s>relevantPeriod</a:s>
+                                                         </a:s>
+                                                      </a:s>
+                                                   </a:s>
+                                                </a:s>
+                                             </a:s>
+                                          </a:s>
+                                       </a:s>
+                                    </a:s>
+                                 </a:s>
+                                 <a:s>
+        )</a:s>
+                              </a:s>
+                           </a:s>
+                        </a:s>
+                     </a:s>
+                  </a:s>
+                  <a:s>
+  )</a:s>
+               </a:s>
+            </a:s>
+         </annotation>
+         <expression localId="239" locator="101:3-112:3" xsi:type="Query">
+            <source localId="204" locator="101:5-101:91" alias="InpatientEncounter">
+               <expression localId="203" locator="101:5-101:72" name="Inpatient Encounters with an Opioid or Benzodiazepine at Discharge" xsi:type="ExpressionRef"/>
+            </source>
+            <where localId="238" locator="102:7-111:9" xsi:type="Or">
+               <operand localId="218" locator="102:13-106:7" xsi:type="GreaterOrEqual">
+                  <operand localId="216" locator="102:15-105:9" xsi:type="Count">
+                     <source localId="215" locator="102:21-104:40" xsi:type="Query">
+                        <source localId="206" locator="102:21-102:99" alias="Opioids">
+                           <expression localId="205" locator="102:21-102:91" xmlns:ns23="urn:healthit-gov:qdm:v5_6" dataType="ns23:PositiveMedicationDischarge" templateId="PositiveMedicationDischarge" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                              <codes locator="102:47-102:90" name="Schedule II, III and IV Opioid Medications" preserve="true" xsi:type="ValueSetRef"/>
+                           </expression>
+                        </source>
+                        <where localId="211" locator="103:13-103:88" precision="Day" xsi:type="In">
+                           <operand localId="208" locator="103:19-103:40" path="authorDatetime" scope="Opioids" xsi:type="Property"/>
+                           <operand localId="210" locator="103:56-103:88" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+                        </where>
+                        <return localId="214" locator="104:13-104:40" distinct="true">
+                           <expression localId="213" locator="104:29-104:40" path="code" scope="Opioids" xsi:type="Property"/>
+                        </return>
+                     </source>
+                  </operand>
+                  <operand localId="217" locator="105:14" valueType="t:Integer" value="2" xsi:type="Literal"/>
+               </operand>
+               <operand localId="237" locator="107:12-111:9" xsi:type="Exists">
+                  <operand localId="236" locator="107:19-111:9" xsi:type="Query">
+                     <source localId="220" locator="107:21-107:108" alias="OpioidsDischarge">
+                        <expression localId="219" locator="107:21-107:91" xmlns:ns24="urn:healthit-gov:qdm:v5_6" dataType="ns24:PositiveMedicationDischarge" templateId="PositiveMedicationDischarge" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                           <codes locator="107:47-107:90" name="Schedule II, III and IV Opioid Medications" preserve="true" xsi:type="ValueSetRef"/>
+                        </expression>
+                     </source>
+                     <where localId="235" locator="108:13-110:109" xsi:type="And">
+                        <operand localId="225" locator="108:19-108:97" precision="Day" xsi:type="In">
+                           <operand localId="222" locator="108:19-108:49" path="authorDatetime" scope="OpioidsDischarge" xsi:type="Property"/>
+                           <operand localId="224" locator="108:65-108:97" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+                        </operand>
+                        <operand localId="234" locator="109:19-110:109" xsi:type="Exists">
+                           <operand localId="233" locator="109:26-110:109" xsi:type="Query">
+                              <source localId="227" locator="109:26-109:106" alias="BenzodiazepinesDischarge">
+                                 <expression localId="226" locator="109:26-109:81" xmlns:ns25="urn:healthit-gov:qdm:v5_6" dataType="ns25:PositiveMedicationDischarge" templateId="PositiveMedicationDischarge" codeProperty="code" codeComparator="in" xsi:type="Retrieve">
+                                    <codes locator="109:52-109:80" name="Schedule IV Benzodiazepines" preserve="true" xsi:type="ValueSetRef"/>
+                                 </expression>
+                              </source>
+                              <where localId="232" locator="110:17-110:109" precision="Day" xsi:type="In">
+                                 <operand localId="229" locator="110:23-110:61" path="authorDatetime" scope="BenzodiazepinesDischarge" xsi:type="Property"/>
+                                 <operand localId="231" locator="110:77-110:109" path="relevantPeriod" scope="InpatientEncounter" xsi:type="Property"/>
+                              </where>
+                           </operand>
+                        </operand>
+                     </where>
+                  </operand>
+               </operand>
+            </where>
+         </expression>
+      </def>
+   </statements>
+</library>

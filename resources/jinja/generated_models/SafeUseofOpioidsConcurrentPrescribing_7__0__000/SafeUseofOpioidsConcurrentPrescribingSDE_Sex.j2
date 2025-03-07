@@ -1,0 +1,14 @@
+{# original CQL begins -#}
+/*
+define "SDE Sex":
+  ["Patient Characteristic Sex": "ONC Administrative Sex"]
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/SafeUseofOpioidsConcurrentPrescribing_7__0__000.j2" import SafeUseofOpioidsConcurrentPrescribingSDE_Sex %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ SafeUseofOpioidsConcurrentPrescribingSDE_Sex(environment, none) }}

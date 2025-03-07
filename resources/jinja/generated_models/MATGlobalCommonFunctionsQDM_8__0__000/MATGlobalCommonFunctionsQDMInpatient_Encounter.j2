@@ -1,0 +1,15 @@
+{# original CQL begins -#}
+/*
+define "Inpatient Encounter":
+  ["Encounter, Performed": "Encounter Inpatient"] EncounterInpatient
+    where EncounterInpatient.relevantPeriod ends during day of "Measurement Period"
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/MATGlobalCommonFunctionsQDM_8__0__000.j2" import MATGlobalCommonFunctionsQDMInpatient_Encounter %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ MATGlobalCommonFunctionsQDMInpatient_Encounter(environment, none) }}
