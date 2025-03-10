@@ -25,7 +25,7 @@
             "projectName": "cql-transpiler",
             "args": [
                 "librarySource=./resources/cql/",
-                "jinjaTarget=resources/jinja/",
+                "jinjaTarget=./resources/jinja/",
                 "targetLanguage=sparksql",
                 "printFunctions=false"
             ]
