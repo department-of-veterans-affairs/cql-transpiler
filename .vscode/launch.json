@@ -9,14 +9,26 @@
             "name": "Transpiler",
             "request": "launch",
             "mainClass": "gov.va.transpiler.jinja.Transpiler",
-            "projectName": "transpiler"
+            "projectName": "transpiler",
+            "args": [
+                "librarySource=./resources/cql/",
+                "jinjaTarget=resources/jinja/",
+                "targetLanguage=sparksql",
+                "printFunctions=false"
+            ]
         },
         {
             "type": "java",
             "name": "Transpiler",
             "request": "launch",
             "mainClass": "gov.va.transpiler.jinja.Transpiler",
-            "projectName": "cql-transpiler"
+            "projectName": "cql-transpiler",
+            "args": [
+                "librarySource=./resources/cql/",
+                "jinjaTarget=resources/jinja/",
+                "targetLanguage=sparksql",
+                "printFunctions=false"
+            ]
         }
     ]
 }

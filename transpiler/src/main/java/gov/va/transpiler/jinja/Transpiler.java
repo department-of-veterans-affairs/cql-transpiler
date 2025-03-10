@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.hl7.elm.r1.Library;
 
@@ -20,13 +22,15 @@ import gov.va.transpiler.jinja.state.State;
 public class Transpiler {
 
     public static void main(String[] args) throws IOException {
-        var librarySource = "./resources/cql/";
+        Map<String, String> arguments = parseArguments(args);
+        var librarySource = arguments.get("librarySource");
+        var jinjaTarget = arguments.get("jinjaTarget");
+        var targetLanguage = arguments.getOrDefault("targetLanguage", "sparksql");
+        var printFunctions = Boolean.parseBoolean(arguments.getOrDefault("printFunctions", "false"));
+        
         var fileLibrarySourceProvider = new FileLibrarySourceProvider(librarySource);
-        var jinjaTarget = "resources/jinja/";
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
-        var target = "sparksql";
-        var printFunctions = false;
-        Standards.setTargetLanguage(target);
+        Standards.setTargetLanguage(targetLanguage);
 
         // read the contents of the file to text
         String[] cqlLibrariesToTranspile = {"CMS104-v12-0-000-QDM-5-6.cql", "CMS506v7/CMS506-v7-0-000-QDM-5-6.cql"};
@@ -56,5 +60,16 @@ public class Transpiler {
                 var modelFilePrinter = new ModelFilePrinter();
                 modelFilePrinter.printModels(state.getModelTracking(), jinjaTarget, cqlFileContentRetriever, printFunctions);
         }
+    }
+
+    private static Map<String, String> parseArguments(String[] args) {
+        Map<String, String> arguments = new HashMap<>();
+        for (String arg : args) {
+            String[] keyValue = arg.split("=");
+            if (keyValue.length == 2) {
+                arguments.put(keyValue[0], keyValue[1]);
+            }
+        }
+        return arguments;
     }
 }
