@@ -1,0 +1,15 @@
+{# original CQL begins -#}
+/*
+define "Encounter with Principal Diagnosis and Age":
+  "All Stroke Encounter" AllStrokeEncounter
+    where AgeInYearsAt(date from start of AllStrokeEncounter.relevantPeriod)>= 18
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/TJCOverall_7__1__000.j2" import TJCOverallEncounter_with_Principal_Diagnosis_and_Age %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ TJCOverallEncounter_with_Principal_Diagnosis_and_Age(environment, none) }}

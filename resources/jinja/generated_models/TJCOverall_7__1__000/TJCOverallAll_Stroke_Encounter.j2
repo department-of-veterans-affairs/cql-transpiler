@@ -1,0 +1,20 @@
+{# original CQL begins -#}
+/*
+define "All Stroke Encounter":
+  "Non Elective Inpatient Encounter" NonElectiveEncounter
+    where exists ( NonElectiveEncounter.diagnoses Diagnosis
+        where Diagnosis.rank = 1
+          and ( Diagnosis.code in "Hemorrhagic Stroke"
+              or Diagnosis.code in "Ischemic Stroke"
+          )
+    )
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/TJCOverall_7__1__000.j2" import TJCOverallAll_Stroke_Encounter %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ TJCOverallAll_Stroke_Encounter(environment, none) }}

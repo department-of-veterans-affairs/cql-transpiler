@@ -15,9 +15,8 @@
             "type": "java",
             "name": "Transpiler",
             "request": "launch",
-            "mainClass": "gov.va.transpiler.sparksql.Transpiler",
-            "projectName": "transpiler",
-            "args": "transpiler/src/test/resources/cql/cq_core transpiler/src/test/resources/cql/cq_core/demo-measure.cql"
+            "mainClass": "gov.va.transpiler.jinja.Transpiler",
+            "projectName": "cql-transpiler"
         }
     ]
 }

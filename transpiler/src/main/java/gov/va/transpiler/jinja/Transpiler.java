@@ -1,42 +1,41 @@
 package gov.va.transpiler.jinja;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.hl7.elm.r1.Library;
 
-import gov.va.sparkcql.cqf.compiler.CqfCompiler;
-import gov.va.sparkcql.cqf.compiler.FileLibrarySourceProvider;
+import gov.va.compiler.CqfCompiler;
+import gov.va.compiler.FileLibrarySourceProvider;
 import gov.va.transpiler.jinja.converter.Converter;
 import gov.va.transpiler.jinja.node.TranspilerNode;
 import gov.va.transpiler.jinja.printing.CQLFileContentRetriever;
+import gov.va.transpiler.jinja.printing.ModelFilePrinter;
 import gov.va.transpiler.jinja.printing.SegmentPrinter;
+import gov.va.transpiler.jinja.standards.Standards;
 import gov.va.transpiler.jinja.state.State;
 
 public class Transpiler {
 
     public static void main(String[] args) throws IOException {
-        String cql = ""
-        + "library Retrievals version '1.0'\n"
-        + "using QDM version '5.6'\n"
-        + "include MATGlobalCommonFunctions version '7.0.000' called Global\n"
-        + "valueset \"Nonelective Inpatient Encounter\": 'urn:oid:2.16.840.1.113883.3.117.1.7.1.424'\n"
-        + "parameter \"Measurement Period\" Interval<DateTime>\n"
-        + "define \"Non Elective Inpatient Encounter\":\n"
-        + "  [\"Encounter, Performed\": \"Nonelective Inpatient Encounter\"] NonElectiveEncounter\n"
-        + "    where Global.\"LengthInDays\" ( NonElectiveEncounter.relevantPeriod ) <= 120\n"
-        + "      and NonElectiveEncounter.relevantPeriod ends during day of \"Measurement Period\"\n"
-       ;
-
-        var fileLibrarySourceProvider = new FileLibrarySourceProvider("./resources/cql");
+        var librarySource = "./resources/cql/";
+        var fileLibrarySourceProvider = new FileLibrarySourceProvider(librarySource);
+        var jinjaTarget = "resources/jinja/";
         var compiler = new CqfCompiler(fileLibrarySourceProvider);
+        var target = "sparksql";
+        var printFunctions = false;
+        Standards.setTargetLanguage(target);
 
-        var libraryList = compiler.compile(cql);
-        // Reverse the order of library processing, so dependencies are processed before the scripts that depend on them
-        Collections.reverse(libraryList);
+        // read the contents of the file to text
+        var cqlLibraryToTranspile = "CMS104-v12-0-000-QDM-5-6.cql";
+        String cqlLibraryToTranspileAsText = Files.readString(Paths.get(librarySource + cqlLibraryToTranspile));
 
-        // Transform the AST into Jinja Scripts
+        // Compile CQL text files into a CQL AST in memory
+        var libraryList = compiler.compile(cqlLibraryToTranspileAsText);
+
+        // Transforms the CQL AST into an intermediate AST that keeps track of all information needed to generate SQL ASTs
         var converter = new Converter();        
         var state = new State();
         var convertedLibraries = new ArrayList<TranspilerNode>();
@@ -44,11 +43,16 @@ public class Transpiler {
             var outputNode = converter.convert(library, state);
             convertedLibraries.add(outputNode);
         }
-        var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cql);
+        var cqlFileContentRetriever = new CQLFileContentRetriever(fileLibrarySourceProvider, cqlLibraryToTranspileAsText);
 
+        // Renders the intermediate AST as a set of Jinja files
         var segmentPrinter = new SegmentPrinter(cqlFileContentRetriever);
         for (var mapped : convertedLibraries) {
-           segmentPrinter.toFiles(mapped.toSegment(), "./");
+           segmentPrinter.toFiles(mapped.toSegment(), jinjaTarget + Standards.GENERATED_INTERMEDIATE_AST_FOLDER);
         }
+
+        // Creates model files for the intermediate ASTs
+        var modelFilePrinter = new ModelFilePrinter();
+        modelFilePrinter.printModels(state.getModelTracking(), jinjaTarget, cqlFileContentRetriever, printFunctions);
     }
 }

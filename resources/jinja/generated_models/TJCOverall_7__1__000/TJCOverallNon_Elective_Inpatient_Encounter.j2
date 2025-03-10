@@ -1,0 +1,16 @@
+{# original CQL begins -#}
+/*
+define "Non Elective Inpatient Encounter":
+  ["Encounter, Performed": "Nonelective Inpatient Encounter"] NonElectiveEncounter
+    where Global."LengthInDays" ( NonElectiveEncounter.relevantPeriod ) <= 120
+      and NonElectiveEncounter.relevantPeriod ends during day of "Measurement Period"
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/TJCOverall_7__1__000.j2" import TJCOverallNon_Elective_Inpatient_Encounter %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ TJCOverallNon_Elective_Inpatient_Encounter(environment, none) }}

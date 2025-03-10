@@ -1,0 +1,16 @@
+{# original CQL begins -#}
+/*
+define "Encounter with Pharmacological Contraindications for Antithrombotic Therapy at Discharge":
+  TJC."Ischemic Stroke Encounter" IschemicStrokeEncounter
+    with ["Medication, Discharge": "Pharmacological Contraindications For Antithrombotic Therapy"] Pharmacological
+      such that Pharmacological.authorDatetime during IschemicStrokeEncounter.relevantPeriod
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/DischargedonAntithromboticTherapy_12__0__000.j2" import DischargedonAntithromboticTherapyEncounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ DischargedonAntithromboticTherapyEncounter_with_Pharmacological_Contraindications_for_Antithrombotic_Therapy_at_Discharge(environment, none) }}

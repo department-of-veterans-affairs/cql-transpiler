@@ -1,0 +1,15 @@
+{# original CQL begins -#}
+/*
+define "Denominator Exclusions":
+  TJC."Ischemic Stroke Encounters with Discharge Disposition"
+    union TJC."Encounter with Comfort Measures during Hospitalization"
+*/
+
+{# original CQL Ends #}
+{%- from "custom_overrides/InitCustomOverrides.sql" import initEnvironmentWithCustomOverrides %}
+{%- from "generated_intermediate/DischargedonAntithromboticTherapy_12__0__000.j2" import DischargedonAntithromboticTherapyDenominator_Exclusions %}
+
+{%- set environment = namespace() %}
+{%- do initEnvironmentWithCustomOverrides(environment) -%}
+
+{{ DischargedonAntithromboticTherapyDenominator_Exclusions(environment, none) }}

@@ -8,24 +8,33 @@ import java.io.IOException;
 import gov.va.transpiler.jinja.printing.Segment.PrintType;
 import gov.va.transpiler.jinja.standards.Standards;
 
+/**
+ * Turns a {@link Segment} tree into Jinja files.
+ */
 public class SegmentPrinter {
 
+    /**
+     * Whether to print the original CQL a particular string of Jinja is derived from
+     */
     private static final boolean PRINT_LOCATORS = true;
     private final CQLFileContentRetriever contentRetriever;
 
+    /**
+     * @param contentRetriever Used to retrieve original CQL.
+     */
     public SegmentPrinter(CQLFileContentRetriever contentRetriever) {
         this.contentRetriever = contentRetriever;
     }
 
-    protected String indentToLevel(int indentLevel) {
-        var sb = new StringBuilder();
-        for (var i = 0; i < indentLevel; i++) {
-            sb.append(Standards.INDENT);
-        }
-        return sb.toString();
-    }
-
+    /**
+     * Prints a segment tree rooted at a given segment into the filesystem.
+     * 
+     * @param segment Root segment.
+     * @param targetPath File system location to print segment to.
+     * @throws IOException
+     */
     public void toFiles(Segment segment, String targetPath) throws IOException {
+        // Folder and File segments require new files to be created. Line and Inline segments are printed inside existing file.s
         switch (segment.getPrintType()) {
             case Folder:
                 folderSegmentToFiles(segment, targetPath);
@@ -35,90 +44,121 @@ public class SegmentPrinter {
                 break;
             case Line:
             case Inline:
-                toFiles(segment, targetPath, 0);
+                printTextSegment(segment, targetPath);
                 break;
             default:
                 throw new IOException("Unexpected Segment Type");
         }
     }
 
-    private void folderSegmentToFiles(Segment segment, String targetPath) throws IOException {
+
+    /**
+     * Creates a folder equivalent to the root segment, and then prints its children inside of the created folder.
+     * 
+     * @param segment Root segment.
+     * @param targetPath File system location to print segment to.
+     * @throws IOException
+     */
+    protected void folderSegmentToFiles(Segment segment, String targetPath) throws IOException {
         var path = targetPath + segment.getFileLocation();
         File file = new File(path);
 
         if (file.exists()) {
-            throw new IOException("Folder already exists at path: " + path);
-        } else {
-            file.mkdir();
+            file.delete();
         }
+
+        file.mkdir();
 
         for (var child : segment.getChildren()) {
             toFiles(child, targetPath);
         }
     }
 
-    private void fileSegmentToFile(Segment segment, String targetPath) throws IOException {
-        var path = targetPath + segment.getFileLocation();
+    /**
+     * Creates a file equivalent to the root segment, and then prints its children inside of the created file.
+     * 
+     * @param segment Root segment.
+     * @param targetPath File system location to print segment to.
+     * @throws IOException
+     */
+    protected void fileSegmentToFile(Segment segment, String targetPath) throws IOException {
+        var path = targetPath + segment.getFileLocation() + Standards.JINJA_FILE_POSTFIX;
         File file = new File(path);
 
         if (file.exists()) {
-            throw new IOException("File already exists at path: " + path);
-        } else {
-            file.createNewFile();
+            file.delete();
         }
 
-        // Print the original CQL text if locators are specified
+        file.createNewFile();
+
+        for (var child : segment.getChildren()) {
+            toFiles(child, targetPath);
+        }
+    }
+
+    /**
+     * Prints a text segment and its children inside a file.
+     * 
+     * @param segment Root segment.
+     * @param targetPath Parent path to print root segment to.
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    protected void printTextSegment(Segment segment, String targetPath) throws FileNotFoundException, IOException {
+        var path = targetPath + segment.getFileLocation() + Standards.JINJA_FILE_POSTFIX;
+        File file = new File(path);
+
+        // Print the original CQL text if PRINT_LOCATORS is enabled and locators are specified
         if (PRINT_LOCATORS && segment.getLocator() != null) {
             printOriginalCQLToFile(file, segment);
         }
 
-        for (var child : segment.getChildren()) {
-            toFiles(child, targetPath);
+        // Print this segment's head
+        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+            outputStream.write(segment.getHead().getBytes());
+        }
+
+        // recursively print this item's children
+        for (var item : segment.getChildren()) {
+            toFiles(item, targetPath);
+        }
+
+        // Print this segment's tail
+        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+            outputStream.write(segment.getTail().getBytes());
+            if (segment.getPrintType() == PrintType.Line) {
+                outputStream.write(Standards.NEWLINE.getBytes());
+            }
         }
     }
 
-    private void printOriginalCQLToFile(File file, Segment segment) throws IOException {
+    /**
+     * Uses the {@link CQLFileContentRetriever} to print original CQL text to a file as an SQL comment.
+     * @param file File to print to.
+     * @param segment {@link Segment} to print {@link Locator} for.
+     * @throws IOException
+     */
+    protected void printOriginalCQLToFile(File file, Segment segment) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-            outputStream.write("{% comment %}" .getBytes());
+            // Begin SQL comment
+            outputStream.write("/*" .getBytes());
             outputStream.write(Standards.NEWLINE.getBytes());
+
+            // Print locator location
             outputStream.write((Standards.INDENT + "// " + segment.getOriginalLibraryIdentifier().getId() + " lines [" + segment.getLocator() + "]").getBytes());
-            var linesFromFile = contentRetriever.getTextFromLibrary(segment.getOriginalLibraryIdentifier(), Locator.fromString(segment.getLocator() ));
+            var linesFromFile = contentRetriever.getLinesOfTextFromLibrary(segment.getOriginalLibraryIdentifier(), Locator.fromString(segment.getLocator() ));
+
+            // Print lines from original CQL file
             for (var line : linesFromFile) {
                 outputStream.write(Standards.NEWLINE.getBytes());
                 outputStream.write(Standards.INDENT.getBytes());
                 outputStream.write(line.getBytes());
             }
             outputStream.write(Standards.NEWLINE.getBytes());
-            outputStream.write("{% endcomment %}".getBytes());
+
+            // End comment
+            outputStream.write("*/".getBytes());
             outputStream.write(Standards.NEWLINE.getBytes());
-        }
-    }
-
-    private void toFiles(Segment segment, String targetPath, int indentLevel) throws FileNotFoundException, IOException {
-        var path = targetPath + segment.getFileLocation();
-        File file = new File(path);
-
-        // Print this segment's head
-        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-            if (segment.getPrintType() == PrintType.Line) {
-                outputStream.write(Standards.NEWLINE.getBytes());
-                outputStream.write(indentToLevel(indentLevel).getBytes());
-            }
-            outputStream.write(segment.getHead().getBytes());
-        }
-
-        // recursively print this item's children
-        for (var item : segment.getChildren()) {
-            toFiles(item, targetPath, segment.getPrintType() == PrintType.Inline ? indentLevel : indentLevel + 1);
-        }
-
-        // Print this segment's tail
-        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
-            if (segment.getPrintType() == PrintType.Line) {
-                outputStream.write(Standards.NEWLINE.getBytes());
-                outputStream.write(indentToLevel(indentLevel).getBytes());
-            }
-            outputStream.write(segment.getTail().getBytes());
         }
     }
 }
