@@ -1,6 +1,19 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
 dependencies {
     implementation(project(":compiler"))
-
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "info.cqframework:cql-to-elm:${cqfVersion}"
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    mergeServiceFiles()
+}
+
+tasks.build {
+    dependsOn shadowJar
 }
