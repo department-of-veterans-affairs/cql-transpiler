@@ -14,7 +14,8 @@
                 "librarySource=./resources/cql/",
                 "jinjaTarget=resources/jinja/",
                 "targetLanguage=sparksql",
-                "printFunctions=false"
+                "printFunctions=false",
+                "cqlLibrariesToTranspile=CMS104-v12-0-000-QDM-5-6.cql,CMS506v7/CMS506-v7-0-000-QDM-5-6.cql"
             ]
         },
         {
@@ -27,7 +28,8 @@
                 "librarySource=./resources/cql/",
                 "jinjaTarget=./resources/jinja/",
                 "targetLanguage=sparksql",
-                "printFunctions=false"
+                "printFunctions=false",
+                "cqlLibrariesToTranspile=CMS104-v12-0-000-QDM-5-6.cql,CMS506v7/CMS506-v7-0-000-QDM-5-6.cql"
             ]
         }
     ]
