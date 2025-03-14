@@ -2,6 +2,7 @@ package gov.va.transpiler.jinja.printing;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,16 @@ import gov.va.transpiler.jinja.node.trackable.element.expressiondef.FunctionDefN
 import gov.va.transpiler.jinja.standards.Standards;
 
 public class ModelFilePrinter {
+
+    private FileWriter modelOrderWriter;
+
+    public ModelFilePrinter(String modelOrderFilePath) throws IOException {
+        modelOrderWriter = new FileWriter(modelOrderFilePath, false); // Open in write mode to replace the file
+    }
+
+    public void closeModelOrderWriter() throws IOException {
+        modelOrderWriter.close();
+    }
 
     public void printModels(Map<LibraryNode, Set<ExpressionDefNode<?>>> models, String targetFolder, CQLFileContentRetriever cqlFileContentRetriever, boolean printFunctions) throws IOException {
         for (var library: models.keySet()) {
@@ -54,6 +65,9 @@ public class ModelFilePrinter {
         if (printFunctionDefContents || !(expressionDefNode instanceof FunctionDefNode)) {
             printExpressionDefToModelFile(expressionFile, libraryName, modelName);
         }
+
+        // Log the relative file location to the model_order file
+        modelOrderWriter.write(Standards.GENERATED_INTERMEDIATE_MODEL_FOLDER + libraryName + Standards.FOLDER_SEPARATOR + modelName + Standards.JINJA_FILE_POSTFIX + "\n");
     }
 
     private void printEquivalentCQLToModelFile(File file, VersionedIdentifier versionedLibraryIdentifier, Locator locator, CQLFileContentRetriever cqlFileContentRetriever) throws IOException {

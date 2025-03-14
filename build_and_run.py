@@ -15,7 +15,17 @@ def run_command(command):
     return True
 
 def main():
-    try:
+    # Hardcoded variables to control skipping steps
+    skip_java_transpiler = False
+    skip_render_models = False
+
+    # Hardcoded variables for the project
+    resources_folder = "resources/"
+    cql_subfolder = "cql/"
+    jinja_subfolder = 'jinja/'
+    model_order_file = resources_folder + jinja_subfolder + "model_order.txt"
+
+    if not skip_java_transpiler:
         # Build the project
         print("Building the project...")
         if not run_command("gradlew clean build"):
@@ -31,8 +41,9 @@ def main():
         cql_libraries_to_transpile = "CMS104-v12-0-000-QDM-5-6.cql,CMS506v7/CMS506-v7-0-000-QDM-5-6.cql"
         java_command = (
             f"java -cp {jar_path} gov.va.transpiler.jinja.Transpiler "
-            f"librarySource=./resources/cql/ "
-            f"jinjaTarget=./resources/jinja/ "
+            f"librarySource=" + resources_folder + cql_subfolder + " "
+            f"jinjaTarget=" + resources_folder + jinja_subfolder + " "
+            f"modelOrderFilePath=" + model_order_file + " "
             f"targetLanguage=sparksql "
             f"printFunctions=false "
             f"cqlLibrariesToTranspile={cql_libraries_to_transpile}"
@@ -40,26 +51,15 @@ def main():
         if not run_command(java_command):
             raise Exception("Transpiler execution failed")
 
+    if not skip_render_models:
         # Set variables for render_models
-        resources_folder = "resources/"
-        jinja_subfolder = 'jinja/'
-        intermediate_ast_folders = [
-            'generated_models/MATGlobalCommonFunctions_7__0__000/', 
-            'generated_models/TJCOverall_7__1__000/', 
-            'generated_models/DischargedonAntithromboticTherapy_12__0__000/', 
-            'generated_models/MATGlobalCommonFunctionsQDM_8__0__000/', 
-            'generated_models/SafeUseofOpioidsConcurrentPrescribing_7__0__000/'
-        ]
         target_subfolder = "transpiler_dbt_models/"
         skip_failing_files = False
         autoformat = True
 
         # Invoke the render_models function
         print("Invoking render_models function...")
-        render_models(resources_folder, jinja_subfolder, intermediate_ast_folders, target_subfolder, skip_failing_files, autoformat)
-
-    except Exception as e:
-        print(e)
+        render_models(resources_folder, jinja_subfolder, model_order_file, target_subfolder, skip_failing_files, autoformat)
 
     # Wait for user input before exiting
     input("Press any key to exit...")
