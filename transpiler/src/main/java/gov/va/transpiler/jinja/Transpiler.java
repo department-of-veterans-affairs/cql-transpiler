@@ -25,7 +25,7 @@ public class Transpiler {
         Map<String, String> arguments = parseArguments(args);
         var librarySource = arguments.get("librarySource");
         var jinjaTarget = arguments.get("jinjaTarget");
-        var modelOrderFilePath = arguments.getOrDefault("modelOrderFilePath", jinjaTarget + "model_order.txt");
+        var modelOrderFilePath = arguments.get("modelOrderFilePath");
         var targetLanguage = arguments.getOrDefault("targetLanguage", "sparksql");
         var printFunctions = Boolean.parseBoolean(arguments.getOrDefault("printFunctions", "false"));
         
